@@ -1,7 +1,6 @@
-"use client";
 import type { Metadata } from "next";
 import React from "react";
-import styled from "styled-components";
+import GlobalStyle from "@/public/styles/global";
 
 export const metadata: Metadata = {
   title: "Popping!",
@@ -9,12 +8,9 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="en">
-    <SaftyArea>{children}</SaftyArea>
+    <GlobalStyle />
+    <body style={{ padding: "60px 0px 35px 0px" }}>{children}</body>
   </html>
 );
-
-const SaftyArea = styled.body`
-  padding: 60px 0px 35px 0px;
-`;
 
 export default RootLayout;
