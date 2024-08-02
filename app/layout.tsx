@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="en">
     <GlobalStyle />
-    <body style={{ padding: "60px 0px 35px 0px" }}>{children}</body>
+    <body>{children}</body>
   </html>
 );
 

@@ -23,6 +23,21 @@ const GlobalStyle = createGlobalStyle`
         font-style: normal;
         src: url(${GmarketSansTTFLight}) format('truetype');
   }
+
+
+html, body {
+  max-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
+
+
 `;
 
 export default GlobalStyle;

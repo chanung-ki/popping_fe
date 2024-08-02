@@ -1,20 +1,12 @@
-@font-face {
-  font-family: "GmarketSansBold";
-  src: url("public/fonts/GmarketSansTTFBold.ttf") format("ttf");
-  font-weight: bold;
-  font-style: normal;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@font-face {
-  font-family: "GmarketSansLight";
-  src: url("public/fonts/GmarketSansTTFLight.ttf") format("ttf");
-  font-weight: lighter;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "GmarketSansMedium";
-  src: url("public/fonts/GmarketSansTTFMedium.ttf") format("ttf");
-  font-weight: normal;
-  font-style: normal;
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
 }
