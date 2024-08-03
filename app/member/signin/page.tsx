@@ -22,7 +22,7 @@ const SignInPage: React.FC = () => {
   console.log(typeof watch("email"));
 
   return (
-    <SigninPageContainer>
+    <SignInPageContainer>
       <SignInFormContainer>
         <h1>POPPING</h1>
         <SignInForm onSubmit={handleSubmit(onSubmit)}>
@@ -67,11 +67,11 @@ const SignInPage: React.FC = () => {
           <div />
         </SocialLoginContainer>
       </SignInFormContainer>
-    </SigninPageContainer>
+    </SignInPageContainer>
   );
 };
 
-const SigninPageContainer = styled.div`
+const SignInPageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
