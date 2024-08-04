@@ -2,6 +2,8 @@
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 
+//버튼이 아니라 Link로 하는게 나을듯? 
+
 const OnlinePopUpOpenningPage: React.FC = () => {
   return (
     <OpenningPageContainer>
