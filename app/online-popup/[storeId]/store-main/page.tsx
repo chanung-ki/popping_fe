@@ -56,8 +56,6 @@ const StoreMainPage: React.FC = () => {
             }}
           />
           <div id={"product_name"}>Elixir 1st Anniversary T-S hirt</div>
-          <div id={"product_options"}>BLACK/GREEN</div>
-          <div id={"product_options"}>M/L/XL/</div>
           <div id={"product_price"}>32,000 KRW</div>
         </StoreItem>
 
@@ -71,8 +69,6 @@ const StoreMainPage: React.FC = () => {
             }}
           />
           <div id={"product_name"}>Elixir 1st Anniversary Cup</div>
-          <div id={"product_options"}>BLACK/GREEN</div>
-          <div id={"product_options"}>M/L/XL/</div>
           <div id={"product_price"}>32,000 KRW</div>
         </StoreItem>
 
@@ -87,8 +83,6 @@ const StoreMainPage: React.FC = () => {
             id={"product_image"}
           />
           <div id={"product_name"}>Elixir 1st Anniversary T-S hirt</div>
-          <div id={"product_options"}>BLACK/GREEN</div>
-          <div id={"product_options"}>M/L/XL/</div>
           <div id={"product_price"}>32,000 KRW</div>
         </StoreItem>
       </StoreItemsContainer>
@@ -187,7 +181,7 @@ const StoreItem = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 28px;
-  height: 300px;
+  height: 250px;
 
   & > div {
     width: 170px;
