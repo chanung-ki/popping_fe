@@ -16,11 +16,13 @@ const StoreMainPage: React.FC = () => {
 
   return (
     <StoreMainPageContainer>
-      <CartButton></CartButton>
+      <CartButton>
+        <Link href={"/mypage/1/my-cart"}>Cart icon</Link>
+      </CartButton>
       <StoreInfoContainer>
         <StoreThumbnailContainer>
           <StoreThumbnailNav>
-            <Link href={"/online-popup/1/store-openning"}>
+            <Link href={"/mypage/1/my-cart"}>
               <GO_BACK />
             </Link>
           </StoreThumbnailNav>
@@ -54,7 +56,9 @@ const StoreMainPage: React.FC = () => {
               backgroundColor: `${COLORS.secondaryColor}`,
               borderRadius: "8px",
             }}
-          />
+          >
+            <ProductLikeButton></ProductLikeButton>
+          </div>
           <div id={"product_name"}>Elixir 1st Anniversary T-S hirt</div>
           <div id={"product_price"}>32,000 KRW</div>
         </StoreItem>
@@ -67,7 +71,9 @@ const StoreMainPage: React.FC = () => {
               backgroundColor: `${COLORS.secondaryColor}`,
               borderRadius: "8px",
             }}
-          />
+          >
+            <ProductLikeButton></ProductLikeButton>
+          </div>
           <div id={"product_name"}>Elixir 1st Anniversary Cup</div>
           <div id={"product_price"}>32,000 KRW</div>
         </StoreItem>
@@ -80,8 +86,9 @@ const StoreMainPage: React.FC = () => {
               backgroundColor: `${COLORS.secondaryColor}`,
               borderRadius: "8px",
             }}
-            id={"product_image"}
-          />
+          >
+            <ProductLikeButton></ProductLikeButton>
+          </div>
           <div id={"product_name"}>Elixir 1st Anniversary T-S hirt</div>
           <div id={"product_price"}>32,000 KRW</div>
         </StoreItem>
@@ -104,7 +111,8 @@ const CartButton = styled.div`
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: ${COLORS.mainColor};
+  border: 1px solid ${COLORS.greyColor};
+  background-color: ${COLORS.primaryColor};
   right: 21px;
   bottom: 112px;
 `;
@@ -204,6 +212,17 @@ const StoreItem = styled.div`
     font-weight: 900;
     margin-top: 9px;
   }
+`;
+
+const ProductLikeButton = styled.div`
+  width: 20px;
+  height: 27px;
+
+  position: relative;
+  top: 112px;
+  left: 138px;
+  bottom: 10px;
+  background-color: ${COLORS.mainColor};
 `;
 
 export default StoreMainPage;
