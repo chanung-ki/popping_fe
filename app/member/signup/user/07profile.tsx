@@ -1,7 +1,10 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
 import { RegexpNickname } from "@/app/components/regexp";
 import { SelectBottomSection, SelectFlat } from "@/app/components/select";
 import { COLORS } from "@/public/styles/colors";
@@ -54,8 +57,8 @@ const StepProfile = ({ onNext }: StepType) => {
     <Container>
       <MemberTitle>프로필을 완성해봐요!</MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valueNickname}
           placeholder="닉네임"
           type="text"
@@ -86,7 +89,7 @@ const StepProfile = ({ onNext }: StepType) => {
             setShowSelectGender(true);
           }}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

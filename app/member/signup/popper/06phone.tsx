@@ -1,8 +1,11 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
-import { RegexpNumber, RegexpPhone } from "@/app/components/regexp";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
+import { RegexpInputNumber, RegexpPhone } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -41,8 +44,8 @@ const StepPhone = ({ onNext }: StepType) => {
         전화번호를 입력해주세요
       </MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valuePhone}
           placeholder="전화번호(숫자만 입력)"
           type="text"
@@ -52,7 +55,7 @@ const StepPhone = ({ onNext }: StepType) => {
           bottomTextClickable={false}
           bottomTextOnClick={() => {}}
           onChange={(text: string) => {
-            setValuePhone(text.replace(RegexpNumber, ""));
+            setValuePhone(text.replace(RegexpInputNumber, ""));
             setIsValidPhone(RegexpPhone.test(text));
           }}
           onFocus={() => {
@@ -63,7 +66,7 @@ const StepPhone = ({ onNext }: StepType) => {
           }}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

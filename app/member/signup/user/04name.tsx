@@ -1,8 +1,11 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
-import { RegexpHangul } from "@/app/components/regexp";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
+import { RegexpHangul, RegexpInputHangul } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -37,8 +40,8 @@ const StepName = ({ onNext }: StepType) => {
     <Container>
       <MemberTitle>이름을 입력해주세요</MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valueName}
           placeholder="이름"
           type="text"
@@ -48,7 +51,7 @@ const StepName = ({ onNext }: StepType) => {
           bottomTextClickable={false}
           bottomTextOnClick={() => {}}
           onChange={(text: string) => {
-            setValueName(text.replace(RegexpHangul, ""));
+            setValueName(text.replace(RegexpInputHangul, ""));
             setIsValidName(RegexpHangul.test(text) && text.length > 1);
           }}
           onFocus={() => {
@@ -59,7 +62,7 @@ const StepName = ({ onNext }: StepType) => {
           }}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

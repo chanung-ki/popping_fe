@@ -1,16 +1,16 @@
 import styled from "styled-components";
 
-interface ButtonTypes {
+type ButtonTypes = {
   text: string;
   backgroundColor: string;
   textColor: string;
   onClick: () => void;
-}
+};
 
-interface ButtonStyleTypes {
+type ButtonStyleTypes = {
   backgroundColor: string;
   textColor: string;
-}
+};
 
 const Button = styled.div<ButtonStyleTypes>`
   width: 100%;

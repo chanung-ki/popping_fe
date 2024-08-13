@@ -1,8 +1,11 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
-import { RegexpAlphabetAndNumber } from "@/app/components/regexp";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
+import { RegexpInputAlphabetAndNumber } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -39,14 +42,6 @@ const StepEmailPasscode = ({ onNext }: StepType) => {
     }
   }, [count]);
 
-  useEffect(() => {
-    if (valuePasscode.length === 8) {
-      setIsValidPasscode(true);
-    } else {
-      setIsValidPasscode(false);
-    }
-  }, [valuePasscode]);
-
   return (
     <Container>
       <MemberTitle>
@@ -55,8 +50,8 @@ const StepEmailPasscode = ({ onNext }: StepType) => {
         인증번호를 입력해주세요
       </MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valuePasscode}
           placeholder="인증번호"
           type="text"
@@ -75,13 +70,14 @@ const StepEmailPasscode = ({ onNext }: StepType) => {
             setIsResendable(false);
           }}
           onChange={(text: string) => {
-            setValuePasscode(text.replace(RegexpAlphabetAndNumber, ""));
+            setValuePasscode(text.replace(RegexpInputAlphabetAndNumber, ""));
+            setIsValidPasscode(valuePasscode.length === 8);
           }}
           onFocus={() => {}}
           onBlur={() => {}}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

@@ -1,7 +1,10 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
 import { RegexpEmail } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
@@ -41,11 +44,11 @@ const StepEmail = ({ onNext }: StepType) => {
         이메일을 입력해주세요
       </MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valueEmail}
           placeholder="이메일"
-          type="text"
+          type="email"
           maxLength={undefined}
           status={statusEmail}
           bottomText={bottomTextEmail}
@@ -63,7 +66,7 @@ const StepEmail = ({ onNext }: StepType) => {
           }}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

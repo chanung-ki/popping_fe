@@ -18,18 +18,20 @@ interface InputTypes {
   disabled: boolean;
 }
 
-interface InputFlatStatusTypes {
+interface InputStatusTypes {
   color: string;
   clickable: boolean;
 }
 
-const InputFlatContainer = styled.div`
+// 밑줄형
+const InputUnderlineContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: flex-start;
 `;
 
-const InputFlatInput = styled.input`
+const InputUnderlineInput = styled.input`
   width: 100%;
 
   padding: 2px 0;
@@ -58,7 +60,7 @@ const InputFlatInput = styled.input`
   }
 `;
 
-const InputFlatStatus = styled.p<InputFlatStatusTypes>`
+const InputUnderlineStatus = styled.span<InputStatusTypes>`
   color: ${(props) => props.color};
   font-family: "Pretendard";
   font-size: 14px;
@@ -69,7 +71,7 @@ const InputFlatStatus = styled.p<InputFlatStatusTypes>`
   cursor: ${(props) => (props.clickable ? "pointer" : "text")};
 `;
 
-export const InputFlat = ({
+export const InputUnderline = ({
   value,
   placeholder,
   type,
@@ -84,8 +86,8 @@ export const InputFlat = ({
   disabled,
 }: InputTypes) => {
   return (
-    <InputFlatContainer>
-      <InputFlatInput
+    <InputUnderlineContainer>
+      <InputUnderlineInput
         value={value}
         placeholder={placeholder}
         required
@@ -99,7 +101,7 @@ export const InputFlat = ({
         disabled={disabled}
       />
       {bottomText != "" ? (
-        <InputFlatStatus
+        <InputUnderlineStatus
           color={
             status != null
               ? status == true
@@ -111,8 +113,107 @@ export const InputFlat = ({
           onClick={bottomTextOnClick}
         >
           {bottomText}
-        </InputFlatStatus>
+        </InputUnderlineStatus>
       ) : null}
-    </InputFlatContainer>
+    </InputUnderlineContainer>
+  );
+};
+
+// 곡률형
+const InputRoundContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+`;
+
+const InputRoundInput = styled.input`
+  width: 100%;
+
+  padding: 16px 12px;
+
+  color: ${COLORS.secondaryColor};
+  font-family: "Pretendard";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+  box-sizing: border-box;
+
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px ${COLORS.greyColor} inset;
+
+  caret-color: ${COLORS.mainColor};
+
+  transition: border 0.3s ease;
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${COLORS.mainColor} inset;
+  }
+
+  &::placeholder {
+    color: ${COLORS.greyColor};
+  }
+`;
+
+const InputRoundStatus = styled.span<InputStatusTypes>`
+  color: ${(props) => props.color};
+  font-family: "Pretendard";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  cursor: ${(props) => (props.clickable ? "pointer" : "text")};
+`;
+
+export const InputRound = ({
+  value,
+  placeholder,
+  type,
+  maxLength,
+  status,
+  bottomText,
+  bottomTextClickable,
+  bottomTextOnClick,
+  onChange,
+  onFocus,
+  onBlur,
+  disabled,
+}: InputTypes) => {
+  return (
+    <InputRoundContainer>
+      <InputRoundInput
+        value={value}
+        placeholder={placeholder}
+        required
+        type={type}
+        maxLength={maxLength}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        disabled={disabled}
+      />
+      {bottomText != "" ? (
+        <InputRoundStatus
+          color={
+            status != null
+              ? status == true
+                ? COLORS.mainColor
+                : COLORS.statusNegativeColor
+              : COLORS.greyColor
+          }
+          clickable={bottomTextClickable}
+          onClick={bottomTextOnClick}
+        >
+          {bottomText}
+        </InputRoundStatus>
+      ) : null}
+    </InputRoundContainer>
   );
 };

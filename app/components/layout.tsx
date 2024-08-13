@@ -1,20 +1,20 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 
-interface LayoutTypes {
+type LayoutTypes = {
   top: string;
   right: string;
   bottom: string;
   left: string;
   children: React.ReactNode;
-}
+};
 
-interface ContainerPaddingTypes {
+type ContainerPaddingTypes = {
   top: string;
   right: string;
   bottom: string;
   left: string;
-}
+};
 
 const Layout = styled.div`
   position: relative;

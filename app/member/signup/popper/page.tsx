@@ -62,7 +62,7 @@ const SignUpUserPage: React.FC = () => {
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <MemberProgressBar value={stepIndex * (100 / steps.length)} />
-      {state.step != "Done" && <MemberChevronLeft />}
+      {state.step !== "Done" ? <MemberChevronLeft /> : null}
       <Funnel>
         <Funnel.Step name="Email">
           <StepEmail
@@ -102,7 +102,7 @@ const SignUpUserPage: React.FC = () => {
               setState((prev) => ({
                 ...prev,
                 businessNumber: businessInfo,
-                step: "Done",
+                step: "Phone",
               }));
             }}
           />
@@ -129,12 +129,12 @@ const SignUpUserPage: React.FC = () => {
           <StepDone
             onNext={() => {
               if (
-                Object.values(state).filter((value) => value !== undefined)
+                Object.values(state).filter((value) => value === undefined)
                   .length > 1
               ) {
                 console.log(
                   `undefined 개수: ${
-                    Object.values(state).filter((value) => value !== undefined)
+                    Object.values(state).filter((value) => value === undefined)
                       .length
                   }`
                 );

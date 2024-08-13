@@ -1,8 +1,11 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
-import { RegexpHangul } from "@/app/components/regexp";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
+import { RegexpNickname } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -20,12 +23,12 @@ const StepBrand = ({ onNext }: StepType) => {
 
   useEffect(() => {
     if (isBrandFocused === false) {
-      if (RegexpHangul.test(valueBrand)) {
+      if (RegexpNickname.test(valueBrand)) {
         setStatusBrand(null);
         setbottomTextBrand("");
       } else {
         setStatusBrand(false);
-        setbottomTextBrand("한글 이외는 입력할 수 없습니다.");
+        setbottomTextBrand("입력할 수 없는 문자가 포함되어 있습니다.");
       }
     } else {
       setStatusBrand(null);
@@ -37,8 +40,8 @@ const StepBrand = ({ onNext }: StepType) => {
     <Container>
       <MemberTitle>브랜드 이름을 입력해주세요</MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valueBrand}
           placeholder="브랜드명(최대 25자)"
           type="text"
@@ -49,7 +52,7 @@ const StepBrand = ({ onNext }: StepType) => {
           bottomTextOnClick={() => {}}
           onChange={(text: string) => {
             setValueBrand(text);
-            setIsValidBrand(RegexpHangul.test(text) && text.length > 1);
+            setIsValidBrand(RegexpNickname.test(text) && text.length > 1);
           }}
           onFocus={() => {
             setIsBrandFocused(true);
@@ -59,7 +62,7 @@ const StepBrand = ({ onNext }: StepType) => {
           }}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

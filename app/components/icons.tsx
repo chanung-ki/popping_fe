@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-interface SVGTypes {
+type SVGTypes = {
   color: string;
   width: number | undefined;
   height: number | undefined;
-}
+};
 
 const SVG = styled.svg`
   width: ${(props) => props.width};
