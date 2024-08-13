@@ -29,7 +29,7 @@ const SignUpPage: React.FC = () => {
               setIsPopper(false);
             }}
           >
-            <p>개인</p>
+            <p>팝플</p>
             <p>팝업스토어를 이용하려고 가입해요</p>
           </RadioBox>
           <RadioBox
