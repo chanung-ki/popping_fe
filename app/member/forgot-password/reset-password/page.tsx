@@ -74,7 +74,7 @@ const ResetPasswordPage: React.FC = () => {
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
         <MemberChevronLeft />
-        <MemberLogoAndTitle>비밀번호 찾기</MemberLogoAndTitle>
+        <MemberLogoAndTitle>비밀번호 재설정</MemberLogoAndTitle>
 
         <MemberAccountForm>
           <InputRound
