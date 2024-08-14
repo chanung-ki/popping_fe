@@ -16,9 +16,9 @@ const StepDone = ({ onNext }: StepType) => {
       <MiddleContainer>
         <Image src={LogoDone} alt={"완료 로고"} width={100} height={100} />
         <p>
-          팝퍼 신청이 완료되었습니다.
-          <br />
-          신청 결과를 메일로 보내드리겠습니다.
+          팝퍼 회원가입이 성공적으로
+            <br />
+          완료되었어요!
         </p>
       </MiddleContainer>
 

@@ -15,15 +15,17 @@ import StepPhone from "./06phone";
 import StepPhonePasscode from "./07phonepasscode";
 import StepBusinessInfo from "./05businessinfo";
 import StepDone from "./08done";
+import axiosInstance from "@/public/network/axios";
 
 const SignUpUserPage: React.FC = () => {
   type bodyTypes = {
     email: string;
     password: string;
     nickname: string;
-    businessNumber: BusinessInfo;
+    businessInfo: BusinessInfo;
     phoneNumber: string;
     isPopper: boolean;
+    authCode: string;
   };
 
   type BusinessInfo = {
@@ -52,12 +54,30 @@ const SignUpUserPage: React.FC = () => {
     email: undefined,
     password: undefined,
     nickname: undefined,
-    businessNumber: undefined,
+    businessInfo: undefined,
     phoneNumber: undefined,
     isPopper: true,
+    authCode: '',
   });
 
   const [stepIndex, setStepIndex] = useState<number>(0);
+
+  const popperSignupApi = async() => {
+    try {
+      const response = await axiosInstance.post(
+          `/api/user/signup`, 
+          state,
+      );
+      if (response.status === 201) {
+        setState((prev) => ({
+          ...prev,
+          step: "Done",
+        }));
+      }
+    } catch (error) {
+      alert('회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.')
+    }
+  }
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
@@ -66,13 +86,15 @@ const SignUpUserPage: React.FC = () => {
       <Funnel>
         <Funnel.Step name="Email">
           <StepEmail
-            onNext={(email: string) => {
-              setState((prev) => ({ ...prev, email, step: "Email Passcode" }));
+            onNext={(email: string, authCode: string) => {
+              setState((prev) => ({ ...prev, email, authCode, step: "Email Passcode" }));
             }}
           />
         </Funnel.Step>
         <Funnel.Step name="Email Passcode">
           <StepEmailPasscode
+            authCode={state.authCode? state.authCode : ''}
+            email={state.email? state.email : ''}
             onNext={() => {
               setState((prev) => ({ ...prev, step: "Password" }));
             }}
@@ -101,7 +123,7 @@ const SignUpUserPage: React.FC = () => {
             onNext={(businessInfo: BusinessInfo) => {
               setState((prev) => ({
                 ...prev,
-                businessNumber: businessInfo,
+                businessInfo: businessInfo,
                 step: "Phone",
               }));
             }}
@@ -113,8 +135,10 @@ const SignUpUserPage: React.FC = () => {
               setState((prev) => ({
                 ...prev,
                 phoneNumber,
-                step: "Phone Passcode",
               }));
+              if (state.phoneNumber !== undefined) {
+                popperSignupApi();
+              }
             }}
           />
         </Funnel.Step>
@@ -128,18 +152,18 @@ const SignUpUserPage: React.FC = () => {
         <Funnel.Step name="Done">
           <StepDone
             onNext={() => {
-              if (
-                Object.values(state).filter((value) => value === undefined)
-                  .length > 1
-              ) {
-                console.log(
-                  `undefined 개수: ${
-                    Object.values(state).filter((value) => value === undefined)
-                      .length
-                  }`
-                );
-                console.log("오류 발생");
-              }
+              // if (
+              //   Object.values(state).filter((value) => value === undefined)
+              //     .length > 1
+              // ) {
+              //   console.log(
+              //     `undefined 개수: ${
+              //       Object.values(state).filter((value) => value === undefined)
+              //         .length
+              //     }`
+              //   );
+              //   console.log("오류 발생");
+              // }
               console.log(state);
             }}
           />
