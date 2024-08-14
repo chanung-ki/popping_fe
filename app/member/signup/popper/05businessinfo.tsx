@@ -13,6 +13,7 @@ import {
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { businessRegistrationCheckApi } from "@/public/utils/function";
 
 type StepType = {
   onNext: CallableFunction;
@@ -39,6 +40,23 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
   const [statusDate, setStatusDate] = useState<boolean | null>(null);
   const [bottomTextDate, setbottomTextDate] = useState<string>("");
   const [isValidDate, setIsValidDate] = useState<boolean>(false);
+
+  // 다음 버튼 클릭 핸들러
+  const handleClickNext = async () => {
+    if (isValidBN && isValidName && isValidDate) {
+      const isValid = await businessRegistrationCheckApi(valueBN, valueDate, valueName);
+
+      if (isValid) {
+        onNext({
+          businessNumber: valueBN,
+          startDate: valueDate,
+          participantName: valueName,
+        });
+      } else {
+        alert('일치하는 사업자 정보가 없습니다.');
+      }
+    }
+  }
 
   useEffect(() => {
     if (isBNFocused === false) {
@@ -87,7 +105,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
 
   return (
     <Container>
-      <MemberTitle>프로필을 완성해봐요!</MemberTitle>
+      <MemberTitle>사업자 정보를 입력해주세요</MemberTitle>
 
       <MemberSignupForm>
         <InputUnderline
@@ -167,15 +185,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
             : COLORS.greyColor
         }
         textColor={COLORS.primaryColor}
-        onClick={() => {
-          if (isValidBN && isValidName && isValidDate) {
-            onNext({
-              businessNumber: valueBN,
-              startDate: valueDate,
-              participantName: valueName,
-            });
-          }
-        }}
+        onClick={handleClickNext}
       />
     </Container>
   );
