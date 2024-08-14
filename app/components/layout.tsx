@@ -1,4 +1,5 @@
 import { COLORS } from "@/public/styles/colors";
+import { RefObject, useRef } from "react";
 import { styled } from "styled-components";
 
 type LayoutTypes = {
@@ -22,7 +23,7 @@ const Layout = styled.div`
   min-width: 320px;
   max-width: 767px;
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
 
   background-color: ${COLORS.primaryColor};
 `;
@@ -49,6 +50,8 @@ export const DefaultLayout = ({
   left,
   children,
 }: LayoutTypes) => {
+  const ref2 = useRef(null);
+
   return (
     <Layout>
       <Container top={top} right={right} bottom={bottom} left={left}>
