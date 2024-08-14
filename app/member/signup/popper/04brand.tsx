@@ -30,7 +30,7 @@ const StepBrand = ({ onNext }: StepType) => {
       setStatusBrand(!isExist);
       setIsValidBrand(!isExist);
       if (isExist) {
-        setbottomTextBrand("현재 사용중인 브랜드 이름 입니다.");
+        setbottomTextBrand("이미 사용중인 브랜드 이름 입니다.");
       } else {
         setbottomTextBrand("사용가능한 브랜드 이름 입니다.");
       }

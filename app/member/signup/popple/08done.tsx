@@ -3,7 +3,7 @@ import { Spacer } from "@/app/components/layout";
 import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
 import { styled } from "styled-components";
-
+import Link from "next/link";
 import LogoDone from "@/public/images/logo_done.png";
 
 type StepType = {
