@@ -1,7 +1,10 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
 import { RegexpPassword } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
@@ -71,8 +74,8 @@ const StepPassword = ({ onNext }: StepType) => {
     <Container>
       <MemberTitle>비밀번호를 입력해주세요</MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valuePassword}
           placeholder="비밀번호"
           type="password"
@@ -94,7 +97,7 @@ const StepPassword = ({ onNext }: StepType) => {
           disabled={false}
         />
 
-        <InputFlat
+        <InputUnderline
           value={valuePasswordConfirm}
           placeholder="비밀번호 확인"
           type="password"
@@ -115,7 +118,7 @@ const StepPassword = ({ onNext }: StepType) => {
           }}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

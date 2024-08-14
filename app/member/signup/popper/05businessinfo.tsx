@@ -1,10 +1,13 @@
 import { ButtonSingle } from "@/app/components/buttons";
-import { InputFlat } from "@/app/components/inputs";
+import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
-import { MemberForm, MemberTitle } from "@/app/components/member/components";
+import {
+  MemberSignupForm,
+  MemberTitle,
+} from "@/app/components/member/components";
 import {
   RegexpHangul,
-  RegexpNumber,
+  RegexpInputNumber,
   RegExpYYYYMMDD,
 } from "@/app/components/regexp";
 import { COLORS } from "@/public/styles/colors";
@@ -86,8 +89,8 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
     <Container>
       <MemberTitle>프로필을 완성해봐요!</MemberTitle>
 
-      <MemberForm>
-        <InputFlat
+      <MemberSignupForm>
+        <InputUnderline
           value={valueBN}
           placeholder="사업자등록번호"
           type="text"
@@ -97,7 +100,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           bottomTextClickable={false}
           bottomTextOnClick={() => {}}
           onChange={(text: string) => {
-            setValueBN(text.replace(RegexpNumber, ""));
+            setValueBN(text.replace(RegexpInputNumber, ""));
             setIsValidBN(text.length === 10);
           }}
           onFocus={() => {
@@ -109,7 +112,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           disabled={false}
         />
 
-        <InputFlat
+        <InputUnderline
           value={valueName}
           placeholder="대표자명"
           type="text"
@@ -119,7 +122,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           bottomTextClickable={false}
           bottomTextOnClick={() => {}}
           onChange={(text: string) => {
-            setValueName(text.replace(RegexpHangul, ""));
+            setValueName(text);
             setIsValidName(RegexpHangul.test(text) && text.length > 1);
           }}
           onFocus={() => {
@@ -131,7 +134,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           disabled={false}
         />
 
-        <InputFlat
+        <InputUnderline
           value={valueDate}
           placeholder="개업일자(YYYYMMDD)"
           type="text"
@@ -141,7 +144,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           bottomTextClickable={false}
           bottomTextOnClick={() => {}}
           onChange={(text: string) => {
-            setValueDate(text.replace(RegexpNumber, ""));
+            setValueDate(text.replace(RegexpInputNumber, ""));
             setIsValidDate(RegExpYYYYMMDD.test(text));
           }}
           onFocus={() => {
@@ -152,7 +155,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           }}
           disabled={false}
         />
-      </MemberForm>
+      </MemberSignupForm>
 
       <Spacer />
 

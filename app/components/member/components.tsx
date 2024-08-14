@@ -2,18 +2,19 @@ import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconChevronLeft } from "../icons";
 import React from "react";
+import Image from "next/image";
 
-interface ChildrenType {
+import LogoLetters from "@/public/images/logo_letters.png";
+
+// Title
+
+type ChildrenType = {
   children: React.ReactNode;
-}
+};
 
-interface ProgressType {
-  value: number;
-}
-
-interface FormType {
-  children: React.ReactNode;
-}
+const TitleContainer = styled.div`
+  margin-bottom: 52px;
+`;
 
 const Title = styled.p`
   color: ${COLORS.secondaryColor};
@@ -22,13 +23,37 @@ const Title = styled.p`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-
-  margin-bottom: 52px;
 `;
+
+export const MemberTitle = ({ children }: ChildrenType) => {
+  return (
+    <TitleContainer>
+      <Title>{children}</Title>
+    </TitleContainer>
+  );
+};
 
 const ChevronLeftContainer = styled.div`
   margin-bottom: 40px;
 `;
+
+export const MemberChevronLeft = () => {
+  return (
+    <ChevronLeftContainer>
+      <IconChevronLeft
+        color={COLORS.secondaryColor}
+        width={undefined}
+        height={16}
+      />
+    </ChevronLeftContainer>
+  );
+};
+
+// Progress
+
+type ProgressType = {
+  value: number;
+};
 
 const Progress = styled.progress`
   width: 100%;
@@ -54,33 +79,54 @@ const Progress = styled.progress`
   }
 `;
 
-const Form = styled.div`
+export const MemberProgressBar = ({ value }: ProgressType) => {
+  return <Progress value={value} max="100" />;
+};
+
+// Form
+
+type FormType = {
+  children: React.ReactNode;
+};
+
+const SignupForm = styled.div`
   display: flex;
   flex-direction: column;
 
   gap: 32px;
 `;
 
-export const MemberTitle = ({ children }: ChildrenType) => {
-  return <Title>{children}</Title>;
+export const MemberSignupForm = ({ children }: FormType) => {
+  return <SignupForm>{children}</SignupForm>;
 };
 
-export const MemberChevronLeft = () => {
+const MemberForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  margin-bottom: 40px;
+`;
+
+export const MemberAccountForm = ({ children }: FormType) => {
+  return <MemberForm>{children}</MemberForm>;
+};
+
+// Logo & Title
+
+const LogoAndTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  margin-bottom: 52px;
+`;
+
+export const MemberLogoAndTitle = ({ children }: ChildrenType) => {
   return (
-    <ChevronLeftContainer>
-      <IconChevronLeft
-        color={COLORS.secondaryColor}
-        width={undefined}
-        height={16}
-      />
-    </ChevronLeftContainer>
+    <LogoAndTitleContainer>
+      <Image src={LogoLetters} alt={"로고"} width={undefined} height={36} />
+      <Title>{children}</Title>
+    </LogoAndTitleContainer>
   );
-};
-
-export const MemberProgressBar = ({ value }: ProgressType) => {
-  return <Progress value={value} max="100" />;
-};
-
-export const MemberForm = ({ children }: FormType) => {
-  return <Form>{children}</Form>;
 };

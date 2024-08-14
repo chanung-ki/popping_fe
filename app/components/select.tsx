@@ -2,16 +2,16 @@ import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconRoundTriangle, IconX } from "./icons";
 
-interface selectTypes {
+type selectTypes = {
   placeholder: string;
   value: string | null;
   isFocus: boolean;
   onClick: () => void;
-}
+};
 
-interface SelectFlatDivType {
+type SelectFlatDivType = {
   isFocus: boolean;
-}
+};
 
 const SelectFlatDiv = styled.div<SelectFlatDivType>`
   position: relative;

@@ -1,161 +1,157 @@
 "use client";
-import styled from "styled-components";
-import { COLORS } from "@/public/styles/colors";
-import { useForm, SubmitHandler } from "react-hook-form";
-import Link from "next/link";
 
-type SignInInput = {
-  email: string;
-  password: string;
-};
+import { styled } from "styled-components";
+import { useState } from "react";
+import { COLORS } from "@/public/styles/colors";
+import { ButtonSingle } from "@/app/components/buttons";
+import { InputRound } from "@/app/components/inputs";
+import { DefaultLayout } from "@/app/components/layout";
+import {
+  MemberChevronLeft,
+  MemberLogoAndTitle,
+  MemberAccountForm,
+} from "@/app/components/member/components";
+import Image from "next/image";
+import LogoKakao from "@/public/images/social/logo_kakao.png";
+import LogoGoogle from "@/public/images/social/logo_google.png";
 
 const SignInPage: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<SignInInput>();
-
-  const onSubmit: SubmitHandler<SignInInput> = (data) => console.log(data);
-
-  console.log(typeof watch("email"));
+  const [valueEmail, setValueEmail] = useState<string>("");
+  const [valuePassword, setValuePassword] = useState<string>("");
 
   return (
-    <SignInPageContainer>
-      <SignInFormContainer>
-        <h1>POPPING</h1>
-        <SignInForm onSubmit={handleSubmit(onSubmit)}>
-          <input
-            type="email"
+    <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
+      <Container>
+        <MemberChevronLeft />
+        <MemberLogoAndTitle>로그인</MemberLogoAndTitle>
+        <MemberAccountForm>
+          <InputRound
+            value={valueEmail}
             placeholder="이메일"
-            {...register("email")}
-            required={true}
+            type="email"
+            maxLength={8}
+            status={null}
+            bottomText={"계정을 잊으셨나요?"}
+            bottomTextClickable={true}
+            bottomTextOnClick={() => {}}
+            onChange={(text: string) => {
+              setValueEmail(text);
+            }}
+            onFocus={() => {}}
+            onBlur={() => {}}
+            disabled={false}
           />
-          <input
-            type="password"
+
+          <InputRound
+            value={valuePassword}
             placeholder="비밀번호"
-            {...register("password")}
-            required={true}
+            type="password"
+            maxLength={8}
+            status={null}
+            bottomText={"비밀번호를 잊으셨나요?"}
+            bottomTextClickable={true}
+            bottomTextOnClick={() => {}}
+            onChange={(text: string) => {
+              setValuePassword(text);
+            }}
+            onFocus={() => {}}
+            onBlur={() => {}}
+            disabled={false}
           />
+        </MemberAccountForm>
 
-          <input
-            type="submit"
-            value="로그인"
-            className={
-              typeof watch("email") === "string" &&
-              typeof watch("password") === "string" &&
-              watch("email").length > 0 &&
-              watch("password").length > 0
-                ? "active-submit"
-                : "submit"
-            }
-          />
-        </SignInForm>
-        <AccountSettingsContainer>
-          <Link href="/member/signup">회원가입</Link>
-          <p>|</p>
-          <Link href="/member/find-email">이메일 찾기</Link>
-          <p>|</p>
-          <Link href="/member/find-password">비밀번호 찾기</Link>
-        </AccountSettingsContainer>
+        <ButtonSingle
+          text="로그인"
+          backgroundColor={
+            valueEmail !== "" && valuePassword !== ""
+              ? COLORS.mainColor
+              : COLORS.greyColor
+          }
+          textColor={COLORS.primaryColor}
+          onClick={() => {}}
+        />
 
-        <SocialLoginContainer>
-          {/*소셜 로그인 확정 후 해당 라이브러리로 작성 */}
-          <div />
-          <div />
-          <div />
-        </SocialLoginContainer>
-      </SignInFormContainer>
-    </SignInPageContainer>
+        <SignupContainer>
+          <SignUpText onClick={() => {}}>계정이 아직 없으신가요?</SignUpText>
+        </SignupContainer>
+
+        <SocialSignInContainer>
+          <SocialSignInButton
+            background={COLORS.kakaoColor}
+            borderColor="transparent"
+          >
+            <Image src={LogoKakao} alt={"카카오 로그인"} />
+          </SocialSignInButton>
+          <SocialSignInButton
+            background={COLORS.whiteColor}
+            borderColor="#747775"
+          >
+            <Image src={LogoGoogle} alt={"구글 로그인"} />
+          </SocialSignInButton>
+        </SocialSignInContainer>
+      </Container>
+    </DefaultLayout>
   );
 };
 
-const SignInPageContainer = styled.div`
+const Container = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 
   width: 100%;
   height: 100%;
 `;
 
-const SignInFormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  & > h1 {
-    font-family: "GmarketSansTTFBold";
-    color: ${COLORS.mainColor};
-  }
+const SignupContainer = styled.div`
+  width: 100%;
+  text-align: center;
+  margin: 12px 0;
 `;
 
-const SignInForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 36px;
-
-  & > input {
-    border-radius: 4px;
-    border: 1px solid ${COLORS.greyColor};
-    padding: 0px 13px;
-    width: calc(350px - 26px);
-    height: 32px;
-  }
-
-  & > input::placeholder {
-    color: ${COLORS.greyColor};
-  }
-
-  .submit {
-    width: 350px;
-    margin-top: 23px;
-    padding: 9px 0px;
-    background-color: ${COLORS.greyColor};
-    color: ${COLORS.primaryColor};
-  }
-
-  .active-submit {
-    background-color: ${COLORS.mainColor};
-    color: ${COLORS.primaryColor};
-    border: none;
-    margin-top: 23px;
-    width: 350px;
-    height: 32px;
-    padding: 9px 0px;
-  }
-`;
-
-const AccountSettingsContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-
+const SignUpText = styled.span`
   color: ${COLORS.greyColor};
-  font-size: 0.5em;
+  text-align: center;
+  font-family: "Pretendard";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 
-  & > a {
-    text-decoration: none;
-    color: ${COLORS.greyColor};
-    cursor: pointer;
-  }
+  cursor: pointer;
 `;
 
-const SocialLoginContainer = styled.div`
+const SocialSignInContainer = styled.div`
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 20px;
+  flex-direction: row;
+  justify-content: center;
 
-  & > div {
-    background-color: ${COLORS.lightGreyColor};
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+  gap: 16px;
+
+  margin-top: 28px;
+`;
+
+const SocialSignInButton = styled.div<{
+  background: string;
+  borderColor: string;
+}>`
+  position: relative;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: ${(props) => props.background};
+  box-shadow: 0 0 0 1px ${(props) => props.borderColor} inset;
+
+  cursor: pointer;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: auto;
+    height: 20px;
   }
 `;
 

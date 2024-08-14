@@ -127,12 +127,12 @@ const SignUpUserPage: React.FC = () => {
           <StepDone
             onNext={() => {
               if (
-                Object.values(state).filter((value) => value !== undefined)
+                Object.values(state).filter((value) => value === undefined)
                   .length > 1
               ) {
                 console.log(
                   `undefined 개수: ${
-                    Object.values(state).filter((value) => value !== undefined)
+                    Object.values(state).filter((value) => value === undefined)
                       .length
                   }`
                 );
