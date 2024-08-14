@@ -13,7 +13,7 @@ import {
   RegexpInputAlphabetAndNumber,
   RegexpInputNumber,
   RegexpPhone,
-} from "@/app/components/regexp";
+} from "@/public/utils/regexp";
 
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";

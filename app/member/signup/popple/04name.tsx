@@ -5,7 +5,7 @@ import {
   MemberSignupForm,
   MemberTitle,
 } from "@/app/components/member/components";
-import { RegexpHangul, RegexpInputHangul } from "@/app/components/regexp";
+import { RegexpHangul, RegexpInputHangul } from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";

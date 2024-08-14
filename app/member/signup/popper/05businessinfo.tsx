@@ -9,7 +9,7 @@ import {
   RegexpHangul,
   RegexpInputNumber,
   RegExpYYYYMMDD,
-} from "@/app/components/regexp";
+} from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";

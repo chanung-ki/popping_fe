@@ -8,7 +8,7 @@ import {
   MemberChevronLeft,
   MemberLogoAndTitle,
 } from "@/app/components/member/components";
-import { RegexpPassword } from "@/app/components/regexp";
+import { RegexpPassword } from "@/public/utils/regexp";
 
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";

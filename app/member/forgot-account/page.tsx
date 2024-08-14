@@ -14,7 +14,7 @@ import {
   RegexpInputNumber,
   RegexpNickname,
   RegexpPhone,
-} from "@/app/components/regexp";
+} from "@/public/utils/regexp";
 import { Taps } from "@/app/components/tabs";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
