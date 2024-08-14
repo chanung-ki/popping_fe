@@ -3,11 +3,11 @@ import React from "react";
 import GlobalStyle from "@/public/styles/global";
 
 export const metadata: Metadata = {
-  title: "Popping!",
+  title: "POPPING",
 };
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
-  <html lang="en">
+  <html lang="ko">
     <GlobalStyle />
     <body>{children}</body>
   </html>

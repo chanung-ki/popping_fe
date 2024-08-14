@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-interface SVGTypes {
+type SVGTypes = {
   color: string;
   width: number | undefined;
   height: number | undefined;
-}
+};
 
 const SVG = styled.svg`
   width: ${(props) => props.width};
@@ -30,18 +30,52 @@ export const IconChevronLeft = ({ color, width, height }: SVGTypes) => {
   );
 };
 
-export const IconHeart = ({ color, width, height }: SVGTypes) => {
-  return (
-    <SVG
-    xmlns="http://www.w3.org/2000/svg"
-    width={width ?? "auto"}
-    height={height ?? "auto"}
-    viewBox="0 0 24 24"
-    fill={color ?? "none"}
-    >
-      <path/>
-      </SVG>
-  )
-};
+export const IconHeart = ({ color, width, height }: SVGTypes) => {};
 
 export const IconBookmark = ({ color, width, height }: SVGTypes) => {};
+
+export const IconRoundTriangle = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      xmlns="http://www.w3.org/2000/svg"
+      width={width ?? "auto"}
+      height={height ?? "auto"}
+      viewBox="0 0 10 8"
+      fill="none"
+    >
+      <path
+        d="M4.13397 0.5C4.51887 -0.166667 5.48113 -0.166666 5.86603 0.5L9.33013 6.5C9.71503 7.16667 9.2339 8 8.4641 8H1.5359C0.766098 8 0.284973 7.16667 0.669873 6.5L4.13397 0.5Z"
+        fill={color}
+      />
+    </SVG>
+  );
+};
+
+export const IconX = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      xmlns="http://www.w3.org/2000/svg"
+      width={width ?? "auto"}
+      height={height ?? "auto"}
+      viewBox="0 0 18 18"
+      fill="none"
+    >
+      <path d="M17 1L1 17L17 1Z" fill={color} />
+      <path
+        d="M17 1L1 17"
+        stroke={color}
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path d="M1 1L17 17L1 1Z" fill={color} />
+      <path
+        d="M1 1L17 17"
+        stroke={color}
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </SVG>
+  );
+};
