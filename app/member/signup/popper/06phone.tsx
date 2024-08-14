@@ -5,10 +5,11 @@ import {
   MemberSignupForm,
   MemberTitle,
 } from "@/app/components/member/components";
-import { RegexpInputNumber, RegexpPhone } from "@/app/components/regexp";
+import { RegexpInputNumber, RegexpPhone } from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { duplicateCheckApi } from "@/public/utils/function";
 
 type StepType = {
   onNext: CallableFunction;
@@ -21,15 +22,26 @@ const StepPhone = ({ onNext }: StepType) => {
   const [statusPhone, setStatusPhone] = useState<boolean | null>(null);
   const [bottomTextPhone, setbottomTextPhone] = useState<string>("");
 
+  // 번호 입력시 실행되는 onBlur 핸들러
+  const handleBrandNameValidation = async () => {
+    if (RegexpPhone.test(valuePhone)) {
+      // 정규식이 유효할 경우 중복 api를 호출.
+      const isExist = await duplicateCheckApi(valuePhone, "phone");
+      setStatusPhone(!isExist);
+      setIsValidPhone(!isExist);
+      if (isExist) {
+        setbottomTextPhone("현재 이용중인 유저가 있는 전화번호 입니다.");
+      } 
+    } else {
+      setStatusPhone(false);
+      setIsValidPhone(false);
+      setbottomTextPhone("전화번호 서식에 맞지 않습니다.");
+    }
+  };
+
   useEffect(() => {
     if (isPhoneFocused === false) {
-      if (RegexpPhone.test(valuePhone)) {
-        setStatusPhone(null);
-        setbottomTextPhone("");
-      } else {
-        setStatusPhone(false);
-        setbottomTextPhone("전화번호 서식에 맞지 않습니다.");
-      }
+      handleBrandNameValidation();
     } else {
       setStatusPhone(null);
       setbottomTextPhone("");
@@ -39,8 +51,6 @@ const StepPhone = ({ onNext }: StepType) => {
   return (
     <Container>
       <MemberTitle>
-        본인인증을 위해
-        <br />
         전화번호를 입력해주세요
       </MemberTitle>
 
