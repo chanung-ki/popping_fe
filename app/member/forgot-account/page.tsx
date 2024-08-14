@@ -10,6 +10,7 @@ import {
 } from "@/app/components/member/components";
 import {
   RegexpHangul,
+  RegexpInputHangul,
   RegexpInputNumber,
   RegexpNickname,
   RegexpPhone,
@@ -63,7 +64,7 @@ const ForgotAccountPage: React.FC = () => {
               bottomTextClickable={false}
               bottomTextOnClick={() => {}}
               onChange={(text: string) => {
-                setValueName(text);
+                setValueName(text.replace(RegexpInputHangul, ""));
                 setIsValidName(RegexpHangul.test(text) && text.length > 1);
               }}
               onFocus={() => {}}

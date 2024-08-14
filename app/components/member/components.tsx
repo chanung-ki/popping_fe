@@ -103,7 +103,6 @@ export const MemberSignupForm = ({ children }: FormType) => {
 const MemberForm = styled.div`
   display: flex;
   flex-direction: column;
-
   gap: 12px;
 
   margin-bottom: 40px;
