@@ -101,6 +101,8 @@ const Container = styled.div`
   height: 100%;
 
   background: ${COLORS.primaryColor};
+
+  margin-bottom: 80px;
 `;
 
 export default LikesPage;

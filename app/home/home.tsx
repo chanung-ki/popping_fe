@@ -121,6 +121,8 @@ const Container = styled.div`
   height: 100%;
 
   background: ${COLORS.primaryColor};
+
+  margin-bottom: 80px;
 `;
 
 const SwiperContainer = styled.div`
@@ -147,7 +149,7 @@ const Sections = styled.div`
   flex-direction: column;
   gap: 36px;
 
-  margin: 36px 0 80px 20px;
+  margin: 36px 0 0 20px;
 `;
 
 const Section = styled.div`
