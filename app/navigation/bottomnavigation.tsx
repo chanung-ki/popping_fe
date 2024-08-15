@@ -103,12 +103,12 @@ export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
   return (
     <Container>
       {/* 홈 */}
-      <Menu>
-        <MenuContainer
-          onClick={() => {
-            onClick(0);
-          }}
-        >
+      <Menu
+        onClick={() => {
+          onClick(0);
+        }}
+      >
+        <MenuContainer>
           <IconHome
             color={
               currentIndex === 0 ? COLORS.secondaryColor : COLORS.greyColor
@@ -118,12 +118,12 @@ export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
         </MenuContainer>
       </Menu>
       {/* 팝업 지도 */}
-      <Menu>
-        <MenuContainer
-          onClick={() => {
-            onClick(1);
-          }}
-        >
+      <Menu
+        onClick={() => {
+          onClick(1);
+        }}
+      >
+        <MenuContainer>
           <IconMap
             color={
               currentIndex === 1 ? COLORS.secondaryColor : COLORS.greyColor
@@ -146,12 +146,12 @@ export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
         </MenuCenterContainer>
       </Menu>
       {/* 관심 */}
-      <Menu>
-        <MenuContainer
-          onClick={() => {
-            onClick(3);
-          }}
-        >
+      <Menu
+        onClick={() => {
+          onClick(3);
+        }}
+      >
+        <MenuContainer>
           <IconLikes
             color={
               currentIndex === 3 ? COLORS.secondaryColor : COLORS.greyColor
@@ -161,12 +161,12 @@ export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
         </MenuContainer>
       </Menu>
       {/* 마이페이지 */}
-      <Menu>
-        <MenuContainer
-          onClick={() => {
-            onClick(4);
-          }}
-        >
+      <Menu
+        onClick={() => {
+          onClick(4);
+        }}
+      >
+        <MenuContainer>
           <IconMypage
             color={
               currentIndex === 4 ? COLORS.secondaryColor : COLORS.greyColor
