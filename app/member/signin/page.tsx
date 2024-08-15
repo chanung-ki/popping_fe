@@ -29,7 +29,7 @@ const SignInPage: React.FC = () => {
             value={valueEmail}
             placeholder="이메일"
             type="email"
-            maxLength={8}
+            maxLength={undefined}
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}

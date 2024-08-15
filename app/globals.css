@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+/* 
+=======
 /*
+>>>>>>> 184e4b1aa266c62ea04385759d8c062a3f30ea0c
 * {
   box-sizing: border-box;
   padding: 0;
@@ -10,6 +14,9 @@ body {
   max-width: 100vw;
   height: 100%;
   overflow-x: hidden;
+<<<<<<< HEAD
+} */
+=======
 }
 
 html,
@@ -148,3 +155,4 @@ table {
   border-spacing: 0;
 }
 */
+>>>>>>> 184e4b1aa266c62ea04385759d8c062a3f30ea0c

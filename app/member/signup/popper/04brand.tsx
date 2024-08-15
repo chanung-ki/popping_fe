@@ -9,6 +9,7 @@ import { RegexpNickname } from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { duplicateCheckApi } from "@/public/utils/function";
 
 type StepType = {
   onNext: CallableFunction;
@@ -21,15 +22,28 @@ const StepBrand = ({ onNext }: StepType) => {
   const [statusBrand, setStatusBrand] = useState<boolean | null>(null);
   const [bottomTextBrand, setbottomTextBrand] = useState<string>("");
 
+  // 브랜드 네임 입력시 실행되는 onBlur 핸들러
+  const handleBrandNameValidation = async () => {
+    if (RegexpNickname.test(valueBrand)) {
+      // 정규식이 유효할 경우 중복 api를 호출.
+      const isExist = await duplicateCheckApi(valueBrand, "nickname");
+      setStatusBrand(!isExist);
+      setIsValidBrand(!isExist);
+      if (isExist) {
+        setbottomTextBrand("현재 사용중인 브랜드 이름 입니다.");
+      } else {
+        setbottomTextBrand("사용가능한 브랜드 이름 입니다.");
+      }
+    } else {
+      setStatusBrand(false);
+      setIsValidBrand(false);
+      setbottomTextBrand("입력할 수 없는 문자가 포함되어 있습니다.");
+    }
+  };
+
   useEffect(() => {
     if (isBrandFocused === false) {
-      if (RegexpNickname.test(valueBrand)) {
-        setStatusBrand(null);
-        setbottomTextBrand("");
-      } else {
-        setStatusBrand(false);
-        setbottomTextBrand("입력할 수 없는 문자가 포함되어 있습니다.");
-      }
+      handleBrandNameValidation();
     } else {
       setStatusBrand(null);
       setbottomTextBrand("");
