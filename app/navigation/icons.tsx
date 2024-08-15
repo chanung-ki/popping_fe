@@ -1,5 +1,7 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
+import Image from "next/image";
+import ImageCenter from "@/public/icons/btmnav_center.png";
 
 type SVGTypes = {
   color: string;
@@ -87,43 +89,19 @@ export const IconMypage = ({ color }: SVGTypes) => {
   );
 };
 
-const IconCenterContainer = styled.div<{
-  width: number | string;
-  height: number | string;
-}>`
+const IconCenterContainer = styled.div<{ width: number; height: number }>`
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
+  border-radius: 20px;
+  overflow: hidden;
+
   cursor: pointer;
-`;
-
-const IconCenterBackground = styled.div`
-  position: relative;
-
-  width: 62px;
-  height: 62px;
-  border-radius: 20px;
-  background: ${COLORS.whiteColor};
-`;
-
-const IconCenterGradient = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-
-  width: 62px;
-  height: 62px;
-  border-radius: 20px;
-  background: linear-gradient(
-    135deg,
-    rgba(250, 141, 14, 0.2) 0.01%,
-    ${COLORS.mainColor} 100%
-  );
 `;
 
 export const IconCenter = () => {
   return (
-    <IconCenterContainer width={"auto"} height={21}>
-      <IconCenterBackground />
-      <IconCenterGradient />
+    <IconCenterContainer width={62} height={62}>
+      <Image src={ImageCenter.src} alt={""} width={62} height={62} />
     </IconCenterContainer>
   );
 };

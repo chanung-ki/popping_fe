@@ -12,6 +12,8 @@ import { RegexpNickname } from "@/public/utils/regexp";
 import { SelectBottomSection, SelectRound } from "../components/select";
 import { useRouter } from "next/navigation";
 
+import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
+
 const SettingProfilePage: React.FC = () => {
   const [valueNickname, setValueNickname] = useState<string>("");
   const [isNicknameFocused, setIsNicknameFocused] = useState<boolean | null>(
@@ -42,7 +44,7 @@ const SettingProfilePage: React.FC = () => {
         </TopNavCenterContainer>
         <TopNavLeftContainer
           onClick={() => {
-            router.back();
+            router.push("/");
           }}
         >
           <IconChevronLeft
@@ -54,7 +56,7 @@ const SettingProfilePage: React.FC = () => {
       </TopNavigation>
       <Container>
         <ProfileContainer>
-          <ProfileImage image={null} />
+          <ProfileImage image={DummyProfile.src} />
           <ButtonSmall
             text={"사진 변경"}
             backgroundColor={COLORS.mainColor}
@@ -187,6 +189,8 @@ const ProfileImage = styled.div<{ image: string | null }>`
 
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
+  background-position: center;
+  background-size: cover;
 `;
 
 const Form = styled.div`

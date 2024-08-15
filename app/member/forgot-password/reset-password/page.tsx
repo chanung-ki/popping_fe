@@ -78,7 +78,7 @@ const ResetPasswordPage: React.FC = () => {
       <Container>
         <div
           onClick={() => {
-            router.back();
+            router.push("/member/forgot-password");
           }}
         >
           <MemberChevronLeft />

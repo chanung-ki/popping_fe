@@ -2,12 +2,14 @@ import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import Image from "next/image";
 import { TopNavigation } from "@/app/navigation/topnavigation";
-
-import LogoLetters from "@/public/images/logo_letters.png";
 import { DefaultLayout, Spacer } from "@/app/components/layout";
 import { IconChevronRight, IconGear } from "@/app/components/icons";
 import { ButtonSmall } from "../components/buttons";
 import { useRouter } from "next/navigation";
+import { LogoLettersMain } from "../components/logo";
+
+import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
+import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 
 const MyPage: React.FC = () => {
   const router = useRouter();
@@ -16,12 +18,7 @@ const MyPage: React.FC = () => {
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
         <TopNavLogoContainer>
-          <TopNavLogo
-            src={LogoLetters}
-            alt={"로고"}
-            width={undefined}
-            height={24}
-          />
+          <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
         <TopNavRightContainer>
           <IconGear color={COLORS.secondaryColor} width={20} height={20} />
@@ -32,7 +29,7 @@ const MyPage: React.FC = () => {
           <MyProfile>
             <MyProfileContainer>
               <ProfileContainer>
-                <ProfileImage image={null} />
+                <ProfileImage image={DummyProfile.src} />
                 <ProfileNickname>{"팝플"}님</ProfileNickname>
                 <Spacer />
                 <ButtonSmall
@@ -87,7 +84,7 @@ const MyPage: React.FC = () => {
           <p>최근 본 팝업스토어</p>
           <ContentsContainer>
             <StoreContainer>
-              <StoreImage image={null} />
+              <StoreImage image={DummyStore.src} />
               <StoreDesc>
                 <p>팝핑스토어</p>
               </StoreDesc>

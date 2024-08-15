@@ -4,9 +4,16 @@ import { styled } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { TopNavigation } from "../navigation/topnavigation";
-import Image from "next/image";
+import { LogoLettersMain } from "../components/logo";
 
-import LogoLetters from "@/public/images/logo_letters.png";
+import DummyBanner from "@/public/images/dummy/dummy_banner.jpg";
+
+import DummyPlace1 from "@/public/images/dummy/dummy_place1.png";
+import DummyPlace2 from "@/public/images/dummy/dummy_place2.png";
+import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
+import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
+
+import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 
 const HomePage = () => {
   const parentDiv = useRef<HTMLDivElement>(null);
@@ -30,12 +37,7 @@ const HomePage = () => {
     <>
       <TopNavigation>
         <TopNavLogoContainer>
-          <TopNavLogo
-            src={LogoLetters}
-            alt={"로고"}
-            width={undefined}
-            height={24}
-          />
+          <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
       </TopNavigation>
       <Container ref={parentDiv}>
@@ -50,10 +52,9 @@ const HomePage = () => {
             loop={true}
           >
             <SwiperSlide>
-              <SlideBannerContainer height={parentWidth}></SlideBannerContainer>
-            </SwiperSlide>
-            <SwiperSlide>
-              <SlideBannerContainer height={parentWidth}></SlideBannerContainer>
+              <SlideBannerContainer height={parentWidth}>
+                <img src={DummyBanner.src} alt={"dummy banner"} />
+              </SlideBannerContainer>
             </SwiperSlide>
           </Swiper>
         </SwiperContainer>
@@ -62,10 +63,10 @@ const HomePage = () => {
           <Section>
             <p>HOT PLACE</p>
             <ContentsContainer>
-              <Place image={null} />
-              <Place image={null} />
-              <Place image={null} />
-              <Place image={null} />
+              <Place image={DummyPlace1.src} />
+              <Place image={DummyPlace2.src} />
+              <Place image={DummyPlace3.src} />
+              <Place image={DummyPlace4.src} />
             </ContentsContainer>
           </Section>
 
@@ -73,7 +74,7 @@ const HomePage = () => {
             <p>최근 본 팝업스토어</p>
             <ContentsContainer>
               <StoreContainer>
-                <StoreImage image={null} />
+                <StoreImage image={DummyStore.src} />
                 <StoreDesc>
                   <p>팝핑 스토어</p>
                   <p>서울 용산구</p>
@@ -86,7 +87,7 @@ const HomePage = () => {
             <p>새로운 팝업스토어</p>
             <ContentsContainer>
               <StoreContainer>
-                <StoreImage image={null} />
+                <StoreImage image={DummyStore.src} />
                 <StoreDesc>
                   <p>팝핑 스토어</p>
                   <p>서울 용산구</p>
@@ -110,11 +111,6 @@ const TopNavLogoContainer = styled.div`
   height: 24px;
 
   cursor: pointer;
-`;
-
-const TopNavLogo = styled(Image)`
-  width: auto;
-  height: 100%;
 `;
 
 const Container = styled.div`

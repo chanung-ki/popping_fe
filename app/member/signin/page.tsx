@@ -72,7 +72,7 @@ const SignInPage: React.FC = () => {
       <Container>
         <div
           onClick={() => {
-            router.back();
+            router.push("/");
           }}
         >
           <MemberChevronLeft />
