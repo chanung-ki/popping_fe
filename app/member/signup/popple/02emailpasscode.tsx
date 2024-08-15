@@ -10,6 +10,7 @@ import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { callEmailAuthApi } from "@/public/utils/function";
+import { Loading } from "@/app/components/loading";
 
 type StepType = {
   onNext: CallableFunction;
@@ -21,6 +22,7 @@ const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
   const [valuePasscode, setValuePasscode] = useState<string>("");
   const [isValidPasscode, setIsValidPasscode] = useState<boolean>(false);
   const [code, setCode] = useState<string>(authCode);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const resendableTime: number = 300;
   const [count, setCount] = useState<number>(resendableTime);
@@ -39,11 +41,13 @@ const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
    const handleBottomTextClick = async () => {
     // isResendable false 일때만 click 되도록 해놓을게연
     if (isResendable){
-       const newAuthCode = await callEmailAuthApi(email);
-       setCode(newAuthCode);
-       setCount(resendableTime);
-       setIsResendable(false);
-       alert('인증 메일이 재전송 되었습니다.')
+      setIsLoading(true);
+      const newAuthCode = await callEmailAuthApi(email);
+      setCode(newAuthCode);
+      setCount(resendableTime);
+      setIsResendable(false);
+      setIsLoading(false);
+      alert('인증 메일이 재전송 되었습니다.')
     }
   }
 
@@ -69,6 +73,7 @@ const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
 
   return (
     <Container>
+      {isLoading && (<Loading/>)}
       <MemberTitle>
         해당 이메일에 수신된
         <br />
