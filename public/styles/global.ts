@@ -2,33 +2,17 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-
-<<<<<<< HEAD
-html, body {
-      margin: 0;
-  max-width: 100vw;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-}
-=======
   html, body {
+        margin: 0;
     max-width: 100vw;
     min-height: 100dvh;
     overflow-x: hidden;
   }
->>>>>>> 184e4b1aa266c62ea04385759d8c062a3f30ea0c
 
   body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
   }
 
   html,
