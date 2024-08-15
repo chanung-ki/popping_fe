@@ -33,7 +33,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  themeColor: "#ffffff",
   manifest: "/favicons/manifest.json",
 };
 
