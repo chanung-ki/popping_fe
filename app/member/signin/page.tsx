@@ -3,7 +3,7 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { COLORS } from "@/public/styles/colors";
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -18,76 +18,43 @@ import axiosInstance from "@/public/network/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/app/redux/reducers/poppingUser";
 import { user } from "@/public/utils/types";
+import { useRouter } from "next/navigation";
 
 const SignInPage: React.FC = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const userData: user = useSelector((state: any) => state.user);
   const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
   const googleClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_GOOGLE_CLIENT_ID;
   const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
+  const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setDomain(window.location.origin);
+    if (userData.isLogin) {
+      router.push("/");
+    } else {
+      if (typeof window !== "undefined") {
+        setDomain(window.location.origin);
+      }
     }
   }, []);
 
-  useEffect(() => {
-    //test code
-    console.log(userData);
-  }, [userData]);
-
   const handleClickLogin = async () => {
-    //test code
-    if (valueEmail !== "" && valuePassword !== "") {
-      alert("로그인 성공");
-      dispatch(
-        setUser({
-          nickname: "정승민",
-          name: "정승민",
-          isMale: true,
-          businessInfo: {
-            businessNumber: "businessNumber",
-            startDate: "startDate",
-            participantName: "participantName",
-          },
-          phoneNumber: "phoneNumber",
-          uuid: "uuid",
-          createdAt: "createdAt",
-          isPopper: true,
-          isSocialuser: true,
-          socialLoginProvider: "socialLoginProvider",
-          gradeInfo: {
-            grade: "grade",
-            minOrderAmount: 0,
-            maxOrderAmount: 0,
-            earnRate: 0,
-            discountRate: 0,
-          },
-          point: 0,
-          savedPopup: [],
-        })
-      );
+    try {
+      const response = await axiosInstance.post("/api/user/signin", {
+        email: valueEmail,
+        password: valuePassword,
+      });
+
+      if (response.status === 200) {
+        const userData: user = response.data.user;
+        dispatch(setUser(userData));
+        router.push("/");
+      }
+    } catch (error) {
+      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
-
-    //real code
-    // try {
-    //   const response = await axiosInstance.post("/api/user/signin", {
-    //     email: valueEmail,
-    //     password: valuePassword,
-    //   });
-
-    //   if (response.status === 200) {
-    //     const userData: user = response.data;
-    //     dispatch(setUser(userData));
-
-    //     window.location.reload();
-    //   }
-    // } catch (error) {
-    //   alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
-    // }
   };
 
   const handleClickSocialLogin = (provider: string) => {
@@ -97,13 +64,19 @@ const SignInPage: React.FC = () => {
     } else if (provider === "google") {
       socialUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${domain}/member/social?provider=google&response_type=code&scope=email`;
     }
-    window.location.href = socialUrl;
+    router.push(socialUrl);
   };
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        <MemberChevronLeft />
+        <div
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <MemberChevronLeft />
+        </div>
         <MemberLogoAndTitle>로그인</MemberLogoAndTitle>
         <MemberAccountForm>
           <InputRound
@@ -114,7 +87,9 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => {
+              router.push("/member/forgot-account");
+            }}
             onChange={(text: string) => {
               setValueEmail(text);
             }}
@@ -131,7 +106,9 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => {
+              router.push("/member/forgot-password");
+            }}
             onChange={(text: string) => {
               setValuePassword(text);
             }}
@@ -141,7 +118,7 @@ const SignInPage: React.FC = () => {
           />
         </MemberAccountForm>
 
-        <ButtonSingle
+        <ButtonLarge
           text="로그인"
           backgroundColor={
             valueEmail !== "" && valuePassword !== ""
@@ -153,7 +130,13 @@ const SignInPage: React.FC = () => {
         />
 
         <SignupContainer>
-          <SignUpText onClick={() => {}}>계정이 아직 없으신가요?</SignUpText>
+          <SignUpText
+            onClick={() => {
+              router.push("/member/signup");
+            }}
+          >
+            계정이 아직 없으신가요?
+          </SignUpText>
         </SignupContainer>
 
         <SocialSignInContainer>

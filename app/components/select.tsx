@@ -9,11 +9,12 @@ type selectTypes = {
   onClick: () => void;
 };
 
-type SelectFlatDivType = {
+type SelectDivType = {
   isFocus: boolean;
 };
 
-const SelectFlatDiv = styled.div<SelectFlatDivType>`
+// 밑줄형
+const SelectUnderlineDiv = styled.div<SelectDivType>`
   position: relative;
   width: 100%;
 
@@ -45,44 +46,115 @@ const SelectFlatDiv = styled.div<SelectFlatDivType>`
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-
-  &:focus {
-    border-bottom: 2px solid ${COLORS.mainColor};
-  }
 `;
 
-const SelectFlatPlaceholder = styled.p`
+const SelectUnderlinePlaceholder = styled.p`
   color: ${COLORS.greyColor};
 `;
 
-const SelectFlatTriangleContainer = styled.div`
+const SelectUnderlineTriangleContainer = styled.div`
   position: absolute;
   top: 50%;
   right: 0;
   transform: translate(0, -50%) rotate(-180deg);
 `;
 
-export const SelectFlat = ({
+export const SelectUnderline = ({
   placeholder,
   value,
   isFocus,
   onClick,
 }: selectTypes) => {
   return (
-    <SelectFlatDiv isFocus={isFocus} onClick={onClick}>
+    <SelectUnderlineDiv isFocus={isFocus} onClick={onClick}>
       {value ? (
         <p>{value}</p>
       ) : (
-        <SelectFlatPlaceholder>{placeholder}</SelectFlatPlaceholder>
+        <SelectUnderlinePlaceholder>{placeholder}</SelectUnderlinePlaceholder>
       )}
-      <SelectFlatTriangleContainer>
+      <SelectUnderlineTriangleContainer>
         <IconRoundTriangle
           color={COLORS.greyColor}
           width={undefined}
           height={10}
         />
-      </SelectFlatTriangleContainer>
-    </SelectFlatDiv>
+      </SelectUnderlineTriangleContainer>
+    </SelectUnderlineDiv>
+  );
+};
+
+// 곡률형
+const SelectRoundDiv = styled.div<SelectDivType>`
+  position: relative;
+  width: 100%;
+
+  padding: 16px 12px;
+
+  color: ${COLORS.secondaryColor};
+  font-family: "Pretendard";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+  box-sizing: border-box;
+
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px
+    ${(props) => (props.isFocus ? COLORS.mainColor : COLORS.greyColor)} inset;
+
+  caret-color: ${COLORS.mainColor};
+
+  transition: box-shadow 0.3s ease;
+
+  cursor: pointer;
+
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+`;
+
+const SelectRoundPlaceholder = styled.p`
+  color: ${COLORS.greyColor};
+`;
+
+const SelectRoundTriangleContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translate(0, -50%) rotate(-180deg);
+`;
+
+export const SelectRound = ({
+  placeholder,
+  value,
+  isFocus,
+  onClick,
+}: selectTypes) => {
+  return (
+    <SelectRoundDiv isFocus={isFocus} onClick={onClick}>
+      {value ? (
+        <p>{value}</p>
+      ) : (
+        <SelectRoundPlaceholder>{placeholder}</SelectRoundPlaceholder>
+      )}
+      <SelectRoundTriangleContainer>
+        <IconRoundTriangle
+          color={COLORS.greyColor}
+          width={undefined}
+          height={10}
+        />
+      </SelectRoundTriangleContainer>
+    </SelectRoundDiv>
   );
 };
 

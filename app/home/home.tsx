@@ -4,9 +4,16 @@ import { styled } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { TopNavigation } from "../navigation/topnavigation";
-import Image from "next/image";
+import { LogoLettersMain } from "../components/logo";
 
-import LogoLetters from "@/public/images/logo_letters.png";
+import DummyBanner from "@/public/images/dummy/dummy_banner.jpg";
+
+import DummyPlace1 from "@/public/images/dummy/dummy_place1.png";
+import DummyPlace2 from "@/public/images/dummy/dummy_place2.png";
+import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
+import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
+
+import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 
 const HomePage = () => {
   const parentDiv = useRef<HTMLDivElement>(null);
@@ -30,12 +37,7 @@ const HomePage = () => {
     <>
       <TopNavigation>
         <TopNavLogoContainer>
-          <TopNavLogo
-            src={LogoLetters}
-            alt={"로고"}
-            width={undefined}
-            height={24}
-          />
+          <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
       </TopNavigation>
       <Container ref={parentDiv}>
@@ -50,21 +52,21 @@ const HomePage = () => {
             loop={true}
           >
             <SwiperSlide>
-              <SlideBannerContainer height={parentWidth}></SlideBannerContainer>
-            </SwiperSlide>
-            <SwiperSlide>
-              <SlideBannerContainer height={parentWidth}></SlideBannerContainer>
+              <SlideBannerContainer height={parentWidth}>
+                <img src={DummyBanner.src} alt={"dummy banner"} />
+              </SlideBannerContainer>
             </SwiperSlide>
           </Swiper>
         </SwiperContainer>
 
         <Sections>
           <Section>
-            <p>HOT PLACE 🥵</p>
+            <p>HOT PLACE</p>
             <ContentsContainer>
-              <Place></Place>
-              <Place></Place>
-              <Place></Place>
+              <Place image={DummyPlace1.src} />
+              <Place image={DummyPlace2.src} />
+              <Place image={DummyPlace3.src} />
+              <Place image={DummyPlace4.src} />
             </ContentsContainer>
           </Section>
 
@@ -72,10 +74,10 @@ const HomePage = () => {
             <p>최근 본 팝업스토어</p>
             <ContentsContainer>
               <StoreContainer>
-                <StoreImage image={null} />
+                <StoreImage image={DummyStore.src} />
                 <StoreDesc>
-                  <p>일릭서 스토어</p>
-                  <p>서울특별시 용산구</p>
+                  <p>팝핑 스토어</p>
+                  <p>서울 용산구</p>
                 </StoreDesc>
               </StoreContainer>
             </ContentsContainer>
@@ -85,10 +87,10 @@ const HomePage = () => {
             <p>새로운 팝업스토어</p>
             <ContentsContainer>
               <StoreContainer>
-                <StoreImage image={""} />
+                <StoreImage image={DummyStore.src} />
                 <StoreDesc>
-                  <p>일릭서 스토어</p>
-                  <p>서울특별시 용산구</p>
+                  <p>팝핑 스토어</p>
+                  <p>서울 용산구</p>
                 </StoreDesc>
               </StoreContainer>
             </ContentsContainer>
@@ -109,11 +111,6 @@ const TopNavLogoContainer = styled.div`
   height: 24px;
 
   cursor: pointer;
-`;
-
-const TopNavLogo = styled(Image)`
-  width: auto;
-  height: 100%;
 `;
 
 const Container = styled.div`
@@ -181,22 +178,18 @@ const ContentsContainer = styled.div`
   }
 `;
 
-const Place = styled.div`
+const Place = styled.div<{ image: string | null }>`
   flex: 0 0 auto;
 
   width: 60px;
   height: 60px;
   border-radius: 8px;
-  background: ${COLORS.greyColor};
+  background: ${(props) =>
+    props.image ? `url(${props.image})` : COLORS.greyColor};
+  background-position: center;
+  background-size: cover;
 
   cursor: pointer;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-position: center;
-    object-fit: cover;
-  }
 `;
 
 const StoreContainer = styled.div`
@@ -213,8 +206,8 @@ const StoreImage = styled.div<{ image: string | null }>`
   border-radius: 8px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
-  object-position: center;
-  object-fit: cover;
+  background-position: center;
+  background-size: cover;
 
   cursor: pointer;
 `;

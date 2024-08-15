@@ -6,6 +6,7 @@ import axiosInstance from "@/public/network/axios";
 import { DefaultLayout } from "@/app/components/layout";
 import Link from "next/link";
 import { IconX } from "@/app/components/icons";
+import { useRouter } from "next/navigation";
 
 //버튼이 아니라 Link로 하는게 나을듯? 
 
@@ -14,20 +15,20 @@ interface BrandsOpening {
   name: string;
   logo: string;
   saved: number;
+  description: string;
+  thumbnail: string;
 }
 
 const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
+  const router = useRouter();
+
   const [openingData, setOpeningData] = useState<BrandsOpening>();
 
   const { storeId } = params;
 
   useEffect(() => {
     BrandDataGetAPI();
-  }, []);
-
-  useEffect(() => {
-    console.log(openingData)
-  }, [openingData])
+  }, [router]);
 
   const BrandDataGetAPI = async () => {
     try {
@@ -43,18 +44,20 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ pa
     }
   }
 
+  if (!openingData) return null;
+
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
 
       <>
-        <OpeningImage src="/images/dummy_sky.jpeg" />
+        <OpeningImage src={openingData.thumbnail} />
         <Link
           href={'/'}
-          style={{ position: 'fixed', top: 20, right: 20, zIndex: 100 }}
+          style={{ position: 'absolute', top: 20, left: 20, zIndex: 100 }}
         >
           <IconX
             color={COLORS.primaryColor}
-            width={16}
+            width={undefined}
             height={16} />
         </Link>
         <Overlay />
@@ -64,13 +67,13 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ pa
         <OpenningPageContentsContainer>
           <BrandInfo>
             <BrandIcon
-              src="/images/popping-orange.png"
+              src={openingData.logo}
               alt="Brand Icon" />
             <BrandName>
               {storeId.toUpperCase()}
             </BrandName>
             <BrandDesc>
-              브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다
+              {openingData.description}
             </BrandDesc>
           </BrandInfo>
           <Button
@@ -100,7 +103,7 @@ const Overlay = styled.div`
   height: 100%;
   background: linear-gradient(
     to top, 
-    rgba(0, 0, 0, 0.8) 0%, 
+    rgba(0, 0, 0, 1) 0%, 
     rgba(0, 0, 0, .1) 100%
   );
   z-index: 1;
@@ -118,6 +121,7 @@ const OpenningPageContainer = styled.div`
 `;
 
 const OpenningPageContentsContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   
@@ -129,6 +133,7 @@ const OpenningPageContentsContainer = styled.div`
 
 
 const BrandInfo = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;

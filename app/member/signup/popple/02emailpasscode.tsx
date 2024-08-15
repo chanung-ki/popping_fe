@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
 import {
@@ -30,26 +30,26 @@ const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
 
   // 다음 버튼 클릭 핸들러
   const handleClickNext = () => {
-    if (valuePasscode == code && isValidPasscode){
+    if (valuePasscode == code && isValidPasscode) {
       onNext(valuePasscode);
     } else {
-      alert('인증번호가 일치하지 않습니다.')
+      alert("인증번호가 일치하지 않습니다.");
     }
   };
 
-   // 이메일 재전송 핸들러
-   const handleBottomTextClick = async () => {
+  // 이메일 재전송 핸들러
+  const handleBottomTextClick = async () => {
     // isResendable false 일때만 click 되도록 해놓을게연
-    if (isResendable){
+    if (isResendable) {
       setIsLoading(true);
       const newAuthCode = await callEmailAuthApi(email);
       setCode(newAuthCode);
       setCount(resendableTime);
       setIsResendable(false);
       setIsLoading(false);
-      alert('인증 메일이 재전송 되었습니다.')
+      alert("인증 메일이 재전송 되었습니다.");
     }
-  }
+  };
 
   useEffect(() => {
     if (isResendable === false) {
@@ -73,7 +73,7 @@ const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
 
   return (
     <Container>
-      {isLoading && (<Loading/>)}
+      {isLoading && <Loading />}
       <MemberTitle>
         해당 이메일에 수신된
         <br />
@@ -108,7 +108,7 @@ const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="다음"
         backgroundColor={isValidPasscode ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}

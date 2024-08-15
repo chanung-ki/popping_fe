@@ -6,9 +6,9 @@ import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
 import { Follow, KRWLocaleString } from "@/public/utils/function";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-
+import styled, { keyframes } from 'styled-components';
 interface BrandData {
   id: number;
   logo: string;
@@ -32,6 +32,7 @@ interface ProductData {
   saved: number;
   view: number;
   isSaved: boolean;
+  thumbnail: string;
 }
 
 interface Option {
@@ -46,14 +47,38 @@ interface Size {
   sleeve: number
 }
 
+const fadeInOut = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+`;
 
 
 const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: number } }> = ({ params }) => {
+  const router = useRouter();
+
   const { storeId, product } = params;
 
   const [productData, setProductData] = useState<ProductData>();
   const [saveState, setSaveState] = useState<boolean>();
   const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
+  const [allOptionsSelected, setAllOptionsSelected] = useState<boolean>(false);
+  const [showAnimation, setShowAnimation] = useState<boolean>(true);
+
+
 
   useEffect(() => {
     if (storeId && product) {
@@ -62,6 +87,34 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
   }, [storeId, product])
 
 
+  useEffect(() => {
+    const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+
+    // `hasSeenAnimation`이 null이나 'false'일 경우 애니메이션을 보여줍니다.
+    if (hasSeenAnimation === null || hasSeenAnimation === 'false') {
+      setShowAnimation(true);
+
+      // 애니메이션이 끝난 후 sessionStorage에 true를 저장합니다.
+      const timer = setTimeout(() => {
+        setShowAnimation(false);
+        sessionStorage.setItem('hasSeenAnimation', 'true');
+      }, 4000);
+
+      const hideOnTouch = () => {
+        setShowAnimation(false);
+        sessionStorage.setItem('hasSeenAnimation', 'true');
+      };
+
+      window.addEventListener('touchstart', hideOnTouch);
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('touchstart', hideOnTouch);
+      };
+    } else {
+      setShowAnimation(false);
+    }
+  }, []); // 빈 배열을 의존성으로 설정하여 최초 렌더링 시 한 번만 실행되도록 함
   const ProductDataGetAPI = async () => {
     try {
       const response = await axiosInstance.get(`/api/popup/product/data/${storeId}/${product}`)
@@ -79,28 +132,40 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
     }
   }
 
+  if (!productData) return null;
+
   const handleBookmarkClick = async (id: number) => {
-    const newSavedState = !saveState;
-    if (productData) {
+    setSaveState(!saveState);
+    if (saveState) {
       setProductData({
         ...productData,
-        isSaved: newSavedState
+        saved: productData.saved - 1
+      });
+    } else {
+      setProductData({
+        ...productData,
+        saved: productData.saved + 1
       });
     }
     Follow("Product", id);
   };
 
-
   const handleOptionChange = (optionName: string, selectedOption: string) => {
-    setSelectedOptions({
+    const updatedOptions = {
       ...selectedOptions,
       [optionName]: selectedOption,
-    });
+    };
+
+    setSelectedOptions(updatedOptions);
+
+    // 모든 옵션이 선택되었는지 확인
+    const allSelected = productData.option.every(
+      (option) => updatedOptions[option.name]
+    );
+    setAllOptionsSelected(allSelected);
   };
 
 
-
-  if (!productData) return null;
 
   const sizeOptions = productData?.option.find(option => option.name.toLowerCase() === "size");
 
@@ -116,13 +181,13 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
       <ProductContainer>
         <Product>
           <ProductThumbnailImg
-            src="/images/gray.png" />
+            src={productData.thumbnail} />
           <ProductBookmark onClick={(event) => {
             event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
             handleBookmarkClick(productData.id);
           }} >
             <IconBookmark
-              color={productData.isSaved ? COLORS.mainColor : COLORS.greyColor}
+              color={saveState ? COLORS.mainColor : COLORS.greyColor}
               width={20}
               height={27} />
           </ProductBookmark>
@@ -191,19 +256,19 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                   <SizeGuideTable>
                     <thead>
                       <tr>
-                        <th>cm</th>
-                        <th>총장</th>
-                        <th>가슴단면</th>
-                        <th>소매길이</th>
+                        <th></th>
+                        {Object.keys(sizeOptions.option[0] || {}).map((key, index) => key !== 'name' && (
+                          <th key={index}>{key}</th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>
                       {sizeOptions.option.map((item, index) => (
                         <tr key={index}>
                           <td>{item.name}</td>
-                          <td>{item.length}</td>
-                          <td>{item.chest}</td>
-                          <td>{item.sleeve}</td>
+                          {Object.keys(sizeOptions.option[0] || {}).map((key, keyIndex) => key !== 'name' && (
+                            <td key={keyIndex}>{(item as any)[key]}</td>
+                          ))}
                         </tr>
                       ))}
                     </tbody>
@@ -213,9 +278,21 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
             )}
           </ProductOptionContainer>
         </ProductInfo>
-
-
+        {allOptionsSelected && (
+          <CartAddDiv>
+            <span>
+              장바구니 담기
+            </span>
+          </CartAddDiv>
+        )}
       </ProductContainer>
+
+      {showAnimation && (
+        <AnimationContainer>
+          상품의 옵션을 선택해주세요.
+        </AnimationContainer>
+      )}
+
     </DefaultLayout >
   );
 };
@@ -230,7 +307,7 @@ const ChevronLeft = styled(Link)`
   border-radius: 8px;
   z-index: 1;
 
-  margin: 16px;
+  margin: 20px;
 `;
 
 const ProductContainer = styled.div`
@@ -238,6 +315,8 @@ const ProductContainer = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  align-items: center;
 
   background-color: ${COLORS.primaryColor};
 
@@ -255,6 +334,7 @@ const Product = styled.div`
 `;
 
 const ProductThumbnailImg = styled.img`
+  max-width: 100%;
   border-radius: 8px;
 `
 
@@ -424,5 +504,61 @@ const SizeGuideTable = styled.table`
     background-color: white;
   }
 `;
+
+
+const CartAddDiv = styled.div`
+  width: calc(100% - 40px);
+  height: 48px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  
+  position: fixed;
+  z-index: 100;
+  bottom: 32px;
+  
+  background-color: ${COLORS.mainColor};
+  
+  border-radius: 8px;
+
+  & > span {
+    color: ${COLORS.primaryColor};
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 1);
+  }
+`
+
+const AnimationContainer = styled.div`
+
+  position: fixed;
+  top: 10px;
+  width: 60%;
+  /* left, right는 해당 요소의 위치 시작점을 결정한다. 그런데, 이때, margin의 양 값을 auto로 줌으로써 마진을 주어 해당 요소의 양 끝 위치를 각각 0으로 만들어준다. */
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  /* 다른 것들 */
+  display: flex;
+  
+  align-items: center;
+  justify-content: center;
+
+
+  background-color: rgb(250, 141, 14, .8);
+  padding: 16px 24px;
+  border-radius: 16px;
+  color: ${COLORS.primaryColor};
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 200;
+  animation: ${fadeInOut} 4s ease-in-out forwards; /* 애니메이션을 부드럽게 적용 */
+`;
+
+
+
+
 
 export default OnlinePopupProductPage;
