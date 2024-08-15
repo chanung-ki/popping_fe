@@ -21,8 +21,7 @@ const Stores = ({ values }: storesType) => {
     <Container>
       {values.map((value: storesTypes, index: number) => {
         return (
-          <Store
-            key={index}>
+          <Store key={index}>
             <StoreImage image={value.image}>
               <IsLiked>
                 <IconHeart
@@ -123,7 +122,7 @@ const StoreInfo = styled.div`
   p {
     color: ${COLORS.greyColor};
     font-family: "Pretendard";
-    font-size: 8px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;

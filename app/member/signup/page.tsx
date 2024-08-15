@@ -9,14 +9,22 @@ import {
 import { COLORS } from "@/public/styles/colors";
 import { useState } from "react";
 import { styled } from "styled-components";
+import { useRouter } from "next/navigation";
 
 const SignUpPage: React.FC = () => {
   const [isPopper, setIsPopper] = useState<boolean | null>(null);
+  const router = useRouter();
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        <MemberChevronLeft />
+        <div
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <MemberChevronLeft />
+        </div>
         <MemberTitle>
           팝핑에 오신 것을 환영해요
           <br />
@@ -49,8 +57,16 @@ const SignUpPage: React.FC = () => {
             isPopper !== null ? COLORS.mainColor : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
-          onClick={() => {}}
-        />{" "}
+          onClick={() => {
+            if (isPopper != null) {
+              if (isPopper) {
+                router.push("/member/signup/popper");
+              } else {
+                router.push("/member/signup/popple");
+              }
+            }
+          }}
+        />
       </Container>
     </DefaultLayout>
   );
