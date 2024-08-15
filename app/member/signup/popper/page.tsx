@@ -152,19 +152,7 @@ const SignUpUserPage: React.FC = () => {
         <Funnel.Step name="Done">
           <StepDone
             onNext={() => {
-              // if (
-              //   Object.values(state).filter((value) => value === undefined)
-              //     .length > 1
-              // ) {
-              //   console.log(
-              //     `undefined 개수: ${
-              //       Object.values(state).filter((value) => value === undefined)
-              //         .length
-              //     }`
-              //   );
-              //   console.log("오류 발생");
-              // }
-              console.log(state);
+              window.location.href = '/member/signin';
             }}
           />
         </Funnel.Step>

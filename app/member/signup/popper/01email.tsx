@@ -30,7 +30,7 @@ const StepEmail = ({ onNext }: StepType) => {
       setStatusEmail(!isExist);
       setIsValidEmail(!isExist);
       if (isExist) {
-        setbottomTextEmail("현재 사용중인 이메일 입니다.");
+        setbottomTextEmail("이미 사용중인 이메일 입니다.");
       } else {
         setbottomTextEmail("사용가능한 이메일 입니다.");
       }
