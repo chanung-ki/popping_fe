@@ -24,7 +24,7 @@ interface PopupStoreData {
   endDate: string;
   openTime: string[];
   event: string[];
-  image:any;
+  image: any;
 }
 
 interface PlaceData {
@@ -41,7 +41,7 @@ interface PlaceData {
 }
 
 const MapTestPage: React.FC = () => {
-  
+
   const [selectedStore, setSelectedStore] = useState<PopupStoreData>();
   const [userLocation, setUserLocation] = useState<number[]>();
   const [isExpanded, setIsExpanded] = useState(false); // 접었다 펴는 상태 관리
@@ -54,18 +54,18 @@ const MapTestPage: React.FC = () => {
   const [coffeePosition, setCoffeePosition] = useState<any[]>();
   const [foodPosition, setFoodPosition] = useState<any[]>();
 
-  const popupStoreAPI = async () =>{
+  const popupStoreAPI = async () => {
 
     await axiosInstance.get(`/api/maps/stores`)
-    .then((response:any) => {
-      setPopupStore(response.data.popupStores)
-    })
-    .catch((error:any) => {
-      console.error('There was an error making the GET request!', error);
-    });
+      .then((response: any) => {
+        setPopupStore(response.data.popupStores)
+      })
+      .catch((error: any) => {
+        console.error('There was an error making the GET request!', error);
+      });
   }
 
-  const placeAPI = async (store:PopupStoreData) =>{
+  const placeAPI = async (store: PopupStoreData) => {
 
     await axiosInstance.get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
     .then((response:any) => {
@@ -89,13 +89,13 @@ const MapTestPage: React.FC = () => {
     });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getUserLocation();
     popupStoreAPI();
-  },[]);
+  }, []);
 
   // 현재 위치 가져오기
-  const getUserLocation = () =>{
+  const getUserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -117,13 +117,13 @@ const MapTestPage: React.FC = () => {
   };
 
   // 현재 위치 및 카카오맵 생성
-  useEffect(()=>{
-    if (userLocation){
+  useEffect(() => {
+    if (userLocation) {
       const script = document.createElement('script');
       script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&autoload=false';
       script.async = true;
       document.body.appendChild(script);
-      
+
       script.onload = () => {
         const kakao = (window as any).kakao;
         setKakao(kakao)
@@ -131,7 +131,7 @@ const MapTestPage: React.FC = () => {
 
           kakao.maps.load(() => {
             const container = document.getElementById('map');
-            
+
             // map 로드시 중심위치
             const options = {
               center: new kakao.maps.LatLng(userLocation[0], userLocation[1]),
@@ -140,25 +140,25 @@ const MapTestPage: React.FC = () => {
             // map생성
             const mapInstance = new kakao.maps.Map(container, options);
             setMapInstance(mapInstance)
-            
+
             // 중심 마커 생성
             const marker = new kakao.maps.Marker({
               position: new kakao.maps.LatLng(userLocation[0], userLocation[1]),
             });
             marker.setMap(mapInstance);
           });
-        }else {
+        } else {
           console.error('Kakao Maps API failed to load');
         }
       };
     }
-  },[userLocation]);
+  }, [userLocation]);
 
   // 가져온 팝업리스트의 위치값과 인포를 지도에 마커로 표시
-  useEffect(()=>{
+  useEffect(() => {
     if (popupCoorData && mapInstance) {
-      
-      const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+
+      const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
       popupCoorData.forEach(coordata => {
 
         var imageSize = new kakao.maps.Size(24, 35);
@@ -167,28 +167,28 @@ const MapTestPage: React.FC = () => {
         var marker = new kakao.maps.Marker({
           map: mapInstance,
           position: coordata.latlng,
-          image : markerImage
+          image: markerImage
         });
-  
+
         var infowindow = new kakao.maps.InfoWindow({
           content: coordata.content
         });
-        
-        (function(marker, infowindow) {
+
+        (function (marker, infowindow) {
           // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
-          kakao.maps.event.addListener(marker, 'mouseover', function() {
+          kakao.maps.event.addListener(marker, 'mouseover', function () {
             infowindow.open(mapInstance, marker);
           });
-  
+
           // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
-          kakao.maps.event.addListener(marker, 'mouseout', function() {
+          kakao.maps.event.addListener(marker, 'mouseout', function () {
             infowindow.close();
           });
         })(marker, infowindow);
 
       });
     }
-  },[popupCoorData])
+  }, [popupCoorData])
 
   // 가져온 popupStore list의 위치데이터
   useEffect(() => {
@@ -207,7 +207,7 @@ const MapTestPage: React.FC = () => {
   }, [popupStore]);
 
   // 날짜를 YYYY.MM.DD 형식으로 포맷하는 함수
-  const formatDate = (dateString:string) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -225,9 +225,9 @@ const MapTestPage: React.FC = () => {
 
     // 마커를 생성합니다
     const marker = new kakao.maps.Marker({
-        position: markerPosition,
-        image: markerImage,
-        map: mapInstance // 맵을 설정하여 바로 표시
+      position: markerPosition,
+      image: markerImage,
+      map: mapInstance // 맵을 설정하여 바로 표시
     });
 
     // const iwContent = `
@@ -256,10 +256,10 @@ const MapTestPage: React.FC = () => {
         ${store.title} <a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
       </div>
     `;
-            
+
     // 인포윈도우를 생성합니다
     const infowindow = new kakao.maps.InfoWindow({
-        content: iwContent,
+      content: iwContent,
     });
 
     // const infowindow = new kakao.maps.CustomOverlay({
@@ -284,39 +284,39 @@ const MapTestPage: React.FC = () => {
   //   placeAPI()
   // },[selectedStore])
 
-  function createMarkerImage(src:any, size:any, options:any) {
+  function createMarkerImage(src: any, size: any, options: any) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
-    return markerImage;            
+    return markerImage;
   }
 
   // 좌표와 마커이미지를 받아 마커를 생성하여 리턴하는 함수입니다
-  function createMarker(position:any, image:any) {
+  function createMarker(position: any, image: any) {
     var marker = new kakao.maps.Marker({
-        position: position,
-        image: image
+      position: position,
+      image: image
     });
-    
-    return marker;  
-  }   
 
-  const setCoffeeMarkers = (mapInstance:any) =>{
+    return marker;
+  }
+
+  const setCoffeeMarkers = (mapInstance: any) => {
     var markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png';
     var coffeeMarkers: any[] = [];
     coffeePosition!.map((position)=>{
       var imageSize = new kakao.maps.Size(22, 26)
-      var imageOptions = {  
-            spriteOrigin: new kakao.maps.Point(10, 0),    
-            spriteSize: new kakao.maps.Size(36, 98)  
-        }; 
+      var imageOptions = {
+        spriteOrigin: new kakao.maps.Point(10, 0),
+        spriteSize: new kakao.maps.Size(36, 98)
+      };
 
-      var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),    
-          marker = createMarker(position, markerImage);  
-      
+      var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),
+        marker = createMarker(position, markerImage);
+
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
       coffeeMarkers.push(marker);
     })
 
-    coffeeMarkers.map((item)=>{
+    coffeeMarkers.map((item) => {
 
       item.setMap(mapInstance);
     })
@@ -327,26 +327,27 @@ const MapTestPage: React.FC = () => {
     var storeMarkers: any[] = [];
 
     foodPosition!.map((position)=>{
-      var imageSize = new kakao.maps.Size(22, 26)
-      var imageOptions = {  
-            spriteOrigin: new kakao.maps.Point(10, 0),    
-            spriteSize: new kakao.maps.Size(36, 98)  
-        }; 
 
-      var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),    
-          marker = createMarker(position, markerImage);  
-      
+      var imageSize = new kakao.maps.Size(22, 26)
+      var imageOptions = {
+        spriteOrigin: new kakao.maps.Point(10, 0),
+        spriteSize: new kakao.maps.Size(36, 98)
+      };
+
+      var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),
+        marker = createMarker(position, markerImage);
+
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
       storeMarkers.push(marker);
     })
 
-    storeMarkers.map((item)=>{
+    storeMarkers.map((item) => {
 
       item.setMap(mapInstance);
     })
   }
 
-  const changeMarker = (type:string) => {
+  const changeMarker = (type: string) => {
     setSelectedCategory(type);
 
     if (type === 'coffee') {
@@ -397,8 +398,8 @@ const MapTestPage: React.FC = () => {
               <img src={`data:image/jpeg;base64,${selectedStore.image}`} alt={selectedStore.title} style={{ maxWidth: '100%', height: 'auto' }} />
             </div>
           ) : (
-            popupStore && popupStore.map((store:PopupStoreData) => (
-              <StoreContainer onClick={()=>{SelectPopup(store)}} key={store.id}>
+            popupStore && popupStore.map((store: PopupStoreData) => (
+              <StoreContainer onClick={() => { SelectPopup(store) }} key={store.id}>
                 <ImgContainer>
                   <img src={`data:image/jpeg;base64,${store.image}`} alt={store.title} />
                 </ImgContainer>
@@ -527,10 +528,10 @@ const ToggleButton = styled.button`
 
 const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
   overflow: hidden;
-  height: ${( {isExpanded} ) => (isExpanded ? '1000px' : '0px')};
+  height: ${({ isExpanded }) => (isExpanded ? '1000px' : '0px')};
   transition: height 0.3s ease;
   background-color: #ffffff;
-  padding: ${( {isExpanded} ) => (isExpanded ? '10px' :'0px')};
+  padding: ${({ isExpanded }) => (isExpanded ? '10px' : '0px')};
   overflow-y: auto;
 `;
 

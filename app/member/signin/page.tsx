@@ -15,64 +15,52 @@ import Image from "next/image";
 import LogoKakao from "@/public/images/social/logo_kakao.png";
 import LogoGoogle from "@/public/images/social/logo_google.png";
 import axiosInstance from "@/public/network/axios";
-// import { useDispatch } from 'react-redux';
-// import { setUser } from '@/app/redux/reducers/user';
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "@/app/redux/reducers/user";
+import { user } from "@/public/utils/types";
 
 const SignInPage: React.FC = () => {
-  // const dispatch = useDispatch();
-  const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID
-  const [domain, setDomain] = useState<string>('');
+  const dispatch = useDispatch();
+  const userData = useSelector((state: any) => state.user);
+  const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
+  const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
 
-  useEffect(()=>{
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       setDomain(window.location.origin);
     }
-  },[])
+  }, [])
 
-  const handleClickLogin = async() => {
+  const handleClickLogin = async () => {
     try {
       const response = await axiosInstance.post(
         "/api/user/signin",
         {
           email: valueEmail,
           password: valuePassword
-        } 
+        }
       );
       if (response.status === 200) {
-        const userData = response.data; 
+        const userData = response.data;
 
-        // 유저 정보를 Redux에 저장 => 승민이 확인 부탁
-        // dispatch(
-        //   setUser({
-        //     nickname: userData.nickname,
-        //     name: userData.name,
-        //     isMale: userData.isMale,
-        //     businessInfo: userData.businessInfo || {}, // 정보가 없으면 빈 객체로 설정
-        //     phoneNumber: userData.phoneNumber,
-        //     uuid: userData.uuid,
-        //     createdAt: userData.createdAt,
-        //     isPopper: userData.isPopper,
-        //     isSocialuser: userData.isSocialuser,
-        //     socialLoginProvider: userData.socialLoginProvider,
-        //     gradeInfo: userData.gradeInfo,
-        //     point: userData.point,
-        //     savedPopup: userData.savedPopup,
-        //   })
-        // );
+        if (response.status === 200) {
+          const userData: user = response.data;
+          dispatch(setUser(userData));
 
-        window.location.reload();
+          window.location.reload();
+        }
       }
     } catch (error) {
-      alert('이메일 혹은 비밀번호가 일치하지 않습니다.')
+      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
   };
 
   const handleClickSocialLogin = (provider: string) => {
-    let socialUrl = ''
-    if (provider === 'kakao') {
-      socialUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${domain}/member/social?provider=kakao&response_type=code`
+    let socialUrl = "";
+    if (provider === "kakao") {
+      socialUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${domain}/member/social?provider=kakao&response_type=code`;
     }
     window.location.href = socialUrl;
   };
@@ -91,12 +79,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -108,12 +96,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>
@@ -130,14 +118,14 @@ const SignInPage: React.FC = () => {
         />
 
         <SignupContainer>
-          <SignUpText onClick={() => {}}>계정이 아직 없으신가요?</SignUpText>
+          <SignUpText onClick={() => { }}>계정이 아직 없으신가요?</SignUpText>
         </SignupContainer>
 
         <SocialSignInContainer>
           <SocialSignInButton
             background={COLORS.kakaoColor}
             borderColor="transparent"
-            onClick={() => handleClickSocialLogin('kakao')}
+            onClick={() => handleClickSocialLogin("kakao")}
           >
             <Image src={LogoKakao} alt={"카카오 로그인"} />
           </SocialSignInButton>

@@ -19,9 +19,10 @@ type storesType = {
 const Stores = ({ values }: storesType) => {
   return (
     <Container>
-      {values.map((value: storesTypes) => {
+      {values.map((value: storesTypes, index: number) => {
         return (
-          <Store>
+          <Store
+            key={index}>
             <StoreImage image={value.image}>
               <IsLiked>
                 <IconHeart
