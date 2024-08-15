@@ -3,7 +3,7 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { COLORS } from "@/public/styles/colors";
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -20,13 +20,15 @@ import { setUser } from "@/app/redux/reducers/poppingUser";
 import { user } from "@/public/utils/types";
 
 const SignInPage: React.FC = () => {
+
   const dispatch = useDispatch();
-  const userData: user = useSelector((state: any) => state.user);
   const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
   const googleClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_GOOGLE_CLIENT_ID;
   const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
+  const userData: user = useSelector((state: any) => state.poppingUser.user);
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -34,45 +36,7 @@ const SignInPage: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    //test code
-    console.log(userData);
-  }, [userData]);
-
   const handleClickLogin = async () => {
-    //test code
-    // if (valueEmail !== "" && valuePassword !== "") {
-    //   alert("로그인 성공");
-    //   dispatch(
-    //     setUser({
-    //       nickname: "정승민",
-    //       name: "정승민",
-    //       isMale: true,
-    //       businessInfo: {
-    //         businessNumber: "businessNumber",
-    //         startDate: "startDate",
-    //         participantName: "participantName",
-    //       },
-    //       phoneNumber: "phoneNumber",
-    //       uuid: "uuid",
-    //       createdAt: "createdAt",
-    //       isPopper: true,
-    //       isSocialuser: true,
-    //       socialLoginProvider: "socialLoginProvider",
-    //       gradeInfo: {
-    //         grade: "grade",
-    //         minOrderAmount: 0,
-    //         maxOrderAmount: 0,
-    //         earnRate: 0,
-    //         discountRate: 0,
-    //       },
-    //       point: 0,
-    //       savedPopup: [],
-    //     })
-    //   );
-    // }
-
-    //real code
     try {
       const response = await axiosInstance.post("/api/user/signin", {
         email: valueEmail,
@@ -80,16 +44,15 @@ const SignInPage: React.FC = () => {
       });
 
       if (response.status === 200) {
-        const userData: user = response.data;
+        const userData: user = response.data.user;
         dispatch(setUser(userData));
-
         window.location.reload();
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
   };
-
+  
   const handleClickSocialLogin = (provider: string) => {
     let socialUrl = "";
     if (provider === "kakao") {
@@ -141,7 +104,7 @@ const SignInPage: React.FC = () => {
           />
         </MemberAccountForm>
 
-        <ButtonSingle
+        <ButtonLarge
           text="로그인"
           backgroundColor={
             valueEmail !== "" && valuePassword !== ""

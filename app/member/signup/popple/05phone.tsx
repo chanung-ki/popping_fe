@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
 import {
@@ -31,7 +31,7 @@ const StepPhone = ({ onNext }: StepType) => {
       setIsValidPhone(!isExist);
       if (isExist) {
         setbottomTextPhone("이미 이용중인 유저가 있는 전화번호 입니다.");
-      } 
+      }
     } else {
       setStatusPhone(false);
       setIsValidPhone(false);
@@ -50,9 +50,7 @@ const StepPhone = ({ onNext }: StepType) => {
 
   return (
     <Container>
-      <MemberTitle>
-        전화번호를 입력해주세요
-      </MemberTitle>
+      <MemberTitle>전화번호를 입력해주세요</MemberTitle>
 
       <MemberSignupForm>
         <InputUnderline
@@ -80,7 +78,7 @@ const StepPhone = ({ onNext }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="다음"
         backgroundColor={isValidPhone ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}

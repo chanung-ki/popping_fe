@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BottomNavigation } from "./navigation/bottomnavigation";
 import { DefaultLayout } from "./components/layout";
 import HomePage from "./home/home";
-import MyPage from "./member/mypage/mypage";
+import MyPage from "./mypage/mypage";
 import LikesPage from "./likes/likes";
 
 const MainPage = () => {
@@ -19,6 +19,7 @@ const MainPage = () => {
         onClick={(index: number) => {
           setPageIndex(index);
         }}
+        currentIndex={pageIndex}
       />
     </DefaultLayout>
   );

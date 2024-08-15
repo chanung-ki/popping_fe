@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -122,7 +122,7 @@ const ResetPasswordPage: React.FC = () => {
           />
         </MemberAccountForm>
 
-        <ButtonSingle
+        <ButtonLarge
           text="다음"
           backgroundColor={
             isValidPassword && isSame ? COLORS.mainColor : COLORS.greyColor

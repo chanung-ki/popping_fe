@@ -6,6 +6,7 @@ import { TopNavigation } from "@/app/navigation/topnavigation";
 import LogoLetters from "@/public/images/logo_letters.png";
 import { DefaultLayout, Spacer } from "@/app/components/layout";
 import { IconChevronRight, IconGear } from "@/app/components/icons";
+import { ButtonSmall } from "../components/buttons";
 
 const MyPage: React.FC = () => {
   return (
@@ -31,9 +32,12 @@ const MyPage: React.FC = () => {
                 <ProfileImage image={null} />
                 <ProfileNickname>{"팝플"}님</ProfileNickname>
                 <Spacer />
-                <ProfileSettingButton>
-                  <ProfileSettingText>프로필 설정</ProfileSettingText>
-                </ProfileSettingButton>
+                <ButtonSmall
+                  text={"프로필 설정"}
+                  backgroundColor={COLORS.mainColor}
+                  textColor={COLORS.whiteColor}
+                  onClick={() => {}}
+                />
               </ProfileContainer>
               <GradeContainer>
                 <CurrentGradeContainer>
@@ -80,7 +84,7 @@ const MyPage: React.FC = () => {
             <StoreContainer>
               <StoreImage image={null} />
               <StoreDesc>
-                <p>일릭서 스토어</p>
+                <p>팝핑스토어</p>
               </StoreDesc>
             </StoreContainer>
           </ContentsContainer>
@@ -178,6 +182,8 @@ const ProfileImage = styled.div<{ image: string | null }>`
 
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
+  background-position: center;
+  background-size: cover;
 `;
 
 const ProfileNickname = styled.p`
@@ -186,25 +192,6 @@ const ProfileNickname = styled.p`
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
-  line-height: normal;
-`;
-
-const ProfileSettingButton = styled.div`
-  border-radius: 4px;
-  background: ${COLORS.mainColor};
-
-  cursor: pointer;
-`;
-
-const ProfileSettingText = styled.p`
-  padding: 8px 12px;
-
-  color: ${COLORS.primaryColor};
-  text-align: center;
-  font-family: "Pretendard";
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
   line-height: normal;
 `;
 
@@ -376,8 +363,8 @@ const StoreImage = styled.div<{ image: string | null }>`
   border-radius: 8px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
-  object-position: center;
-  object-fit: cover;
+  background-position: center;
+  background-size: cover;
 
   cursor: pointer;
 `;
@@ -411,6 +398,8 @@ const MenuContainer = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+
+    cursor: pointer;
   }
 `;
 

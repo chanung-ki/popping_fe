@@ -60,11 +60,12 @@ const HomePage = () => {
 
         <Sections>
           <Section>
-            <p>HOT PLACE 🥵</p>
+            <p>HOT PLACE</p>
             <ContentsContainer>
-              <Place></Place>
-              <Place></Place>
-              <Place></Place>
+              <Place image={null} />
+              <Place image={null} />
+              <Place image={null} />
+              <Place image={null} />
             </ContentsContainer>
           </Section>
 
@@ -74,8 +75,8 @@ const HomePage = () => {
               <StoreContainer>
                 <StoreImage image={null} />
                 <StoreDesc>
-                  <p>일릭서 스토어</p>
-                  <p>서울특별시 용산구</p>
+                  <p>팝핑 스토어</p>
+                  <p>서울 용산구</p>
                 </StoreDesc>
               </StoreContainer>
             </ContentsContainer>
@@ -85,10 +86,10 @@ const HomePage = () => {
             <p>새로운 팝업스토어</p>
             <ContentsContainer>
               <StoreContainer>
-                <StoreImage image={""} />
+                <StoreImage image={null} />
                 <StoreDesc>
-                  <p>일릭서 스토어</p>
-                  <p>서울특별시 용산구</p>
+                  <p>팝핑 스토어</p>
+                  <p>서울 용산구</p>
                 </StoreDesc>
               </StoreContainer>
             </ContentsContainer>
@@ -181,22 +182,18 @@ const ContentsContainer = styled.div`
   }
 `;
 
-const Place = styled.div`
+const Place = styled.div<{ image: string | null }>`
   flex: 0 0 auto;
 
   width: 60px;
   height: 60px;
   border-radius: 8px;
-  background: ${COLORS.greyColor};
+  background: ${(props) =>
+    props.image ? `url(${props.image})` : COLORS.greyColor};
+  background-position: center;
+  background-size: cover;
 
   cursor: pointer;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-position: center;
-    object-fit: cover;
-  }
 `;
 
 const StoreContainer = styled.div`
@@ -213,8 +210,8 @@ const StoreImage = styled.div<{ image: string | null }>`
   border-radius: 8px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
-  object-position: center;
-  object-fit: cover;
+  background-position: center;
+  background-size: cover;
 
   cursor: pointer;
 `;

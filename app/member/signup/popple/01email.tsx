@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
 import {
@@ -54,10 +54,12 @@ const StepEmail = ({ onNext }: StepType) => {
       } else {
         setIsLoading(false);
         setStatusEmail(false);
-        setbottomTextEmail("인증메일 전송 중 오류가 발생했습니다. 잠시 후 시도해주세요.");
+        setbottomTextEmail(
+          "인증메일 전송 중 오류가 발생했습니다. 잠시 후 시도해주세요."
+        );
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (isEmailFocused === false) {
@@ -70,7 +72,7 @@ const StepEmail = ({ onNext }: StepType) => {
 
   return (
     <Container>
-      {isLoading && (<Loading/>)}
+      {isLoading && <Loading />}
       <MemberTitle>
         본인인증을 위해
         <br />
@@ -95,7 +97,6 @@ const StepEmail = ({ onNext }: StepType) => {
           }}
           onBlur={() => {
             setIsEmailFocused(false);
-
           }}
           disabled={false}
         />
@@ -103,7 +104,7 @@ const StepEmail = ({ onNext }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="다음"
         backgroundColor={isValidEmail ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
