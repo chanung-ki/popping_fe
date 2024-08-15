@@ -5,20 +5,17 @@ import { DefaultLayout } from "@/app/components/layout";
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from "react";
 import axiosInstance from "@/public/network/axios";
+import { Loading } from "@/app/components/loading";
 
 const SocialAuthPage: React.FC = () => {
 
   const searchParams = useSearchParams();
-  // const [code, setCode] = useState<string>('');
-  // const [provider, setProvider] = useState<string>('');
 
   useEffect(() => {
     const code = searchParams.get('code');
     const provider = searchParams.get('provider');
 
     if (code && provider) {
-      // setCode(getCode);
-      // setProvider(getProvider);
       socialAuthApi(code, provider);
     }
   }, [searchParams]);
@@ -41,7 +38,7 @@ const SocialAuthPage: React.FC = () => {
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        {/* 로딩 컴포넌트 필요 */}
+        <Loading/>
       </Container>
     </DefaultLayout>
   );

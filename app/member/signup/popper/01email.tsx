@@ -10,6 +10,7 @@ import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { duplicateCheckApi, callEmailAuthApi } from "@/public/utils/function";
+import { Loading } from "@/app/components/loading";
 
 type StepType = {
   onNext: CallableFunction;
@@ -21,6 +22,7 @@ const StepEmail = ({ onNext }: StepType) => {
   const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
   const [statusEmail, setStatusEmail] = useState<boolean | null>(null);
   const [bottomTextEmail, setbottomTextEmail] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 이메일 입력시 실행되는 onBlur 핸들러
   const handleEmailValidation = async () => {
@@ -44,10 +46,13 @@ const StepEmail = ({ onNext }: StepType) => {
   // 다음 버튼 클릭 핸들러
   const handleClickNext = async () => {
     if (isValidEmail === true) {
+      setIsLoading(true);
       const authCode = await callEmailAuthApi(valueEmail);
       if (authCode) {
+        setIsLoading(false);
         onNext(valueEmail, authCode);
       } else {
+        setIsLoading(false);
         setStatusEmail(false);
         setbottomTextEmail("인증메일 전송 중 오류가 발생했습니다. 잠시 후 시도해주세요.");
       }
@@ -65,6 +70,7 @@ const StepEmail = ({ onNext }: StepType) => {
 
   return (
     <Container>
+      {isLoading && (<Loading/>)}
       <MemberTitle>
         본인인증을 위해
         <br />
