@@ -16,9 +16,10 @@ type goodsType = {
 const Goods = ({ values }: goodsType) => {
   return (
     <Grid>
-      {values.map((value: goodsTypes) => {
+      {values.map((value: goodsTypes, index: number) => {
         return (
-          <Stuff>
+          <Stuff
+            key={index}>
             <StuffImage image={value.image}>
               <IsLiked>
                 <IconBookmark
