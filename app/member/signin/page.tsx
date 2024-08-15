@@ -42,8 +42,8 @@ const SignInPage: React.FC = () => {
         email: valueEmail,
         password: valuePassword,
       });
+
       if (response.status === 200) {
-        console.log(response.data.user);
         const userData: user = response.data.user;
         dispatch(setUser(userData));
         window.location.reload();
@@ -77,12 +77,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -94,12 +94,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>
@@ -116,7 +116,7 @@ const SignInPage: React.FC = () => {
         />
 
         <SignupContainer>
-          <SignUpText onClick={() => {}}>계정이 아직 없으신가요?</SignUpText>
+          <SignUpText onClick={() => { }}>계정이 아직 없으신가요?</SignUpText>
         </SignupContainer>
 
         <SocialSignInContainer>
