@@ -41,53 +41,53 @@ const SignInPage: React.FC = () => {
 
   const handleClickLogin = async () => {
     //test code
-    if (valueEmail !== "" && valuePassword !== "") {
-      alert("로그인 성공");
-      dispatch(
-        setUser({
-          nickname: "정승민",
-          name: "정승민",
-          isMale: true,
-          businessInfo: {
-            businessNumber: "businessNumber",
-            startDate: "startDate",
-            participantName: "participantName",
-          },
-          phoneNumber: "phoneNumber",
-          uuid: "uuid",
-          createdAt: "createdAt",
-          isPopper: true,
-          isSocialuser: true,
-          socialLoginProvider: "socialLoginProvider",
-          gradeInfo: {
-            grade: "grade",
-            minOrderAmount: 0,
-            maxOrderAmount: 0,
-            earnRate: 0,
-            discountRate: 0,
-          },
-          point: 0,
-          savedPopup: [],
-        })
-      );
-    }
+    // if (valueEmail !== "" && valuePassword !== "") {
+    //   alert("로그인 성공");
+    //   dispatch(
+    //     setUser({
+    //       nickname: "정승민",
+    //       name: "정승민",
+    //       isMale: true,
+    //       businessInfo: {
+    //         businessNumber: "businessNumber",
+    //         startDate: "startDate",
+    //         participantName: "participantName",
+    //       },
+    //       phoneNumber: "phoneNumber",
+    //       uuid: "uuid",
+    //       createdAt: "createdAt",
+    //       isPopper: true,
+    //       isSocialuser: true,
+    //       socialLoginProvider: "socialLoginProvider",
+    //       gradeInfo: {
+    //         grade: "grade",
+    //         minOrderAmount: 0,
+    //         maxOrderAmount: 0,
+    //         earnRate: 0,
+    //         discountRate: 0,
+    //       },
+    //       point: 0,
+    //       savedPopup: [],
+    //     })
+    //   );
+    // }
 
     //real code
-    // try {
-    //   const response = await axiosInstance.post("/api/user/signin", {
-    //     email: valueEmail,
-    //     password: valuePassword,
-    //   });
+    try {
+      const response = await axiosInstance.post("/api/user/signin", {
+        email: valueEmail,
+        password: valuePassword,
+      });
 
-    //   if (response.status === 200) {
-    //     const userData: user = response.data;
-    //     dispatch(setUser(userData));
+      if (response.status === 200) {
+        const userData: user = response.data;
+        dispatch(setUser(userData));
 
-    //     window.location.reload();
-    //   }
-    // } catch (error) {
-    //   alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
-    // }
+        window.location.reload();
+      }
+    } catch (error) {
+      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+    }
   };
 
   const handleClickSocialLogin = (provider: string) => {
@@ -114,12 +114,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -131,12 +131,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>
@@ -153,7 +153,7 @@ const SignInPage: React.FC = () => {
         />
 
         <SignupContainer>
-          <SignUpText onClick={() => {}}>계정이 아직 없으신가요?</SignUpText>
+          <SignUpText onClick={() => { }}>계정이 아직 없으신가요?</SignUpText>
         </SignupContainer>
 
         <SocialSignInContainer>
