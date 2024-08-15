@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
 import GlobalStyle from "@/public/styles/global";
+import CommonProvider from "./redux/provider";
 import Head from "next/head";
 
 export const metadata: Metadata = {
@@ -21,7 +22,9 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
       ></script>
     </Head>
     <GlobalStyle />
-    <body>{children}</body>
+    <body>
+      <CommonProvider>{children}</CommonProvider>
+    </body>
   </html>
 );
 
