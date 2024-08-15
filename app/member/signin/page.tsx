@@ -20,28 +20,25 @@ import axiosInstance from "@/public/network/axios";
 
 const SignInPage: React.FC = () => {
   // const dispatch = useDispatch();
-  const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID
-  const [domain, setDomain] = useState<string>('');
+  const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
+  const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
 
-  useEffect(()=>{
-    if (typeof window !== 'undefined') {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       setDomain(window.location.origin);
     }
-  },[])
+  }, []);
 
-  const handleClickLogin = async() => {
+  const handleClickLogin = async () => {
     try {
-      const response = await axiosInstance.post(
-        "/api/user/signin",
-        {
-          email: valueEmail,
-          password: valuePassword
-        } 
-      );
+      const response = await axiosInstance.post("/api/user/signin", {
+        email: valueEmail,
+        password: valuePassword,
+      });
       if (response.status === 200) {
-        const userData = response.data; 
+        const userData = response.data;
 
         // 유저 정보를 Redux에 저장 => 승민이 확인 부탁
         // dispatch(
@@ -65,14 +62,14 @@ const SignInPage: React.FC = () => {
         window.location.reload();
       }
     } catch (error) {
-      alert('이메일 혹은 비밀번호가 일치하지 않습니다.')
+      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
   };
 
   const handleClickSocialLogin = (provider: string) => {
-    let socialUrl = ''
-    if (provider === 'kakao') {
-      socialUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${domain}/member/social?provider=kakao&response_type=code`
+    let socialUrl = "";
+    if (provider === "kakao") {
+      socialUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${domain}/member/social?provider=kakao&response_type=code`;
     }
     window.location.href = socialUrl;
   };
@@ -137,7 +134,7 @@ const SignInPage: React.FC = () => {
           <SocialSignInButton
             background={COLORS.kakaoColor}
             borderColor="transparent"
-            onClick={() => handleClickSocialLogin('kakao')}
+            onClick={() => handleClickSocialLogin("kakao")}
           >
             <Image src={LogoKakao} alt={"카카오 로그인"} />
           </SocialSignInButton>
