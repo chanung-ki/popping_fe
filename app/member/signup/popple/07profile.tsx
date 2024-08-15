@@ -10,6 +10,7 @@ import { SelectBottomSection, SelectFlat } from "@/app/components/select";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { duplicateCheckApi } from "@/public/utils/function";
 
 type StepType = {
   onNext: CallableFunction;
@@ -36,22 +37,35 @@ const StepProfile = ({ onNext }: StepType) => {
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
 
+
+  // 닉네임 입력시 실행되는 onBlur 핸들러
+  const handleNicknameValidation = async () => {
+    if (RegexpNickname.test(valueNickname)) {
+      // 정규식이 유효할 경우 중복 api를 호출.
+      const isExist = await duplicateCheckApi(valueNickname, "nickname");
+      setStatusNickname(!isExist);
+      setIsValidNickname(!isExist);
+      if (isExist) {
+        setbottomTextNickname("이미 사용중인 닉네임 입니다.");
+      } else {
+        setbottomTextNickname("사용가능한 닉네임 입니다.");
+      }
+    } else {
+      setStatusNickname(false);
+      setIsValidNickname(false);
+      setbottomTextNickname("네임은 공백없이 한글, 알파벳, 숫자만 가능해요.");
+    }
+  };
+
   useEffect(() => {
     if (isNicknameFocused === false) {
-      if (RegexpNickname.test(valueNickname)) {
-        setStatusNickname(null);
-        setbottomTextNickname("");
-      } else {
-        setStatusNickname(false);
-        setbottomTextNickname(
-          "닉네임은 공백없이 한글, 알파벳, 숫자만 가능해요."
-        );
-      }
+      handleNicknameValidation();
     } else {
       setStatusNickname(null);
       setbottomTextNickname("");
     }
   }, [isNicknameFocused]);
+
 
   return (
     <Container>
