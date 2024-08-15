@@ -38,6 +38,8 @@ const Container = styled.div<ContainerPaddingTypes>`
   height: calc(100% - (${(props) => props.top} + ${(props) => props.bottom}));
   padding: ${(props) => props.top} ${(props) => props.right}
     ${(props) => props.bottom} ${(props) => props.left};
+
+  background: ${COLORS.primaryColor};
 `;
 
 const SpacerContainer = styled.div`

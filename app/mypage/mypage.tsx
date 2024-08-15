@@ -117,11 +117,6 @@ const TopNavLogoContainer = styled.div`
   cursor: pointer;
 `;
 
-const TopNavLogo = styled(Image)`
-  width: auto;
-  height: 100%;
-`;
-
 const TopNavRightContainer = styled.div`
   position: absolute;
   top: 50%;
