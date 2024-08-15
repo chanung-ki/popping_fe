@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -150,7 +150,7 @@ const ForgotAccountPage: React.FC = () => {
           </MemberAccountForm>
         )}
 
-        <ButtonSingle
+        <ButtonLarge
           text={"확인"}
           backgroundColor={
             selectedIndex === 0

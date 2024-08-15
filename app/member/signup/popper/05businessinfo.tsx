@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
 import {
@@ -44,7 +44,11 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
   // 다음 버튼 클릭 핸들러
   const handleClickNext = async () => {
     if (isValidBN && isValidName && isValidDate) {
-      const isValid = await businessRegistrationCheckApi(valueBN, valueDate, valueName);
+      const isValid = await businessRegistrationCheckApi(
+        valueBN,
+        valueDate,
+        valueName
+      );
 
       if (isValid) {
         onNext({
@@ -53,10 +57,10 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
           participantName: valueName,
         });
       } else {
-        alert('일치하는 사업자 정보가 없습니다.');
+        alert("일치하는 사업자 정보가 없습니다.");
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (isBNFocused === false) {
@@ -177,7 +181,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="다음"
         backgroundColor={
           isValidBN && isValidName && isValidDate
