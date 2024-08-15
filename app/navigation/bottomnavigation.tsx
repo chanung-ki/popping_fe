@@ -11,6 +11,7 @@ import {
 
 type BottomNavTypes = {
   onClick: CallableFunction;
+  currentIndex: number;
 };
 
 const Container = styled.div`
@@ -37,6 +38,17 @@ const Container = styled.div`
   height: 58px;
 
   background: ${COLORS.primaryColor};
+
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 `;
 
 const Menu = styled.div`
@@ -87,7 +99,7 @@ const BubbleContainer = styled.div`
   transform: translate(-50%, 0);
 `;
 
-export const BottomNavigation = ({ onClick }: BottomNavTypes) => {
+export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
   return (
     <Container>
       {/* 홈 */}
@@ -97,7 +109,11 @@ export const BottomNavigation = ({ onClick }: BottomNavTypes) => {
             onClick(0);
           }}
         >
-          <IconHome color={COLORS.greyColor} />
+          <IconHome
+            color={
+              currentIndex === 0 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
           <p>홈</p>
         </MenuContainer>
       </Menu>
@@ -108,7 +124,11 @@ export const BottomNavigation = ({ onClick }: BottomNavTypes) => {
             onClick(1);
           }}
         >
-          <IconMap color={COLORS.greyColor} />
+          <IconMap
+            color={
+              currentIndex === 1 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
           <p>팝업 지도</p>
         </MenuContainer>
       </Menu>
@@ -132,7 +152,11 @@ export const BottomNavigation = ({ onClick }: BottomNavTypes) => {
             onClick(3);
           }}
         >
-          <IconLikes color={COLORS.greyColor} />
+          <IconLikes
+            color={
+              currentIndex === 3 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
           <p>관심</p>
         </MenuContainer>
       </Menu>
@@ -143,8 +167,12 @@ export const BottomNavigation = ({ onClick }: BottomNavTypes) => {
             onClick(4);
           }}
         >
-          <IconMypage color={COLORS.greyColor} />
-          <p>관심</p>
+          <IconMypage
+            color={
+              currentIndex === 4 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
+          <p>MY</p>
         </MenuContainer>
       </Menu>
     </Container>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -134,7 +134,7 @@ const ForgotPasswordPage: React.FC = () => {
         </MemberAccountForm>
 
         {isSent ? (
-          <ButtonSingle
+          <ButtonLarge
             text={"확인"}
             backgroundColor={
               isValidEmail && isValidPhone && isValidPasscode
@@ -145,7 +145,7 @@ const ForgotPasswordPage: React.FC = () => {
             onClick={() => {}}
           />
         ) : (
-          <ButtonSingle
+          <ButtonLarge
             text={"인증번호 전송"}
             backgroundColor={
               isValidEmail && isValidPhone ? COLORS.mainColor : COLORS.greyColor
