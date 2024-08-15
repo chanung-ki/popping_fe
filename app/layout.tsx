@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
 import GlobalStyle from "@/public/styles/global";
+import CommonProvider from "./redux/provider";
 
 export const metadata: Metadata = {
   title: "POPPING",
@@ -9,7 +10,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="ko">
     <GlobalStyle />
-    <body>{children}</body>
+    <body>
+      <CommonProvider>{children}</CommonProvider>
+    </body>
   </html>
 );
 
