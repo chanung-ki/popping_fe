@@ -9,18 +9,47 @@ import { RegexpInputAlphabetAndNumber } from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { callEmailAuthApi } from "@/public/utils/function";
+import { Loading } from "@/app/components/loading";
 
 type StepType = {
   onNext: CallableFunction;
+  authCode: string;
+  email: string;
 };
 
-const StepEmailPasscode = ({ onNext }: StepType) => {
+const StepEmailPasscode = ({ onNext, authCode, email }: StepType) => {
   const [valuePasscode, setValuePasscode] = useState<string>("");
   const [isValidPasscode, setIsValidPasscode] = useState<boolean>(false);
+  const [code, setCode] = useState<string>(authCode);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const resendableTime: number = 18;
+  const resendableTime: number = 300;
   const [count, setCount] = useState<number>(resendableTime);
   const [isResendable, setIsResendable] = useState<boolean>(false);
+
+  // 다음 버튼 클릭 핸들러
+  const handleClickNext = () => {
+    if (valuePasscode == code && isValidPasscode){
+      onNext(valuePasscode);
+    } else {
+      alert('인증번호가 일치하지 않습니다.')
+    }
+  };
+
+   // 이메일 재전송 핸들러
+   const handleBottomTextClick = async () => {
+    // isResendable false 일때만 click 되도록 해놓을게연
+    if (isResendable){
+      setIsLoading(true);
+      const newAuthCode = await callEmailAuthApi(email);
+      setCode(newAuthCode);
+      setCount(resendableTime);
+      setIsResendable(false);
+      setIsLoading(false);
+      alert('인증 메일이 재전송 되었습니다.')
+    }
+  }
 
   useEffect(() => {
     if (isResendable === false) {
@@ -44,6 +73,7 @@ const StepEmailPasscode = ({ onNext }: StepType) => {
 
   return (
     <Container>
+      {isLoading && (<Loading/>)}
       <MemberTitle>
         해당 이메일에 수신된
         <br />
@@ -65,13 +95,10 @@ const StepEmailPasscode = ({ onNext }: StepType) => {
                 ).padStart(2, "0")} 후에 재전송 가능`
           }
           bottomTextClickable={isResendable}
-          bottomTextOnClick={() => {
-            setCount(resendableTime);
-            setIsResendable(false);
-          }}
+          bottomTextOnClick={handleBottomTextClick}
           onChange={(text: string) => {
             setValuePasscode(text.replace(RegexpInputAlphabetAndNumber, ""));
-            setIsValidPasscode(valuePasscode.length === 8);
+            setIsValidPasscode(text.length === 8);
           }}
           onFocus={() => {}}
           onBlur={() => {}}
@@ -85,11 +112,7 @@ const StepEmailPasscode = ({ onNext }: StepType) => {
         text="다음"
         backgroundColor={isValidPasscode ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
-        onClick={() => {
-          if (isValidPasscode) {
-            onNext(valuePasscode);
-          }
-        }}
+        onClick={handleClickNext}
       />
     </Container>
   );

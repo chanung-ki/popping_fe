@@ -1,7 +1,7 @@
 "use client";
 
 import { styled } from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COLORS } from "@/public/styles/colors";
 import { ButtonSingle } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
@@ -14,10 +14,68 @@ import {
 import Image from "next/image";
 import LogoKakao from "@/public/images/social/logo_kakao.png";
 import LogoGoogle from "@/public/images/social/logo_google.png";
+import axiosInstance from "@/public/network/axios";
+// import { useDispatch } from 'react-redux';
+// import { setUser } from '@/app/redux/reducers/user';
 
 const SignInPage: React.FC = () => {
+  // const dispatch = useDispatch();
+  const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID
+  const [domain, setDomain] = useState<string>('');
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
+
+  useEffect(()=>{
+    if (typeof window !== 'undefined') {
+      setDomain(window.location.origin);
+    }
+  },[])
+
+  const handleClickLogin = async() => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/user/signin",
+        {
+          email: valueEmail,
+          password: valuePassword
+        } 
+      );
+      if (response.status === 200) {
+        const userData = response.data; 
+
+        // 유저 정보를 Redux에 저장 => 승민이 확인 부탁
+        // dispatch(
+        //   setUser({
+        //     nickname: userData.nickname,
+        //     name: userData.name,
+        //     isMale: userData.isMale,
+        //     businessInfo: userData.businessInfo || {}, // 정보가 없으면 빈 객체로 설정
+        //     phoneNumber: userData.phoneNumber,
+        //     uuid: userData.uuid,
+        //     createdAt: userData.createdAt,
+        //     isPopper: userData.isPopper,
+        //     isSocialuser: userData.isSocialuser,
+        //     socialLoginProvider: userData.socialLoginProvider,
+        //     gradeInfo: userData.gradeInfo,
+        //     point: userData.point,
+        //     savedPopup: userData.savedPopup,
+        //   })
+        // );
+
+        window.location.reload();
+      }
+    } catch (error) {
+      alert('이메일 혹은 비밀번호가 일치하지 않습니다.')
+    }
+  };
+
+  const handleClickSocialLogin = (provider: string) => {
+    let socialUrl = ''
+    if (provider === 'kakao') {
+      socialUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${domain}/member/social?provider=kakao&response_type=code`
+    }
+    window.location.href = socialUrl;
+  };
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
@@ -29,7 +87,7 @@ const SignInPage: React.FC = () => {
             value={valueEmail}
             placeholder="이메일"
             type="email"
-            maxLength={8}
+            maxLength={undefined}
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
@@ -46,7 +104,7 @@ const SignInPage: React.FC = () => {
             value={valuePassword}
             placeholder="비밀번호"
             type="password"
-            maxLength={8}
+            maxLength={undefined}
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
@@ -68,7 +126,7 @@ const SignInPage: React.FC = () => {
               : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
-          onClick={() => {}}
+          onClick={handleClickLogin}
         />
 
         <SignupContainer>
@@ -79,6 +137,7 @@ const SignInPage: React.FC = () => {
           <SocialSignInButton
             background={COLORS.kakaoColor}
             borderColor="transparent"
+            onClick={() => handleClickSocialLogin('kakao')}
           >
             <Image src={LogoKakao} alt={"카카오 로그인"} />
           </SocialSignInButton>

@@ -15,6 +15,7 @@ import StepPhone from "./05phone";
 import StepPhonePasscode from "./06phonepasscode";
 import StepProfile from "./07profile";
 import StepDone from "./08done";
+import axiosInstance from "@/public/network/axios";
 
 const SignUpUserPage: React.FC = () => {
   type bodyTypes = {
@@ -25,6 +26,7 @@ const SignUpUserPage: React.FC = () => {
     isMale: boolean | null;
     phoneNumber: string;
     isPopper: boolean;
+    authCode: string;
   };
 
   type profileTypes = {
@@ -56,7 +58,25 @@ const SignUpUserPage: React.FC = () => {
     isMale: undefined,
     phoneNumber: undefined,
     isPopper: false,
+    authCode: '',
   });
+
+  const poppleSignupApi = async() => {
+    try {
+      const response = await axiosInstance.post(
+          `/api/user/signup`, 
+          state,
+      );
+      if (response.status === 201) {
+        setState((prev) => ({
+          ...prev,
+          step: "Done",
+        }));
+      }
+    } catch (error) {
+      alert('회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.')
+    }
+  }
 
   const [stepIndex, setStepIndex] = useState<number>(0);
 
@@ -67,13 +87,15 @@ const SignUpUserPage: React.FC = () => {
       <Funnel>
         <Funnel.Step name="Email">
           <StepEmail
-            onNext={(email: string) => {
-              setState((prev) => ({ ...prev, email, step: "Email Passcode" }));
+            onNext={(email: string, authCode: string) => {
+              setState((prev) => ({ ...prev, email, authCode, step: "Email Passcode" }));
             }}
           />
         </Funnel.Step>
         <Funnel.Step name="Email Passcode">
           <StepEmailPasscode
+            authCode={state.authCode? state.authCode : ''}
+            email={state.email? state.email : ''}
             onNext={() => {
               setState((prev) => ({ ...prev, step: "Password" }));
             }}
@@ -99,7 +121,7 @@ const SignUpUserPage: React.FC = () => {
               setState((prev) => ({
                 ...prev,
                 phoneNumber,
-                step: "Phone Passcode",
+                step: "Profile",
               }));
             }}
           />
@@ -118,27 +140,17 @@ const SignUpUserPage: React.FC = () => {
                 ...prev,
                 nickname: result.nickname,
                 isMale: result.isMale,
-                step: "Done",
               }));
+              if (state.phoneNumber !== undefined) {
+                poppleSignupApi();
+              }
             }}
           />
         </Funnel.Step>
         <Funnel.Step name="Done">
           <StepDone
             onNext={() => {
-              if (
-                Object.values(state).filter((value) => value === undefined)
-                  .length > 1
-              ) {
-                console.log(
-                  `undefined 개수: ${
-                    Object.values(state).filter((value) => value === undefined)
-                      .length
-                  }`
-                );
-                console.log("오류 발생");
-              }
-              console.log(state);
+              window.location.href = '/member/signin';
             }}
           />
         </Funnel.Step>

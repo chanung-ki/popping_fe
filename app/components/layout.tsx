@@ -1,4 +1,5 @@
 import { COLORS } from "@/public/styles/colors";
+import { RefObject, useRef } from "react";
 import { styled } from "styled-components";
 
 type LayoutTypes = {
@@ -22,6 +23,7 @@ const Layout = styled.div`
   min-width: 320px;
   max-width: 767px;
   width: 100%;
+  min-height: 100dvh;
   height: 100dvh;
 
   background-color: ${COLORS.primaryColor};

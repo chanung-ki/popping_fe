@@ -22,7 +22,8 @@
     "redux": "^5.0.1",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "styled-components": "^6.1.12"
+    "styled-components": "^6.1.12",
+    "swiper": "^11.1.9"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
