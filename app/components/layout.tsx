@@ -24,6 +24,7 @@ const Layout = styled.div`
   max-width: 767px;
   width: 100%;
   min-height: 100dvh;
+  height: 100dvh;
 
   background-color: ${COLORS.primaryColor};
 `;
@@ -50,8 +51,6 @@ export const DefaultLayout = ({
   left,
   children,
 }: LayoutTypes) => {
-  const ref2 = useRef(null);
-
   return (
     <Layout>
       <Container top={top} right={right} bottom={bottom} left={left}>
