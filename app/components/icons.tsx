@@ -13,6 +13,23 @@ const SVG = styled.svg`
   cursor: pointer;
 `;
 
+export const IconSearch = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <path
+        d="M15.6095 13.7241L12.2248 10.3394C12.9241 9.28543 13.3335 8.02342 13.3335 6.66674C13.3335 2.9907 10.3428 0 6.66674 0C2.9907 0 0 2.9907 0 6.66674C0 10.3428 2.9907 13.3335 6.66674 13.3335C8.02342 13.3335 9.28543 12.9241 10.3394 12.2248L13.7241 15.6095C14.2441 16.1302 15.0895 16.1302 15.6095 15.6095C16.1302 15.0888 16.1302 14.2448 15.6095 13.7241ZM2.00002 6.66674C2.00002 4.09338 4.09338 2.00002 6.66674 2.00002C9.2401 2.00002 11.3335 4.09338 11.3335 6.66674C11.3335 9.2401 9.2401 11.3335 6.66674 11.3335C4.09338 11.3335 2.00002 9.2401 2.00002 6.66674Z"
+        fill={color}
+      />
+    </SVG>
+  );
+};
+
 export const IconChevronLeft = ({ color, width, height }: SVGTypes) => {
   return (
     <SVG
@@ -64,7 +81,6 @@ export const IconHeart = ({ color, width, height }: SVGTypes) => {
   );
 };
 
-
 export const IconRoundTriangle = ({ color, width, height }: SVGTypes) => {
   return (
     <SVG
@@ -91,19 +107,19 @@ export const IconX = ({ color, width, height }: SVGTypes) => {
       viewBox="0 0 18 18"
       fill="none"
     >
-      <path d="M17 1L1 17L17 1Z" fill={color} />
+      <path d="M16 2L2 16Z" fill={color} />
       <path
-        d="M17 1L1 17"
+        d="M16 2L2 16"
         stroke={color}
-        stroke-width="2"
+        stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-      <path d="M1 1L17 17L1 1Z" fill={color} />
+      <path d="M2 2L16 16Z" fill={color} />
       <path
-        d="M1 1L17 17"
+        d="M2 2L16 16"
         stroke={color}
-        stroke-width="2"
+        stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
@@ -137,8 +153,14 @@ export const IconBookmark = ({ color, width, height }: SVGTypes) => {
       height={height ?? "auto"}
       viewBox="0 0 16 22"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <path fillRule="evenodd" clipRule="evenodd" d="M16 3.66643C16 2.69397 15.6169 1.76141 14.935 1.07337C14.2527 0.386261 13.3278 0 12.3634 0H3.63613C2.67171 0 1.74685 0.386261 1.06449 1.07337C0.383069 1.76141 0 2.69444 0 3.66643V21.2664C0 21.5626 0.177338 21.8306 0.448698 21.9441C0.720524 22.0577 1.03331 21.9948 1.24137 21.785L7.99977 14.9703L14.7582 21.785C14.9662 21.9948 15.279 22.0577 15.5508 21.9441C15.8222 21.8306 15.9995 21.5626 15.9995 21.2664V3.66643H16Z" fill={color} />
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M16 3.66643C16 2.69397 15.6169 1.76141 14.935 1.07337C14.2527 0.386261 13.3278 0 12.3634 0H3.63613C2.67171 0 1.74685 0.386261 1.06449 1.07337C0.383069 1.76141 0 2.69444 0 3.66643V21.2664C0 21.5626 0.177338 21.8306 0.448698 21.9441C0.720524 22.0577 1.03331 21.9948 1.24137 21.785L7.99977 14.9703L14.7582 21.785C14.9662 21.9948 15.279 22.0577 15.5508 21.9441C15.8222 21.8306 15.9995 21.5626 15.9995 21.2664V3.66643H16Z"
+        fill={color}
+      />
     </SVG>
   );
 };
