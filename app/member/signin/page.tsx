@@ -18,9 +18,12 @@ import axiosInstance from "@/public/network/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/app/redux/reducers/poppingUser";
 import { user } from "@/public/utils/types";
+import {useRouter} from "next/navigation";
+
 
 const SignInPage: React.FC = () => {
 
+  const router = useRouter();
   const dispatch = useDispatch();
   const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
   const googleClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_GOOGLE_CLIENT_ID;
@@ -29,10 +32,13 @@ const SignInPage: React.FC = () => {
   const [valuePassword, setValuePassword] = useState<string>("");
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
-
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setDomain(window.location.origin);
+    if (userData.isLogin) {
+      router.push('/');
+    } else {
+      if (typeof window !== "undefined") {
+        setDomain(window.location.origin);
+      }
     }
   }, []);
 
@@ -46,7 +52,7 @@ const SignInPage: React.FC = () => {
       if (response.status === 200) {
         const userData: user = response.data.user;
         dispatch(setUser(userData));
-        window.location.reload();
+        router.push('/');
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
@@ -60,7 +66,7 @@ const SignInPage: React.FC = () => {
     } else if (provider === "google") {
       socialUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${domain}/member/social?provider=google&response_type=code&scope=email`;
     }
-    window.location.href = socialUrl;
+    router.push(socialUrl);
   };
 
   return (
