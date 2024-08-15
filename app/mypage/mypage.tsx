@@ -7,8 +7,11 @@ import LogoLetters from "@/public/images/logo_letters.png";
 import { DefaultLayout, Spacer } from "@/app/components/layout";
 import { IconChevronRight, IconGear } from "@/app/components/icons";
 import { ButtonSmall } from "../components/buttons";
+import { useRouter } from "next/navigation";
 
 const MyPage: React.FC = () => {
+  const router = useRouter();
+
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
@@ -36,7 +39,9 @@ const MyPage: React.FC = () => {
                   text={"프로필 설정"}
                   backgroundColor={COLORS.mainColor}
                   textColor={COLORS.whiteColor}
-                  onClick={() => {}}
+                  onClick={() => {
+                    router.push("/setting-profile");
+                  }}
                 />
               </ProfileContainer>
               <GradeContainer>

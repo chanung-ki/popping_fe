@@ -10,6 +10,7 @@ import { ButtonLarge, ButtonSmall } from "../components/buttons";
 import { InputRound } from "../components/inputs";
 import { RegexpNickname } from "@/public/utils/regexp";
 import { SelectBottomSection, SelectRound } from "../components/select";
+import { useRouter } from "next/navigation";
 
 const SettingProfilePage: React.FC = () => {
   const [valueNickname, setValueNickname] = useState<string>("");
@@ -31,13 +32,19 @@ const SettingProfilePage: React.FC = () => {
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
 
+  const router = useRouter();
+
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>프로필 설정</TopNavTitle>
         </TopNavCenterContainer>
-        <TopNavLeftContainer>
+        <TopNavLeftContainer
+          onClick={() => {
+            router.back();
+          }}
+        >
           <IconChevronLeft
             color={COLORS.secondaryColor}
             width={undefined}

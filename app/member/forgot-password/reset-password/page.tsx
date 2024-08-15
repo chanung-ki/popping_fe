@@ -13,6 +13,7 @@ import { RegexpPassword } from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useRouter } from "next/navigation";
 
 const ResetPasswordPage: React.FC = () => {
   // 비밀번호
@@ -70,10 +71,18 @@ const ResetPasswordPage: React.FC = () => {
     }
   }, [isPasswordConfirmFocused]);
 
+  const router = useRouter();
+
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        <MemberChevronLeft />
+        <div
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <MemberChevronLeft />
+        </div>
         <MemberLogoAndTitle>비밀번호 재설정</MemberLogoAndTitle>
 
         <MemberAccountForm>

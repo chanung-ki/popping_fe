@@ -18,11 +18,9 @@ import axiosInstance from "@/public/network/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/app/redux/reducers/poppingUser";
 import { user } from "@/public/utils/types";
-import {useRouter} from "next/navigation";
-
+import { useRouter } from "next/navigation";
 
 const SignInPage: React.FC = () => {
-
   const router = useRouter();
   const dispatch = useDispatch();
   const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
@@ -34,7 +32,7 @@ const SignInPage: React.FC = () => {
 
   useEffect(() => {
     if (userData.isLogin) {
-      router.push('/');
+      router.push("/");
     } else {
       if (typeof window !== "undefined") {
         setDomain(window.location.origin);
@@ -52,13 +50,13 @@ const SignInPage: React.FC = () => {
       if (response.status === 200) {
         const userData: user = response.data.user;
         dispatch(setUser(userData));
-        router.push('/');
+        router.push("/");
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
   };
-  
+
   const handleClickSocialLogin = (provider: string) => {
     let socialUrl = "";
     if (provider === "kakao") {
@@ -72,7 +70,13 @@ const SignInPage: React.FC = () => {
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        <MemberChevronLeft />
+        <div
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <MemberChevronLeft />
+        </div>
         <MemberLogoAndTitle>로그인</MemberLogoAndTitle>
         <MemberAccountForm>
           <InputRound
@@ -83,12 +87,14 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {
+              router.push("/member/forgot-account");
+            }}
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -100,12 +106,14 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {
+              router.push("/member/forgot-password");
+            }}
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
         </MemberAccountForm>
@@ -122,7 +130,13 @@ const SignInPage: React.FC = () => {
         />
 
         <SignupContainer>
-          <SignUpText onClick={() => { }}>계정이 아직 없으신가요?</SignUpText>
+          <SignUpText
+            onClick={() => {
+              router.push("/member/signup");
+            }}
+          >
+            계정이 아직 없으신가요?
+          </SignUpText>
         </SignupContainer>
 
         <SocialSignInContainer>
