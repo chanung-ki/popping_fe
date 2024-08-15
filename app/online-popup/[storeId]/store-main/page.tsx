@@ -9,7 +9,7 @@ import { COLORS } from "@/public/styles/colors";
 import { DefaultLayout } from "@/app/components/layout";
 import axiosInstance from "@/public/network/axios";
 import { Follow, KRWLocaleString } from "@/public/utils/function";
-import { IconBookmark } from "@/app/components/icons";
+import { IconBookmark, IconCart } from "@/app/components/icons";
 
 interface BrandData {
   id: number;
@@ -145,9 +145,12 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
 
       <Container ref={containerRef}>
         <StoreMainPageContainer>
-          {/* <CartButton>
-            <Link href={"/mypage/1/my-cart"}>Cart icon</Link>
-          </CartButton> */}
+          <CartButton href={"/mypage/1/my-cart"}>
+            <IconCart
+              color={COLORS.secondaryColor}
+              width={undefined}
+              height={undefined} />
+          </CartButton>
 
           <StoreInfoContainer>
             <StoreInfoHeader>
@@ -199,7 +202,6 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
           </StoreProductContainer>
         </StoreMainPageContainer>
       </Container>
-
     </DefaultLayout>
 
   );
@@ -222,10 +224,30 @@ const StoreMainPageContainer = styled.div`
   padding: 0 20px;
 `;
 
+const CartButton = styled(Link)`
+  width: 44px;
+  height: 44px;
+
+  bottom: 112px;
+  right: 20px;
+  
+  border: 1px solid ${COLORS.greyColor};
+  background-color: white;
+  border-radius: 50%;
+  position: fixed;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  
+  z-index: 100;
+`
+
 const StoreThumbnailContainer = styled.img`
   width: 100%;
+  height: 100%;
   object-fit: cover;
-
 `;
 
 const StoreThumbnailNav = styled(Link)`

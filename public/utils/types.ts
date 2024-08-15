@@ -1,4 +1,5 @@
 export type user = {
+  isLogin: boolean,
   nickname: string,
   name: string,
   isMale: boolean | null,
