@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { DefaultLayout, Spacer } from "@/app/components/layout";
 import {
   MemberChevronLeft,
@@ -43,7 +43,7 @@ const SignUpPage: React.FC = () => {
           </RadioBox>
         </RadioBoxContainer>
         <Spacer />
-        <ButtonSingle
+        <ButtonLarge
           text="다음"
           backgroundColor={
             isPopper !== null ? COLORS.mainColor : COLORS.greyColor

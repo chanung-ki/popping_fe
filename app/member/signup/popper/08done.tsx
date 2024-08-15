@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { Spacer } from "@/app/components/layout";
 import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
@@ -17,14 +17,14 @@ const StepDone = ({ onNext }: StepType) => {
         <Image src={LogoDone} alt={"완료 로고"} width={100} height={100} />
         <p>
           팝퍼 회원가입이 성공적으로
-            <br />
+          <br />
           완료되었어요!
         </p>
       </MiddleContainer>
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="로그인"
         backgroundColor={COLORS.mainColor}
         textColor={COLORS.primaryColor}

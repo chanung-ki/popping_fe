@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { Spacer } from "@/app/components/layout";
 import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
@@ -24,7 +24,7 @@ const StepDone = ({ onNext }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="로그인"
         backgroundColor={COLORS.mainColor}
         textColor={COLORS.primaryColor}

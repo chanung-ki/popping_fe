@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
 import {
@@ -6,7 +6,7 @@ import {
   MemberTitle,
 } from "@/app/components/member/components";
 import { RegexpNickname } from "@/public/utils/regexp";
-import { SelectBottomSection, SelectFlat } from "@/app/components/select";
+import { SelectBottomSection, SelectUnderline } from "@/app/components/select";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -37,7 +37,6 @@ const StepProfile = ({ onNext }: StepType) => {
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
 
-
   // 닉네임 입력시 실행되는 onBlur 핸들러
   const handleNicknameValidation = async () => {
     if (RegexpNickname.test(valueNickname)) {
@@ -66,7 +65,6 @@ const StepProfile = ({ onNext }: StepType) => {
     }
   }, [isNicknameFocused]);
 
-
   return (
     <Container>
       <MemberTitle>프로필을 완성해봐요!</MemberTitle>
@@ -94,7 +92,7 @@ const StepProfile = ({ onNext }: StepType) => {
           disabled={false}
         />
 
-        <SelectFlat
+        <SelectUnderline
           placeholder="성별"
           value={valueGender}
           isFocus={isGenderFocused}
@@ -107,7 +105,7 @@ const StepProfile = ({ onNext }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="다음"
         backgroundColor={
           isValidNickname && valueGender ? COLORS.mainColor : COLORS.greyColor
