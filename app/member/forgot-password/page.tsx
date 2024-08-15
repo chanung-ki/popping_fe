@@ -62,7 +62,7 @@ const ForgotPasswordPage: React.FC = () => {
       <Container>
         <div
           onClick={() => {
-            router.back();
+            router.push("/member/signin");
           }}
         >
           <MemberChevronLeft />

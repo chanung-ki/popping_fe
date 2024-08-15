@@ -20,7 +20,7 @@ const SignUpPage: React.FC = () => {
       <Container>
         <div
           onClick={() => {
-            router.back();
+            router.push("/");
           }}
         >
           <MemberChevronLeft />

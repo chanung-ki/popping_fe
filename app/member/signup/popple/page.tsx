@@ -16,7 +16,7 @@ import StepPhonePasscode from "./06phonepasscode";
 import StepProfile from "./07profile";
 import StepDone from "./08done";
 import axiosInstance from "@/public/network/axios";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const SignUpUserPage: React.FC = () => {
   type bodyTypes = {
@@ -61,15 +61,12 @@ const SignUpUserPage: React.FC = () => {
     isMale: undefined,
     phoneNumber: undefined,
     isPopper: false,
-    authCode: '',
+    authCode: "",
   });
 
-  const poppleSignupApi = async() => {
+  const poppleSignupApi = async () => {
     try {
-      const response = await axiosInstance.post(
-          `/api/user/signup`, 
-          state,
-      );
+      const response = await axiosInstance.post(`/api/user/signup`, state);
       if (response.status === 201) {
         setState((prev) => ({
           ...prev,
@@ -77,15 +74,15 @@ const SignUpUserPage: React.FC = () => {
         }));
       }
     } catch (error) {
-      alert('회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.')
+      alert("회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.");
     }
-  }
+  };
 
   const [stepIndex, setStepIndex] = useState<number>(0);
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
-      <MemberProgressBar value={stepIndex * (100 / steps.length-1)} />
+      <MemberProgressBar value={stepIndex * (100 / steps.length - 1)} />
       {state.step !== "Done" && (
         <div
           onClick={() => {
@@ -96,7 +93,7 @@ const SignUpUserPage: React.FC = () => {
                 step: steps[stepIndex - 1],
               }));
             } else {
-              router.back();
+              router.push("/");
             }
           }}
         >
@@ -107,14 +104,19 @@ const SignUpUserPage: React.FC = () => {
         <Funnel.Step name="Email">
           <StepEmail
             onNext={(email: string, authCode: string) => {
-              setState((prev) => ({ ...prev, email, authCode, step: "Email Passcode" }));
+              setState((prev) => ({
+                ...prev,
+                email,
+                authCode,
+                step: "Email Passcode",
+              }));
             }}
           />
         </Funnel.Step>
         <Funnel.Step name="Email Passcode">
           <StepEmailPasscode
-            authCode={state.authCode? state.authCode : ''}
-            email={state.email? state.email : ''}
+            authCode={state.authCode ? state.authCode : ""}
+            email={state.email ? state.email : ""}
             onNext={() => {
               setState((prev) => ({ ...prev, step: "Password" }));
             }}
@@ -169,7 +171,7 @@ const SignUpUserPage: React.FC = () => {
         <Funnel.Step name="Done">
           <StepDone
             onNext={() => {
-              router.push('/member/signin');
+              router.push("/member/signin");
             }}
           />
         </Funnel.Step>

@@ -92,7 +92,7 @@ const SignUpUserPage: React.FC = () => {
                 step: steps[stepIndex - 1],
               }));
             } else {
-              router.back();
+              router.push("/");
             }
           }}
         >

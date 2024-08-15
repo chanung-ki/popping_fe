@@ -18,9 +18,7 @@ const Following = ({ values }: followingType) => {
     <Container>
       {values.map((value: followingTypes, index: number) => {
         return (
-          <Store
-            key={index}
-          >
+          <Store key={index}>
             <StoreImage image={value.image}>
               <BrandText>{value.brand}</BrandText>
 
@@ -57,7 +55,7 @@ const StoreImage = styled.div<{ image: string | null }>`
   width: 100%;
   height: 90px;
   background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
+    props.image ? `url(${props.image})` : COLORS.secondaryColor};
   border-radius: 8px;
   object-position: center;
   object-fit: cover;

@@ -2,9 +2,8 @@ import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconChevronLeft } from "../icons";
 import React from "react";
-import Image from "next/image";
-
-import LogoLetters from "@/public/images/logo_letters.png";
+import { LogoLettersMain } from "../logo";
+import { useRouter } from "next/navigation";
 
 // Title
 
@@ -123,9 +122,17 @@ const LogoAndTitleContainer = styled.div`
 `;
 
 export const MemberLogoAndTitle = ({ children }: ChildrenType) => {
+  const router = useRouter();
+
   return (
     <LogoAndTitleContainer>
-      <Image src={LogoLetters} alt={"로고"} width={undefined} height={36} />
+      <div
+        onClick={() => {
+          router.push("/");
+        }}
+      >
+        <LogoLettersMain width={undefined} height={36} />
+      </div>
       <Title>{children}</Title>
     </LogoAndTitleContainer>
   );

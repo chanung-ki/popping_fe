@@ -71,7 +71,7 @@ const StoreImage = styled.div<{ image: string | null }>`
   width: 100%;
   height: 90px;
   background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
+    props.image ? `url(${props.image})` : COLORS.secondaryColor};
   border-radius: 8px;
   object-position: center;
   object-fit: cover;
