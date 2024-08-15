@@ -2,12 +2,18 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  html, body {
-        margin: 0;
-    max-width: 100vw;
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
+html, body {
+  margin: 0;
+  max-width: 100vw;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
 
   body {
         display: flex;

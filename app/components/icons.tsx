@@ -64,24 +64,6 @@ export const IconHeart = ({ color, width, height }: SVGTypes) => {
   );
 };
 
-export const IconBookmark = ({ color, width, height }: SVGTypes) => {
-  return (
-    <SVG
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
-      height={height}
-      viewBox="0 0 12 16"
-      fill="none"
-    >
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M11.6364 2.6665C11.6364 1.95925 11.3578 1.28102 10.8618 0.780629C10.3656 0.280917 9.69296 0 8.99157 0H2.64446C1.94306 0 1.27044 0.280917 0.774178 0.780629C0.278596 1.28102 0 1.95959 0 2.6665V15.4665C0 15.6819 0.128973 15.8768 0.326326 15.9594C0.524017 16.042 0.751498 15.9962 0.902813 15.8437L5.81801 10.8875L10.7332 15.8437C10.8845 15.9962 11.112 16.042 11.3097 15.9594C11.5071 15.8768 11.636 15.6819 11.636 15.4665V2.6665H11.6364Z"
-        fill={color}
-      />
-    </SVG>
-  );
-};
 
 export const IconRoundTriangle = ({ color, width, height }: SVGTypes) => {
   return (
@@ -147,3 +129,17 @@ export const IconGear = ({ color, width, height }: SVGTypes) => {
     </SVG>
   );
 };
+
+export const IconBookmark = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      width={width ?? "auto"}
+      height={height ?? "auto"}
+      viewBox="0 0 16 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path fillRule="evenodd" clipRule="evenodd" d="M16 3.66643C16 2.69397 15.6169 1.76141 14.935 1.07337C14.2527 0.386261 13.3278 0 12.3634 0H3.63613C2.67171 0 1.74685 0.386261 1.06449 1.07337C0.383069 1.76141 0 2.69444 0 3.66643V21.2664C0 21.5626 0.177338 21.8306 0.448698 21.9441C0.720524 22.0577 1.03331 21.9948 1.24137 21.785L7.99977 14.9703L14.7582 21.785C14.9662 21.9948 15.279 22.0577 15.5508 21.9441C15.8222 21.8306 15.9995 21.5626 15.9995 21.2664V3.66643H16Z" fill={color} />
+    </SVG>
+  );
+};
+

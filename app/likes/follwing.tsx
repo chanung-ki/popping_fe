@@ -16,9 +16,11 @@ type followingType = {
 const Following = ({ values }: followingType) => {
   return (
     <Container>
-      {values.map((value: followingTypes) => {
+      {values.map((value: followingTypes, index: number) => {
         return (
-          <Store>
+          <Store
+            key={index}
+          >
             <StoreImage image={value.image}>
               <BrandText>{value.brand}</BrandText>
 
