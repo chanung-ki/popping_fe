@@ -30,7 +30,7 @@ interface PopupStoreData {
 
 const MapTestPage: React.FC = () => {
   
-  const [selectedStore, setSelectedStore] = useState<PopupStoreData | null>(null);
+  const [selectedStore, setSelectedStore] = useState<PopupStoreData>();
   const [userLocation, setUserLocation] = useState<number[]>();
   const [isExpanded, setIsExpanded] = useState(false); // 접었다 펴는 상태 관리
   const [popupStore, setPopupStore] = useState<PopupStoreData[]>();
@@ -38,12 +38,26 @@ const MapTestPage: React.FC = () => {
   const [mapInstance, setMapInstance] = useState<any>();
   const [kakao, setKakao] = useState<any>();
 
+  const [selectedCategory, setSelectedCategory] = useState<string>('coffee');
+  const [coffeePosition, setCoffeePosition] = useState<any[]>();
 
   const popupStoreAPI = async () =>{
 
     await axiosInstance.get(`/api/maps/stores`)
     .then((response:any) => {
       setPopupStore(response.data.popupStores)
+    })
+    .catch((error:any) => {
+      console.error('There was an error making the GET request!', error);
+    });
+  }
+
+  const placeAPI = async (store:PopupStoreData) =>{
+
+    await axiosInstance.get(`/api/maps/surround?popupId=${store.id}&meter=300`)
+    .then((response:any) => {
+
+      console.log(response.data)
     })
     .catch((error:any) => {
       console.error('There was an error making the GET request!', error);
@@ -84,30 +98,33 @@ const MapTestPage: React.FC = () => {
       script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&autoload=false';
       script.async = true;
       document.body.appendChild(script);
-  
+      
       script.onload = () => {
         const kakao = (window as any).kakao;
         setKakao(kakao)
+        if (kakao && kakao.maps) {
 
-        kakao.maps.load(() => {
-          const container = document.getElementById('map');
-
-          // map 로드시 중심위치
-          const options = {
-            center: new kakao.maps.LatLng(userLocation[0], userLocation[1]),
-            level: 3,
-          };
-
-          // map생성
-          const mapInstance = new kakao.maps.Map(container, options);
-          setMapInstance(mapInstance)
-
-          // 중심 마커 생성
-          const marker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(userLocation[0], userLocation[1]),
+          kakao.maps.load(() => {
+            const container = document.getElementById('map');
+            
+            // map 로드시 중심위치
+            const options = {
+              center: new kakao.maps.LatLng(userLocation[0], userLocation[1]),
+              level: 3,
+            };
+            // map생성
+            const mapInstance = new kakao.maps.Map(container, options);
+            setMapInstance(mapInstance)
+            
+            // 중심 마커 생성
+            const marker = new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(userLocation[0], userLocation[1]),
+            });
+            marker.setMap(mapInstance);
           });
-          marker.setMap(mapInstance);
-        });
+        }else {
+          console.error('Kakao Maps API failed to load');
+        }
       };
     }
   },[userLocation]);
@@ -131,7 +148,7 @@ const MapTestPage: React.FC = () => {
         var infowindow = new kakao.maps.InfoWindow({
           content: coordata.content
         });
-
+        
         (function(marker, infowindow) {
           // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
           kakao.maps.event.addListener(marker, 'mouseover', function() {
@@ -156,7 +173,7 @@ const MapTestPage: React.FC = () => {
         var latitude = store.location.geoData.coordinates[1];
         var longitude = store.location.geoData.coordinates[0];
         return {
-          content: `<div style="padding:5px;">${store.title}<br><a href="https://map.kakao.com/link/to/${store.location.placeName},${latitude},${longitude}" style="color:blue" target="_blank">길찾기</a></div>`,
+          content: `<div style="padding:3px;">${store.title} <a href="https://map.kakao.com/link/to/${store.location.placeName},${latitude},${longitude}" style="color:blue" target="_blank">길찾기</a></div>`,
           latlng: new kakao.maps.LatLng(latitude, longitude)
         };
       });
@@ -188,15 +205,44 @@ const MapTestPage: React.FC = () => {
         map: mapInstance // 맵을 설정하여 바로 표시
     });
 
+    // const iwContent = `
+    //   <div class="wrap">
+    //     <div class="info">
+    //       <div class="title">
+    //         ${store.title}
+    //         <div class="close" onclick="closeOverlay()" title="닫기"></div>
+    //       </div>
+    //       <div class="body">
+    //         <div class="img">
+    //           <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">
+    //         </div>
+    //         <div class="desc">
+    //           <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+    //           <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>
+    //           <a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // ` ;
+
     const iwContent = `
-        <div style="padding:5px;">
-          ${store.title} <br><a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
-        </div>`;
-    
+      <div style="padding:3px;">
+        ${store.title} <a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
+      </div>
+    `;
+            
     // 인포윈도우를 생성합니다
     const infowindow = new kakao.maps.InfoWindow({
-        content: iwContent
+        content: iwContent,
     });
+
+    // const infowindow = new kakao.maps.CustomOverlay({
+    //     content: iwContent,
+    //     position: marker.getPosition(),
+    //     map: mapInstance,
+    // });
+    // infowindow.setMap(mapInstance);
 
     // 마커 위에 인포윈도우를 표시합니다.
     infowindow.open(mapInstance, marker);
@@ -206,13 +252,131 @@ const MapTestPage: React.FC = () => {
 
     setSelectedStore(store);
 
-};
+    placeAPI(store);
+  };
 
+  // useEffect(()=>{
+  //   placeAPI()
+  // },[selectedStore])
+
+  function createMarkerImage(src:any, size:any, options:any) {
+    var markerImage = new kakao.maps.MarkerImage(src, size, options);
+    return markerImage;            
+  }
+
+  // 좌표와 마커이미지를 받아 마커를 생성하여 리턴하는 함수입니다
+  function createMarker(position:any, image:any) {
+    var marker = new kakao.maps.Marker({
+        position: position,
+        image: image
+    });
+    
+    return marker;  
+  }   
+
+  const setCoffeeMarkers = (mapInstance:any) =>{
+    var markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png';
+    var coffeeMarkers: any[] = [];
+    const coffeePosition = [ 
+      new kakao.maps.LatLng(37.499590490909185, 127.0263723554437),
+      new kakao.maps.LatLng(37.499427948430814, 127.02794423197847),
+      new kakao.maps.LatLng(37.498553760499505, 127.02882598822454),
+      new kakao.maps.LatLng(37.497625593121384, 127.02935713582038),
+      new kakao.maps.LatLng(37.49646391248451, 127.02675574250912),
+      new kakao.maps.LatLng(37.49629291770947, 127.02587362608637),
+      new kakao.maps.LatLng(37.49754540521486, 127.02546694890695)                
+    ];
+
+    coffeePosition.map((position)=>{
+      var imageSize = new kakao.maps.Size(22, 26)
+      var imageOptions = {  
+            spriteOrigin: new kakao.maps.Point(10, 0),    
+            spriteSize: new kakao.maps.Size(36, 98)  
+        }; 
+
+      var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),    
+          marker = createMarker(position, markerImage);  
+      
+      // 생성된 마커를 커피숍 마커 배열에 추가합니다
+      coffeeMarkers.push(marker);
+    })
+
+    coffeeMarkers.map((item)=>{
+
+      item.setMap(mapInstance);
+    })
+  }
+
+  const setStoreMarkers = (mapInstance:any) =>{
+    var markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png';
+    var storeMarkers: any[] = [];
+    const storePositions  = [ 
+      new kakao.maps.LatLng(37.497535461505684, 127.02948149502778),
+      new kakao.maps.LatLng(37.49671536281186, 127.03020491448352),
+      new kakao.maps.LatLng(37.496201943633714, 127.02959405469642),
+      new kakao.maps.LatLng(37.49640072567703, 127.02726459882308),
+      new kakao.maps.LatLng(37.49640098874988, 127.02609983175294),
+      new kakao.maps.LatLng(37.49932849491523, 127.02935780247945),
+      new kakao.maps.LatLng(37.49996818951873, 127.02943721562295)                
+    ];
+
+    storePositions.map((position)=>{
+      var imageSize = new kakao.maps.Size(22, 26)
+      var imageOptions = {  
+            spriteOrigin: new kakao.maps.Point(10, 0),    
+            spriteSize: new kakao.maps.Size(36, 98)  
+        }; 
+
+      var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),    
+          marker = createMarker(position, markerImage);  
+      
+      // 생성된 마커를 커피숍 마커 배열에 추가합니다
+      storeMarkers.push(marker);
+    })
+
+    storeMarkers.map((item)=>{
+
+      item.setMap(mapInstance);
+    })
+  }
+
+  const changeMarker = (type:string) => {
+    setSelectedCategory(type);
+
+    if (type === 'coffee') {
+      setCoffeeMarkers(mapInstance);
+      setStoreMarkers(null);
+
+    } else if (type === 'store') {
+      setCoffeeMarkers(null);
+      setStoreMarkers(mapInstance);
+    }
+  };
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
         <KakaoMap id="map"></KakaoMap>
+        <CategoryBox className="category">
+        <ul>
+          <li
+            id="coffeeMenu"
+            className={selectedCategory === 'coffee' ? 'menu_selected' : ''}
+            onClick={() => changeMarker('coffee')}
+          >
+            <span className="ico_comm ico_coffee"></span>
+            커피숍
+          </li>
+          <li
+            id="storeMenu"
+            className={selectedCategory === 'store' ? 'menu_selected' : ''}
+            onClick={() => changeMarker('store')}
+          >
+            <span className="ico_comm ico_store"></span>
+            편의점
+          </li>
+        </ul>
+        </CategoryBox>
         <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
           {isExpanded ? '접기' : '펼치기'}
         </ToggleButton>
@@ -245,6 +409,64 @@ const MapTestPage: React.FC = () => {
     </DefaultLayout>
   );
 };
+
+const CategoryBox = styled.div`
+  position: absolute;
+  overflow: hidden;
+  top: 10px;
+  left: 10px;
+  width: 100px;
+  height: 50px;
+  z-index: 10;
+  border: 1px solid black;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-size: 12px;
+  text-align: center;
+  background-color: #fff;
+
+  * {
+    margin: 0;
+    padding: 0;
+    color: #000;
+  }
+
+  .menu_selected {
+    background: #ff5f4a;
+    color: #fff;
+    border-left: 1px solid #915b2f;
+    border-right: 1px solid #915b2f;
+    margin: 0 -1px;
+  }
+
+  li {
+    list-style: none;
+    float: left;
+    width: 50px;
+    height: 45px;
+    padding-top: 5px;
+    cursor: pointer;
+  }
+
+  .ico_comm {
+    display: block;
+    margin: 0 auto 2px;
+    width: 22px;
+    height: 26px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png') no-repeat;
+  }
+
+  .ico_coffee {
+    background-position: -10px 0;
+  }
+
+  .ico_store {
+    background-position: -10px -36px;
+  }
+
+  .ico_carpark {
+    background-position: -10px -72px;
+  }
+`;
 
 const ImgContainer = styled.div`
   flex: 0 0 auto; /* 이미지 컨테이너의 크기 조절 */
@@ -283,12 +505,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: 95vh;
 `;
 
 const KakaoMap = styled.div`
-  flex: 1;
   width: 100%;
+  height: 100%;
 `;
 
 const ToggleButton = styled.button`
@@ -297,12 +519,12 @@ const ToggleButton = styled.button`
   cursor: pointer;
 `;
 
-const ExpandableDiv = styled.div<{ isExpanded: boolean }>`
+const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
   overflow: hidden;
-  height: ${({ isExpanded }) => (isExpanded ? '700px' : '0')};
+  height: ${( {isExpanded} ) => (isExpanded ? '1000px' : '0px')};
   transition: height 0.3s ease;
   background-color: #ffffff;
-  padding: ${({ isExpanded }) => (isExpanded ? '10px' : '0')};
+  padding: ${( {isExpanded} ) => (isExpanded ? '10px' :'0px')};
   overflow-y: auto;
 `;
 
