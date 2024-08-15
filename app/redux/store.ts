@@ -2,16 +2,15 @@ import { configureStore, applyMiddleware, combineReducers } from "@reduxjs/toolk
 import storage from "redux-persist/lib/storage";
 import logger from "redux-logger";
 import persistReducer from "redux-persist/es/persistReducer";
-
-import userSlice from "./reducers/user";
+import userSlice from "./reducers/poppingUser";
 
 const reducers = combineReducers({
-  user: userSlice.reducer,
+  poppingUser: userSlice.reducer,
 })
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user"],
+  whitelist: ["poppingUser"],
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -22,6 +21,7 @@ const middleware: (getDefaultMiddleware: any) => any = (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(logger) :
     // 배포 환경에서는 Redux-Logger를 추가하지 않습니다.
     getDefaultMiddleware({ serializableCheck: false });
+
 
 const store = configureStore({
   reducer: persistedReducer,

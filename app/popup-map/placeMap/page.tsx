@@ -27,6 +27,18 @@ interface PopupStoreData {
   image: any;
 }
 
+interface PlaceData {
+    title: string;
+    bestMenu: string[];
+    gradePoint: number;
+    loadAddr: string;
+    numberAddr: string;
+    telNumber: string;
+    option: string;
+    charTag: string[];
+    tags: string[];
+    geoData: GeoData;
+}
 
 const MapTestPage: React.FC = () => {
 
@@ -38,8 +50,9 @@ const MapTestPage: React.FC = () => {
   const [mapInstance, setMapInstance] = useState<any>();
   const [kakao, setKakao] = useState<any>();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('coffee');
+  const [selectedCategory, setSelectedCategory] = useState<string>();
   const [coffeePosition, setCoffeePosition] = useState<any[]>();
+  const [foodPosition, setFoodPosition] = useState<any[]>();
 
   const popupStoreAPI = async () => {
 
@@ -54,14 +67,26 @@ const MapTestPage: React.FC = () => {
 
   const placeAPI = async (store: PopupStoreData) => {
 
-    await axiosInstance.get(`/api/maps/surround?popupId=${store.id}&meter=300`)
-      .then((response: any) => {
+    await axiosInstance.get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
+    .then((response:any) => {
 
-        console.log(response.data)
+      var coffeePoList: any[] = [];
+      var foodPoList: any[] = [];
+
+      response.data.placeData.map((item:PlaceData)=>{
+        var position = new kakao.maps.LatLng(item.geoData.coordinates[1], item.geoData.coordinates[0])
+        if (item.option === 'food'){
+          foodPoList.push(position)
+        } else if (item.option === 'cafe') {
+          coffeePoList.push(position)
+        }
       })
-      .catch((error: any) => {
-        console.error('There was an error making the GET request!', error);
-      });
+      setCoffeePosition(coffeePoList)
+      setFoodPosition(foodPoList)
+    })
+    .catch((error:any) => {
+      console.error('There was an error making the GET request!', error);
+    });
   }
 
   useEffect(() => {
@@ -277,17 +302,7 @@ const MapTestPage: React.FC = () => {
   const setCoffeeMarkers = (mapInstance: any) => {
     var markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png';
     var coffeeMarkers: any[] = [];
-    const coffeePosition = [
-      new kakao.maps.LatLng(37.499590490909185, 127.0263723554437),
-      new kakao.maps.LatLng(37.499427948430814, 127.02794423197847),
-      new kakao.maps.LatLng(37.498553760499505, 127.02882598822454),
-      new kakao.maps.LatLng(37.497625593121384, 127.02935713582038),
-      new kakao.maps.LatLng(37.49646391248451, 127.02675574250912),
-      new kakao.maps.LatLng(37.49629291770947, 127.02587362608637),
-      new kakao.maps.LatLng(37.49754540521486, 127.02546694890695)
-    ];
-
-    coffeePosition.map((position) => {
+    coffeePosition!.map((position)=>{
       var imageSize = new kakao.maps.Size(22, 26)
       var imageOptions = {
         spriteOrigin: new kakao.maps.Point(10, 0),
@@ -307,20 +322,12 @@ const MapTestPage: React.FC = () => {
     })
   }
 
-  const setStoreMarkers = (mapInstance: any) => {
+  const setFoodMarkers = (mapInstance:any) =>{
     var markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png';
     var storeMarkers: any[] = [];
-    const storePositions = [
-      new kakao.maps.LatLng(37.497535461505684, 127.02948149502778),
-      new kakao.maps.LatLng(37.49671536281186, 127.03020491448352),
-      new kakao.maps.LatLng(37.496201943633714, 127.02959405469642),
-      new kakao.maps.LatLng(37.49640072567703, 127.02726459882308),
-      new kakao.maps.LatLng(37.49640098874988, 127.02609983175294),
-      new kakao.maps.LatLng(37.49932849491523, 127.02935780247945),
-      new kakao.maps.LatLng(37.49996818951873, 127.02943721562295)
-    ];
 
-    storePositions.map((position) => {
+    foodPosition!.map((position)=>{
+
       var imageSize = new kakao.maps.Size(22, 26)
       var imageOptions = {
         spriteOrigin: new kakao.maps.Point(10, 0),
@@ -345,11 +352,11 @@ const MapTestPage: React.FC = () => {
 
     if (type === 'coffee') {
       setCoffeeMarkers(mapInstance);
-      setStoreMarkers(null);
+      setFoodMarkers(null);
 
-    } else if (type === 'store') {
+    } else if (type === 'food') {
       setCoffeeMarkers(null);
-      setStoreMarkers(mapInstance);
+      setFoodMarkers(mapInstance);
     }
   };
 
@@ -358,24 +365,24 @@ const MapTestPage: React.FC = () => {
       <Container>
         <KakaoMap id="map"></KakaoMap>
         <CategoryBox className="category">
-          <ul>
-            <li
-              id="coffeeMenu"
-              className={selectedCategory === 'coffee' ? 'menu_selected' : ''}
-              onClick={() => changeMarker('coffee')}
-            >
-              <span className="ico_comm ico_coffee"></span>
-              커피숍
-            </li>
-            <li
-              id="storeMenu"
-              className={selectedCategory === 'store' ? 'menu_selected' : ''}
-              onClick={() => changeMarker('store')}
-            >
-              <span className="ico_comm ico_store"></span>
-              편의점
-            </li>
-          </ul>
+        <ul>
+          <li
+            id="coffeeMenu"
+            className={selectedCategory === 'coffee' ? 'menu_selected' : ''}
+            onClick={() => changeMarker('coffee')}
+          >
+            <span className="ico_comm ico_coffee"></span>
+            커피숍
+          </li>
+          <li
+            id="foodMenu"
+            className={selectedCategory === 'food' ? 'menu_selected' : ''}
+            onClick={() => changeMarker('food')}
+          >
+            <span className="ico_comm ico_store"></span>
+            맛집
+          </li>
+        </ul>
         </CategoryBox>
         <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
           {isExpanded ? '접기' : '펼치기'}

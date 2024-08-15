@@ -16,51 +16,86 @@ import LogoKakao from "@/public/images/social/logo_kakao.png";
 import LogoGoogle from "@/public/images/social/logo_google.png";
 import axiosInstance from "@/public/network/axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/app/redux/reducers/user";
+import { setUser } from "@/app/redux/reducers/poppingUser";
 import { user } from "@/public/utils/types";
 
 const SignInPage: React.FC = () => {
   const dispatch = useDispatch();
-  const userData = useSelector((state: any) => state.user);
+  const userData: user = useSelector((state: any) => state.user);
   const kakaoClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_KAKAO_CLIENT_ID;
+  const googleClientId = process.env.NEXT_PUBLIC_SOCIAL_AUTH_GOOGLE_CLIENT_ID;
   const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setDomain(window.location.origin);
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    //test code
+    console.log(userData);
+  }, [userData]);
 
   const handleClickLogin = async () => {
-    try {
-      const response = await axiosInstance.post(
-        "/api/user/signin",
-        {
-          email: valueEmail,
-          password: valuePassword
-        }
+    //test code
+    if (valueEmail !== "" && valuePassword !== "") {
+      alert("로그인 성공");
+      dispatch(
+        setUser({
+          nickname: "정승민",
+          name: "정승민",
+          isMale: true,
+          businessInfo: {
+            businessNumber: "businessNumber",
+            startDate: "startDate",
+            participantName: "participantName",
+          },
+          phoneNumber: "phoneNumber",
+          uuid: "uuid",
+          createdAt: "createdAt",
+          isPopper: true,
+          isSocialuser: true,
+          socialLoginProvider: "socialLoginProvider",
+          gradeInfo: {
+            grade: "grade",
+            minOrderAmount: 0,
+            maxOrderAmount: 0,
+            earnRate: 0,
+            discountRate: 0,
+          },
+          point: 0,
+          savedPopup: [],
+        })
       );
-      if (response.status === 200) {
-        const userData = response.data;
-
-        if (response.status === 200) {
-          const userData: user = response.data;
-          dispatch(setUser(userData));
-
-          window.location.reload();
-        }
-      }
-    } catch (error) {
-      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
+
+    //real code
+    // try {
+    //   const response = await axiosInstance.post("/api/user/signin", {
+    //     email: valueEmail,
+    //     password: valuePassword,
+    //   });
+
+    //   if (response.status === 200) {
+    //     const userData: user = response.data;
+    //     dispatch(setUser(userData));
+
+    //     window.location.reload();
+    //   }
+    // } catch (error) {
+    //   alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+    // }
   };
 
   const handleClickSocialLogin = (provider: string) => {
     let socialUrl = "";
     if (provider === "kakao") {
       socialUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoClientId}&redirect_uri=${domain}/member/social?provider=kakao&response_type=code`;
+    } else if (provider === "google") {
+      socialUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${domain}/member/social?provider=google&response_type=code&scope=email`;
     }
     window.location.href = socialUrl;
   };
@@ -79,12 +114,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"계정을 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -96,12 +131,12 @@ const SignInPage: React.FC = () => {
             status={null}
             bottomText={"비밀번호를 잊으셨나요?"}
             bottomTextClickable={true}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
         </MemberAccountForm>
@@ -118,7 +153,7 @@ const SignInPage: React.FC = () => {
         />
 
         <SignupContainer>
-          <SignUpText onClick={() => { }}>계정이 아직 없으신가요?</SignUpText>
+          <SignUpText onClick={() => {}}>계정이 아직 없으신가요?</SignUpText>
         </SignupContainer>
 
         <SocialSignInContainer>
@@ -132,6 +167,7 @@ const SignInPage: React.FC = () => {
           <SocialSignInButton
             background={COLORS.whiteColor}
             borderColor="#747775"
+            onClick={() => handleClickSocialLogin("google")}
           >
             <Image src={LogoGoogle} alt={"구글 로그인"} />
           </SocialSignInButton>
