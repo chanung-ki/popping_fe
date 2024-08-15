@@ -43,7 +43,7 @@ const SignInPage: React.FC = () => {
       if (response.status === 200) {
         const userData = response.data; 
 
-        // 유저 정보를 Redux에 저장 ??? => 안되는데 어케하노
+        // 유저 정보를 Redux에 저장 => 승민이 확인 부탁
         // dispatch(
         //   setUser({
         //     nickname: userData.nickname,
@@ -61,6 +61,7 @@ const SignInPage: React.FC = () => {
         //     savedPopup: userData.savedPopup,
         //   })
         // );
+
         window.location.reload();
       }
     } catch (error) {
