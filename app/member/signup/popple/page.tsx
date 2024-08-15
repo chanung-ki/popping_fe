@@ -16,6 +16,7 @@ import StepPhonePasscode from "./06phonepasscode";
 import StepProfile from "./07profile";
 import StepDone from "./08done";
 import axiosInstance from "@/public/network/axios";
+import {useRouter} from "next/navigation";
 
 const SignUpUserPage: React.FC = () => {
   type bodyTypes = {
@@ -45,10 +46,12 @@ const SignUpUserPage: React.FC = () => {
     "Done",
   ] as const;
 
+  const router = useRouter();
+
   const [Funnel, state, setState] = useFunnel(steps, {
     initialStep: "Email",
     onStepChange: (step) => {
-      setStepIndex(steps.indexOf(step) + 1);
+      setStepIndex(steps.indexOf(step));
     },
   }).withState<bodyTypes>({
     email: undefined,
@@ -82,8 +85,24 @@ const SignUpUserPage: React.FC = () => {
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
-      <MemberProgressBar value={stepIndex * (100 / steps.length)} />
-      {state.step != "Done" && <MemberChevronLeft />}
+      <MemberProgressBar value={stepIndex * (100 / steps.length-1)} />
+      {state.step !== "Done" && (
+        <div
+          onClick={() => {
+            if (stepIndex > 0) {
+              setStepIndex((prev) => prev - 1);
+              setState((prev) => ({
+                ...prev,
+                step: steps[stepIndex - 1],
+              }));
+            } else {
+              router.back();
+            }
+          }}
+        >
+          <MemberChevronLeft />{" "}
+        </div>
+      )}
       <Funnel>
         <Funnel.Step name="Email">
           <StepEmail
@@ -150,7 +169,7 @@ const SignUpUserPage: React.FC = () => {
         <Funnel.Step name="Done">
           <StepDone
             onNext={() => {
-              window.location.href = '/member/signin';
+              router.push('/member/signin');
             }}
           />
         </Funnel.Step>
