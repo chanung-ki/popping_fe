@@ -32,6 +32,7 @@ interface ProductData {
   saved: number;
   view: number;
   isSaved: boolean;
+  thumbnail: string;
 }
 
 interface Option {
@@ -134,11 +135,18 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
   if (!productData) return null;
 
   const handleBookmarkClick = async (id: number) => {
-    const newSavedState = !saveState;
-    setProductData({
-      ...productData,
-      isSaved: newSavedState
-    });
+    setSaveState(!saveState);
+    if (saveState) {
+      setProductData({
+        ...productData,
+        saved: productData.saved - 1
+      });
+    } else {
+      setProductData({
+        ...productData,
+        saved: productData.saved + 1
+      });
+    }
     Follow("Product", id);
   };
 
@@ -173,13 +181,13 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
       <ProductContainer>
         <Product>
           <ProductThumbnailImg
-            src="/images/gray.png" />
+            src={productData.thumbnail} />
           <ProductBookmark onClick={(event) => {
             event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
             handleBookmarkClick(productData.id);
           }} >
             <IconBookmark
-              color={productData.isSaved ? COLORS.mainColor : COLORS.greyColor}
+              color={saveState ? COLORS.mainColor : COLORS.greyColor}
               width={20}
               height={27} />
           </ProductBookmark>
@@ -248,19 +256,19 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                   <SizeGuideTable>
                     <thead>
                       <tr>
-                        <th>cm</th>
-                        <th>총장</th>
-                        <th>가슴단면</th>
-                        <th>소매길이</th>
+                        <th></th>
+                        {Object.keys(sizeOptions.option[0] || {}).map((key, index) => key !== 'name' && (
+                          <th key={index}>{key}</th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>
                       {sizeOptions.option.map((item, index) => (
                         <tr key={index}>
                           <td>{item.name}</td>
-                          <td>{item.length}</td>
-                          <td>{item.chest}</td>
-                          <td>{item.sleeve}</td>
+                          {Object.keys(sizeOptions.option[0] || {}).map((key, keyIndex) => key !== 'name' && (
+                            <td key={keyIndex}>{(item as any)[key]}</td>
+                          ))}
                         </tr>
                       ))}
                     </tbody>
@@ -299,7 +307,7 @@ const ChevronLeft = styled(Link)`
   border-radius: 8px;
   z-index: 1;
 
-  margin: 16px;
+  margin: 20px;
 `;
 
 const ProductContainer = styled.div`
@@ -326,6 +334,7 @@ const Product = styled.div`
 `;
 
 const ProductThumbnailImg = styled.img`
+  max-width: 100%;
   border-radius: 8px;
 `
 
