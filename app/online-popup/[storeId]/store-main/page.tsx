@@ -170,6 +170,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
           <StoreProductContainer>
             {productData.map((item: ProductData, index: number) => (
               <Product
+                key={index}
                 href={`product/${item.id}`}
               >
                 <ProductThumbnail>

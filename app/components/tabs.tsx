@@ -31,7 +31,7 @@ const Tap = styled.div<{ isSelect: boolean }>`
     padding: 12px 0%;
 
     color: ${(props) =>
-      props.isSelect ? COLORS.primaryColor : COLORS.secondaryColor};
+    props.isSelect ? COLORS.primaryColor : COLORS.secondaryColor};
     text-align: center;
     font-family: "Pretendard";
     font-size: 14px;
@@ -46,6 +46,7 @@ export const Taps = ({ values, selected, onSelect }: TabsTypes) => {
     <TapsContainer>
       {values.map((value, index) => (
         <Tap
+          key={index}
           isSelect={value === selected}
           onClick={() => {
             onSelect(index);
