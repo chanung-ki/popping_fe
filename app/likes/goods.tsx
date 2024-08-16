@@ -51,6 +51,8 @@ const Stuff = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  cursor: pointer;
 `;
 
 const StuffImage = styled.div<{ image: string | null }>`
