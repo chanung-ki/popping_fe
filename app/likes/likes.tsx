@@ -44,16 +44,12 @@ const LikesPage: React.FC = () => {
                 isLiked: true,
                 brand: "test",
                 desc: "testtest",
-                location: "서울시 용산구",
-                date: "2024.7.24 ~ 2024.8.15",
               },
               {
                 image: "",
                 isLiked: false,
                 brand: "test2",
                 desc: "testtest",
-                location: "서울시 용산구",
-                date: "2024.7.24 ~ 2024.8.16",
               },
             ]}
           />

@@ -1,5 +1,5 @@
 import { COLORS } from "@/public/styles/colors";
-import { RefObject, useRef } from "react";
+import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 import { styled } from "styled-components";
 
 type LayoutTypes = {
@@ -20,8 +20,8 @@ type ContainerPaddingTypes = {
 const Layout = styled.div`
   position: relative;
 
-  min-width: 320px;
-  max-width: 767px;
+  min-width: ${MobileMinWidth};
+  max-width: ${MobileMaxWidth};
   width: 100%;
   min-height: 100dvh;
   height: 100dvh;

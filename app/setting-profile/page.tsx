@@ -13,6 +13,7 @@ import { SelectBottomSection, SelectRound } from "../components/select";
 import { useRouter } from "next/navigation";
 
 import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
+import { ProfileImage } from "../components/main/componenets";
 
 const SettingProfilePage: React.FC = () => {
   const [valueNickname, setValueNickname] = useState<string>("");
@@ -56,7 +57,7 @@ const SettingProfilePage: React.FC = () => {
       </TopNavigation>
       <Container>
         <ProfileContainer>
-          <ProfileImage image={DummyProfile.src} />
+          <ProfileImage image={DummyProfile.src} width={100} height={100} />
           <ButtonSmall
             text={"사진 변경"}
             backgroundColor={COLORS.mainColor}
@@ -180,17 +181,6 @@ const ProfileContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
-`;
-
-const ProfileImage = styled.div<{ image: string | null }>`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-
-  background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
-  background-position: center;
-  background-size: cover;
 `;
 
 const Form = styled.div`

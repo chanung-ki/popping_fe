@@ -41,7 +41,7 @@ const SignUpUserPage: React.FC = () => {
     "Password",
     "Name",
     "Phone",
-    "Phone Passcode",
+    // "Phone Passcode",
     "Profile",
     "Done",
   ] as const;
@@ -93,7 +93,7 @@ const SignUpUserPage: React.FC = () => {
                 step: steps[stepIndex - 1],
               }));
             } else {
-              router.push("/");
+              router.push("/signup");
             }
           }}
         >
@@ -147,13 +147,13 @@ const SignUpUserPage: React.FC = () => {
             }}
           />
         </Funnel.Step>
-        <Funnel.Step name="Phone Passcode">
+        {/* <Funnel.Step name="Phone Passcode">
           <StepPhonePasscode
             onNext={() => {
               setState((prev) => ({ ...prev, step: "Profile" }));
             }}
           />
-        </Funnel.Step>
+        </Funnel.Step> */}
         <Funnel.Step name="Profile">
           <StepProfile
             onNext={(result: profileTypes) => {

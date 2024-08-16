@@ -8,6 +8,7 @@ import {
   IconMap,
   IconMypage,
 } from "./icons";
+import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 type BottomNavTypes = {
   onClick: CallableFunction;
@@ -32,8 +33,8 @@ const Container = styled.div`
     0 1px 0 0 ${COLORS.greyColor} inset, 1px 0 0 0 ${COLORS.greyColor} inset,
     1px 0 0 0 ${COLORS.greyColor} inset;
 
-  min-width: 320px;
-  max-width: 767px;
+  min-width: ${MobileMinWidth};
+  max-width: ${MobileMaxWidth};
   width: 100%;
   height: 58px;
 
