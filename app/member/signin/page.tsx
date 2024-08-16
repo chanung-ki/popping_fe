@@ -38,7 +38,7 @@ const SignInPage: React.FC = () => {
         setDomain(window.location.origin);
       }
     }
-  }, []);
+  }, [router]);
 
   const handleClickLogin = async () => {
     try {
@@ -50,7 +50,12 @@ const SignInPage: React.FC = () => {
       if (response.status === 200) {
         const userData: user = response.data.user;
         dispatch(setUser(userData));
-        router.push("/");
+        window.location.href = "/";
+        /*
+          django와 react 간의 로그인 세션 정보를 동기화 시키려면 최초 로그인 후 새로고침을 한번 해줘야합니다.
+          그러나 router의 push는 새로고치는게 아닌 url상의 이동만 지원하다보니
+          최초 로그인 후 메인페이지로 이동시에는 window.location.href를 사용하여 이동하도록 구현하겠습니다.
+        */
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");

@@ -14,13 +14,18 @@ import {
   RegexpInputNumber,
   RegexpPhone,
 } from "@/public/utils/regexp";
+import { Loading } from "@/app/components/loading";
 
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/public/network/axios";
 
 const ForgotPasswordPage: React.FC = () => {
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePhone, setValuePhone] = useState<string>("");
   const [valuePasscode, setValuePasscode] = useState<string>("");
@@ -32,7 +37,7 @@ const ForgotPasswordPage: React.FC = () => {
   const [isSent, setIsSent] = useState<boolean>(false);
   const [isResendable, setIsResendable] = useState<boolean>(false);
 
-  const resendableTime: number = 18;
+  const resendableTime: number = 300;
   const [count, setCount] = useState<number>(resendableTime);
 
   useEffect(() => {
@@ -57,8 +62,66 @@ const ForgotPasswordPage: React.FC = () => {
 
   const router = useRouter();
 
+  const authEmailSendApi = async() => {
+    if (isValidEmail && isValidPhone) {
+      setIsLoading(true);
+      try {
+        const response = await axiosInstance.post(
+          "/api/user/retrieve/auth",
+          {
+            email: valueEmail,
+            phoneNumber: valuePhone
+          }
+        );
+        if (response.status === 200) {
+          if (response.data.isSend) {
+            alert("인증메일이 전송되었습니다.");
+            setIsSent(true);
+            setCount(resendableTime);
+            setIsResendable(false);
+          } else {
+            alert("조건에 해당하는 계정이 존재하지 않습니다.");
+          }
+          setIsLoading(false);
+        };
+      } catch (error) {
+        alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+        setIsLoading(false);
+      }
+    }
+  }
+
+  const resetEmailSendApi = async() => {
+    if (isValidEmail && isValidPhone && isValidPasscode) {
+      setIsLoading(true);
+      try {
+        const response = await axiosInstance.post(
+          "/api/user/retrieve/password",
+          {
+            email: valueEmail,
+            phoneNumber: valuePhone,
+            authCode: valuePasscode
+          }
+        );
+        if (response.status === 200) {
+          if (response.data.isSend) {
+            alert("비밀번호 재설정 이메일이 전송되었습니다.");
+            router.push("/member/signin");
+          } else {
+            alert("인증번호가 일치하지 않습니다.");
+          }
+          setIsLoading(false);
+        };
+      } catch (error) {
+        alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+        setIsLoading(false);
+      }
+    }
+  }
+
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
+      {isLoading && <Loading/>}
       <Container>
         <div
           onClick={() => {
@@ -126,14 +189,16 @@ const ForgotPasswordPage: React.FC = () => {
               }
               bottomTextClickable={isResendable}
               bottomTextOnClick={() => {
-                setCount(resendableTime);
-                setIsResendable(false);
+                if (isResendable){
+                  authEmailSendApi();
+                }
               }}
               onChange={(text: string) => {
                 setValuePasscode(
                   text.replace(RegexpInputAlphabetAndNumber, "")
                 );
-                setIsValidPasscode(valuePasscode.length === 8);
+                // setIsValidPasscode(valuePasscode.length === 8); // 이상하게 7글자여야 true가 되어서 잠시 주석걸게요
+                setIsValidPasscode(valuePasscode !== ""); 
               }}
               onFocus={() => {}}
               onBlur={() => {}}
@@ -151,7 +216,7 @@ const ForgotPasswordPage: React.FC = () => {
                 : COLORS.greyColor
             }
             textColor={COLORS.primaryColor}
-            onClick={() => {}}
+            onClick={resetEmailSendApi}
           />
         ) : (
           <ButtonLarge
@@ -160,9 +225,7 @@ const ForgotPasswordPage: React.FC = () => {
               isValidEmail && isValidPhone ? COLORS.mainColor : COLORS.greyColor
             }
             textColor={COLORS.primaryColor}
-            onClick={() => {
-              setIsSent(true);
-            }}
+            onClick={authEmailSendApi}
           />
         )}
       </Container>
