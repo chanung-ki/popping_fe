@@ -7,13 +7,84 @@ import { IconChevronRight, IconGear } from "@/app/components/icons";
 import { ButtonSmall } from "../components/buttons";
 import { useRouter } from "next/navigation";
 import { LogoLettersMain } from "../components/logo";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ProfileImage } from "../components/main/componenets";
+import axiosInstance from "@/public/network/axios";
+import { removeCookie } from "@/public/network/cookie";
+import { initUser } from "../redux/reducers/poppingUser";
 
 import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
-import { ProfileImage } from "../components/main/componenets";
 
 const MyPage: React.FC = () => {
+
+  type myPageTypes = {
+    followingNum: number;
+    point: string;
+    gradeInfo: {
+      grade: string;
+      minOrderAmount: number;
+      maxOrderAmount: number;
+      earnRate: number;
+      discountRate: number;
+    },
+  };
+  
+  const dispatch = useDispatch();
   const router = useRouter();
+  const hasAlerted = useRef<boolean>(false); 
+  const { isLogin, nickname } = useSelector((state: any) => state.poppingUser.user);
+  const [myPageData, setMyPageData] = useState<myPageTypes>({
+    followingNum: 0,
+    point: '',
+    gradeInfo: {
+      grade: '',
+      minOrderAmount: 0,
+      maxOrderAmount: 0,
+      earnRate: 0,
+      discountRate: 0,
+    },
+  });
+
+  const signOutApi = async() => {
+    try {
+      const response = await axiosInstance.post(`/api/user/signout`);
+      if (response.status === 200) {
+        dispatch(initUser());
+        removeCookie('csrftoken');
+        removeCookie('sessionid');
+        alert('로그아웃이 완료되었습니다.');
+        hasAlerted.current = true;
+        router.push('/member/signin');
+      };
+    } catch (error) {
+      alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+    }
+  }
+
+  const getMyPageDataApi = async() => {
+    try {
+      const response = await axiosInstance.get(`/api/user/mypage`);
+      if (response.status === 200) {
+        setMyPageData(response.data);
+      };
+    } catch (error) {
+      alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+      router.push('/');
+    }
+  }
+
+  useEffect(() => {
+    if (!isLogin && !hasAlerted.current) {
+      alert("로그인 후 이용가능합니다.");
+      hasAlerted.current = true; // alert 호출 후 true로 설정
+      router.push("/member/signin");
+    }
+    if (isLogin) {
+      getMyPageDataApi();
+    }
+  }, [isLogin, router]);
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -31,7 +102,7 @@ const MyPage: React.FC = () => {
             <MyProfileContainer>
               <ProfileContainer>
                 <ProfileImage image={DummyProfile.src} width={60} height={60} />
-                <ProfileNickname>{"팝플"}님</ProfileNickname>
+                <ProfileNickname>{nickname}님</ProfileNickname>
                 <Spacer />
                 <ButtonSmall
                   text={"프로필 설정"}
@@ -45,24 +116,24 @@ const MyPage: React.FC = () => {
               <GradeContainer>
                 <CurrentGradeContainer>
                   <p>현재등급</p>
-                  <GradeText color={COLORS.mainColor}>{"VIP"}</GradeText>
-                  <IconNext
+                  <GradeText color={COLORS.mainColor}>{myPageData.gradeInfo.grade}</GradeText>
+                  {/* <IconNext
                     color={COLORS.greyColor}
                     width={undefined}
                     height={10}
-                  />
+                  /> */}
                   <Spacer />
-                  <p>{"무료배송 · 3% 할인"}</p>
+                  <p>{myPageData.gradeInfo.earnRate}% 적립 · {myPageData.gradeInfo.discountRate}% 할인</p>
                 </CurrentGradeContainer>
                 <PointsProgress value={80} max="100" />
-                <NextGradeContainer>
+                {/* <NextGradeContainer>
                   <NextGradeText color={COLORS.statusNegativeColor}>
                     {"SVIP"}
                   </NextGradeText>
                   <NextGradeDesc>
                     까지 {256}/{300} pts
                   </NextGradeDesc>
-                </NextGradeContainer>
+                </NextGradeContainer> */}
               </GradeContainer>
             </MyProfileContainer>
           </MyProfile>
@@ -70,11 +141,11 @@ const MyPage: React.FC = () => {
           <MyActivities>
             <MyActivitiesContainer>
               <Activity>
-                <p>{"99+"}</p>
+                <p>{myPageData.followingNum}</p>
                 <p>{"팔로잉"}</p>
               </Activity>
               <Activity>
-                <p>{"1,000"}</p>
+                <p>{myPageData.point}</p>
                 <p>{"콘 포인트"}</p>
               </Activity>
             </MyActivitiesContainer>
@@ -100,6 +171,9 @@ const MyPage: React.FC = () => {
           <p>공지사항</p>
           <p>고객센터</p>
           <p>1:1 문의 내역</p>
+          <div onClick={signOutApi} >
+            <p>로그아웃</p>
+          </div>
         </MenuContainer>
       </Container>
     </DefaultLayout>

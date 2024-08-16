@@ -13,7 +13,8 @@ import { RegexpPassword } from "@/public/utils/regexp";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import axiosInstance from "@/public/network/axios";
 
 const ResetPasswordPage: React.FC = () => {
   // 비밀번호
@@ -72,6 +73,30 @@ const ResetPasswordPage: React.FC = () => {
   }, [isPasswordConfirmFocused]);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const updatePasswordApi = async() => {
+    try {
+      const uuid = searchParams.get("uuid");
+      const response = await axiosInstance.patch(
+        "/api/user/retrieve/password",
+        {
+          uuid: uuid,
+          newPassword: valuePassword
+        }
+      );
+      if (response.status === 200) {
+        if (response.data.isSuccess) {
+          alert("비밀번호가 정상적을 변경되었습니다.\n변경된 비밀번호로 로그인을 해주세요.");
+        } else {
+          alert("비밀번호 재설정 권한이 없습니다.");
+        }
+        router.push("/member/signin");
+      };
+    } catch (error) {
+      alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+    }
+  }
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
@@ -132,13 +157,14 @@ const ResetPasswordPage: React.FC = () => {
         </MemberAccountForm>
 
         <ButtonLarge
-          text="다음"
+          text="변경"
           backgroundColor={
             isValidPassword && isSame ? COLORS.mainColor : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
           onClick={() => {
             if (isValidPassword && isSame) {
+              updatePasswordApi();
             }
           }}
         />
