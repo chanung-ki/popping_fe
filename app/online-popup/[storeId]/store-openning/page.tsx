@@ -7,22 +7,13 @@ import { DefaultLayout } from "@/app/components/layout";
 import Link from "next/link";
 import { IconX } from "@/app/components/icons";
 import { useRouter } from "next/navigation";
+import { BrandType } from "@/public/utils/types";
 
-//버튼이 아니라 Link로 하는게 나을듯? 
-
-interface BrandsOpening {
-  id: number;
-  name: string;
-  logo: string;
-  saved: number;
-  description: string;
-  thumbnail: string;
-}
 
 const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
   const router = useRouter();
 
-  const [openingData, setOpeningData] = useState<BrandsOpening>();
+  const [openingData, setOpeningData] = useState<BrandType>();
 
   const { storeId } = params;
 

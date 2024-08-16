@@ -40,6 +40,8 @@ const HomePage = () => {
           <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
       </TopNavigation>
+
+
       <Container ref={parentDiv}>
         {/* Top Navigation */}
 
@@ -119,9 +121,9 @@ const Container = styled.div`
 
   width: 100%;
   height: 100%;
+  overflow: auto; 
 
   background: ${COLORS.primaryColor};
-
   margin-bottom: 80px;
 `;
 
