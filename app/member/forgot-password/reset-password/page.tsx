@@ -87,7 +87,7 @@ const ResetPasswordPage: React.FC = () => {
       );
       if (response.status === 200) {
         if (response.data.isSuccess) {
-          alert("비밀번호가 정상적을 변경되었습니다.\n변경된 비밀번호로 로그인을 해주세요.");
+          alert("비밀번호가 정상적으로 변경되었습니다.\n변경된 비밀번호로 로그인을 해주세요.");
         } else {
           alert("비밀번호 재설정 권한이 없습니다.");
         }
