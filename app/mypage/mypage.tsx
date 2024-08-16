@@ -10,6 +10,7 @@ import { LogoLettersMain } from "../components/logo";
 
 import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
+import { ProfileImage } from "../components/main/componenets";
 
 const MyPage: React.FC = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const MyPage: React.FC = () => {
           <MyProfile>
             <MyProfileContainer>
               <ProfileContainer>
-                <ProfileImage image={DummyProfile.src} />
+                <ProfileImage image={DummyProfile.src} width={60} height={60} />
                 <ProfileNickname>{"팝플"}님</ProfileNickname>
                 <Spacer />
                 <ButtonSmall
@@ -172,17 +173,6 @@ const ProfileContainer = styled.div`
   gap: 12px;
 
   align-items: center;
-`;
-
-const ProfileImage = styled.div<{ image: string | null }>`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-
-  background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
-  background-position: center;
-  background-size: cover;
 `;
 
 const ProfileNickname = styled.p`

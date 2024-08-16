@@ -8,8 +8,6 @@ type storesTypes = {
   isLiked: boolean;
   brand: string;
   desc: string;
-  location: string;
-  date: string;
 };
 
 type storesType = {
@@ -18,7 +16,7 @@ type storesType = {
 
 const Stores = ({ values }: storesType) => {
   return (
-    <Container>
+    <Grid>
       {values.map((value: storesTypes, index: number) => {
         return (
           <Store key={index}>
@@ -32,47 +30,39 @@ const Stores = ({ values }: storesType) => {
               </IsLiked>
             </StoreImage>
 
-            <StoreTextContainer>
-              <StoreDesc>
-                <p>{value.brand}</p>
-                <p>{value.desc}</p>
-              </StoreDesc>
-
-              <Spacer />
-
-              <StoreInfo>
-                <p>{value.location}</p>
-                <p>{value.date}</p>
-              </StoreInfo>
-            </StoreTextContainer>
+            <StoreDesc>
+              <p>{value.brand}</p>
+              <p>{value.desc}</p>
+            </StoreDesc>
           </Store>
         );
       })}
-    </Container>
+    </Grid>
   );
 };
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 한 줄에 3개의 열 */
+  column-gap: 20px;
+  row-gap: 20px;
 `;
 
 const Store = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 8px;
 
-  gap: 24px;
+  cursor: pointer;
 `;
 
 const StoreImage = styled.div<{ image: string | null }>`
   position: relative;
-  max-width: 40%;
-  width: 100%;
-  height: 90px;
+  width: 100%; /* 그리드 셀의 너비에 맞춤 */
+  padding-bottom: 100%;
+  border-radius: 8px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.secondaryColor};
-  border-radius: 8px;
   object-position: center;
   object-fit: cover;
 `;
@@ -83,20 +73,15 @@ const IsLiked = styled.div`
   right: 12px;
 `;
 
-const StoreTextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const StoreDesc = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 
   p:first-child {
     color: ${COLORS.secondaryColor};
     font-family: "Pretendard";
-    font-size: 20px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -106,23 +91,6 @@ const StoreDesc = styled.div`
     color: ${COLORS.secondaryColor};
     font-family: "Pretendard";
     font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`;
-
-const StoreInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  p {
-    color: ${COLORS.greyColor};
-    font-family: "Pretendard";
-    font-size: 10px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;

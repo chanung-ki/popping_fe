@@ -44,27 +44,24 @@ const Container = styled.div`
 `;
 
 const Store = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  gap: 24px;
+  cursor: pointer;
 `;
 
 const StoreImage = styled.div<{ image: string | null }>`
   position: relative;
   width: 100%;
-  height: 90px;
+  height: 128px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.secondaryColor};
   border-radius: 8px;
-  object-position: center;
-  object-fit: cover;
+  background-position: center;
+  background-size: cover;
 `;
 
 const BrandText = styled.span`
   position: absolute;
   left: 12px;
-  bottom: 8px;
+  bottom: 12px;
 
   color: ${COLORS.primaryColor};
   font-family: "Pretendard";
@@ -77,7 +74,7 @@ const BrandText = styled.span`
 const IsLiked = styled.div`
   position: absolute;
   right: 12px;
-  bottom: 8px;
+  bottom: 12px;
 `;
 
 export default Following;
