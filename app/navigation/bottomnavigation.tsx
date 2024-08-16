@@ -31,10 +31,10 @@ const Container = styled.div`
   /* 아래, 위, 왼, 오 */
   box-shadow: 0 0 0 0 ${COLORS.greyColor} inset,
     0 1px 0 0 ${COLORS.greyColor} inset, 1px 0 0 0 ${COLORS.greyColor} inset,
-    1px 0 0 0 ${COLORS.greyColor} inset;
+    -1px 0 0 0 ${COLORS.greyColor} inset;
 
-  min-width: ${MobileMinWidth};
-  max-width: ${MobileMaxWidth};
+  min-width: ${MobileMinWidth}px;
+  max-width: ${MobileMaxWidth}px;
   width: 100%;
   height: 58px;
 

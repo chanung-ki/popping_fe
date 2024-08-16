@@ -79,7 +79,7 @@ const SignInPage: React.FC = () => {
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <Container>
         <div
           onClick={() => {
@@ -140,14 +140,13 @@ const SignInPage: React.FC = () => {
           onClick={handleClickLogin}
         />
 
-        <SignupContainer>
-          <SignUpText
-            onClick={() => {
-              router.push("/member/signup");
-            }}
-          >
-            계정이 아직 없으신가요?
-          </SignUpText>
+        <SignupContainer
+          onClick={() => {
+            router.push("/member/signup");
+          }}
+        >
+          <SignUpTextNormal>계정이 아직 없으신가요?</SignUpTextNormal>
+          <SignUpTextHighlight>회원가입</SignUpTextHighlight>
         </SignupContainer>
 
         <SocialSignInContainer>
@@ -180,18 +179,35 @@ const Container = styled.div`
 `;
 
 const SignupContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+
+  justify-content: center;
+
   width: 100%;
-  text-align: center;
   margin: 12px 0;
 `;
 
-const SignUpText = styled.span`
+const SignUpTextNormal = styled.span`
   color: ${COLORS.greyColor};
   text-align: center;
   font-family: "Pretendard";
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
+  line-height: normal;
+
+  cursor: pointer;
+`;
+
+const SignUpTextHighlight = styled.span`
+  color: ${COLORS.mainColor};
+  text-align: center;
+  font-family: "Pretendard";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
   line-height: normal;
 
   cursor: pointer;

@@ -20,13 +20,20 @@ type ContainerPaddingTypes = {
 const Layout = styled.div`
   position: relative;
 
-  min-width: ${MobileMinWidth};
-  max-width: ${MobileMaxWidth};
+  min-width: ${MobileMinWidth}px;
+  max-width: ${MobileMaxWidth}px;
   width: 100%;
   min-height: 100dvh;
   height: 100dvh;
 
   background-color: ${COLORS.primaryColor};
+
+  border: 0;
+
+  @media (min-width: ${MobileMaxWidth + 1}px) {
+    border-left: 1px solid ${COLORS.lightGreyColor};
+    border-right: 1px solid ${COLORS.lightGreyColor};
+  }
 `;
 
 const Container = styled.div<ContainerPaddingTypes>`

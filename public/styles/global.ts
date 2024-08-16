@@ -1,5 +1,6 @@
 "use client";
 import { createGlobalStyle } from "styled-components";
+import { COLORS } from "./colors";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -120,7 +121,7 @@ const GlobalStyle = createGlobalStyle`
   }
   html,
   body {
-    background: #222222;
+    background: ${COLORS.primaryColor};
     line-height: 1;
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
