@@ -85,8 +85,13 @@ const MapTestPage: React.FC = () => {
   const [foodPosition, setFoodPosition] = useState<any[]>();
 
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
+  const [selectedLocation, setSelectedLocation] = useState<any>();
 
   const router = useRouter();
+
+  useEffect(() => {
+    console.log(selectedLocation);
+  }, [selectedLocation]);
 
   const popupStoreAPI = async () => {
     await axiosInstance
@@ -441,10 +446,13 @@ const MapTestPage: React.FC = () => {
                   color: COLORS.secondaryColor,
                   backgroundColor: COLORS.whiteColor,
                   border: false,
-                  shadow: false,
+                  borderRadius: "12px",
+                }}
+                onChangeHandler={(e: any) => {
+                  console.log(e);
                 }}
               />
-              <LocalBanner></LocalBanner>
+              <LocalBanner>{selectedLocation}</LocalBanner>
               <input type="text" />
             </SearchContainer>
           </UpperSearchContainer>

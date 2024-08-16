@@ -11,15 +11,16 @@ export interface SelectOptionProps {
     color: string;
     backgroundColor: string;
     border?: boolean;
-    shadow?: boolean;
     borderRadius?: string;
   };
+  onChangeHandler: any;
 }
 
 const StyledSelect: React.FC<SelectOptionProps> = ({
   options,
   placeholder,
   styles,
+  onChangeHandler,
 }) => {
   return (
     <>
@@ -29,6 +30,7 @@ const StyledSelect: React.FC<SelectOptionProps> = ({
         placeholder={placeholder}
         classNamePrefix="react-select"
         styles={styles}
+        onChange={onChangeHandler}
       />
     </>
   );
@@ -45,88 +47,49 @@ const SelectStyled = styled(Select)<{
     borderRadius?: string;
   };
 }>`
-  width: ${(props) => props.styles.width};
-  /* height: ${(props) => props.styles.height}; */
-  border-radius: ${(props) =>
-    props.styles.borderRadius ? props.styles.borderRadius : "16px"};
-  color: ${(props) => props.styles.color};
+  & .react-select {
+    &__control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-  ${(props) =>
-    props.styles.shadow ? "box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1)" : ""};
+      width: calc(${(props) => props.styles.width} - 4px);
+      min-height: calc(${(props) => props.styles.height} - 8px);
+      max-height: ${(props) => props.styles.height};
+      border-radius: ${(props) =>
+        props.styles.borderRadius ? props.styles.borderRadius : "16px"};
+      border: none;
+      font-size: 12px;
+      font-family: "Pretendard";
+      font-weight: 300;
+      white-space: nowrap;
 
-  font-size: 12px;
-  font-weight: normal;
-  font-style: normal;
-  font-family: "Pretendard";
-
-  .react-select__indicator {
-    text-align: center;
-    color: ${(props) => props.styles.color};
-  }
-
-  .react-select__control {
-    width: ${(props) => props.styles.width};
-    height: ${(props) => props.styles.height};
-    background-color: ${(props) => props.styles.backgroundColor};
-    border: none;
-    border-radius: ${(props) =>
-      props.styles.borderRadius ? props.styles.borderRadius : "16px"};
-    color: ${(props) => props.styles.color};
-    ${(props) => (props.styles.border ? "border: 1px solid #757575;" : "")}
-  }
-
-  .react-select__placeholder {
-    padding: 0;
-    width: 78px;
-    height: ${(props) => props.styles.height};
-    padding-left: 0px;
-    text-align: left;
-    color: ${(props) => props.styles.color};
-  }
-
-  .react-select__single-value {
-    padding: 0;
-    color: ${(props) => props.styles.color};
-  }
-
-  .react-select__indicator {
-    padding: 0;
-    color: ${(props) => props.styles.color};
-
-    &-separator {
-      padding: 0;
-      background-color: ${(props) => props.styles.backgroundColor};
+      &--menu-is-open {
+      }
     }
-  }
-  .react-select__input-container {
-    padding: 0;
-    color: ${(props) => props.styles.color};
-  }
 
-  .react-select__menu {
-    /* margin-top: -18px; */
-    padding: 0;
-    border-radius: 6px;
-    background-color: rgba(255, 255, 255, 0.3);
-    ${(props) =>
-      props.styles.shadow ? "box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1)" : ""};
-    backdrop-filter: blur(31px);
+    &__value-container {
+      height: 100%;
+    }
 
-    color: #9e9e9e;
-    ${(props) => (props.styles.border ? "border: 1px solid #757575;" : "")}
-  }
-
-  .react-select__option {
-    &--is-focused {
-      color: ${(props) => props.styles.color};
-      background: transparent;
+    &__input-container {
+      height: 100%;
+      margin: 0;
       padding: 0;
     }
 
-    &--is-selected {
-      color: ${(props) => props.styles.color};
-      background-color: transparent;
-      padding: 0;
+    &__indicators {
+    }
+
+    &__indicator {
+      &-separator {
+        display: none;
+      }
+
+      & > svg {
+        width: 8px;
+        height: 8px;
+      }
     }
   }
 `;
