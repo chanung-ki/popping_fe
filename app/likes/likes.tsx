@@ -4,14 +4,34 @@ import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
 import { TopNavigation } from "../navigation/topnavigation";
 import { Taps } from "../components/tabs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Goods from "./goods";
 import Stores from "./stores";
 import Following from "./follwing";
+import axiosInstance from "@/public/network/axios";
 
 const LikesPage: React.FC = () => {
   const tabValues: string[] = ["상품", "스토어", "팔로잉"];
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+
+
+  useEffect(() => {
+    UserLikeDataGet();
+  }, []);
+
+  const UserLikeDataGet = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/popup/follow/list`)
+      if (response.status === 200) {
+        console.log(response.data)
+      }
+    }
+    catch (e: any) {
+      if (e.response.status != 401) {
+      }
+    }
+  }
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>

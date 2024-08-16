@@ -10,48 +10,15 @@ import { DefaultLayout } from "@/app/components/layout";
 import axiosInstance from "@/public/network/axios";
 import { Follow, KRWLocaleString } from "@/public/utils/function";
 import { IconBookmark, IconCart, IconChevronLeft } from "@/app/components/icons";
-
-interface BrandData {
-  id: number;
-  logo: string;
-  name: string;
-  proceeding: boolean;
-  conditions: {};
-  saved: number;
-  isSaved: boolean;
-  description: string;
-  thumbnail: string;
-}
-
-
-interface ProductData {
-  id: number;
-  brandFK: BrandData;
-  description: string;
-  name: string;
-  option: Option[];
-  price: number;
-  productInvoice: string;
-  createdAt: string;
-  updatedAt: string;
-  saved: number;
-  view: number;
-  thumbnail: string;
-  isSaved: boolean;
-}
-
-interface Option {
-  name: string;
-  option: string[];
-}
+import { BrandType, ProductType } from "@/public/utils/types";
 
 
 const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
   const { storeId } = params;
 
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
-  const [brandData, setBrandData] = useState<BrandData>();
-  const [productData, setProductData] = useState<ProductData[]>();
+  const [brandData, setBrandData] = useState<BrandType>();
+  const [productData, setProductData] = useState<ProductType[]>();
   const [savedProducts, setSavedProducts] = useState<{ [key: number]: boolean }>({});
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -108,7 +75,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
         setProductData(response.data.product)
         setIsFollowed(response.data.brand.isSaved)
 
-        const savedStates = response.data.product.reduce((acc: any, product: ProductData) => {
+        const savedStates = response.data.product.reduce((acc: any, product: ProductType) => {
           acc[product.id] = product.isSaved;
           return acc;
         }, {});
@@ -177,7 +144,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
           </StoreInfoContainer>
 
           <StoreProductContainer>
-            {productData.map((item: ProductData, index: number) => (
+            {productData.map((item: ProductType, index: number) => (
               <Product
                 key={index}
                 href={`product/${item.id}`}

@@ -87,14 +87,14 @@ const MenuContainer = styled.div`
 
 const MenuCenterContainer = styled.div`
   position: absolute;
-  top: 10%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
 
 const BubbleContainer = styled.div`
   position: absolute;
-  top: -50px;
+  top: -40px;
   left: 50%;
   transform: translate(-50%, 0);
 `;

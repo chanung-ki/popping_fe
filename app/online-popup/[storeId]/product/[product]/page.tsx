@@ -5,47 +5,11 @@ import { DefaultLayout } from "@/app/components/layout";
 import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
 import { Follow, KRWLocaleString } from "@/public/utils/function";
+import { OptionType, ProductType, SizeType } from "@/public/utils/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled, { keyframes } from 'styled-components';
-interface BrandData {
-  id: number;
-  logo: string;
-  name: string;
-  proceeding: boolean;
-  conditions: {};
-  saved: number;
-  isSaved: boolean;
-}
-
-interface ProductData {
-  id: number;
-  brandFK: BrandData;
-  description: string;
-  name: string;
-  option: Option[];
-  price: number;
-  productInvoice: string;
-  createdAt: string;
-  updatedAt: string;
-  saved: number;
-  view: number;
-  isSaved: boolean;
-  thumbnail: string;
-}
-
-interface Option {
-  name: string;
-  option: Size[];
-}
-
-interface Size {
-  name: string;
-  length: number;
-  chest: number;
-  sleeve: number
-}
 
 const fadeInOut = keyframes`
   0% {
@@ -72,7 +36,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
 
   const { storeId, product } = params;
 
-  const [productData, setProductData] = useState<ProductData>();
+  const [productData, setProductData] = useState<ProductType>();
   const [saveState, setSaveState] = useState<boolean>();
   const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
   const [allOptionsSelected, setAllOptionsSelected] = useState<boolean>(false);
@@ -211,7 +175,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
 
 
           <ProductOptionContainer>
-            {productData.option.map((data: Option, index: number) => (
+            {productData.option.map((data: OptionType, index: number) => (
               <ProductOption key={index}>
                 <ProductOptionTitle>
                   <span>
@@ -222,7 +186,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                   )}
                 </ProductOptionTitle>
                 <ProductOptionContent>
-                  {data.option.map((option: Size, optionIndex: number) => (
+                  {data.option.map((option: SizeType, optionIndex: number) => (
                     <RadioLabel key={optionIndex}>
                       <RadioButton
                         type="radio"
