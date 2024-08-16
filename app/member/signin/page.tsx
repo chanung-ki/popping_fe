@@ -11,6 +11,7 @@ import {
   MemberLogoAndTitle,
   MemberAccountForm,
 } from "@/app/components/member/components";
+import { Loading } from "@/app/components/loading";
 import Image from "next/image";
 import LogoKakao from "@/public/images/social/logo_kakao.png";
 import LogoGoogle from "@/public/images/social/logo_google.png";
@@ -28,6 +29,7 @@ const SignInPage: React.FC = () => {
   const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   useEffect(() => {
@@ -41,6 +43,7 @@ const SignInPage: React.FC = () => {
   }, [router]);
 
   const handleClickLogin = async () => {
+    setIsLoading(true);
     try {
       const response = await axiosInstance.post("/api/user/signin", {
         email: valueEmail,
@@ -50,6 +53,7 @@ const SignInPage: React.FC = () => {
       if (response.status === 200) {
         const userData: user = response.data.user;
         dispatch(setUser(userData));
+        setIsLoading(false);
         window.location.href = "/";
         /*
           django와 react 간의 로그인 세션 정보를 동기화 시키려면 최초 로그인 후 새로고침을 한번 해줘야합니다.
@@ -59,6 +63,7 @@ const SignInPage: React.FC = () => {
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+      setIsLoading(false);
     }
   };
 
@@ -74,6 +79,7 @@ const SignInPage: React.FC = () => {
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
+      {isLoading && <Loading/>}
       <Container>
         <div
           onClick={() => {
