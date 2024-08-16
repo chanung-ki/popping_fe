@@ -1,2 +1,2 @@
-export const MobileMinWidth: string = "320px";
-export const MobileMaxWidth: string = "767px";
+export const MobileMinWidth: number = 320;
+export const MobileMaxWidth: number = 767;
