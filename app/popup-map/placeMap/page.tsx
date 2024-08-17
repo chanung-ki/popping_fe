@@ -800,41 +800,6 @@ const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
   overflow-y: auto;
 `;
 
-const EachLocationContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  width: 166px;
-
-  & .heart-icon {
-    position: relative;
-    top: 138px;
-    left: 138px;
-  }
-
-  & .store-description-container {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    & .store-name {
-      font-size: 16px;
-      font-weight: 600;
-      font-style: normal;
-      line-height: normal;
-    }
-
-    & .store-description {
-      width: 100%;
-      font-size: 10px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: normal;
-    }
-  }
-`;
-
 const LocationContainer = styled.div`
   display: flex;
   flex-wrap: wrap;

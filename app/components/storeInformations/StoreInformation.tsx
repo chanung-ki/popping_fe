@@ -2,13 +2,16 @@ import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { useRouter } from "next/router";
 import { IconHeart } from "../icons";
-import { GeoData, LocationData, PopupStoreData } from "@/app/popup-map/placeMap/page";
+import {
+  GeoData,
+  LocationData,
+  PopupStoreData,
+} from "@/app/popup-map/placeMap/page";
 
 //TODO : 재희님과 협의 후 Props 정의
 interface StoreInformationProps {
   store: PopupStoreData;
 }
-
 
 const StoreInformation: React.FC = () => {
   return (
