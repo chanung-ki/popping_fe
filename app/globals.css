@@ -1,4 +1,5 @@
-/*
+/* @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -96,7 +97,7 @@ video {
   border: 0;
   font-size: 100%;
   font: inherit;
-  font-family: "Noto Sans KR";
+  font-family: "Pretendard";
   vertical-align: baseline;
   text-decoration: none;
   color: inherit;
@@ -146,5 +147,4 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-*/
+} */

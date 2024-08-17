@@ -18,8 +18,7 @@ const Goods = ({ values }: goodsType) => {
     <Grid>
       {values.map((value: goodsTypes, index: number) => {
         return (
-          <Stuff
-            key={index}>
+          <Stuff key={index}>
             <StuffImage image={value.image}>
               <IsLiked>
                 <IconBookmark
@@ -60,7 +59,7 @@ const StuffImage = styled.div<{ image: string | null }>`
   padding-bottom: 100%;
   border-radius: 8px;
   background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
+    props.image ? `url(${props.image})` : COLORS.secondaryColor};
   object-position: center;
   object-fit: cover;
 `;

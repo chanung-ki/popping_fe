@@ -16,6 +16,17 @@ const Container = styled.div`
   height: 68px;
 
   background: ${COLORS.primaryColor};
+
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 `;
 
 export const TopNavigation = ({ children }: TopNavTypes) => {

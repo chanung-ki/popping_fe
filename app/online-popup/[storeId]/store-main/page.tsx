@@ -9,7 +9,7 @@ import { COLORS } from "@/public/styles/colors";
 import { DefaultLayout } from "@/app/components/layout";
 import axiosInstance from "@/public/network/axios";
 import { Follow, KRWLocaleString } from "@/public/utils/function";
-import { IconBookmark } from "@/app/components/icons";
+import { IconBookmark, IconCart, IconChevronLeft } from "@/app/components/icons";
 
 interface BrandData {
   id: number;
@@ -19,6 +19,8 @@ interface BrandData {
   conditions: {};
   saved: number;
   isSaved: boolean;
+  description: string;
+  thumbnail: string;
 }
 
 
@@ -34,6 +36,7 @@ interface ProductData {
   updatedAt: string;
   saved: number;
   view: number;
+  thumbnail: string;
   isSaved: boolean;
 }
 
@@ -135,24 +138,30 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
     <DefaultLayout top="0" right="0" bottom="0" left="0">
 
       <StoreThumbnailContainer
-        src="/images/dummy_sky.jpeg"
+        src={brandData.thumbnail}
         height={parentWidth}
       />
 
       <StoreThumbnailNav href={"store-openning"}>
-        <GO_BACK />
+        <IconChevronLeft
+          color={COLORS.secondaryColor}
+          width={undefined}
+          height={16} />
       </StoreThumbnailNav>
 
       <Container ref={containerRef}>
         <StoreMainPageContainer>
-          {/* <CartButton>
-            <Link href={"/mypage/1/my-cart"}>Cart icon</Link>
-          </CartButton> */}
+          <CartButton href={"#"}>
+            <IconCart
+              color={COLORS.secondaryColor}
+              width={undefined}
+              height={undefined} />
+          </CartButton>
 
           <StoreInfoContainer>
             <StoreInfoHeader>
               <StoreName>
-                {storeId.toUpperCase()}
+                {storeId.toUpperCase()} STORE
               </StoreName>
               <StoreSave
                 onClick={() => storeFollowHandler()}>
@@ -160,7 +169,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
               </StoreSave>
             </StoreInfoHeader>
             <StoreDesc>
-              브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다브랜드설명입니다
+              {brandData.description}
             </StoreDesc>
             <BrandFollower>
               이 브랜드를 <span>{KRWLocaleString(brandData.saved)}</span>명의 <span>팝플</span>이 팔로우합니다.
@@ -175,7 +184,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
               >
                 <ProductThumbnail>
                   <ProductThumbnailImage
-                    src={`/images/popping-white.png`}
+                    src={item.thumbnail}
                   />
                   <ProductBookmark onClick={(event) => {
                     event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
@@ -199,7 +208,6 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
           </StoreProductContainer>
         </StoreMainPageContainer>
       </Container>
-
     </DefaultLayout>
 
   );
@@ -222,10 +230,30 @@ const StoreMainPageContainer = styled.div`
   padding: 0 20px;
 `;
 
+const CartButton = styled(Link)`
+  width: 44px;
+  height: 44px;
+
+  bottom: 112px;
+  right: 20px;
+  
+  border: 1px solid ${COLORS.greyColor};
+  background-color: white;
+  border-radius: 50%;
+
+  position: fixed;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  
+  z-index: 100;
+`
+
 const StoreThumbnailContainer = styled.img`
   width: 100%;
+  height: 100%;
   object-fit: cover;
-
 `;
 
 const StoreThumbnailNav = styled(Link)`

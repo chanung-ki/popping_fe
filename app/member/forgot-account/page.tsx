@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -19,6 +19,7 @@ import { Taps } from "@/app/components/tabs";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useRouter } from "next/navigation";
 
 const ForgotAccountPage: React.FC = () => {
   const tabValues: string[] = ["팝플", "팝핑"];
@@ -39,10 +40,18 @@ const ForgotAccountPage: React.FC = () => {
     setValueBN("");
   }, [selectedIndex]);
 
+  const router = useRouter();
+
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        <MemberChevronLeft />
+        <div
+          onClick={() => {
+            router.push("/member/signin");
+          }}
+        >
+          <MemberChevronLeft />
+        </div>
         <MemberLogoAndTitle>계정 찾기</MemberLogoAndTitle>
         <Taps
           values={tabValues}
@@ -150,7 +159,7 @@ const ForgotAccountPage: React.FC = () => {
           </MemberAccountForm>
         )}
 
-        <ButtonSingle
+        <ButtonLarge
           text={"확인"}
           backgroundColor={
             selectedIndex === 0

@@ -21,8 +21,7 @@ const Stores = ({ values }: storesType) => {
     <Container>
       {values.map((value: storesTypes, index: number) => {
         return (
-          <Store
-            key={index}>
+          <Store key={index}>
             <StoreImage image={value.image}>
               <IsLiked>
                 <IconHeart
@@ -72,7 +71,7 @@ const StoreImage = styled.div<{ image: string | null }>`
   width: 100%;
   height: 90px;
   background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
+    props.image ? `url(${props.image})` : COLORS.secondaryColor};
   border-radius: 8px;
   object-position: center;
   object-fit: cover;
@@ -123,7 +122,7 @@ const StoreInfo = styled.div`
   p {
     color: ${COLORS.greyColor};
     font-family: "Pretendard";
-    font-size: 8px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;

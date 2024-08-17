@@ -1,4 +1,4 @@
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
 import { Spacer } from "@/app/components/layout";
 import {
@@ -80,7 +80,7 @@ const StepBrand = ({ onNext }: StepType) => {
 
       <Spacer />
 
-      <ButtonSingle
+      <ButtonLarge
         text="다음"
         backgroundColor={isValidBrand ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}

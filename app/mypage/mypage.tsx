@@ -2,22 +2,23 @@ import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import Image from "next/image";
 import { TopNavigation } from "@/app/navigation/topnavigation";
-
-import LogoLetters from "@/public/images/logo_letters.png";
 import { DefaultLayout, Spacer } from "@/app/components/layout";
 import { IconChevronRight, IconGear } from "@/app/components/icons";
+import { ButtonSmall } from "../components/buttons";
+import { useRouter } from "next/navigation";
+import { LogoLettersMain } from "../components/logo";
+
+import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
+import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 
 const MyPage: React.FC = () => {
+  const router = useRouter();
+
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
         <TopNavLogoContainer>
-          <TopNavLogo
-            src={LogoLetters}
-            alt={"로고"}
-            width={undefined}
-            height={24}
-          />
+          <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
         <TopNavRightContainer>
           <IconGear color={COLORS.secondaryColor} width={20} height={20} />
@@ -28,12 +29,17 @@ const MyPage: React.FC = () => {
           <MyProfile>
             <MyProfileContainer>
               <ProfileContainer>
-                <ProfileImage image={null} />
+                <ProfileImage image={DummyProfile.src} />
                 <ProfileNickname>{"팝플"}님</ProfileNickname>
                 <Spacer />
-                <ProfileSettingButton>
-                  <ProfileSettingText>프로필 설정</ProfileSettingText>
-                </ProfileSettingButton>
+                <ButtonSmall
+                  text={"프로필 설정"}
+                  backgroundColor={COLORS.mainColor}
+                  textColor={COLORS.whiteColor}
+                  onClick={() => {
+                    router.push("/setting-profile");
+                  }}
+                />
               </ProfileContainer>
               <GradeContainer>
                 <CurrentGradeContainer>
@@ -78,9 +84,9 @@ const MyPage: React.FC = () => {
           <p>최근 본 팝업스토어</p>
           <ContentsContainer>
             <StoreContainer>
-              <StoreImage image={null} />
+              <StoreImage image={DummyStore.src} />
               <StoreDesc>
-                <p>일릭서 스토어</p>
+                <p>팝핑스토어</p>
               </StoreDesc>
             </StoreContainer>
           </ContentsContainer>
@@ -178,6 +184,8 @@ const ProfileImage = styled.div<{ image: string | null }>`
 
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
+  background-position: center;
+  background-size: cover;
 `;
 
 const ProfileNickname = styled.p`
@@ -186,25 +194,6 @@ const ProfileNickname = styled.p`
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
-  line-height: normal;
-`;
-
-const ProfileSettingButton = styled.div`
-  border-radius: 4px;
-  background: ${COLORS.mainColor};
-
-  cursor: pointer;
-`;
-
-const ProfileSettingText = styled.p`
-  padding: 8px 12px;
-
-  color: ${COLORS.primaryColor};
-  text-align: center;
-  font-family: "Pretendard";
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
   line-height: normal;
 `;
 
@@ -376,8 +365,8 @@ const StoreImage = styled.div<{ image: string | null }>`
   border-radius: 8px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
-  object-position: center;
-  object-fit: cover;
+  background-position: center;
+  background-size: cover;
 
   cursor: pointer;
 `;
@@ -411,6 +400,8 @@ const MenuContainer = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+
+    cursor: pointer;
   }
 `;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonSingle } from "@/app/components/buttons";
+import { ButtonLarge } from "@/app/components/buttons";
 import { InputRound } from "@/app/components/inputs";
 import { DefaultLayout } from "@/app/components/layout";
 import {
@@ -18,6 +18,7 @@ import {
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useRouter } from "next/navigation";
 
 const ForgotPasswordPage: React.FC = () => {
   const [valueEmail, setValueEmail] = useState<string>("");
@@ -54,10 +55,18 @@ const ForgotPasswordPage: React.FC = () => {
     }
   }, [count]);
 
+  const router = useRouter();
+
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       <Container>
-        <MemberChevronLeft />
+        <div
+          onClick={() => {
+            router.push("/member/signin");
+          }}
+        >
+          <MemberChevronLeft />
+        </div>
         <MemberLogoAndTitle>비밀번호 찾기</MemberLogoAndTitle>
 
         <MemberAccountForm>
@@ -134,7 +143,7 @@ const ForgotPasswordPage: React.FC = () => {
         </MemberAccountForm>
 
         {isSent ? (
-          <ButtonSingle
+          <ButtonLarge
             text={"확인"}
             backgroundColor={
               isValidEmail && isValidPhone && isValidPasscode
@@ -145,7 +154,7 @@ const ForgotPasswordPage: React.FC = () => {
             onClick={() => {}}
           />
         ) : (
-          <ButtonSingle
+          <ButtonLarge
             text={"인증번호 전송"}
             backgroundColor={
               isValidEmail && isValidPhone ? COLORS.mainColor : COLORS.greyColor
