@@ -5,22 +5,28 @@ import { DefaultLayout } from "@/app/components/layout";
 import { styled } from "styled-components";
 import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
-import { IconChevronLeft, IconX, IconSearch } from "@/app/components/icons";
+import {
+  IconChevronLeft,
+  IconX,
+  IconSearch,
+  IconHeart,
+} from "@/app/components/icons";
 import { useRouter } from "next/navigation";
 import StyledSelect from "@/app/components/styledSelect";
+import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 
-interface GeoData {
+export interface GeoData {
   type: string;
   coordinates: number[];
 }
 
-interface LocationData {
+export interface LocationData {
   address: string;
   placeName: string;
   geoData: GeoData;
 }
 
-interface PopupStoreData {
+export interface PopupStoreData {
   id: string;
   title: string;
   location: LocationData;
@@ -31,7 +37,7 @@ interface PopupStoreData {
   image: any;
 }
 
-interface PlaceData {
+export interface PlaceData {
   title: string;
   bestMenu: string[];
   gradePoint: number;
@@ -106,7 +112,8 @@ const MapTestPage: React.FC = () => {
 
   const placeAPI = async (store: PopupStoreData) => {
     await axiosInstance
-      .get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
+      // .get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
+      .get(`/api/maps/surround?popupId=66bb102131dd67964d630d18&meter=1000`)
       .then((response: any) => {
         var coffeePoList: any[] = [];
         var foodPoList: any[] = [];
@@ -323,9 +330,9 @@ const MapTestPage: React.FC = () => {
     placeAPI(store);
   };
 
-  // useEffect(()=>{
-  //   placeAPI()
-  // },[selectedStore])
+  useEffect(() => {
+    placeAPI();
+  }, [selectedStore]);
 
   function createMarkerImage(src: any, size: any, options: any) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
@@ -452,8 +459,10 @@ const MapTestPage: React.FC = () => {
                   setSelectedLocation(e.value);
                 }}
               />
-              <LocalBanner>{selectedLocation}</LocalBanner>
-              <input type="text" />
+              <LocalBanner>
+                {selectedLocation ? selectedLocation : "지역 선택"}
+              </LocalBanner>
+              <input type="text" placeholder="검색어를 입력하세요..." />
             </SearchContainer>
           </UpperSearchContainer>
         ) : (
@@ -504,10 +513,15 @@ const MapTestPage: React.FC = () => {
             </li>
           </ul>
         </CategoryBox>
-        <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
-          {isExpanded ? "접기" : "펼치기"}
-        </ToggleButton>
+        <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
         <ExpandableDiv isExpanded={isExpanded}>
+          <LocationContainer>
+            <StoreInformation />
+            <StoreInformation />
+            <StoreInformation />
+            <StoreInformation />
+          </LocationContainer>
+
           {selectedStore ? (
             <div>
               <h2>{selectedStore.title}</h2>
@@ -564,7 +578,7 @@ const MapTestPage: React.FC = () => {
 const UpperSearchContainer = styled.div`
   position: absolute;
   z-index: 10;
-  top: 80px;
+  top: 16px;
   left: 0px;
 
   display: flex;
@@ -602,6 +616,17 @@ const SearchContainer = styled.div`
   height: 32px;
   border-radius: 16px;
   background-color: ${COLORS.lightGreyColor};
+
+  & > input {
+    border: none;
+    background-color: ${COLORS.lightGreyColor};
+
+    &::placeholder {
+      font-size: 12px;
+      font-weight: 700;
+      color: ${COLORS.greyColor};
+    }
+  }
 `;
 
 const LocalBanner = styled.div`
@@ -621,7 +646,7 @@ const LocalBanner = styled.div`
 const UpperContainer = styled.div`
   position: absolute;
   z-index: 10;
-  top: 80px;
+  top: 16px;
   left: 0px;
 
   display: flex;
@@ -651,7 +676,7 @@ const UpperButtonContainer = styled.div`
 const CategoryBox = styled.div<{ $isSearchOpen: boolean }>`
   position: absolute;
   overflow: hidden;
-  top: ${({ $isSearchOpen }) => ($isSearchOpen ? "200px" : "120px")};
+  top: ${({ $isSearchOpen }) => ($isSearchOpen ? "140px" : "60px")};
   left: 20px;
   width: 100px;
   height: 50px;
@@ -743,6 +768,8 @@ const StoreContainer = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+
   width: 100%;
   height: 95vh;
 `;
@@ -753,8 +780,14 @@ const KakaoMap = styled.div`
 `;
 
 const ToggleButton = styled.button`
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 8px;
+
+  width: 54px;
+  height: 4px;
+
+  border: none;
+  border-radius: 2px;
+  background-color: ${COLORS.greyColor};
   cursor: pointer;
 `;
 
@@ -765,6 +798,52 @@ const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
   background-color: #ffffff;
   padding: ${({ isExpanded }) => (isExpanded ? "10px" : "0px")};
   overflow-y: auto;
+`;
+
+const EachLocationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  width: 166px;
+
+  & .heart-icon {
+    position: relative;
+    top: 138px;
+    left: 138px;
+  }
+
+  & .store-description-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    & .store-name {
+      font-size: 16px;
+      font-weight: 600;
+      font-style: normal;
+      line-height: normal;
+    }
+
+    & .store-description {
+      width: 100%;
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+  }
+`;
+
+const LocationContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 21px;
+
+  margin-top: 32px;
+  width: 100%;
 `;
 
 export default MapTestPage;
