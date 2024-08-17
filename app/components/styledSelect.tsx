@@ -61,7 +61,7 @@ const SelectStyled = styled(Select)<{
       border: none;
       font-size: 12px;
       font-family: "Pretendard";
-      font-weight: 300;
+      font-weight: 400;
       white-space: nowrap;
 
       &--menu-is-open {

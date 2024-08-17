@@ -449,7 +449,7 @@ const MapTestPage: React.FC = () => {
                   borderRadius: "12px",
                 }}
                 onChangeHandler={(e: any) => {
-                  console.log(e);
+                  setSelectedLocation(e.value);
                 }}
               />
               <LocalBanner>{selectedLocation}</LocalBanner>
@@ -577,6 +577,7 @@ const UpperSearchContainer = styled.div`
   height: 58px;
 
   background-color: ${COLORS.whiteColor};
+  font-family: "Pretendard";
 `;
 
 const TitleAndButtonContainer = styled.div`
@@ -604,10 +605,17 @@ const SearchContainer = styled.div`
 `;
 
 const LocalBanner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 8px;
   width: 76px;
-  height: 22px;
+  height: 14px;
   border-radius: 12px;
   background-color: ${COLORS.whiteColor};
+
+  font-size: 12px;
 `;
 
 const UpperContainer = styled.div`
