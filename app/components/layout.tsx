@@ -43,7 +43,9 @@ const Container = styled.div<ContainerPaddingTypes>`
 
   background: ${COLORS.primaryColor};
 
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
+  @media (min-width: ${MobileMaxWidth + 1}px) {
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const SpacerContainer = styled.div`
