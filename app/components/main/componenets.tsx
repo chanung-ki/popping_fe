@@ -12,7 +12,7 @@ const ProfileImageContainer = styled.div<ProfileImageTypes>`
   height: ${(props) => props.height}px;
   border-radius: 50%;
 
-  border: 1px solid ${COLORS.greyColor};
+  border: 1px solid ${COLORS.lightGreyColor};
 
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};

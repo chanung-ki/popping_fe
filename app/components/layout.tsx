@@ -29,11 +29,6 @@ const Layout = styled.div`
   background-color: ${COLORS.primaryColor};
 
   border: 0;
-
-  @media (min-width: ${MobileMaxWidth + 1}px) {
-    border-left: 1px solid ${COLORS.lightGreyColor};
-    border-right: 1px solid ${COLORS.lightGreyColor};
-  }
 `;
 
 const Container = styled.div<ContainerPaddingTypes>`
@@ -47,6 +42,10 @@ const Container = styled.div<ContainerPaddingTypes>`
     ${(props) => props.bottom} ${(props) => props.left};
 
   background: ${COLORS.primaryColor};
+
+  @media (min-width: ${MobileMaxWidth + 1}px) {
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const SpacerContainer = styled.div`

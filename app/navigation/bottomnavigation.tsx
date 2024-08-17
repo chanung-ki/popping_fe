@@ -1,18 +1,88 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import {
-  Bubble,
-  IconCenter,
-  IconHome,
-  IconLikes,
-  IconMap,
-  IconMypage,
-} from "./icons";
+import { IconCenter, IconHome, IconLikes, IconMap, IconMypage } from "./icons";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 type BottomNavTypes = {
   onClick: CallableFunction;
   currentIndex: number;
+};
+
+export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
+  return (
+    <Container>
+      {/* 홈 */}
+      <Menu
+        onClick={() => {
+          onClick(0);
+        }}
+      >
+        <MenuContainer>
+          <IconHome
+            color={
+              currentIndex === 0 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
+          <p>홈</p>
+        </MenuContainer>
+      </Menu>
+      {/* 팝업 지도 */}
+      <Menu
+        onClick={() => {
+          onClick(1);
+        }}
+      >
+        <MenuContainer>
+          <IconMap
+            color={
+              currentIndex === 1 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
+          <p>팝업 지도</p>
+        </MenuContainer>
+      </Menu>
+      {/* 중앙 */}
+      <Menu>
+        <MenuCenterContainer
+          onClick={() => {
+            onClick(2);
+          }}
+        >
+          <IconCenter />
+        </MenuCenterContainer>
+      </Menu>
+      {/* 관심 */}
+      <Menu
+        onClick={() => {
+          onClick(3);
+        }}
+      >
+        <MenuContainer>
+          <IconLikes
+            color={
+              currentIndex === 3 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
+          <p>관심</p>
+        </MenuContainer>
+      </Menu>
+      {/* 마이페이지 */}
+      <Menu
+        onClick={() => {
+          onClick(4);
+        }}
+      >
+        <MenuContainer>
+          <IconMypage
+            color={
+              currentIndex === 4 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
+          <p>MY</p>
+        </MenuContainer>
+      </Menu>
+    </Container>
+  );
 };
 
 const Container = styled.div`
@@ -88,94 +158,7 @@ const MenuContainer = styled.div`
 
 const MenuCenterContainer = styled.div`
   position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const BubbleContainer = styled.div`
-  position: absolute;
-  top: -40px;
+  top: -20px;
   left: 50%;
   transform: translate(-50%, 0);
 `;
-
-export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
-  return (
-    <Container>
-      {/* 홈 */}
-      <Menu
-        onClick={() => {
-          onClick(0);
-        }}
-      >
-        <MenuContainer>
-          <IconHome
-            color={
-              currentIndex === 0 ? COLORS.secondaryColor : COLORS.greyColor
-            }
-          />
-          <p>홈</p>
-        </MenuContainer>
-      </Menu>
-      {/* 팝업 지도 */}
-      <Menu
-        onClick={() => {
-          onClick(1);
-        }}
-      >
-        <MenuContainer>
-          <IconMap
-            color={
-              currentIndex === 1 ? COLORS.secondaryColor : COLORS.greyColor
-            }
-          />
-          <p>팝업 지도</p>
-        </MenuContainer>
-      </Menu>
-      {/* 중앙 */}
-      <Menu>
-        <MenuCenterContainer
-          onClick={() => {
-            onClick(2);
-          }}
-        >
-          <IconCenter />
-          <BubbleContainer>
-            <Bubble />
-          </BubbleContainer>
-        </MenuCenterContainer>
-      </Menu>
-      {/* 관심 */}
-      <Menu
-        onClick={() => {
-          onClick(3);
-        }}
-      >
-        <MenuContainer>
-          <IconLikes
-            color={
-              currentIndex === 3 ? COLORS.secondaryColor : COLORS.greyColor
-            }
-          />
-          <p>관심</p>
-        </MenuContainer>
-      </Menu>
-      {/* 마이페이지 */}
-      <Menu
-        onClick={() => {
-          onClick(4);
-        }}
-      >
-        <MenuContainer>
-          <IconMypage
-            color={
-              currentIndex === 4 ? COLORS.secondaryColor : COLORS.greyColor
-            }
-          />
-          <p>MY</p>
-        </MenuContainer>
-      </Menu>
-    </Container>
-  );
-};

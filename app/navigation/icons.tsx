@@ -1,7 +1,6 @@
-import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import Image from "next/image";
-import ImageCenter from "@/public/icons/btmnav_center.png";
+import ImageCenter from "@/public/icons/btmnav_center.jpg";
 
 type SVGTypes = {
   color: string;
@@ -106,6 +105,7 @@ export const IconCenter = () => {
   );
 };
 
+/*
 const BubbleContainer = styled.div`
   position: relative;
 
@@ -153,3 +153,4 @@ export const Bubble = () => {
     </BubbleContainer>
   );
 };
+*/
