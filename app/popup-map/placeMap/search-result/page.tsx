@@ -8,18 +8,27 @@ import StoreInformation from "@/app/components/storeInformations/StoreInformatio
 //TODO: params 넘길지? 어떻게 검색 결과 표출할지.
 
 const SearchResultPage: React.FC = () => {
+  const router = useRouter();
+
   return (
     <Container>
       <ResultHeader>
-        <div>
-          <IconChevronLeft
-            width={9}
-            height={16}
-            color={COLORS.secondaryColor}
-          />
-        </div>
-        <p>서울 용산구의 &quot;일릭서&quot; 검색 결과</p>
+        <ResultHeaderContents>
+          <div
+            onClick={() => {
+              router.push("/papup-map/palceMap");
+            }}
+          >
+            <IconChevronLeft
+              width={9}
+              height={16}
+              color={COLORS.secondaryColor}
+            />
+          </div>
+          <p>서울 용산구의 &quot;일릭서&quot; 검색 결과</p>
+        </ResultHeaderContents>
       </ResultHeader>
+
       <LocationContainer>
         <StoreInformation />
         <StoreInformation />
@@ -42,11 +51,16 @@ const Container = styled.div`
 
 const ResultHeader = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-around;
-
+  align-items: flex-start;
   padding: 13px 20px;
   width: calc(100% - 40px);
+`;
+
+const ResultHeaderContents = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  padding: 0px 20px;
 `;
 
 const LocationContainer = styled.div`
