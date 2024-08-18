@@ -30,9 +30,9 @@ const SearchResultPage: React.FC = () => {
       </ResultHeader>
 
       <LocationContainer>
-        <StoreInformation />
-        <StoreInformation />
-        <StoreInformation />
+        <StoreInformation storeId="123" />
+        <StoreInformation storeId="123"/>
+        <StoreInformation storeId="123"/>
         <StoreInformation />
       </LocationContainer>
     </Container>
