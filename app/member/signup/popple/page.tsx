@@ -17,6 +17,7 @@ import StepProfile from "./07profile";
 import StepDone from "./08done";
 import axiosInstance from "@/public/network/axios";
 import { useRouter } from "next/navigation";
+import { Loading } from "@/app/components/loading";
 
 const SignUpUserPage: React.FC = () => {
   type bodyTypes = {
@@ -46,6 +47,8 @@ const SignUpUserPage: React.FC = () => {
     "Done",
   ] as const;
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const router = useRouter();
 
   const [Funnel, state, setState] = useFunnel(steps, {
@@ -64,17 +67,33 @@ const SignUpUserPage: React.FC = () => {
     authCode: "",
   });
 
+  const checkValidForm = () => {
+    return(
+      state.email !== undefined &&
+      state.password !== undefined &&
+      state.name !== undefined &&
+      state.nickname !== undefined &&
+      state.phoneNumber !== undefined &&
+      state.isPopper === false 
+    )      
+  };
+
   const poppleSignupApi = async () => {
-    try {
-      const response = await axiosInstance.post(`/api/user/signup`, state);
-      if (response.status === 201) {
-        setState((prev) => ({
-          ...prev,
-          step: "Done",
-        }));
+    if (checkValidForm()) {
+      setIsLoading(true);
+      try {
+        const response = await axiosInstance.post(`/api/user/signup`, state);
+        if (response.status === 201) {
+          setState((prev) => ({
+            ...prev,
+            step: "Done",
+          }));
+          setIsLoading(false);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        alert("회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.");
       }
-    } catch (error) {
-      alert("회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -82,6 +101,7 @@ const SignUpUserPage: React.FC = () => {
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
+      {isLoading && <Loading/>}
       <MemberProgressBar value={stepIndex * (100 / steps.length - 1)} />
       {state.step !== "Done" && (
         <div
