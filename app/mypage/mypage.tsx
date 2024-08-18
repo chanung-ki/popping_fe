@@ -47,13 +47,17 @@ const MyPage: React.FC = () => {
     },
   });
 
+  const cleanUserData = () => {
+    dispatch(initUser());
+    removeCookie('csrftoken');
+    removeCookie('sessionid');
+  };
+
   const signOutApi = async() => {
     try {
       const response = await axiosInstance.post(`/api/user/signout`);
       if (response.status === 200) {
-        dispatch(initUser());
-        removeCookie('csrftoken');
-        removeCookie('sessionid');
+        cleanUserData();
         alert('로그아웃이 완료되었습니다.');
         hasAlerted.current = true;
         router.push('/member/signin');
@@ -69,8 +73,14 @@ const MyPage: React.FC = () => {
       if (response.status === 200) {
         setMyPageData(response.data);
       };
-    } catch (error) {
-      alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+    } catch (error: any) {
+      if (error.response.statue === 403) {
+        cleanUserData();
+        alert('로그인 세션이 만료되었습니다. 재로그인 후 이용해주세요.');
+        router.push('/member/signin');
+      } else {
+        alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+      }
       router.push('/');
     }
   }
