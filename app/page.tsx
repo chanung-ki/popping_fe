@@ -1,19 +1,23 @@
 "use client";
 
-import { BottomNavigation } from "./navigation/bottomnavigation";
 import { DefaultLayout } from "./components/layout";
 import HomePage from "./home/home";
 import MyPage from "./mypage/mypage";
 import LikesPage from "./likes/likes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
+import { BottomNavigationPopper } from "./navigation/bottomnavigation/popper";
+import { BottomNavigationPopple } from "./navigation/bottomnavigation/popple";
 
 const MainPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isLogin } = useSelector((state: any) => state.poppingUser.user);
+  const { isLogin, isPopper } = useSelector(
+    (state: any) => state.poppingUser.user
+  );
 
-  const getPageIndex = (param: string | null) => {
+  // Popple
+  const getPageIndexPopple = (param: string | null) => {
     switch (param) {
       case null:
         return 0;
@@ -24,20 +28,62 @@ const MainPage = () => {
     }
   };
 
-  const loginValid = (index: number) => {
-    if (isLogin) {
-      if (index === 3) {
-        router.replace("/?page=likes");
-      } else {
-        // index가 4일 경우
-      }
-    } else {
-      alert("로그인 후 이용가능합니다.");
-      router.push(
-        `/member/signin?redirect=${encodeURIComponent(
-          window.location.pathname
-        )}`
-      );
+  const btmnavOnClickPopple = (index: number) => {
+    switch (index) {
+      case 0:
+        router.replace("/");
+        break;
+      case 1:
+        // router.push("");
+        break;
+      case 2:
+        router.push("/online-popup/Popping/store-openning");
+        break;
+      case 3:
+        if (isLogin) {
+          router.replace("/?page=likes");
+        } else {
+          alert("로그인 후 이용가능합니다.");
+          router.replace("/member/signin");
+        }
+        break;
+      case 4:
+        if (isLogin) {
+          router.replace("/?page=mypage");
+        } else {
+          alert("로그인 후 이용가능합니다.");
+          router.replace("/member/signin");
+        }
+        break;
+    }
+  };
+
+  // Popper
+  const getPageIndexPopper = (param: string | null) => {
+    switch (param) {
+      case null:
+        return 0;
+      case "mypage":
+        return 2;
+    }
+  };
+
+  const btmnavOnClickPopper = (index: number) => {
+    switch (index) {
+      case 0:
+        router.replace("/");
+        break;
+      case 1:
+        // router.push("");
+        break;
+      case 2:
+        if (isLogin) {
+          router.replace("/?page=mypage");
+        } else {
+          alert("로그인 후 이용가능합니다.");
+          router.replace("/member/signin");
+        }
+        break;
     }
   };
 
@@ -46,27 +92,22 @@ const MainPage = () => {
       {searchParams.get("page") === null && <HomePage />}
       {searchParams.get("page") === "likes" && <LikesPage />}
       {searchParams.get("page") === "mypage" && <MyPage />}
-      <BottomNavigation
-        onClick={(index: number) => {
-          switch (index) {
-            case 0:
-              router.replace("/");
-              break;
-            case 1:
-              break;
-            case 2:
-              router.push("/online-popup/Popping/store-openning");
-              break;
-            case 3:
-              loginValid(3);
-              break;
-            case 4:
-              loginValid(3);
-              break;
-          }
-        }}
-        currentIndex={getPageIndex(searchParams.get("page")) ?? 5}
-      />
+      {isLogin && isPopper ? (
+        <BottomNavigationPopper
+          onClick={(index: number) => {
+            btmnavOnClickPopper(index);
+          }}
+          currentIndex={getPageIndexPopper(searchParams.get("page")) ?? -1}
+        />
+      ) : (
+        <BottomNavigationPopple
+          onClick={(index: number) => {
+            btmnavOnClickPopple(index);
+          }}
+          currentIndex={getPageIndexPopple(searchParams.get("page")) ?? -1}
+        />
+      )}
+      {}
     </DefaultLayout>
   );
 };
