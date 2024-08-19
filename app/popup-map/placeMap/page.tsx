@@ -19,6 +19,7 @@ import { PopupStoreDataType, PlaceDataType } from "@/public/utils/types";
 import StoreInfoList from "@/app/components/storeInformations/StoreInfoList";
 
 const MapTestPage: React.FC = () => {
+  const kakaoMapApiId = process.env.NEXT_PUBLIC_KAKAO_API_KEY;
   const DUMMY_SEOUL_OPTIONS = [
     { value: "서울시 종로구", label: "서울시 종로구" },
     { value: "서울시 중구", label: "서울시 중구" },
@@ -61,12 +62,9 @@ const MapTestPage: React.FC = () => {
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>();
   const [clickedLocationId, setClickedLocationId] = useState<string>("");
+  const [checkPopupList, setCheckPopupList] = useState<boolean>(true);
 
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(selectedLocation);
-  }, [selectedLocation]);
 
   const popupStoreAPI = async () => {
     await axiosInstance
@@ -79,10 +77,9 @@ const MapTestPage: React.FC = () => {
       });
   };
 
-  const placeAPI = async (store: PopupStoreDataType) => {
+  const placeAPI = async (storeId: string) => {
     await axiosInstance
-      // .get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
-      .get(`/api/maps/surround?popupId=66bb102131dd67964d630d18&meter=1000`)
+      .get(`/api/maps/surround?popupId=${storeId}&meter=1000`)
       .then((response: any) => {
         var coffeePoList: any[] = [];
         var foodPoList: any[] = [];
@@ -107,8 +104,8 @@ const MapTestPage: React.FC = () => {
   };
 
   useEffect(() => {
+    popupStoreAPI();
     getUserLocation();
-    // popupStoreAPI();
   }, []);
 
   // 현재 위치 가져오기
@@ -138,7 +135,8 @@ const MapTestPage: React.FC = () => {
     if (userLocation) {
       const script = document.createElement("script");
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&autoload=false";
+        `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiId}&autoload=false`;
+        // "//dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&autoload=false";
       script.async = true;
       document.body.appendChild(script);
 
@@ -180,14 +178,16 @@ const MapTestPage: React.FC = () => {
         var imageSize = new kakao.maps.Size(24, 35);
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-        var marker = new kakao.maps.Marker({
+        var popupMarker = new kakao.maps.Marker({
           map: mapInstance,
           position: coordata.latlng,
           image: markerImage,
+          clickable: true,
         });
 
         var infowindow = new kakao.maps.InfoWindow({
           content: coordata.content,
+          removable : true,
         });
 
         (function (marker, infowindow) {
@@ -200,14 +200,14 @@ const MapTestPage: React.FC = () => {
           kakao.maps.event.addListener(marker, "mouseout", function () {
             infowindow.close();
           });
-        })(marker, infowindow);
+        })(popupMarker, infowindow);
       });
     }
   }, [popupCoorData]);
 
   // 가져온 popupStore list의 위치데이터
   useEffect(() => {
-    if (popupStore) {
+    if (popupStore && kakao) {
       // popupStore를 기반으로 popupCoorData 생성
       const coorData = popupStore.map((store) => {
         var latitude = store.location.geoData.coordinates[1];
@@ -220,15 +220,6 @@ const MapTestPage: React.FC = () => {
       setPopupCoorData(coorData);
     }
   }, [popupStore]);
-
-  // 날짜를 YYYY.MM.DD 형식으로 포맷하는 함수
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}.${month}.${day}`;
-  };
 
   const SelectPopup = (store: PopupStoreDataType) => {
     const imageSrc =
@@ -294,17 +285,24 @@ const MapTestPage: React.FC = () => {
     // 선택한 마커의 위치로 지도의 중심을 이동합니다.
     mapInstance.setCenter(markerPosition);
 
-    setSelectedStore(store);
+    // setSelectedStore(store);
 
-    placeAPI(store);
+    placeAPI(selectedStore!.id);
   };
 
   useEffect(() => {
 
     if (selectedStore) {
-      placeAPI(selectedStore);
+      placeAPI(selectedStore.id);
+      SelectPopup(selectedStore)
     }
   }, [selectedStore]);
+
+  useEffect(()=>{
+    if (checkPopupList) {
+      setSelectedStore(undefined)
+    }
+  },[checkPopupList])
 
   function createMarkerImage(src: any, size: any, options: any) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
@@ -351,7 +349,7 @@ const MapTestPage: React.FC = () => {
   const setFoodMarkers = (mapInstance: any) => {
     var markerImageSrc =
       "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png";
-    var storeMarkers: any[] = [];
+    var foodMarkers: any[] = [];
 
     foodPosition!.map((position) => {
       var imageSize = new kakao.maps.Size(22, 26);
@@ -368,10 +366,10 @@ const MapTestPage: React.FC = () => {
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
-      storeMarkers.push(marker);
+      foodMarkers.push(marker);
     });
 
-    storeMarkers.map((item) => {
+    foodMarkers.map((item) => {
       item.setMap(mapInstance);
     });
   };
@@ -389,9 +387,9 @@ const MapTestPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top="0px" right="0px" bottom="0px" left="0px">
+    <DefaultLayout top="0" right="20px" bottom="0" left="20px">
+      <KakaoMap id="map"></KakaoMap>
       <Container>
-        <KakaoMap id="map"></KakaoMap>
         {isSearchClicked ? (
           <UpperSearchContainer>
             <TitleAndButtonContainer>
@@ -464,91 +462,69 @@ const MapTestPage: React.FC = () => {
             </UpperButtonContainer>
           </UpperContainer>
         )}
-
-        <CategoryBox className="category" $isSearchOpen={isSearchClicked}>
-          <ul>
-            <li
-              id="coffeeMenu"
-              className={selectedCategory === "coffee" ? "menu_selected" : ""}
-              onClick={() => changeMarker("coffee")}
-            >
-              <span className="ico_comm ico_coffee"></span>
-              커피숍
-            </li>
-            <li
-              id="foodMenu"
-              className={selectedCategory === "food" ? "menu_selected" : ""}
-              onClick={() => changeMarker("food")}
-            >
-              <span className="ico_comm ico_store"></span>
-              맛집
-            </li>
-          </ul>
-        </CategoryBox>
-        <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
-        <ExpandableDiv isExpanded={isExpanded}>
-          {clickedLocationId !== "" ? (
-            <StoreInfoAtMap setStore={setClickedLocationId} />
-          ) : (
-            <StoreInfoList
-              store={clickedLocationId}
-              setStore={setClickedLocationId}
-            />
-          )}
-
-          {/*여기는 재희님이랑 이야기 나눠봐야할 부분. */}
-          {selectedStore ? (
-            <div>
-              <h2>{selectedStore.title}</h2>
-              <p>
-                주소: {selectedStore.location.address}{" "}
-                {selectedStore.location.placeName}
-              </p>
-              <p>
-                이벤트 기간: {formatDate(selectedStore.startDate)} ~{" "}
-                {formatDate(selectedStore.endDate)}
-              </p>
-              <p>운영 시간: {selectedStore.openTime.join(", ")}</p>
-              <p>이벤트: {selectedStore.event.join(", ")}</p>
-              <img
-                src={`data:image/jpeg;base64,${selectedStore.image}`}
-                alt={selectedStore.title}
-                style={{ maxWidth: "100%", height: "auto" }}
-              />
-            </div>
-          ) : (
-            popupStore &&
-            popupStore.map((store: PopupStoreDataType) => (
-              <StoreContainer
-                onClick={() => {
-                  SelectPopup(store);
-                }}
-                key={store.id}
+        {selectedStore&&
+          <CategoryBox className="category" $isSearchOpen={isSearchClicked}>
+            <ul>
+              <li
+                id="coffeeMenu"
+                className={selectedCategory === "coffee" ? "menu_selected" : ""}
+                onClick={() => changeMarker("coffee")}
               >
-                <ImgContainer>
-                  <img
-                    src={`data:image/jpeg;base64,${store.image}`}
-                    alt={store.title}
+                <span className="ico_comm ico_coffee"></span>
+                커피숍
+              </li>
+              <li
+                id="foodMenu"
+                className={selectedCategory === "food" ? "menu_selected" : ""}
+                onClick={() => changeMarker("food")}
+              >
+                <span className="ico_comm ico_store"></span>
+                맛집
+              </li>
+            </ul>
+          </CategoryBox>
+        }
+        <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
+
+        <ExpandableDiv isExpanded={isExpanded}>
+         <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
+          {/*여기는 재희님이랑 이야기 나눠봐야할 부분. */}
+          {/* {selectedStore ? ( */}
+          {selectedStore ? (
+            <StoreInfoAtMap 
+            store={selectedStore}
+            setStore={setCheckPopupList}
+            />
+          ) : (
+            <StoreProductContainer isExpanded={isExpanded}>
+            {/* <LocationContainer> */}
+              {
+                popupStore &&
+                popupStore.map((store: PopupStoreDataType) => (
+                  <StoreInformation
+                    store={store}
+                    setCheckPopupList={setCheckPopupList}
+                    setSelectedStore={setSelectedStore}
                   />
-                </ImgContainer>
-                <TextConteiner>
-                  <h1>{store.title}</h1>
-                  <p>
-                    {store.location.address}
-                    {store.location.placeName}
-                  </p>
-                  <p>
-                    {formatDate(store.startDate)} ~ {formatDate(store.endDate)}
-                  </p>
-                </TextConteiner>
-              </StoreContainer>
-            ))
+    
+                ))
+              }
+            </StoreProductContainer>
           )}
         </ExpandableDiv>
       </Container>
     </DefaultLayout>
   );
 };
+
+const StoreProductContainer = styled.div<{isExpanded: boolean}>`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: ${(props) => (props.isExpanded ? 32 : 92)}px;
+  transition: height 0.3s ease;
+`;
 
 const UpperSearchContainer = styled.div`
   position: absolute;
@@ -651,7 +627,7 @@ const UpperButtonContainer = styled.div`
 const CategoryBox = styled.div<{ $isSearchOpen: boolean }>`
   position: absolute;
   overflow: hidden;
-  top: ${({ $isSearchOpen }) => ($isSearchOpen ? "140px" : "60px")};
+  top: ${({ isSearchOpen }) => (isSearchOpen ? "140px" : "60px")};
   left: 20px;
   width: 100px;
   height: 50px;
@@ -707,55 +683,33 @@ const CategoryBox = styled.div<{ $isSearchOpen: boolean }>`
   }
 `;
 
-const ImgContainer = styled.div`
-  flex: 0 0 auto; /* 이미지 컨테이너의 크기 조절 */
-
-  img {
-    width: 100%;
-    height: 100%;
-    max-width: 160px;
-  }
-`;
-
-const TextConteiner = styled.div`
-  flex: 1; /* 텍스트 컨테이너가 남은 공간을 차지하도록 설정 */
-  h1 {
-    font-size: 25px;
-    font-weight: 10px;
-  }
-  p {
-    margin-top: 10px;
-    font-size: 15px;
-  }
-`;
-
-const StoreContainer = styled.div`
-  margin-bottom: 20px;
-  display: flex; /* Flexbox 활성화 */
-  align-items: center; /* 수직 가운데 정렬 */
-  margin: 10px; /* 필요에 따라 마진 조절 */
-  border: 1px solid #ccc; /* 필요에 따라 테두리 추가 */
-  padding: 10px; /* 필요에 따라 패딩 추가 */
-  border-radius: 8px; /* 필요에 따라 테두리 반경 추가 */
-  cursor: pointer;
-`;
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
   width: 100%;
-  height: 95vh;
+  height: 100%;
 `;
 
 const KakaoMap = styled.div`
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+
   width: 100%;
   height: 100%;
 `;
 
 const ToggleButton = styled.button`
   margin-top: 8px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+
 
   width: 54px;
   height: 4px;
@@ -766,25 +720,33 @@ const ToggleButton = styled.button`
   cursor: pointer;
 `;
 
-const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
-  overflow: hidden;
-  width: 100%;
-  height: ${({ isExpanded }) => (isExpanded ? "1000px" : "0px")};
-  transition: height 0.3s ease;
-  background-color: #ffffff;
-  padding: ${({ isExpanded }) => (isExpanded ? "10px" : "0px")};
-  overflow-y: auto;
-`;
-
-const LocationContainer = styled.div`
+const ExpandableDiv = styled.div<{ $isExpanded: Boolean }>`
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
-  gap: 21px;
 
-  margin-top: 32px;
-  width: 100%;
+  width: calc(100% - 40px);
+  height: ${({ isExpanded }) => (isExpanded ? "70%" : "92px")};
+  
+  border-radius: 20px 20px 0 0;
+
+  background-color: ${COLORS.primaryColor};
+
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  position: absolute;
+  z-index: 10;
+
+  overflow: hidden;
+
+  transition: height 0.3s ease;
+
+  padding: ${({ isExpanded }) => (isExpanded ? "10px" : "0px")};
+  padding: 0 20px;
+
+  overflow-y: auto;
 `;
 
 export default MapTestPage;
