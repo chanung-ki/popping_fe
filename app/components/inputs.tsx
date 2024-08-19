@@ -25,6 +25,8 @@ interface InputStatusTypes {
 
 // 밑줄형
 const InputUnderlineContainer = styled.div`
+  flex: 1;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -121,6 +123,8 @@ export const InputUnderline = ({
 
 // 곡률형
 const InputRoundContainer = styled.div`
+  flex: 1;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -156,6 +160,10 @@ const InputRoundInput = styled.input`
 
   &::placeholder {
     color: ${COLORS.greyColor};
+  }
+
+  &:disabled {
+    background: ${COLORS.lightGreyColor};
   }
 `;
 
