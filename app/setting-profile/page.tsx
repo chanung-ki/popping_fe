@@ -29,15 +29,15 @@ import {
 } from "../redux/reducers/poppingUser";
 
 const SettingProfilePage: React.FC = () => {
-  const { isLogin, isPopper, nickname, name, isMale, profileImage } = useSelector(
-    (state: any) => state.poppingUser.user
-  );
+  const { isLogin, isPopper, nickname, name, isMale, profileImage } =
+    useSelector((state: any) => state.poppingUser.user);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   // 프로필 사진
   const [profileBlobUrl, setProfileBlobUrl] = useState<string>(profileImage);
   const [valueProfileImage, setValueProfileImage] = useState<string>("");
-  const [isChangeValueProfileImage, setIsChangeValueProfileImage] = useState<boolean>(false);
+  const [isChangeValueProfileImage, setIsChangeValueProfileImage] =
+    useState<boolean>(false);
 
   // 닉네임 or 브랜드네임
   const [valueNickname, setValueNickname] = useState<string>("");
@@ -67,7 +67,8 @@ const SettingProfilePage: React.FC = () => {
   const [valueGender, setValueGender] = useState<string | null>(null);
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
-  const [isChangeValueGender, setIsChangeValueGender] = useState<boolean>(false);
+  const [isChangeValueGender, setIsChangeValueGender] =
+    useState<boolean>(false);
 
   const hasAlerted = useRef<boolean>(false);
 
@@ -142,7 +143,7 @@ const SettingProfilePage: React.FC = () => {
       return;
     }
 
-    const blobUrl = URL.createObjectURL(file)
+    const blobUrl = URL.createObjectURL(file);
     setProfileBlobUrl(blobUrl);
 
     const reader = new FileReader();
@@ -211,25 +212,48 @@ const SettingProfilePage: React.FC = () => {
     setIsChangeNickname(nickname !== valueNickname);
     setIsChangeName(name !== valueName);
     setIsChangeValueProfileImage(valueProfileImage !== "");
-    setIsChangeValueGender(isMaleOptions[valueGender ? valueGender : "비공개"] !== isMale);
-  }, [nickname, valueNickname, name, valueName, valueProfileImage, valueGender, isMale, isMaleOptions]);
+    setIsChangeValueGender(
+      isMaleOptions[valueGender ? valueGender : "비공개"] !== isMale
+    );
+  }, [
+    nickname,
+    valueNickname,
+    name,
+    valueName,
+    valueProfileImage,
+    valueGender,
+    isMale,
+    isMaleOptions,
+  ]);
 
   useEffect(() => {
     let isValidForm = false;
     if (isPopper) {
       // 팝퍼 valid
-      isValidForm = isChangeNickname ? isValidNickname : isChangeValueProfileImage;
+      isValidForm = isChangeNickname
+        ? isValidNickname
+        : isChangeValueProfileImage;
     } else {
       // 팝플 valid
       if (isChangeNickname || isChangeName) {
-        isValidForm = (isChangeNickname && isValidNickname) && (isChangeName ? isValidName : true);
+        isValidForm =
+          isChangeNickname &&
+          isValidNickname &&
+          (isChangeName ? isValidName : true);
       } else {
         isValidForm = isChangeValueGender || isChangeValueProfileImage;
       }
     }
     setIsFormValid(isValidForm);
-  }, [isChangeNickname, isChangeName, isChangeValueGender, isChangeValueProfileImage, isValidNickname, isValidName, isPopper]);
-
+  }, [
+    isChangeNickname,
+    isChangeName,
+    isChangeValueGender,
+    isChangeValueProfileImage,
+    isValidNickname,
+    isValidName,
+    isPopper,
+  ]);
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -254,7 +278,7 @@ const SettingProfilePage: React.FC = () => {
           <ProfileImage image={profileBlobUrl} width={100} height={100} />
           <ButtonSmall
             text={"사진 변경"}
-            backgroundColor={COLORS.mainColor}
+            buttonColor={COLORS.mainColor}
             textColor={COLORS.primaryColor}
             onClick={() => {
               const el = document.getElementById("profileImage");
