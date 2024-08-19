@@ -60,7 +60,7 @@ export const MyPagePopper: React.FC = () => {
         cleanUserData();
         alert("로그아웃이 완료되었습니다.");
         hasAlerted.current = true;
-        router.push("/member/signin");
+        router.push("/");
       }
     } catch (error) {
       alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
