@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 const CartButton: React.FC = () => {
   const router = useRouter();
 
-  const [count, isCount] = useState<number>();
+  const [count, isCount] = useState<number>(0);
 
   useEffect(() => {
     CartBadgeGetAPI();
@@ -40,7 +40,9 @@ const CartButton: React.FC = () => {
         color={COLORS.secondaryColor}
         width={undefined}
         height={16} />
-      <Badge>{count}</Badge>
+      {(count > 0) &&
+        <Badge>{count}</Badge>
+      }
     </Container>
   )
 }

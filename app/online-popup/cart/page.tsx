@@ -13,19 +13,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const test = {
-  color: 'black',
-  size: 'XL',
-  amount: 1
-};
-
 const MyCartPage: React.FC = () => {
   const router = useRouter();
   const [selectedCards, setSelectedCards] = useState<Set<number>>(new Set());
   const [brandName, setBrandName] = useState<string>();
   const [cartData, setCartData] = useState<CartType[]>();
   const [cartLen, setCartLen] = useState<number>(0);
-
 
   const handleCheckboxChange = (index: number, selected: boolean) => {
     setSelectedCards(prevSelected => {
@@ -45,32 +38,34 @@ const MyCartPage: React.FC = () => {
 
   useEffect(() => {
     CartDataGetAPI();
-  }, [])
+  }, []);
 
   const CartDataGetAPI = async () => {
     try {
-      const response = await axiosInstance.get(`/api/popup/cart/data`)
+      const response = await axiosInstance.get(`/api/popup/cart/data`);
 
       if (response.status === 200) {
-        setBrandName(response.data.brand)
-        setCartData(response.data.cart)
-        setCartLen(response.data.cart.length)
+        setBrandName(response.data.brand);
+        setCartData(response.data.cart);
+        setCartLen(response.data.cart.length);
       }
-    }
-
-    catch (error: any) {
-      if (error.response.status === 401) {
+    } catch (error: any) {
+      if (error.response?.status === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push("/member/signin");
+        router.push(
+          `/member/signin?redirect=${encodeURIComponent(
+            window.location.pathname
+          )}`
+        );
       }
     }
-  }
+  };
 
   const decreaseCartLen = () => {
     setCartLen(prevLen => prevLen - 1);
   };
 
-  if (!cartData || !brandName) return null
+  if (!cartData || !brandName) return null;
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="0" left="20px">

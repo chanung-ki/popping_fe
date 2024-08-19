@@ -14,6 +14,7 @@ import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
 import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
 
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
+import { DefaultLayout } from "../components/layout";
 
 const HomePage = () => {
   const parentDiv = useRef<HTMLDivElement>(null);
@@ -40,7 +41,6 @@ const HomePage = () => {
           <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
       </TopNavigation>
-
 
       <Container ref={parentDiv}>
         {/* Top Navigation */}
@@ -121,10 +121,11 @@ const Container = styled.div`
 
   width: 100%;
   height: 100%;
-  overflow: auto; 
+  overflow: auto;
 
   background: ${COLORS.primaryColor};
-  margin-bottom: 80px;
+
+  padding-bottom: 80px;
 `;
 
 const SwiperContainer = styled.div`

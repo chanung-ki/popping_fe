@@ -300,7 +300,10 @@ const MapTestPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // placeAPI();
+
+    if (selectedStore) {
+      placeAPI(selectedStore);
+    }
   }, [selectedStore]);
 
   function createMarkerImage(src: any, size: any, options: any) {

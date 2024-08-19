@@ -1,6 +1,6 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import { IconCenter, IconHome, IconLikes, IconMap, IconMypage } from "./icons";
+import { IconHome, IconMap, IconMypage } from "../icons";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 type BottomNavTypes = {
@@ -8,7 +8,10 @@ type BottomNavTypes = {
   currentIndex: number;
 };
 
-export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
+export const BottomNavigationPopper = ({
+  onClick,
+  currentIndex,
+}: BottomNavTypes) => {
   return (
     <Container>
       {/* 홈 */}
@@ -41,41 +44,16 @@ export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
           <p>팝업 지도</p>
         </MenuContainer>
       </Menu>
-      {/* 중앙 */}
-      <Menu>
-        <MenuCenterContainer
-          onClick={() => {
-            onClick(2);
-          }}
-        >
-          <IconCenter />
-        </MenuCenterContainer>
-      </Menu>
-      {/* 관심 */}
-      <Menu
-        onClick={() => {
-          onClick(3);
-        }}
-      >
-        <MenuContainer>
-          <IconLikes
-            color={
-              currentIndex === 3 ? COLORS.secondaryColor : COLORS.greyColor
-            }
-          />
-          <p>관심</p>
-        </MenuContainer>
-      </Menu>
       {/* 마이페이지 */}
       <Menu
         onClick={() => {
-          onClick(4);
+          onClick(2);
         }}
       >
         <MenuContainer>
           <IconMypage
             color={
-              currentIndex === 4 ? COLORS.secondaryColor : COLORS.greyColor
+              currentIndex === 2 ? COLORS.secondaryColor : COLORS.greyColor
             }
           />
           <p>MY</p>
@@ -154,11 +132,4 @@ const MenuContainer = styled.div`
     font-weight: 600;
     line-height: normal;
   }
-`;
-
-const MenuCenterContainer = styled.div`
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translate(-50%, 0);
 `;

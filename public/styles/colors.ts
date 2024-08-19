@@ -7,4 +7,9 @@ export const COLORS = {
   whiteColor: "#FFFFFF",
   statusNegativeColor: "#F43529",
   kakaoColor: "#FEE500",
+  GradeWhitePop: "#F8F8FF",
+  GradeYellowPop: "#FAB913",
+  GradeRedPop: "#F6513B",
+  GradePurplePop: "#B829FB",
+  GradeGoldPop: "#DCA046",
 };

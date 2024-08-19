@@ -103,7 +103,11 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
     catch (e: any) {
       if (e.response.sataus === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push("/member/signin");
+        router.push(
+          `/member/signin?redirect=${encodeURIComponent(
+            window.location.pathname
+          )}`
+        );
       }
     }
   }
@@ -129,7 +133,11 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
     catch (error: any) {
       if (error.response.data === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push("/member/signin");
+        router.push(
+          `/member/signin?redirect=${encodeURIComponent(
+            window.location.pathname
+          )}`
+        );
       }
       else if (error.response.status === 400) {
         if (error.response.data.status === 1) {
@@ -157,7 +165,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
         saved: productData.saved + 1
       });
     }
-    Follow("Product", id);
+    Follow("Product", id, router);
   };
 
   const handleOptionChange = (optionName: string, selectedOption: string) => {
