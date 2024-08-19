@@ -65,7 +65,11 @@ const LikesPage: React.FC = () => {
     } catch (e: any) {
       if (e.response && e.response.status === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push("/member/signin");
+        router.push(
+          `/member/signin?redirect=${encodeURIComponent(
+            window.location.pathname
+          )}`
+        );
       }
     }
   };

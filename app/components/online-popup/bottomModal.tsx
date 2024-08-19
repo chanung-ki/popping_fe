@@ -61,9 +61,13 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
     } catch (error: any) {
       if (error.response.status === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push("/member/signin");
+        router.push(
+          `/member/signin?redirect=${encodeURIComponent(
+            window.location.pathname
+          )}`
+        );
       } else {
-        alert('옵션 변경에 문제가 생겼습니다.');
+        console.log(`${error.response}`);
       }
     }
   }, [data.id, router]);
@@ -260,7 +264,7 @@ const RadioLabel = styled.label<{ isChecked: boolean }>`
   flex: 0 0 auto;
   cursor: pointer;
   text-align: center;
-  border-radius: 17px;
+  border-radius: 16px;
   border: 1px solid ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
   padding: 8px 20px;
   box-sizing: border-box;
@@ -292,7 +296,7 @@ const AmountIcon = styled.button`
   justify-content: center;
   align-items: center;
   border: 1px solid ${COLORS.greyColor};
-  border-radius: 17px;
+  border-radius: 16px;
   box-sizing: border-box;
 
   &:first-child {
@@ -320,7 +324,7 @@ const AmountInput = styled.input`
   font-weight: 500;
   height: 34px;
   border: 1px solid ${COLORS.greyColor};
-  border-radius: 17px;
+  border-radius: 16px;
   box-sizing: border-box;
 
   &:focus {

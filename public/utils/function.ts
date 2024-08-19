@@ -1,5 +1,8 @@
 import { useRouter } from "next/navigation";
 import axiosInstance from "../network/axios";
+import { Route } from "next";
+import { NextRouter, Router } from "next/router";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // email, nickname, phoneNumber 중복 확인 api
 export const duplicateCheckApi = async (
@@ -76,8 +79,11 @@ export function FormatFollowers(follow: number) {
   }
 }
 
-export const Follow = async (type: string, id: number) => {
-  const router = useRouter();
+export const Follow = async (
+  type: string,
+  id: number,
+  router: AppRouterInstance
+) => {
   try {
     await axiosInstance.post(`/api/popup/follow/toggle`, {
       type: type,
@@ -85,8 +91,12 @@ export const Follow = async (type: string, id: number) => {
     });
   } catch (e: any) {
     if (e.response.status === 401) {
-      alert("로그인 후 이용가능합니다.");
-      router.push("/member/signin");
+      alert("로그인 이후 가능한 기능입니다.");
+      router.push(
+        `/member/signin?redirect=${encodeURIComponent(
+          window.location.pathname
+        )}`
+      );
     }
   }
   sessionStorage.setItem("followToggle", "true");

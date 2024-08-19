@@ -17,7 +17,11 @@ const MyPage: React.FC = () => {
     if (!isLogin && !hasAlerted.current) {
       alert("로그인 후 이용가능합니다.");
       hasAlerted.current = true; // alert 호출 후 true로 설정
-      router.push("/member/signin");
+      router.push(
+        `/member/signin?redirect=${encodeURIComponent(
+          window.location.pathname
+        )}`
+      );
     }
     if (isLogin) {
       setIsPopple(!isPopper);
