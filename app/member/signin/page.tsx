@@ -78,7 +78,8 @@ const SignInPage: React.FC = () => {
 
   const Back = () => {
     if (redirectPath) {
-      router.push(redirectPath);
+      router.refresh();
+      window.location.href = redirectPath;
     } else {
       window.location.href = "/";
     }

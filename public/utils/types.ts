@@ -117,3 +117,16 @@ export interface CartOption {
   size: string;
   amount: number;
 }
+
+// 팝플용 마이페이지 타입
+export type myPagePoppleTypes = {
+  followingNum: number;
+  point: string;
+  gradeInfo: {
+    grade: string;
+    minOrderAmount: number;
+    maxOrderAmount: number;
+    earnRate: number;
+    discountRate: number;
+  };
+};
