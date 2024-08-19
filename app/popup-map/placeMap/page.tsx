@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import StyledSelect from "@/app/components/styledSelect";
 import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
-import { PopupStoreData, PlaceData } from "@/public/utils/types";
+import { PopupStoreDataType, PlaceDataType } from "@/public/utils/types";
 
 
 const MapTestPage: React.FC = () => {
@@ -300,7 +300,9 @@ const MapTestPage: React.FC = () => {
   };
 
   useEffect(() => {
-    placeAPI();
+    if (selectedStore) {
+      placeAPI(selectedStore);
+    }
   }, [selectedStore]);
 
   function createMarkerImage(src: any, size: any, options: any) {

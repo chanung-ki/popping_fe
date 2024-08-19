@@ -165,7 +165,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
         saved: productData.saved + 1
       });
     }
-    Follow("Product", id);
+    Follow("Product", id, router);
   };
 
   const handleOptionChange = (optionName: string, selectedOption: string) => {
