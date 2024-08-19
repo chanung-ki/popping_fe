@@ -8,15 +8,28 @@ import { IconChevronLeft } from "../icons";
 import { SetStateAction } from "react";
 
 interface StoreInfoAtMapProps {
-  setStore: React.Dispatch<SetStateAction<string>>;
+  store: PopupStoreDataType
+  setStore: React.Dispatch<SetStateAction<boolean>>;
 }
+import { PopupStoreDataType } from "@/public/utils/types";
 
 //TODO : Props 구체화 필요함.
-const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
+const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
+// const StoreInfoAtMap: React.FC<{store: PopupStoreDataType, setStore: React.Dispatch<SetStateAction<null>>}> = ({ store, setStore }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   const backButtonClickhandler = () => {
-    setStore("");
+    setStore(true);
+  };
+
+
+  // 날짜를 YYYY.MM.DD 형식으로 포맷하는 함수
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
   };
 
   return (
@@ -25,10 +38,11 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
         <div className={"back-button"} onClick={backButtonClickhandler}>
           <IconChevronLeft width={9} height={16} color={COLORS.primaryColor} />
         </div>
+        <img src={`data:image/jpeg;base64,${store.image}`}/>
       </PopupStoreImage>
       <PopupStoreDescContainer>
         <div className={"slider-desc-header"}>
-          <p className={"slider-store-name"}>일릭서 스토어</p>
+          <p className={"slider-store-name"}>{store.title}</p>
           <div className={"slider-store-like"}>
             <IconHeart width={32} height={30} color={COLORS.mainColor} />
             <p>99만</p>
@@ -36,13 +50,16 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
         </div>
 
         <div className={"slider-store-desc"}>
-          일어나라 노예들이여 이 텍스트는 무한정 늘릴 수 있긴 한데
-          여어어어어어어어어어어어어기까지 가면 안대여
+          {store.event.map((item:string, index:number)=>(
+            <div>
+              {item}
+            </div>
+          ))}
         </div>
         <p className={"slider-store-address"}>
-          서울시 용산구 한강대로 109 17층
+          {store.location.address} {store.location.placeName}
         </p>
-        <p className={"slider-store-address"}>2024.07.24 ~ 2024. 08. 15</p>
+        <p className={"slider-store-address"}>{formatDate(store.startDate)} ~ {formatDate(store.endDate)}</p>
       </PopupStoreDescContainer>
       <ButtonContainer>
         {userData.isPopper ? (
@@ -104,6 +121,11 @@ const PopupStoreImage = styled.div`
     left: 20px;
     cursor: pointer;
   }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const PopupStoreDescContainer = styled.div`
@@ -111,7 +133,8 @@ const PopupStoreDescContainer = styled.div`
   flex-direction: column;
   gap: 8px;
 
-  overflow: hidden;
+  /* overflow: hidden; */
+  overflow-y: auto;
   padding: 16px 20px;
   width: calc(100% - 40px);
 
@@ -140,7 +163,7 @@ const PopupStoreDescContainer = styled.div`
 
   .slider-store-name {
     font-family: "Pretendard";
-    font-size: 32px;
+    font-size: 24px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
