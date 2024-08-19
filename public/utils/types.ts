@@ -32,6 +32,7 @@ export interface GeoDataType {
   coordinates: number[];
 }
 
+
 export interface LocationDataType {
   address: string;
   placeName: string;
@@ -48,6 +49,7 @@ export interface PopupStoreDataType {
   event: string[];
   image: any;
 }
+
 
 export interface PlaceDataType {
   title: string;

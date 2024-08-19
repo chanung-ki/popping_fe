@@ -5,11 +5,17 @@ import { DefaultLayout } from "@/app/components/layout";
 import { styled } from "styled-components";
 import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
-import { IconChevronLeft, IconX, IconSearch } from "@/app/components/icons";
+import {
+  IconChevronLeft,
+  IconX,
+  IconSearch,
+  IconHeart,
+} from "@/app/components/icons";
 import { useRouter } from "next/navigation";
 import StyledSelect from "@/app/components/styledSelect";
-import { PlaceDataType, PopupStoreDataType } from "@/public/utils/types";
-
+import StoreInformation from "@/app/components/storeInformations/StoreInformation";
+import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
+import { PopupStoreData, PlaceData } from "@/public/utils/types";
 
 
 const MapTestPage: React.FC = () => {
@@ -53,8 +59,14 @@ const MapTestPage: React.FC = () => {
   const [foodPosition, setFoodPosition] = useState<any[]>();
 
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
+  const [selectedLocation, setSelectedLocation] = useState<any>();
+  const [clickedLocationId, setClickedLocationId] = useState<string>("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    console.log(selectedLocation);
+  }, [selectedLocation]);
 
   const popupStoreAPI = async () => {
     await axiosInstance
@@ -69,7 +81,8 @@ const MapTestPage: React.FC = () => {
 
   const placeAPI = async (store: PopupStoreDataType) => {
     await axiosInstance
-      .get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
+      // .get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
+      .get(`/api/maps/surround?popupId=66bb102131dd67964d630d18&meter=1000`)
       .then((response: any) => {
         var coffeePoList: any[] = [];
         var foodPoList: any[] = [];
@@ -286,9 +299,9 @@ const MapTestPage: React.FC = () => {
     placeAPI(store);
   };
 
-  // useEffect(()=>{
-  //   placeAPI()
-  // },[selectedStore])
+  useEffect(() => {
+    placeAPI();
+  }, [selectedStore]);
 
   function createMarkerImage(src: any, size: any, options: any) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
@@ -409,11 +422,16 @@ const MapTestPage: React.FC = () => {
                   color: COLORS.secondaryColor,
                   backgroundColor: COLORS.whiteColor,
                   border: false,
-                  shadow: false,
+                  borderRadius: "12px",
+                }}
+                onChangeHandler={(e: any) => {
+                  setSelectedLocation(e.value);
                 }}
               />
-              <LocalBanner></LocalBanner>
-              <input type="text" />
+              <LocalBanner>
+                {selectedLocation ? selectedLocation : "지역 선택"}
+              </LocalBanner>
+              <input type="text" placeholder="검색어를 입력하세요..." />
             </SearchContainer>
           </UpperSearchContainer>
         ) : (
@@ -464,10 +482,37 @@ const MapTestPage: React.FC = () => {
             </li>
           </ul>
         </CategoryBox>
-        <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
-          {isExpanded ? "접기" : "펼치기"}
-        </ToggleButton>
+        <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
         <ExpandableDiv isExpanded={isExpanded}>
+          {clickedLocationId !== "" ? (
+            <StoreInfoAtMap />
+          ) : (
+            <LocationContainer>
+              {/*TODO: 리스트 렌더링 필요 */}
+              <StoreInformation
+                storeId={"123"}
+                currentStoreId={clickedLocationId}
+                setCurrentStoreId={setClickedLocationId}
+              />
+              <StoreInformation
+                storeId={"567"}
+                currentStoreId={clickedLocationId}
+                setCurrentStoreId={setClickedLocationId}
+              />
+              <StoreInformation
+                storeId={"1234"}
+                currentStoreId={clickedLocationId}
+                setCurrentStoreId={setClickedLocationId}
+              />
+              <StoreInformation
+                storeId={"4321"}
+                currentStoreId={clickedLocationId}
+                setCurrentStoreId={setClickedLocationId}
+              />
+            </LocationContainer>
+          )}
+
+          {/*여기는 재희님이랑 이야기 나눠봐야할 부분. */}
           {selectedStore ? (
             <div>
               <h2>{selectedStore.title}</h2>
@@ -524,7 +569,7 @@ const MapTestPage: React.FC = () => {
 const UpperSearchContainer = styled.div`
   position: absolute;
   z-index: 10;
-  top: 80px;
+  top: 16px;
   left: 0px;
 
   display: flex;
@@ -537,6 +582,7 @@ const UpperSearchContainer = styled.div`
   height: 58px;
 
   background-color: ${COLORS.whiteColor};
+  font-family: "Pretendard";
 `;
 
 const TitleAndButtonContainer = styled.div`
@@ -557,23 +603,41 @@ const SearchContainer = styled.div`
   gap: 8px;
 
   padding: 5px 12px;
-  width: 100%;
+  width: calc(100% - 28px);
   height: 32px;
   border-radius: 16px;
   background-color: ${COLORS.lightGreyColor};
+
+  & > input {
+    border: none;
+    background-color: ${COLORS.lightGreyColor};
+
+    &::placeholder {
+      font-size: 12px;
+      font-weight: 700;
+      color: ${COLORS.greyColor};
+    }
+  }
 `;
 
 const LocalBanner = styled.div`
-  width: 76px;
-  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 12px;
+  /* width: 76px; */
+  height: 14px;
   border-radius: 12px;
   background-color: ${COLORS.whiteColor};
+
+  font-size: 12px;
 `;
 
 const UpperContainer = styled.div`
   position: absolute;
   z-index: 10;
-  top: 80px;
+  top: 16px;
   left: 0px;
 
   display: flex;
@@ -603,7 +667,7 @@ const UpperButtonContainer = styled.div`
 const CategoryBox = styled.div<{ $isSearchOpen: boolean }>`
   position: absolute;
   overflow: hidden;
-  top: ${({ $isSearchOpen }) => ($isSearchOpen ? "200px" : "120px")};
+  top: ${({ $isSearchOpen }) => ($isSearchOpen ? "140px" : "60px")};
   left: 20px;
   width: 100px;
   height: 50px;
@@ -695,6 +759,8 @@ const StoreContainer = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+
   width: 100%;
   height: 95vh;
 `;
@@ -705,18 +771,36 @@ const KakaoMap = styled.div`
 `;
 
 const ToggleButton = styled.button`
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 8px;
+
+  width: 54px;
+  height: 4px;
+
+  border: none;
+  border-radius: 2px;
+  background-color: ${COLORS.greyColor};
   cursor: pointer;
 `;
 
 const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
   overflow: hidden;
+  width: 100%;
   height: ${({ isExpanded }) => (isExpanded ? "1000px" : "0px")};
   transition: height 0.3s ease;
   background-color: #ffffff;
   padding: ${({ isExpanded }) => (isExpanded ? "10px" : "0px")};
   overflow-y: auto;
+`;
+
+const LocationContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 21px;
+
+  margin-top: 32px;
+  width: 100%;
 `;
 
 export default MapTestPage;
