@@ -1,12 +1,31 @@
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
+import { useSelector } from "react-redux";
+import { user } from "@/public/utils/types";
+import { ButtonLarge, ButtonLargeSingle, ButtonSmall } from "../buttons";
+import { IconChevronLeft } from "../icons";
+import { SetStateAction } from "react";
+
+interface StoreInfoAtMapProps {
+  setStore: React.Dispatch<SetStateAction<string>>;
+}
 
 //TODO : Props 구체화 필요함.
-const StoreInfoAtMap: React.FC = () => {
+const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
+  const userData: user = useSelector((state: any) => state.poppingUser.user);
+
+  const backButtonClickhandler = () => {
+    setStore("");
+  };
+
   return (
     <PopupStoreInfoContainer>
-      <PopupStoreImage />
+      <PopupStoreImage>
+        <div className={"back-button"} onClick={backButtonClickhandler}>
+          <IconChevronLeft width={9} height={16} color={COLORS.primaryColor} />
+        </div>
+      </PopupStoreImage>
       <PopupStoreDescContainer>
         <div className={"slider-desc-header"}>
           <p className={"slider-store-name"}>일릭서 스토어</p>
@@ -25,7 +44,40 @@ const StoreInfoAtMap: React.FC = () => {
         </p>
         <p className={"slider-store-address"}>2024.07.24 ~ 2024. 08. 15</p>
       </PopupStoreDescContainer>
-      <VisitStoreButton>방문하기</VisitStoreButton>
+      <ButtonContainer>
+        {userData.isPopper ? (
+          <>
+            <ButtonLarge
+              text={"방문하기"}
+              backgroundColor={COLORS.mainColor}
+              textColor={COLORS.primaryColor}
+              onClick={() => {
+                console.log("router 처리 필요");
+              }}
+            />
+            <ButtonLarge
+              text={"통계"}
+              backgroundColor={COLORS.primaryColor}
+              textColor={COLORS.mainColor}
+              onClick={() => {
+                console.log("router 처리 필요");
+              }}
+              border={`2px solid ${COLORS.mainColor}`}
+            />
+          </>
+        ) : (
+          <>
+            <ButtonLargeSingle
+              text={"방문하기"}
+              backgroundColor={COLORS.mainColor}
+              textColor={COLORS.primaryColor}
+              onClick={() => {
+                console.log("router 처리 필요");
+              }}
+            />
+          </>
+        )}
+      </ButtonContainer>
     </PopupStoreInfoContainer>
   );
 };
@@ -39,11 +91,18 @@ const PopupStoreInfoContainer = styled.div`
   width: 100%;
 `;
 
-//TODO : 이미지로 대체
+//TODO : 추후 이미지로 삽입
 const PopupStoreImage = styled.div`
   width: 100%;
   height: 215px;
   background-color: ${COLORS.greyColor};
+
+  & .back-button {
+    position: relative;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+  }
 `;
 
 const PopupStoreDescContainer = styled.div`
@@ -114,27 +173,11 @@ const PopupStoreDescContainer = styled.div`
   }
 `;
 
-const VisitStoreButton = styled.div`
-  position: fixed;
-  bottom: 16px;
-  z-index: 16;
-
+const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-
-  border: none;
-  width: 90%;
-  height: 48px;
-  border-radius: 8px;
-  background-color: ${COLORS.mainColor};
-
-  text-align: center;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  color: ${COLORS.primaryColor};
+  gap: 15px;
+  width: 95%;
 `;
 
 export default StoreInfoAtMap;
