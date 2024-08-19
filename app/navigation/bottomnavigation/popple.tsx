@@ -1,6 +1,6 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import { IconCenter, IconHome, IconLikes, IconMap, IconMypage } from "./icons";
+import { IconCenter, IconHome, IconLikes, IconMap, IconMypage } from "../icons";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 type BottomNavTypes = {
@@ -8,7 +8,10 @@ type BottomNavTypes = {
   currentIndex: number;
 };
 
-export const BottomNavigation = ({ onClick, currentIndex }: BottomNavTypes) => {
+export const BottomNavigationPopple = ({
+  onClick,
+  currentIndex,
+}: BottomNavTypes) => {
   return (
     <Container>
       {/* 홈 */}

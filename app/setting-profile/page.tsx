@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DefaultLayout } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { styled } from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconChevronLeft } from "../components/icons";
-import { ButtonLarge, ButtonSmall } from "../components/buttons";
+import { ButtonLarge } from "../components/buttons";
 import { InputRound } from "../components/inputs";
-import { RegexpHangul, RegexpInputHangul, RegexpNickname } from "@/public/utils/regexp";
+import {
+  RegexpHangul,
+  RegexpInputHangul,
+  RegexpNickname,
+} from "@/public/utils/regexp";
 import { SelectBottomSection, SelectRound } from "../components/select";
 import { useRouter } from "next/navigation";
 
@@ -17,13 +21,17 @@ import { ProfileImage } from "../components/main/componenets";
 import { useSelector } from "react-redux";
 import { duplicateCheckApi } from "@/public/utils/function";
 import axiosInstance from "@/public/network/axios";
-import { useDispatch } from 'react-redux';
-import { changeNickname, changeName, changeisMale } from "../redux/reducers/poppingUser";
-
+import { useDispatch } from "react-redux";
+import {
+  changeNickname,
+  changeName,
+  changeisMale,
+} from "../redux/reducers/poppingUser";
 
 const SettingProfilePage: React.FC = () => {
-
-  const { isLogin, isPopper, nickname, name, isMale  } = useSelector((state: any) => state.poppingUser.user);
+  const { isLogin, isPopper, nickname, name, isMale } = useSelector(
+    (state: any) => state.poppingUser.user
+  );
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   // 닉네임 or 브랜드네임
@@ -37,9 +45,7 @@ const SettingProfilePage: React.FC = () => {
 
   // 이름
   const [valueName, setValueName] = useState<string>("");
-  const [isNameFocused, setIsNameFocused] = useState<boolean | null>(
-    null
-  );
+  const [isNameFocused, setIsNameFocused] = useState<boolean | null>(null);
   const [statusName, setStatusName] = useState<boolean | null>(null);
   const [bottomTextName, setbottomTextName] = useState<string>("");
   const [isValidName, setIsValidName] = useState<boolean>(false);
@@ -55,43 +61,52 @@ const SettingProfilePage: React.FC = () => {
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
 
+  const hasAlerted = useRef<boolean>(false);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
     setValueNickname(nickname);
     setValueName(name);
-    setValueGender(isMale ? ("남성") : (isMale == false ? "여성" : "비공개"));
-  }, [router])
+    setValueGender(isMale ? "남성" : isMale == false ? "여성" : "비공개");
+  }, [router]);
+
+  useEffect(() => {
+    if (!isLogin && !hasAlerted.current) {
+      alert("로그인 후 이용가능합니다.");
+      hasAlerted.current = true; // alert 호출 후 true로 설정
+      router.push("/member/signin");
+    }
+  }, [isLogin, router]);
 
   // api
-  const updateUserInfoApi = async() => {
+  const updateUserInfoApi = async () => {
     let requestBody;
     if (isPopper) {
       requestBody = {
         isPopper: true,
-        nickname: valueNickname
-      }
+        nickname: valueNickname,
+      };
     } else {
       requestBody = {
         isPopper: false,
         nickname: valueNickname,
         name: valueName,
-        isMale: isMaleOptions[valueGender? valueGender : '비공개']
-      }
+        isMale: isMaleOptions[valueGender ? valueGender : "비공개"],
+      };
     }
     try {
-      const response = await axiosInstance.patch(
-        "/api/user/", 
-        requestBody
-      );
+      const response = await axiosInstance.patch("/api/user/", requestBody);
       if (response.status === 200) {
         dispatch(changeNickname(valueNickname));
         if (!isPopper) {
           dispatch(changeName(valueName));
-          dispatch(changeisMale(isMaleOptions[valueGender? valueGender : '비공개']));
+          dispatch(
+            changeisMale(isMaleOptions[valueGender ? valueGender : "비공개"])
+          );
         }
-        alert('프로필 설정이 적용되었습니다.')
+        alert("프로필 설정이 적용되었습니다.");
         router.push("/?page=mypage");
       }
     } catch (error) {
@@ -114,7 +129,7 @@ const SettingProfilePage: React.FC = () => {
         // 정규식이 유효할 경우 중복 api를 호출.
         const isExist = await duplicateCheckApi(valueNickname, "nickname");
         setStatusNickname(!isExist);
-        setIsValidNickname(!isExist)
+        setIsValidNickname(!isExist);
         if (isExist) {
           setbottomTextNickname("이미 사용중인 닉네임 입니다.");
         } else {
@@ -154,36 +169,38 @@ const SettingProfilePage: React.FC = () => {
     }
   }, [isNameFocused]);
 
-
   const changeValid = (option: string) => {
-    if (option == 'nickname') {
+    if (option == "nickname") {
       if (nickname !== valueNickname) {
-        return isValidNickname
+        return isValidNickname;
       }
-      return undefined
+      return undefined;
     } else {
       if (name !== valueName) {
-        return isValidName
+        return isValidName;
       }
-      return undefined
+      return undefined;
     }
   };
 
   const getIsValidForm = () => {
-    const isNicknameValid = changeValid('nickname');
-    const isNameValid = changeValid('name');
-    
-    if ((isNicknameValid === false || isNameValid === false) || (isNicknameValid === undefined && isNameValid === undefined)) {
+    const isNicknameValid = changeValid("nickname");
+    const isNameValid = changeValid("name");
+
+    if (
+      isNicknameValid === false ||
+      isNameValid === false ||
+      (isNicknameValid === undefined && isNameValid === undefined)
+    ) {
       return false;
-    } 
+    }
     // 그 외는 모두 true를 반환
     return true;
-  }
+  };
 
   useEffect(() => {
     setIsFormValid(getIsValidForm());
-  },[isNameFocused, isNicknameFocused])
-
+  }, [isNameFocused, isNicknameFocused]);
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -237,7 +254,7 @@ const SettingProfilePage: React.FC = () => {
             }}
             disabled={false}
           />
-          
+
           {!isPopper && (
             <>
               <InputRound
@@ -277,9 +294,7 @@ const SettingProfilePage: React.FC = () => {
 
         <ButtonLarge
           text={"저장"}
-          backgroundColor={
-            isFormValid ? COLORS.mainColor : COLORS.greyColor
-          }
+          backgroundColor={isFormValid ? COLORS.mainColor : COLORS.greyColor}
           textColor={COLORS.primaryColor}
           onClick={handleSaveButton}
         />
