@@ -23,7 +23,6 @@ import { useRouter } from "next/navigation";
 import axiosInstance from "@/public/network/axios";
 
 const ForgotPasswordPage: React.FC = () => {
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [valueEmail, setValueEmail] = useState<string>("");
@@ -62,17 +61,14 @@ const ForgotPasswordPage: React.FC = () => {
 
   const router = useRouter();
 
-  const authEmailSendApi = async() => {
+  const authEmailSendApi = async () => {
     if (isValidEmail && isValidPhone) {
       setIsLoading(true);
       try {
-        const response = await axiosInstance.post(
-          "/api/user/retrieve/auth",
-          {
-            email: valueEmail,
-            phoneNumber: valuePhone
-          }
-        );
+        const response = await axiosInstance.post("/api/user/retrieve/auth", {
+          email: valueEmail,
+          phoneNumber: valuePhone,
+        });
         if (response.status === 200) {
           if (response.data.isSend) {
             alert("인증메일이 전송되었습니다.");
@@ -83,15 +79,15 @@ const ForgotPasswordPage: React.FC = () => {
             alert("조건에 해당하는 계정이 존재하지 않습니다.");
           }
           setIsLoading(false);
-        };
+        }
       } catch (error) {
         alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
         setIsLoading(false);
       }
     }
-  }
+  };
 
-  const resetEmailSendApi = async() => {
+  const resetEmailSendApi = async () => {
     if (isValidEmail && isValidPhone && isValidPasscode) {
       setIsLoading(true);
       try {
@@ -100,7 +96,7 @@ const ForgotPasswordPage: React.FC = () => {
           {
             email: valueEmail,
             phoneNumber: valuePhone,
-            authCode: valuePasscode
+            authCode: valuePasscode,
           }
         );
         if (response.status === 200) {
@@ -111,17 +107,17 @@ const ForgotPasswordPage: React.FC = () => {
             alert("인증번호가 일치하지 않습니다.");
           }
           setIsLoading(false);
-        };
+        }
       } catch (error) {
         alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
         setIsLoading(false);
       }
     }
-  }
+  };
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <Container>
         <div
           onClick={() => {
@@ -189,7 +185,7 @@ const ForgotPasswordPage: React.FC = () => {
               }
               bottomTextClickable={isResendable}
               bottomTextOnClick={() => {
-                if (isResendable){
+                if (isResendable) {
                   authEmailSendApi();
                 }
               }}
@@ -198,7 +194,7 @@ const ForgotPasswordPage: React.FC = () => {
                   text.replace(RegexpInputAlphabetAndNumber, "")
                 );
                 // setIsValidPasscode(valuePasscode.length === 8); // 이상하게 7글자여야 true가 되어서 잠시 주석걸게요
-                setIsValidPasscode(valuePasscode !== ""); 
+                setIsValidPasscode(valuePasscode !== "");
               }}
               onFocus={() => {}}
               onBlur={() => {}}
@@ -210,7 +206,7 @@ const ForgotPasswordPage: React.FC = () => {
         {isSent ? (
           <ButtonLarge
             text={"확인"}
-            backgroundColor={
+            buttonColor={
               isValidEmail && isValidPhone && isValidPasscode
                 ? COLORS.mainColor
                 : COLORS.greyColor
@@ -221,7 +217,7 @@ const ForgotPasswordPage: React.FC = () => {
         ) : (
           <ButtonLarge
             text={"인증번호 전송"}
-            backgroundColor={
+            buttonColor={
               isValidEmail && isValidPhone ? COLORS.mainColor : COLORS.greyColor
             }
             textColor={COLORS.primaryColor}

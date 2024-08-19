@@ -75,3 +75,15 @@ export const DefaultLayout = ({
 export const Spacer = () => {
   return <SpacerContainer />;
 };
+
+const BottomPaddingBox = styled.div`
+  display: block;
+  width: 100%;
+  height: 80px;
+
+  background: transparent;
+`;
+
+export const BottomBox = () => {
+  return <BottomPaddingBox />;
+};

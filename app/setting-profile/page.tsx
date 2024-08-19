@@ -337,7 +337,7 @@ const SettingProfilePage: React.FC = () => {
 
         <ButtonLarge
           text={"저장"}
-          backgroundColor={isFormValid ? COLORS.mainColor : COLORS.greyColor}
+          buttonColor={isFormValid ? COLORS.mainColor : COLORS.greyColor}
           textColor={COLORS.primaryColor}
           onClick={handleSaveButton}
         />

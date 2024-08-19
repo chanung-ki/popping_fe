@@ -107,7 +107,7 @@ const StepProfile = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={
+        buttonColor={
           isValidNickname && valueGender ? COLORS.mainColor : COLORS.greyColor
         }
         textColor={COLORS.primaryColor}

@@ -53,9 +53,7 @@ const SignUpPage: React.FC = () => {
         <Spacer />
         <ButtonLarge
           text="다음"
-          backgroundColor={
-            isPopper !== null ? COLORS.mainColor : COLORS.greyColor
-          }
+          buttonColor={isPopper !== null ? COLORS.mainColor : COLORS.greyColor}
           textColor={COLORS.primaryColor}
           onClick={() => {
             if (isPopper != null) {

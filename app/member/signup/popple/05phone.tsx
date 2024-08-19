@@ -80,7 +80,7 @@ const StepPhone = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={isValidPhone ? COLORS.mainColor : COLORS.greyColor}
+        buttonColor={isValidPhone ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
         onClick={() => {
           if (isValidPhone === true) {

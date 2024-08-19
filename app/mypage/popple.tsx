@@ -18,7 +18,6 @@ type MyPagePoppleProps = {
 };
 
 export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileImage, signOutApi, myPageData }) => {
-
   const router = useRouter();
 
   return (
@@ -41,7 +40,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
                 <Spacer />
                 <ButtonSmall
                   text={"프로필 설정"}
-                  backgroundColor={COLORS.mainColor}
+                  buttonColor={COLORS.mainColor}
                   textColor={COLORS.whiteColor}
                   onClick={() => {
                     router.push("/setting-profile");

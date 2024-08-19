@@ -14,8 +14,8 @@ type MyPagePopperProps = {
   signOutApi: () => void;
 };
 
-export const MyPagePopper: React.FC<MyPagePopperProps> = ({nickname, profileImage, signOutApi}) => {
 
+export const MyPagePopper: React.FC<MyPagePopperProps> = ({nickname, profileImage, signOutApi}) => {
   const router = useRouter();
 
   return (
@@ -39,7 +39,7 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({nickname, profileImag
               </ProfileBottomText> */}
               <ButtonSmall
                 text={"프로필 설정"}
-                backgroundColor={COLORS.mainColor}
+                buttonColor={COLORS.mainColor}
                 textColor={COLORS.whiteColor}
                 onClick={() => {
                   router.push("/setting-profile");

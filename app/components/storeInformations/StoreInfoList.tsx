@@ -93,14 +93,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
-  padding: 30px 20px;
+  padding: 32px 20px;
   width: 100%;
 `;
 
 const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 28px;
 `;
 
@@ -117,7 +117,7 @@ const StoreList = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
-  gap: 21px;
+  gap: 20px;
   width: 100%;
 `;
 

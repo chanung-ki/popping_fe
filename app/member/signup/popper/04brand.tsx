@@ -82,7 +82,7 @@ const StepBrand = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={isValidBrand ? COLORS.mainColor : COLORS.greyColor}
+        buttonColor={isValidBrand ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
         onClick={() => {
           if (isValidBrand === true) {

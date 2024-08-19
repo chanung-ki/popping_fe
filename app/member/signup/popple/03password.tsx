@@ -126,7 +126,7 @@ const StepPassword = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={
+        buttonColor={
           isValidPassword && isSame ? COLORS.mainColor : COLORS.greyColor
         }
         textColor={COLORS.primaryColor}
