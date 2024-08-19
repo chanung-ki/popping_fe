@@ -17,43 +17,16 @@ interface StoreInformationProps {
 //TODO : Props 변동해야할 필요 있음.
 const StoreInformation: React.FC<{
   storeId: string;
-  currentStoreId?: string;
-  setCurrentStoreId?: React.Dispatch<SetStateAction<string>>;
+  currentStoreId: string;
+  setCurrentStoreId: React.Dispatch<SetStateAction<string>>;
 }> = ({ storeId, currentStoreId, setCurrentStoreId }) => {
   const onClickHandler = () => {
-    if (currentStoreId && setCurrentStoreId) {
-      setCurrentStoreId(storeId);
-    }
+    console.log("clicked");
+    setCurrentStoreId(storeId);
   };
 
-  return currentStoreId ? (
+  return (
     <EachLocationContainer onClick={onClickHandler}>
-      <div
-        style={{
-          width: "100%",
-          height: "166px",
-          backgroundColor: `${COLORS.greyColor}`,
-          borderRadius: "8px",
-        }}
-      >
-        <div className={"heart-icon"}>
-          <IconHeart
-            width={16}
-            height={16}
-            color={COLORS.mainColor}
-            //색 처리 해야됨.
-          />
-        </div>
-      </div>
-      <div className={"store-description-container"}>
-        <p className={"store-name"}>일릭서 스토어</p>
-        <p className={"store-description"}>
-          일어나라 노예들이여 이 텍스트는 두줄까지만 가능
-        </p>
-      </div>
-    </EachLocationContainer>
-  ) : (
-    <EachLocationContainer>
       <div
         style={{
           width: "100%",

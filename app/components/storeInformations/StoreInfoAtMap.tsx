@@ -1,40 +1,34 @@
-import styled from "styled-components"
+import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
 
 //TODO : Props 구체화 필요함.
 const StoreInfoAtMap: React.FC = () => {
-  return(
+  return (
     <PopupStoreInfoContainer>
-              <PopupStoreImage />
-              <PopupStoreDescContainer>
-                <div className={"slider-desc-header"}>
-                  <p className={"slider-store-name"}>일릭서 스토어</p>
-                  <div className={"slider-store-like"}>
-                    <IconHeart
-                      width={32}
-                      height={30}
-                      color={COLORS.mainColor}
-                    />
-                    <p>99만</p>
-                  </div>
-                </div>
+      <PopupStoreImage />
+      <PopupStoreDescContainer>
+        <div className={"slider-desc-header"}>
+          <p className={"slider-store-name"}>일릭서 스토어</p>
+          <div className={"slider-store-like"}>
+            <IconHeart width={32} height={30} color={COLORS.mainColor} />
+            <p>99만</p>
+          </div>
+        </div>
 
-                <p className={"slider-store-desc"}>
-                  일어나라 노예들이여 이 텍스트는 무한정 늘릴 수 있긴 한데
-                  여어어어어어어어어어어어어기까지 가면 안대여
-                </p>
-                <p className={"slider-store-address"}>
-                  서울시 용산구 한강대로 109 17층
-                </p>
-                <p className={"slider-store-address"}>
-                  2024.07.24 ~ 2024. 08. 15
-                </p>
-              </PopupStoreDescContainer>
-              <VisitStoreButton>방문하기</VisitStoreButton>
-            </PopupStoreInfoContainer>
-  )
-}
+        <p className={"slider-store-desc"}>
+          일어나라 노예들이여 이 텍스트는 무한정 늘릴 수 있긴 한데
+          여어어어어어어어어어어어어기까지 가면 안대여
+        </p>
+        <p className={"slider-store-address"}>
+          서울시 용산구 한강대로 109 17층
+        </p>
+        <p className={"slider-store-address"}>2024.07.24 ~ 2024. 08. 15</p>
+      </PopupStoreDescContainer>
+      <VisitStoreButton>방문하기</VisitStoreButton>
+    </PopupStoreInfoContainer>
+  );
+};
 
 const PopupStoreInfoContainer = styled.div`
   display: flex;
@@ -73,6 +67,7 @@ const PopupStoreDescContainer = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 3px;
+    margin-left: 30px;
 
     & > p {
       font-family: "Pretendard";
@@ -97,7 +92,7 @@ const PopupStoreDescContainer = styled.div`
   }
 
   .slider-store-desc {
-    max-width: 292px;
+    padding-right: 70px;
     font-family: "Pretendard";
     font-size: 14px;
     font-style: normal;
