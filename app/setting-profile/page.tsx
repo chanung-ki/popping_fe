@@ -24,8 +24,8 @@ import { useDispatch } from "react-redux";
 import {
   changeNickname,
   changeName,
-  changeisMale,
-  changeprofileImage,
+  changeIsMale,
+  changeProfileImage,
 } from "../redux/reducers/poppingUser";
 
 const SettingProfilePage: React.FC = () => {
@@ -112,12 +112,12 @@ const SettingProfilePage: React.FC = () => {
         dispatch(changeNickname(valueNickname));
         if (valueProfileImage !== "") {
           // 이미지가 변경되었을떄만 프로필 사진 변경
-          dispatch(changeprofileImage(valueProfileImage));
+          dispatch(changeProfileImage(valueProfileImage));
         }
         if (!isPopper) {
           dispatch(changeName(valueName));
           dispatch(
-            changeisMale(isMaleOptions[valueGender ? valueGender : "비공개"])
+            changeIsMale(isMaleOptions[valueGender ? valueGender : "비공개"])
           );
         }
         alert("프로필 설정이 적용되었습니다.");
