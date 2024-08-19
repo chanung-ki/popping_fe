@@ -67,7 +67,7 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
           )}`
         );
       } else {
-        alert('옵션 변경에 문제가 생겼습니다.');
+        console.log(`${error.response}`);
       }
     }
   }, [data.id, router]);

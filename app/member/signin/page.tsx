@@ -59,7 +59,8 @@ const SignInPage: React.FC = () => {
         dispatch(setUser(userData));
         setIsLoading(false);
         if (redirectPath) {
-          router.push(redirectPath);
+          router.refresh();
+          window.location.href = redirectPath;
         } else {
           window.location.href = "/";
         }
