@@ -8,60 +8,31 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { COLORS } from "@/public/styles/colors";
 import { DefaultLayout } from "@/app/components/layout";
 import axiosInstance from "@/public/network/axios";
-import { Follow, KRWLocaleString } from "@/public/utils/function";
-import { IconBookmark, IconCart, IconChevronLeft } from "@/app/components/icons";
-
-interface BrandData {
-  id: number;
-  logo: string;
-  name: string;
-  proceeding: boolean;
-  conditions: {};
-  saved: number;
-  isSaved: boolean;
-  description: string;
-  thumbnail: string;
-}
-
-
-interface ProductData {
-  id: number;
-  brandFK: BrandData;
-  description: string;
-  name: string;
-  option: Option[];
-  price: number;
-  productInvoice: string;
-  createdAt: string;
-  updatedAt: string;
-  saved: number;
-  view: number;
-  thumbnail: string;
-  isSaved: boolean;
-}
-
-interface Option {
-  name: string;
-  option: string[];
-}
+import { Follow, FormatFollowers, KRWLocaleString } from "@/public/utils/function";
+import { IconBookmark, IconCart, IconChevronLeft, IconFollow } from "@/app/components/icons";
+import { BrandType, ProductType } from "@/public/utils/types";
+import Back from "@/app/components/back";
+import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
+import { useSelector } from "react-redux";
+import CartButton from "@/app/components/online-popup/cartButton";
 
 
 const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
   const { storeId } = params;
+  const { isPopper } = useSelector((state: any) => state.poppingUser.user);
+
 
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
-  const [brandData, setBrandData] = useState<BrandData>();
-  const [productData, setProductData] = useState<ProductData[]>();
+  const [brandData, setBrandData] = useState<BrandType>();
+  const [productData, setProductData] = useState<ProductType[]>();
   const [savedProducts, setSavedProducts] = useState<{ [key: number]: boolean }>({});
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState<number>(0);
 
   const updateParentWidth = () => {
-    console.log(containerRef.current)
     if (containerRef.current) {
       const width = containerRef.current.offsetWidth;
-      console.log("Container width:", width); // 디버깅을 위한 로그 추가
       if (width > 0) {
         setParentWidth((width / 4) * 3);
       }
@@ -108,7 +79,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
         setProductData(response.data.product)
         setIsFollowed(response.data.brand.isSaved)
 
-        const savedStates = response.data.product.reduce((acc: any, product: ProductData) => {
+        const savedStates = response.data.product.reduce((acc: any, product: ProductType) => {
           acc[product.id] = product.isSaved;
           return acc;
         }, {});
@@ -136,48 +107,55 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
 
   return (
     <DefaultLayout top="0" right="0" bottom="0" left="0">
-
-      <StoreThumbnailContainer
-        src={brandData.thumbnail}
-        height={parentWidth}
-      />
-
-      <StoreThumbnailNav href={"store-openning"}>
-        <IconChevronLeft
-          color={COLORS.secondaryColor}
-          width={undefined}
-          height={16} />
-      </StoreThumbnailNav>
+      <div style={{ position: 'absolute', top: 16, left: 20 }}>
+        <Back
+          url={'store-openning'}
+          color={undefined} />
+      </div>
 
       <Container ref={containerRef}>
-        <StoreMainPageContainer>
-          <CartButton href={"#"}>
-            <IconCart
-              color={COLORS.secondaryColor}
-              width={undefined}
-              height={undefined} />
-          </CartButton>
+        <StoreThumbnailContainer
+          src={brandData.thumbnail}
+          height={parentWidth}
+        />
 
+        <StoreMainPageContainer>
+          <CartButton />
           <StoreInfoContainer>
             <StoreInfoHeader>
               <StoreName>
                 {storeId.toUpperCase()} STORE
               </StoreName>
-              <StoreSave
-                onClick={() => storeFollowHandler()}>
-                {isFollowed ? <FOLLOWED /> : <FOLLOW />}
-              </StoreSave>
+              <StoreDesc>
+                {brandData.description}
+              </StoreDesc>
             </StoreInfoHeader>
-            <StoreDesc>
-              {brandData.description}
-            </StoreDesc>
-            <BrandFollower>
-              이 브랜드를 <span>{KRWLocaleString(brandData.saved)}</span>명의 <span>팝플</span>이 팔로우합니다.
-            </BrandFollower>
+
+            <StoreSave
+              onClick={() => storeFollowHandler()}>
+              {isFollowed ? <IconFollow color={COLORS.mainColor} width={undefined} height={30} /> : <IconFollow color={COLORS.greyColor} width={undefined} height={30} />}
+              <span>
+                {FormatFollowers(brandData.saved)}
+              </span>
+            </StoreSave>
+
           </StoreInfoContainer>
+          {isPopper && (
+            <PopperManageContainer>
+              <FollowerUpdate>
+                어제보다 <span>300</span>명 늘었어요
+              </FollowerUpdate>
+              <StoreDecisionButton
+                isVisible={true}
+                title="스토어 관리"
+                onClick={() => alert('test')}
+                sort="right"
+              />
+            </PopperManageContainer>
+          )}
 
           <StoreProductContainer>
-            {productData.map((item: ProductData, index: number) => (
+            {productData.map((item: ProductType, index: number) => (
               <Product
                 key={index}
                 href={`product/${item.id}`}
@@ -187,7 +165,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
                     src={item.thumbnail}
                   />
                   <ProductBookmark onClick={(event) => {
-                    event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
+                    event.stopPropagation();
                     handleBookmarkClick(item.id);
                   }} >
                     <IconBookmark
@@ -209,18 +187,15 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
         </StoreMainPageContainer>
       </Container>
     </DefaultLayout>
-
   );
 };
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100dvh;
   width: 100%;
-
   background-color: ${COLORS.primaryColor};
-
 `;
 
 const StoreMainPageContainer = styled.div`
@@ -228,27 +203,8 @@ const StoreMainPageContainer = styled.div`
   width: calc(100% - 40px);
 
   padding: 0 20px;
+  padding-bottom: 80px;
 `;
-
-const CartButton = styled(Link)`
-  width: 44px;
-  height: 44px;
-
-  bottom: 112px;
-  right: 20px;
-  
-  border: 1px solid ${COLORS.greyColor};
-  background-color: white;
-  border-radius: 50%;
-
-  position: fixed;
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-  
-  z-index: 100;
-`
 
 const StoreThumbnailContainer = styled.img`
   width: 100%;
@@ -256,69 +212,73 @@ const StoreThumbnailContainer = styled.img`
   object-fit: cover;
 `;
 
-const StoreThumbnailNav = styled(Link)`
-
-  position: absolute;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  top: 20px;
-  left: 20px;
-
-  border-radius: 8px;
-  z-index: 1;
-`;
 
 const StoreInfoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+
+  gap: 8px;
+  padding-top: 20px;
+`;
+
+
+const StoreInfoHeader = styled.div`
   display: flex;
   flex-direction: column;
 
   gap: 8px;
-  padding-top: 16px;
-
 `;
 
-const BrandFollower = styled.span`
+
+const StoreName = styled.h2`
+  font-size: 32px;
+  font-weight: 600;
+`;
+
+const StoreSave = styled.span`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 4px;
   font-size: 12px;
-  color: ${COLORS.secondaryColor};
+  font-weight: 500;
 
   & > span {
     font-weight: 600;
   }
 `;
 
-const StoreInfoHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  align-items: center;
-  justify-content: space-between;
-`;
-
-
-const StoreName = styled.h2`
-  font-size: 32px;
-  font-weight: 700;
-`;
-
-const StoreSave = styled.span`
-`;
-
 const StoreDesc = styled.p`
-  margin-top: 8px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 160%;
-`;
+  line-height: 120%;
+  `;
+
+
+const PopperManageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+  margin-top: 12px;
+`
+
+const FollowerUpdate = styled.p`
+  font-size: 14px;
+  font-weight: 600;
+  & > span {
+  color: ${COLORS.mainColor};
+  }
+`
 
 const StoreProductContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 12px; /* 요소들 사이에 8px 간격 설정 */
+  gap: 12px;
   justify-content: space-between;
-  
   margin-top: 28px;
 `;
 
@@ -338,12 +298,13 @@ const Product = styled(Link)`
 
 const ProductThumbnail = styled.div`
   position: relative;
+  margin-bottom: 8px;
 `;
 
 
 const ProductThumbnailImage = styled.img`
   width: 100%; 
-  aspect-ratio: 1 / 1; /* 1:1 비율로 설정 */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 8px;
 `;

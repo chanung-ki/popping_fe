@@ -11,6 +11,7 @@ import {
   MemberLogoAndTitle,
   MemberAccountForm,
 } from "@/app/components/member/components";
+import { Loading } from "@/app/components/loading";
 import Image from "next/image";
 import LogoKakao from "@/public/images/social/logo_kakao.png";
 import LogoGoogle from "@/public/images/social/logo_google.png";
@@ -28,6 +29,7 @@ const SignInPage: React.FC = () => {
   const [domain, setDomain] = useState<string>("");
   const [valueEmail, setValueEmail] = useState<string>("");
   const [valuePassword, setValuePassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   useEffect(() => {
@@ -38,9 +40,10 @@ const SignInPage: React.FC = () => {
         setDomain(window.location.origin);
       }
     }
-  }, []);
+  }, [router]);
 
   const handleClickLogin = async () => {
+    setIsLoading(true);
     try {
       const response = await axiosInstance.post("/api/user/signin", {
         email: valueEmail,
@@ -50,10 +53,17 @@ const SignInPage: React.FC = () => {
       if (response.status === 200) {
         const userData: user = response.data.user;
         dispatch(setUser(userData));
-        router.push("/");
+        setIsLoading(false);
+        window.location.href = "/";
+        /*
+          django와 react 간의 로그인 세션 정보를 동기화 시키려면 최초 로그인 후 새로고침을 한번 해줘야합니다.
+          그러나 router의 push는 새로고치는게 아닌 url상의 이동만 지원하다보니
+          최초 로그인 후 메인페이지로 이동시에는 window.location.href를 사용하여 이동하도록 구현하겠습니다.
+        */
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+      setIsLoading(false);
     }
   };
 
@@ -69,6 +79,7 @@ const SignInPage: React.FC = () => {
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
+      {isLoading && <Loading />}
       <Container>
         <div
           onClick={() => {
@@ -129,14 +140,13 @@ const SignInPage: React.FC = () => {
           onClick={handleClickLogin}
         />
 
-        <SignupContainer>
-          <SignUpText
-            onClick={() => {
-              router.push("/member/signup");
-            }}
-          >
-            계정이 아직 없으신가요?
-          </SignUpText>
+        <SignupContainer
+          onClick={() => {
+            router.push("/member/signup");
+          }}
+        >
+          <SignUpTextNormal>계정이 아직 없으신가요?</SignUpTextNormal>
+          <SignUpTextHighlight>회원가입</SignUpTextHighlight>
         </SignupContainer>
 
         <SocialSignInContainer>
@@ -169,18 +179,35 @@ const Container = styled.div`
 `;
 
 const SignupContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+
+  justify-content: center;
+
   width: 100%;
-  text-align: center;
   margin: 12px 0;
 `;
 
-const SignUpText = styled.span`
+const SignUpTextNormal = styled.span`
   color: ${COLORS.greyColor};
   text-align: center;
   font-family: "Pretendard";
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
+  line-height: normal;
+
+  cursor: pointer;
+`;
+
+const SignUpTextHighlight = styled.span`
+  color: ${COLORS.mainColor};
+  text-align: center;
+  font-family: "Pretendard";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
   line-height: normal;
 
   cursor: pointer;

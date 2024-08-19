@@ -1,33 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { BottomNavigation } from "./navigation/bottomnavigation";
 import { DefaultLayout } from "./components/layout";
 import HomePage from "./home/home";
 import MyPage from "./mypage/mypage";
 import LikesPage from "./likes/likes";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const MainPage = () => {
-  const [pageIndex, setPageIndex] = useState<number>(0);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { isLogin } = useSelector((state: any) => state.poppingUser.user);
 
-  useEffect(() => {
-    if (pageIndex === 2) {
-      router.push("/online-popup/Popping/store-openning");
+  const getPageIndex = (param: string | null) => {
+    switch (param) {
+      case null:
+        return 0;
+      case "likes":
+        return 3;
+      case "mypage":
+        return 4;
     }
-  }, [pageIndex]);
+  };
+
+  const loginValid = (index: number) => {
+    if (isLogin) {
+      if (index === 3) {
+        router.replace("/?page=likes");
+      } else {
+        // index가 4일 경우
+        router.replace("/?page=mypage");
+      }
+    } else {
+      alert("로그인 후 이용가능합니다.");
+      router.replace("/member/signin");
+    }
+  };
 
   return (
     <DefaultLayout top={"0"} right={"0"} bottom={"0"} left={"0"}>
-      {pageIndex === 0 && <HomePage />}
-      {pageIndex === 3 && <LikesPage />}
-      {pageIndex === 4 && <MyPage />}
+      {searchParams.get("page") === null && <HomePage />}
+      {searchParams.get("page") === "likes" && <LikesPage />}
+      {searchParams.get("page") === "mypage" && <MyPage />}
       <BottomNavigation
         onClick={(index: number) => {
-          setPageIndex(index);
+          switch (index) {
+            case 0:
+              router.replace("/");
+              break;
+            case 1:
+              break;
+            case 2:
+              router.push("/online-popup/Popping/store-openning");
+              break;
+            case 3:
+              loginValid(3);
+              break;
+            case 4:
+              loginValid(4);
+              break;
+          }
         }}
-        currentIndex={pageIndex}
+        currentIndex={getPageIndex(searchParams.get("page")) ?? 5}
       />
     </DefaultLayout>
   );

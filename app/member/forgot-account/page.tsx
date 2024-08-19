@@ -20,6 +20,7 @@ import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/public/network/axios";
 
 const ForgotAccountPage: React.FC = () => {
   const tabValues: string[] = ["팝플", "팝핑"];
@@ -41,6 +42,41 @@ const ForgotAccountPage: React.FC = () => {
   }, [selectedIndex]);
 
   const router = useRouter();
+
+  const findEmailApi = async() => {
+    
+    let bodyData;
+
+    if (selectedIndex === 0) {
+      bodyData = {
+        name: valueName,
+        phoneNumber: valuePhone,
+        isPopper: false
+      }
+    } else {
+      bodyData = {
+        name: valueName,
+        phoneNumber: valuePhone,
+        businessNumber: valueBN,
+        isPopper: true
+      }
+    }
+    try {
+      const response = await axiosInstance.post(
+        `/api/user/retrieve/email`,
+        bodyData
+      );
+      if (response.status === 200) {
+        if (response.data.isExist) {
+          alert(`해당 조건에 해당하는 계정을 찾았습니다.\n${response.data.email}`)
+        } else {
+          alert("조건에 해당하는 계정이 존재하지 않습니다.")
+        }
+      };
+    } catch (error) {
+      alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+    }
+  }
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
@@ -73,7 +109,8 @@ const ForgotAccountPage: React.FC = () => {
               bottomTextClickable={false}
               bottomTextOnClick={() => {}}
               onChange={(text: string) => {
-                setValueName(text.replace(RegexpInputHangul, ""));
+                // setValueName(text.replace(RegexpInputHangul, "")); // 오류 있음 수정 요망
+                setValueName(text); // 오류 있음 수정 요망
                 setIsValidName(RegexpHangul.test(text) && text.length > 1);
               }}
               onFocus={() => {}}
@@ -173,7 +210,7 @@ const ForgotAccountPage: React.FC = () => {
               : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
-          onClick={() => {}}
+          onClick={findEmailApi}
         />
       </Container>
     </DefaultLayout>

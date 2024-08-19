@@ -1,5 +1,5 @@
 import { COLORS } from "@/public/styles/colors";
-import { RefObject, useRef } from "react";
+import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 import { styled } from "styled-components";
 
 type LayoutTypes = {
@@ -20,13 +20,15 @@ type ContainerPaddingTypes = {
 const Layout = styled.div`
   position: relative;
 
-  min-width: 320px;
-  max-width: 767px;
+  min-width: ${MobileMinWidth}px;
+  max-width: ${MobileMaxWidth}px;
   width: 100%;
   min-height: 100dvh;
   height: 100dvh;
 
   background-color: ${COLORS.primaryColor};
+
+  border: 0;
 `;
 
 const Container = styled.div<ContainerPaddingTypes>`
@@ -38,6 +40,12 @@ const Container = styled.div<ContainerPaddingTypes>`
   height: calc(100% - (${(props) => props.top} + ${(props) => props.bottom}));
   padding: ${(props) => props.top} ${(props) => props.right}
     ${(props) => props.bottom} ${(props) => props.left};
+
+  background: ${COLORS.primaryColor};
+
+  @media (min-width: ${MobileMaxWidth + 1}px) {
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const SpacerContainer = styled.div`

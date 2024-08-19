@@ -40,6 +40,8 @@ const HomePage = () => {
           <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
       </TopNavigation>
+
+
       <Container ref={parentDiv}>
         {/* Top Navigation */}
 
@@ -119,8 +121,10 @@ const Container = styled.div`
 
   width: 100%;
   height: 100%;
+  overflow: auto; 
 
   background: ${COLORS.primaryColor};
+  margin-bottom: 80px;
 `;
 
 const SwiperContainer = styled.div`
@@ -147,7 +151,7 @@ const Sections = styled.div`
   flex-direction: column;
   gap: 36px;
 
-  margin: 36px 0 80px 20px;
+  margin: 36px 0 0 20px;
 `;
 
 const Section = styled.div`

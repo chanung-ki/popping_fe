@@ -17,6 +17,7 @@ import StoreInformation from "@/app/components/storeInformations/StoreInformatio
 import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
 import { PopupStoreData, PlaceData } from "@/public/utils/types";
 
+
 const MapTestPage: React.FC = () => {
   const DUMMY_SEOUL_OPTIONS = [
     { value: "서울시 종로구", label: "서울시 종로구" },
@@ -45,10 +46,10 @@ const MapTestPage: React.FC = () => {
     { value: "서울시 송파구", label: "서울시 송파구" },
     { value: "서울시 강동구", label: "서울시 강동구" },
   ];
-  const [selectedStore, setSelectedStore] = useState<PopupStoreData>();
+  const [selectedStore, setSelectedStore] = useState<PopupStoreDataType>();
   const [userLocation, setUserLocation] = useState<number[]>();
   const [isExpanded, setIsExpanded] = useState(false); // 접었다 펴는 상태 관리
-  const [popupStore, setPopupStore] = useState<PopupStoreData[]>();
+  const [popupStore, setPopupStore] = useState<PopupStoreDataType[]>();
   const [popupCoorData, setPopupCoorData] = useState<any[]>([]);
   const [mapInstance, setMapInstance] = useState<any>();
   const [kakao, setKakao] = useState<any>();
@@ -78,7 +79,7 @@ const MapTestPage: React.FC = () => {
       });
   };
 
-  const placeAPI = async (store: PopupStoreData) => {
+  const placeAPI = async (store: PopupStoreDataType) => {
     await axiosInstance
       // .get(`/api/maps/surround?popupId=${store.id}&meter=1000`)
       .get(`/api/maps/surround?popupId=66bb102131dd67964d630d18&meter=1000`)
@@ -86,7 +87,7 @@ const MapTestPage: React.FC = () => {
         var coffeePoList: any[] = [];
         var foodPoList: any[] = [];
 
-        response.data.placeData.map((item: PlaceData) => {
+        response.data.placeData.map((item: PlaceDataType) => {
           var position = new kakao.maps.LatLng(
             item.geoData.coordinates[1],
             item.geoData.coordinates[0]
@@ -229,7 +230,7 @@ const MapTestPage: React.FC = () => {
     return `${year}.${month}.${day}`;
   };
 
-  const SelectPopup = (store: PopupStoreData) => {
+  const SelectPopup = (store: PopupStoreDataType) => {
     const imageSrc =
       "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
     const imageSize = new kakao.maps.Size(30, 41);
@@ -329,10 +330,10 @@ const MapTestPage: React.FC = () => {
       };
 
       var markerImage = createMarkerImage(
-          markerImageSrc,
-          imageSize,
-          imageOptions
-        ),
+        markerImageSrc,
+        imageSize,
+        imageOptions
+      ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
@@ -357,10 +358,10 @@ const MapTestPage: React.FC = () => {
       };
 
       var markerImage = createMarkerImage(
-          markerImageSrc,
-          imageSize,
-          imageOptions
-        ),
+        markerImageSrc,
+        imageSize,
+        imageOptions
+      ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
@@ -533,7 +534,7 @@ const MapTestPage: React.FC = () => {
             </div>
           ) : (
             popupStore &&
-            popupStore.map((store: PopupStoreData) => (
+            popupStore.map((store: PopupStoreDataType) => (
               <StoreContainer
                 onClick={() => {
                   SelectPopup(store);

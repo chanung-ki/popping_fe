@@ -1,9 +1,8 @@
 "use client";
 import { createGlobalStyle } from "styled-components";
+import { COLORS } from "./colors";
 
 const GlobalStyle = createGlobalStyle`
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-
   html, body {
     margin: 0;
     max-width: 100vw;
@@ -122,7 +121,7 @@ const GlobalStyle = createGlobalStyle`
   }
   html,
   body {
-    background: #222222;
+    background: ${COLORS.primaryColor};
     line-height: 1;
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;

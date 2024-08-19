@@ -7,22 +7,13 @@ import { DefaultLayout } from "@/app/components/layout";
 import Link from "next/link";
 import { IconX } from "@/app/components/icons";
 import { useRouter } from "next/navigation";
+import { BrandType } from "@/public/utils/types";
 
-//버튼이 아니라 Link로 하는게 나을듯? 
-
-interface BrandsOpening {
-  id: number;
-  name: string;
-  logo: string;
-  saved: number;
-  description: string;
-  thumbnail: string;
-}
 
 const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
   const router = useRouter();
 
-  const [openingData, setOpeningData] = useState<BrandsOpening>();
+  const [openingData, setOpeningData] = useState<BrandType>();
 
   const { storeId } = params;
 
@@ -53,7 +44,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ pa
         <OpeningImage src={openingData.thumbnail} />
         <Link
           href={'/'}
-          style={{ position: 'absolute', top: 20, left: 20, zIndex: 100 }}
+          style={{ position: 'absolute', top: 16, left: 20, zIndex: 100 }}
         >
           <IconX
             color={COLORS.primaryColor}
@@ -103,8 +94,8 @@ const Overlay = styled.div`
   height: 100%;
   background: linear-gradient(
     to top, 
-    rgba(0, 0, 0, 1) 0%, 
-    rgba(0, 0, 0, .1) 100%
+    rgba(25, 25, 25, .8) 0%, 
+    rgba(0, 0, 0, .3) 100%
   );
   z-index: 1;
 `;
@@ -138,7 +129,7 @@ const BrandInfo = styled.div`
   flex-direction: column;
   position: relative;
 
-  gap: 16px;
+  gap: 8px;
   color: ${COLORS.greyColor};
 `
 
@@ -154,10 +145,11 @@ const BrandIcon = styled.img`
 const BrandName = styled.h2`
   font-size: 32px;
   font-weight: 700;
+  color: ${COLORS.primaryColor};
 `
 
 const BrandDesc = styled.p`
-  margin-top: 8px;
+  margin-top: 16px;
   font-size: 16px;
   font-weight: 550;
   line-height: 160%;
