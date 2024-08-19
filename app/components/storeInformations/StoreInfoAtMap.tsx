@@ -119,7 +119,7 @@ const VisitStoreButton = styled.div`
   align-items: center;
 
   border: none;
-  width: 353px;
+  width: 90%;
   height: 48px;
   border-radius: 8px;
   background-color: ${COLORS.mainColor};
