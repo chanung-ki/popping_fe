@@ -15,8 +15,7 @@ import { useRouter } from "next/navigation";
 import StyledSelect from "@/app/components/styledSelect";
 import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
-import { PopupStoreData, PlaceData} from "@/public/utils/types";
-
+import { PopupStoreData, PlaceData } from "@/public/utils/types";
 
 const MapTestPage: React.FC = () => {
   const DUMMY_SEOUL_OPTIONS = [
@@ -603,7 +602,7 @@ const SearchContainer = styled.div`
   gap: 8px;
 
   padding: 5px 12px;
-  width: 100%;
+  width: calc(100% - 28px);
   height: 32px;
   border-radius: 16px;
   background-color: ${COLORS.lightGreyColor};
@@ -625,8 +624,8 @@ const LocalBanner = styled.div`
   align-items: center;
   justify-content: center;
 
-  padding: 4px 8px;
-  width: 76px;
+  padding: 4px 12px;
+  /* width: 76px; */
   height: 14px;
   border-radius: 12px;
   background-color: ${COLORS.whiteColor};
