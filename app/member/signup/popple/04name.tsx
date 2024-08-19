@@ -68,7 +68,7 @@ const StepName = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={isValidName ? COLORS.mainColor : COLORS.greyColor}
+        buttonColor={isValidName ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
         onClick={() => {
           if (isValidName === true) {

@@ -26,7 +26,7 @@ const StepDone = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="로그인"
-        backgroundColor={COLORS.mainColor}
+        buttonColor={COLORS.mainColor}
         textColor={COLORS.primaryColor}
         onClick={() => {
           onNext();

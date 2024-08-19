@@ -3,7 +3,7 @@ import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
 import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
-import { ButtonLarge, ButtonLargeSingle, ButtonSmall } from "../buttons";
+import { ButtonLarge } from "../buttons";
 import { IconChevronLeft } from "../icons";
 import { SetStateAction } from "react";
 
@@ -49,7 +49,7 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
           <>
             <ButtonLarge
               text={"방문하기"}
-              backgroundColor={COLORS.mainColor}
+              buttonColor={COLORS.mainColor}
               textColor={COLORS.primaryColor}
               onClick={() => {
                 console.log("router 처리 필요");
@@ -57,19 +57,20 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
             />
             <ButtonLarge
               text={"통계"}
-              backgroundColor={COLORS.primaryColor}
+              buttonColor={COLORS.primaryColor}
               textColor={COLORS.mainColor}
               onClick={() => {
                 console.log("router 처리 필요");
               }}
-              border={`2px solid ${COLORS.mainColor}`}
+              borderWidth={2}
+              borderColor={COLORS.mainColor}
             />
           </>
         ) : (
           <>
-            <ButtonLargeSingle
+            <ButtonLarge
               text={"방문하기"}
-              backgroundColor={COLORS.mainColor}
+              buttonColor={COLORS.mainColor}
               textColor={COLORS.primaryColor}
               onClick={() => {
                 console.log("router 처리 필요");
@@ -176,8 +177,8 @@ const PopupStoreDescContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
-  width: 95%;
+  gap: 16px;
+  width: calc(100% - 40px);
 `;
 
 export default StoreInfoAtMap;

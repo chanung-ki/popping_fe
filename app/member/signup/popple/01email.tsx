@@ -106,7 +106,7 @@ const StepEmail = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={isValidEmail ? COLORS.mainColor : COLORS.greyColor}
+        buttonColor={isValidEmail ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
         onClick={handleClickNext}
       />

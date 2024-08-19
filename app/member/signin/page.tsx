@@ -35,7 +35,6 @@ const SignInPage: React.FC = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const redirectPath = searchParams.get("redirect");
 
-
   useEffect(() => {
     if (userData.isLogin) {
       router.push("/");
@@ -83,7 +82,7 @@ const SignInPage: React.FC = () => {
     } else {
       window.location.href = "/";
     }
-  }
+  };
 
   const handleClickSocialLogin = (provider: string) => {
     let socialUrl = "";
@@ -99,9 +98,7 @@ const SignInPage: React.FC = () => {
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       {isLoading && <Loading />}
       <Container>
-        <div
-          onClick={Back}
-        >
+        <div onClick={Back}>
           <MemberChevronLeft />
         </div>
         <MemberLogoAndTitle>로그인</MemberLogoAndTitle>
@@ -120,8 +117,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -139,15 +136,15 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
         </MemberAccountForm>
 
         <ButtonLarge
           text="로그인"
-          backgroundColor={
+          buttonColor={
             valueEmail !== "" && valuePassword !== ""
               ? COLORS.mainColor
               : COLORS.greyColor

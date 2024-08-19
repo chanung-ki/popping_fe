@@ -83,7 +83,7 @@ const StepPhonePasscode = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={isValidPasscode ? COLORS.mainColor : COLORS.greyColor}
+        buttonColor={isValidPasscode ? COLORS.mainColor : COLORS.greyColor}
         textColor={COLORS.primaryColor}
         onClick={() => {
           if (isValidPasscode) {
