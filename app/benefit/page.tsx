@@ -55,12 +55,12 @@ const BenefitPage: React.FC = () => {
               <ProfileImage image={DummyProfile.src} width={60} height={60} />
               <ProfileNickname>{"test"}님</ProfileNickname>
               <PointsProgress
-                color={COLORS.RankWhitePop}
+                color={COLORS.GradeWhitePop}
                 value={80}
                 max="100"
               />
               <NextGradeContainer>
-                <NextGradeText color={COLORS.RankYellowPop}>
+                <NextGradeText color={COLORS.GradeYellowPop}>
                   {"YELLOW POP"}
                 </NextGradeText>
                 <NextGradeDesc>까지 {30000}원</NextGradeDesc>
@@ -194,12 +194,11 @@ const PointsProgress = styled.progress`
 const NextGradeContainer = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   gap: 0px;
 
   width: 100%;
-
-  justify-content: flex-start;
-  align-items: center;
 `;
 
 const NextGradeText = styled.span`
