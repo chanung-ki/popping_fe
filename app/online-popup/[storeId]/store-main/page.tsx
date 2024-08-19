@@ -15,9 +15,11 @@ import Back from "@/app/components/back";
 import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
 import { useSelector } from "react-redux";
 import CartButton from "@/app/components/online-popup/cartButton";
+import { useRouter } from "next/navigation";
 
 
 const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
+  const router = useRouter();
   const { storeId } = params;
   const { isPopper } = useSelector((state: any) => state.poppingUser.user);
 
@@ -61,12 +63,12 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
   const storeFollowHandler = () => {
     if (brandData) {
       const updatedSaved = isFollowed ? brandData.saved - 1 : brandData.saved + 1;
+      Follow("Brands", brandData.id, router);
       setBrandData({
         ...brandData,
         saved: updatedSaved,
       });
       setIsFollowed(!isFollowed);
-      Follow("Brands", brandData.id);
     }
   };
 
@@ -100,7 +102,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
       ...prev,
       [id]: newSavedState,
     }));
-    Follow("Product", id);
+    Follow("Product", id, router);
   };
 
   if (!brandData || !productData) return null;
