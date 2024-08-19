@@ -15,41 +15,8 @@ import { useRouter } from "next/navigation";
 import StyledSelect from "@/app/components/styledSelect";
 import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
+import { PopupStoreData, PlaceData} from "@/public/utils/types";
 
-export interface GeoData {
-  type: string;
-  coordinates: number[];
-}
-
-export interface LocationData {
-  address: string;
-  placeName: string;
-  geoData: GeoData;
-}
-
-export interface PopupStoreData {
-  id: string;
-  title: string;
-  location: LocationData;
-  startDate: string;
-  endDate: string;
-  openTime: string[];
-  event: string[];
-  image: any;
-}
-
-export interface PlaceData {
-  title: string;
-  bestMenu: string[];
-  gradePoint: number;
-  loadAddr: string;
-  numberAddr: string;
-  telNumber: string;
-  option: string;
-  charTag: string[];
-  tags: string[];
-  geoData: GeoData;
-}
 
 const MapTestPage: React.FC = () => {
   const DUMMY_SEOUL_OPTIONS = [

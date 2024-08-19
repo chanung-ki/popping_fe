@@ -16,10 +16,10 @@ const StoreInfoAtMap: React.FC = () => {
           </div>
         </div>
 
-        <p className={"slider-store-desc"}>
+        <div className={"slider-store-desc"}>
           일어나라 노예들이여 이 텍스트는 무한정 늘릴 수 있긴 한데
           여어어어어어어어어어어어어기까지 가면 안대여
-        </p>
+        </div>
         <p className={"slider-store-address"}>
           서울시 용산구 한강대로 109 17층
         </p>
@@ -106,6 +106,11 @@ const PopupStoreDescContainer = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 `;
 
