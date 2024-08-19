@@ -103,3 +103,15 @@ export interface SizeType {
   chest: number;
   sleeve: number;
 }
+
+export interface CartType {
+  id: number;
+  product: ProductType;
+  option: CartOption;
+}
+
+export interface CartOption {
+  color: string;
+  size: string;
+  amount: number;
+}

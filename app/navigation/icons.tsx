@@ -1,12 +1,12 @@
 import { styled } from "styled-components";
 import Image from "next/image";
-import ImageCenter from "@/public/icons/btmnav_center.jpg";
+import ImageCenter from "@/public/images/popping-orange.png";
 
 type SVGTypes = {
   color: string;
 };
 
-const SVG = styled.svg`
+const SVG = styled.svg` 
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   cursor: pointer;
@@ -93,7 +93,6 @@ const IconCenterContainer = styled.div<{ width: number; height: number }>`
   height: ${(props) => props.height}px;
   border-radius: 20px;
   overflow: hidden;
-
   cursor: pointer;
 `;
 

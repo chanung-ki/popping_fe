@@ -1,14 +1,16 @@
 'use client'
 
-import { IconBookmark, IconChevronLeft } from "@/app/components/icons";
+import Back from "@/app/components/back";
+import { IconBookmark, IconMinus, IconPlus } from "@/app/components/icons";
 import { DefaultLayout } from "@/app/components/layout";
+import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
 import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
-import { Follow, KRWLocaleString } from "@/public/utils/function";
+import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
+import { Follow, FormatFollowers, KRWLocaleString } from "@/public/utils/function";
 import { OptionType, ProductType, SizeType } from "@/public/utils/types";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from 'styled-components';
 
 const fadeInOut = keyframes`
@@ -36,13 +38,22 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
 
   const { storeId, product } = params;
 
+  const [isCarted, setIsCarted] = useState<boolean>();
+
   const [productData, setProductData] = useState<ProductType>();
   const [saveState, setSaveState] = useState<boolean>();
   const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
   const [allOptionsSelected, setAllOptionsSelected] = useState<boolean>(false);
   const [showAnimation, setShowAnimation] = useState<boolean>(true);
 
+  const [amount, setAmount] = useState<number>(1);
+  const sizeGuideRef = useRef(null);
 
+  useEffect(() => {
+    setTimeout(() => {
+      router.push(`${window.location.hash}`);
+    }, 100)
+  }, [router])
 
   useEffect(() => {
     if (storeId && product) {
@@ -54,11 +65,9 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
   useEffect(() => {
     const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
 
-    // `hasSeenAnimation`이 null이나 'false'일 경우 애니메이션을 보여줍니다.
     if (hasSeenAnimation === null || hasSeenAnimation === 'false') {
       setShowAnimation(true);
 
-      // 애니메이션이 끝난 후 sessionStorage에 true를 저장합니다.
       const timer = setTimeout(() => {
         setShowAnimation(false);
         sessionStorage.setItem('hasSeenAnimation', 'true');
@@ -78,25 +87,62 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
     } else {
       setShowAnimation(false);
     }
-  }, []); // 빈 배열을 의존성으로 설정하여 최초 렌더링 시 한 번만 실행되도록 함
+  }, [router]);
+
+
   const ProductDataGetAPI = async () => {
     try {
       const response = await axiosInstance.get(`/api/popup/product/data/${storeId}/${product}`)
 
       if (response.status === 200) {
-        console.log(response.data)
         setProductData(response.data)
         setSaveState(response.data.isSaved)
-
+        setIsCarted(response.data.isCarted)
       }
     }
     catch (e: any) {
-      if (e.response.sataus != 401) {
+      if (e.response.sataus === 401) {
+        alert("로그인 후 이용가능합니다.");
+        router.push("/member/signin");
       }
     }
   }
 
+
   if (!productData) return null;
+
+  const AddCart = async () => {
+    try {
+      const response = await axiosInstance.post(`/api/popup/cart/data`, {
+        id: productData.id,
+        amount: amount,
+        option: selectedOptions
+      })
+
+      if (response.status === 201) {
+        if (window.confirm('장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?')) {
+          router.push('/online-popup/cart')
+        }
+        setIsCarted(true)
+      }
+    }
+    catch (error: any) {
+      if (error.response.data === 401) {
+        alert("로그인 후 이용가능합니다.");
+        router.push("/member/signin");
+      }
+      else if (error.response.status === 400) {
+        if (error.response.data.status === 1) {
+          if (window.confirm('장바구니에 이미 존재하는 상품입니다.\n장바구니로 이동하시겠습니까?')) {
+            router.push('/online-popup/cart')
+          }
+
+        } else {
+          alert(error.response.data.message)
+        }
+      }
+    }
+  }
 
   const handleBookmarkClick = async (id: number) => {
     setSaveState(!saveState);
@@ -129,65 +175,90 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
     setAllOptionsSelected(allSelected);
   };
 
+  // const AmountToggle = (increment: boolean) => {
+  //   setAmount(prevAmount => {
+  //     const newAmount = increment ? prevAmount + 1 : Math.max(0, prevAmount - 1);
+  //     return newAmount;
+  //   });
+  // };
 
 
+  const AmountToggle = (increment: boolean) => {
+    if (amount >= 0 && increment) {
+      setAmount(amount + 1)
+    }
+    if (amount > 0 && !increment) {
+      setAmount(amount - 1)
+    }
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '') {
+      setAmount(0);
+    }
+    else if (/^\d*$/.test(value)) {
+      const number = parseInt(value, 10);
+      if (number >= 1 && number <= 99) {
+        setAmount(number);
+      } else if (number > 99) {
+        setAmount(99);
+      }
+    }
+  };
   const sizeOptions = productData?.option.find(option => option.name.toLowerCase() === "size");
 
   return (
-    <DefaultLayout top="0" right="0" bottom="0" left="0">
-      <ChevronLeft href={"../store-main"}>
-        <IconChevronLeft
-          color={COLORS.secondaryColor}
-          width={undefined}
-          height={16} />
-      </ChevronLeft>
-
+    <DefaultLayout top="16px" right="0" bottom="0" left="0">
+      <Top>
+        <Back url={undefined} />
+        <ProductThumbnailImg
+          src={productData.thumbnail} />
+      </Top>
       <ProductContainer>
-        <Product>
-          <ProductThumbnailImg
-            src={productData.thumbnail} />
-          <ProductBookmark onClick={(event) => {
-            event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
-            handleBookmarkClick(productData.id);
-          }} >
-            <IconBookmark
-              color={saveState ? COLORS.mainColor : COLORS.greyColor}
-              width={20}
-              height={27} />
-          </ProductBookmark>
-        </Product>
-
         <ProductInfo>
           <ProductHeader>
-
-            <ProductTitle>
-              {productData.name}
-            </ProductTitle>
-            <ProductPrice>
-              {KRWLocaleString(productData.price)} KRW
-            </ProductPrice>
-            <ProductSave>
-              이 상품을 <span>{KRWLocaleString(productData.saved)}</span>명의 <span>팝플</span>이 저장합니다.
-            </ProductSave>
+            <HeaderLeft>
+              <ProductTitle>
+                {productData.name}
+              </ProductTitle>
+              <ProductPrice>
+                {KRWLocaleString(productData.price * amount)} KRW
+                <span>배송비 무료</span>
+              </ProductPrice>
+            </HeaderLeft>
+            <ProductBookmark
+              onClick={(event) => {
+                event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
+                handleBookmarkClick(productData.id);
+              }} >
+              <IconBookmark
+                color={saveState ? COLORS.mainColor : COLORS.greyColor}
+                width={20}
+                height={27} />
+              <span>
+                {FormatFollowers(productData.saved)}
+              </span>
+            </ProductBookmark>
           </ProductHeader>
-
-
-
 
           <ProductOptionContainer>
             {productData.option.map((data: OptionType, index: number) => (
               <ProductOption key={index}>
                 <ProductOptionTitle>
                   <span>
-                    {data.name}
+                    {data.name.toUpperCase()}
                   </span>
                   {data.name.toLowerCase() === "size" && (
                     <SizeGuide href="#sizeGuide">사이즈 가이드 ⓘ</SizeGuide>
                   )}
                 </ProductOptionTitle>
-                <ProductOptionContent>
+                <ProductRadioContent>
                   {data.option.map((option: SizeType, optionIndex: number) => (
-                    <RadioLabel key={optionIndex}>
+                    <RadioLabel
+                      key={optionIndex}
+                      isChecked={selectedOptions[data.name] === option.name}
+                    >
                       <RadioButton
                         type="radio"
                         name={data.name}
@@ -195,12 +266,36 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                         checked={selectedOptions[data.name] === option.name}
                         onChange={() => handleOptionChange(data.name, option.name)}
                       />
-                      {option.name}
+                      <span>
+                        {option.name}
+                      </span>
                     </RadioLabel>
                   ))}
-                </ProductOptionContent>
+                </ProductRadioContent>
               </ProductOption>
             ))}
+
+            <ProductOptionContent>
+              <ProductOptionTitle>
+                AMOUNT
+              </ProductOptionTitle>
+              <AmountContainer>
+                <AmountIcon onClick={() => AmountToggle(false)} disabled={amount <= 1}>
+                  <IconMinus color={COLORS.secondaryColor} width={10} height={10} />
+                </AmountIcon>
+
+                <AmountInput
+                  type="text"
+                  value={amount}
+                  onChange={handleAmountChange}
+                  maxLength={2} // Limit the input length to 2 characters
+                />
+
+                <AmountIcon onClick={() => AmountToggle(true)} disabled={amount >= 99}>
+                  <IconPlus color={COLORS.secondaryColor} width={10} height={10} />
+                </AmountIcon>
+              </AmountContainer>
+            </ProductOptionContent>
 
             <ProductOptionContent>
               <ProductOptionTitle>
@@ -213,8 +308,8 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
 
             {sizeOptions && sizeOptions.option && (
               <>
-                <ProductOptionContent>
-                  <ProductOptionTitle id="sizeGuide">
+                <ProductOptionContent ref={sizeGuideRef}>
+                  <ProductOptionTitle id="sizeGuide" >
                     SIZE GUIDE
                   </ProductOptionTitle>
                   <SizeGuideTable>
@@ -229,7 +324,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                     <tbody>
                       {sizeOptions.option.map((item, index) => (
                         <tr key={index}>
-                          <td>{item.name}</td>
+                          <td style={{ fontWeight: 600 }}>{item.name}</td>
                           {Object.keys(sizeOptions.option[0] || {}).map((key, keyIndex) => key !== 'name' && (
                             <td key={keyIndex}>{(item as any)[key]}</td>
                           ))}
@@ -242,13 +337,21 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
             )}
           </ProductOptionContainer>
         </ProductInfo>
-        {allOptionsSelected && (
-          <CartAddDiv>
-            <span>
-              장바구니 담기
-            </span>
-          </CartAddDiv>
-        )}
+        <BottomButtonContainer isVisible={allOptionsSelected && amount > 0}>
+          <StoreDecisionButton
+            isVisible={allOptionsSelected && amount > 0}
+            onClick={AddCart}
+            title={isCarted ? '장바구니 존재' : '장바구니 담기'}
+            sort={'left'}
+          />
+          <StoreDecisionButton
+            isVisible={allOptionsSelected && amount > 0}
+            onClick={() => alert('구매 로직 구현중.')}
+            title="구매하기"
+            sort={'right'}
+          />
+        </BottomButtonContainer>
+
       </ProductContainer>
 
       {showAnimation && (
@@ -257,125 +360,180 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
         </AnimationContainer>
       )}
 
-    </DefaultLayout >
+
+    </DefaultLayout>
   );
 };
 
+const BottomButtonContainer = styled.div<{ isVisible: boolean }>`
+  width: 100%;
+  min-width: ${MobileMinWidth}px;
+  max-width: ${MobileMaxWidth}px;
 
-const ChevronLeft = styled(Link)`
-  cursor: pointer;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
 
-  border-radius: 8px;
-  z-index: 1;
+  gap: 20px;
+  padding: 0 20px;
 
-  margin: 20px;
+  position: fixed;
+
+  left: 50%;
+  bottom: 32px;
+  transform: translate(-50%, 0);
+
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
+  pointer-events: ${({ isVisible }) => (isVisible ? 'auto' : 'none')};
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 `;
 
+const Top = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+  gap: 16px;
+
+  & > div {
+    margin-left: 20px;
+  }
+`
+
 const ProductContainer = styled.div`
-  width: calc(100% - 32px);
+  width: calc(100% - 20px);
 
   display: flex;
   flex-direction: column;
 
-  align-items: center;
+  align-items: start;
+  position: relative;
 
   background-color: ${COLORS.primaryColor};
 
   gap: 24px;
-  padding: 0 16px;
-  padding-bottom: 32px;
+  padding-left: 20px;
+  padding-bottom: 80px;
+
 `
 
-const Product = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-
-  gap: 24px;
-`;
 
 const ProductThumbnailImg = styled.img`
   max-width: 100%;
-  border-radius: 8px;
 `
 
 const ProductBookmark = styled.div`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  & > span {
+    font-weight: 600;
+  }
 `;
 
 const ProductInfo = styled.div`
   display: flex;
   flex-direction: column;
 
-  gap: 32px;
+  gap: 24px;
 `
 
 const ProductHeader = styled.div`
   display: flex;
+  flex-direction: row;
+
+  gap: 32px;
+  margin-top: 24px;
+
+  align-items: start;
+  justify-content: space-between;
+  padding-right: 20px;
+`
+
+const HeaderLeft = styled.div`
+  display: flex;
   flex-direction: column;
 
-  gap: 8px;
-`
-const ProductSave = styled.p`
-  font-size: 12px;
-  color: ${COLORS.secondaryColor} !important;
-  font-weight: 400;
-
-  & > span {
-    font-weight: 500;
-  }
+  align-items: flex-start;
+  gap: 20px;
 `
 
 const ProductTitle = styled.h3`
   font-size: 24px;
   font-weight: 500;
+  word-break: break-all;
 `;
 
 const ProductPrice = styled.span`
-  font-size: 20px;
-  font-weight: 600;
-`;
+  display: flex;
+  flex-direction: column;
 
+  gap: 4px;
+  font-size: 20px;
+  font-weight: 700;
+
+  & > span {
+    font-size: 16px;
+    font-weight: 500;
+  }
+`;
 
 const ProductOptionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  
   justify-content: center;
-
-  gap: 32px;
+  gap: 36px;
 `
+
+const ProductRadioContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;  
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;  
+
+`;
+
 
 const ProductOption = styled.div`
   display: flex;
   flex-direction: column;
-
   gap:16px;
 `
 
 const ProductOptionTitle = styled.p`
-display: flex;
-align-items: center;
+  display: flex;
+  align-items: center;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   gap: 8px;
+
+  padding-right: 20px;
 `
 
 const SizeGuide = styled.a`
   font-size: 10px;
-  font-family: "Pretendard";
   font-weight: 500;
   color: ${COLORS.greyColor};
-  width: 67px;
   height: 12px;
 `;
 
 const ProductOptionContent = styled.div`
+  width: calc(100% - 20px);
   display: flex;
   flex-direction: column;
 
@@ -383,46 +541,81 @@ const ProductOptionContent = styled.div`
   justify-content: center;
 
   gap: 16px;
+  padding-right: 20px;
 `;
 
-
-const RadioButton = styled.input.attrs({ type: 'radio' })`
-  margin: 0;
-  margin-right: 8px;
-  appearance: none; // 기본 라디오 버튼 스타일을 없애기 위해 사용
-  width: 16px;
-  height: 16px; 
-  background-color: ${COLORS.primaryColor};
-  border: 1px solid ${COLORS.greyColor};
-  border-radius: 50%;
-  position: relative;
-  cursor: pointer;
-
-  &:checked {
-    background-color: ${COLORS.mainColor}; // 체크된 상태의 배경색 변경
-    border-color: ${COLORS.mainColor}; // 체크된 상태의 테두리 색 변경
-  }
-
-  &:checked::before {
-    content: '';
-    display: block;
-    width: 8px;
-    height: 8px;
-    background-color: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-`;
-
-const RadioLabel = styled.label`
+const AmountContainer = styled.div`
+  width: 100%;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  gap: 12px;
+`;
+
+const AmountIcon = styled.button`
+  cursor: pointer;
+  width: 40px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid ${COLORS.greyColor};
+  border-radius: 16px;
+
+  box-sizing: border-box;
+
+  &:enabled{
+    border:none;
+    background-color: ${COLORS.mainColor};
+    line {
+      stroke: ${COLORS.primaryColor};
+    }
+  }
+  &:disabled {
+    cursor: none;
+    background-color: ${COLORS.primaryColor};
+  }
+`;
+
+const AmountInput = styled.input`
+  flex: 1;
+  text-align: center;
+
   font-size: 12px;
   font-weight: 500;
+  height: 34px;
+
+  border: 1px solid ${COLORS.greyColor};
+  border-radius: 16px;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: ${COLORS.mainColor};
+  }
+`;
+
+const RadioButton = styled.input.attrs({ type: 'radio' })`
+  display: none;
+`;
+
+const RadioLabel = styled.label<{ isChecked: boolean }>`
+  flex: 0 0 auto;
+
   cursor: pointer;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px solid   ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
+  padding: 8px 20px;
+  box-sizing: border-box;
+
+  & > span {
+    font-size: 14px;
+    font-weight: 500;
+  }
 `;
 
 const ProductDescription = styled.div`
@@ -436,6 +629,7 @@ const SizeGuideTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 16px;
+  box-sizing: border-box;
 
   th, td {
     padding: 8px;
@@ -446,7 +640,7 @@ const SizeGuideTable = styled.table`
   th {
     background-color: ${COLORS.primaryColor};
     color: ${COLORS.secondaryColor};
-    font-weight: 500;
+    font-weight: 600;
     font-size: 14px;
   }
 
@@ -470,7 +664,7 @@ const SizeGuideTable = styled.table`
 `;
 
 
-const CartAddDiv = styled.div`
+const StoreBottomButton = styled.div`
   width: calc(100% - 40px);
   height: 48px;
   

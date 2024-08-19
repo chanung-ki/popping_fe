@@ -112,16 +112,16 @@ export const IconX = ({ color, width, height }: SVGTypes) => {
         d="M16 2L2 16"
         stroke={color}
         strokeWidth="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path d="M2 2L16 16Z" fill={color} />
       <path
         d="M2 2L16 16"
         stroke={color}
         strokeWidth="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </SVG>
   );
@@ -149,8 +149,8 @@ export const IconGear = ({ color, width, height }: SVGTypes) => {
 export const IconBookmark = ({ color, width, height }: SVGTypes) => {
   return (
     <SVG
-      width={width ?? "auto"}
-      height={height ?? "auto"}
+      width={width}
+      height={height}
       viewBox="0 0 16 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -168,8 +168,8 @@ export const IconBookmark = ({ color, width, height }: SVGTypes) => {
 export const IconCart = ({ color, width, height }: SVGTypes) => {
   return (
     <SVG
-      width={width ?? "20"}
-      height={height ?? "16"}
+      width={width}
+      height={height}
       viewBox="0 0 20 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +177,7 @@ export const IconCart = ({ color, width, height }: SVGTypes) => {
       <g clipPath="url(#clip0_703_291)">
         <path
           d="M19.4444 6.0002L15.9167 6.00026L12.6837 0.403389C12.4732 0.0371395 11.9681 -0.108173 11.5601 0.0840145C11.151 0.274452 10.9927 0.727452 11.2052 1.09464L14.0389 5.99776H5.96181L8.79549 1.09464C9.00694 0.728952 8.85069 0.275889 8.44097 0.085452C8.03125 -0.105954 7.52778 0.038577 7.31597 0.404889L4.08299 6.00176L0.555556 6.0002C0.24875 6.0002 0 6.22408 0 6.47208V7.47208C0 7.7482 0.24875 7.94395 0.555556 7.94395H1.35799L2.94653 14.3783C3.17257 15.3502 4.07292 16.0002 5.11458 16.0002H14.8819C15.8924 16.0002 16.8253 15.3493 17.0514 14.434L18.6399 7.99958H19.4444C19.7513 7.99958 20 7.7757 20 7.5277V6.5277C20 6.2252 19.75 6.0002 19.4444 6.0002ZM6.66667 13.5002C6.66667 13.7763 6.41785 13.9721 6.11111 13.9721C5.80444 13.9721 5.55556 13.7481 5.55556 13.5002V9.5002C5.55556 9.22414 5.80444 9.02833 6.11111 9.02833C6.41785 9.02833 6.66667 9.25226 6.66667 9.5002V13.5002ZM10.5556 13.5002C10.5556 13.7763 10.3067 13.9721 10 13.9721C9.69333 13.9721 9.44444 13.7482 9.44444 13.5002V9.5002C9.44444 9.22414 9.69333 9.02833 10 9.02833C10.3067 9.02833 10.5556 9.25226 10.5556 9.5002V13.5002ZM14.4444 13.5002C14.4444 13.7763 14.1956 13.9721 13.8889 13.9721C13.5822 13.9721 13.3333 13.7481 13.3333 13.5002V9.5002C13.3333 9.22414 13.5822 9.02833 13.8889 9.02833C14.1956 9.02833 14.4444 9.25226 14.4444 9.5002V13.5002Z"
-          fill={color ?? "#222222"}
+          fill={color}
         />
       </g>
       <defs>
@@ -188,3 +188,59 @@ export const IconCart = ({ color, width, height }: SVGTypes) => {
     </SVG>
   );
 };
+
+export const IconMinus = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      width={width}
+      height={height}
+      viewBox="0 0 7 1"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <line y1="0.5" x2="7" y2="0.5" stroke={color} />
+    </SVG>
+  );
+}
+
+export const IconPlus = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      width={width}
+      height={height}
+      viewBox="0 0 7 7"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <line y1="3.5" x2="7" y2="3.5" stroke={color} />
+      <line x1="3.5" y1="0" x2="3.5" y2="7" stroke={color} />
+    </SVG>
+  );
+}
+
+export const IconCheck = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      width={width}
+      height={height}
+      viewBox="0 0 10 7"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.33333 7L0 4L1.11111 3L3.33333 5L8.88889 0L10 1L3.33333 7Z" fill={color} />
+    </SVG>
+  );
+}
+
+
+export const IconFollow = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      width={width}
+      height={height}
+      viewBox="0 0 32 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M0.0152337 9.94522C0.0152337 9.69018 0.0152337 9.43513 0.0152337 9.18009C0.0152337 9.10507 0.045701 9.03006 0.0609347 8.95505C0.106636 8.59498 0.121869 8.21992 0.182804 7.85985C0.914021 3.5541 4.44824 0.298522 8.7746 0.0284741C11.3339 -0.136555 13.6189 0.598575 15.6602 2.17385C15.7821 2.27887 15.904 2.36889 16.0258 2.4739C16.0563 2.4439 16.0715 2.4439 16.0868 2.4289C17.7015 1.04865 19.56 0.238511 21.6623 0.0434768C23.6427 -0.136555 25.5164 0.238511 27.2531 1.24369C30.9091 3.34406 32.6762 7.5448 31.7622 11.8356C31.3966 13.5609 30.6502 15.1061 29.7057 16.5614C28.487 18.4217 27.0093 20.072 25.4555 21.6473C22.7591 24.3928 19.8952 26.9432 17.0617 29.5387C16.3914 30.1538 15.6145 30.1538 14.9442 29.5387C13.9541 28.6235 12.9639 27.7083 11.9737 26.7932C9.68862 24.6928 7.40357 22.5924 5.30132 20.297C3.99122 18.8718 2.77253 17.3865 1.79757 15.7062C0.944488 14.236 0.335141 12.6757 0.106636 10.9804C0.0609347 10.6353 0.0304674 10.2903 0 9.94522H0.0152337Z"
+        fill={color} />
+    </SVG>
+  )
+} 

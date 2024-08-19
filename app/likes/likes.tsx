@@ -9,31 +9,62 @@ import Goods from "./goods";
 import Stores from "./stores";
 import Following from "./follwing";
 import axiosInstance from "@/public/network/axios";
+import { BrandType, PopupStoreDataType, ProductType } from "@/public/utils/types";
+import { useRouter } from "next/navigation";
 
 const LikesPage: React.FC = () => {
+  const router = useRouter();
   const tabValues: string[] = ["상품", "스토어", "팔로잉"];
+
+  const [sessionAbleCheck, setSessionAbleCheck] = useState<boolean>(false);
+  const [brands, setBrands] = useState<BrandType>();
+  const [products, setProducts] = useState<ProductType>();
+  const [popups, setPopups] = useState<PopupStoreDataType>();
+
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-
-
   useEffect(() => {
-    UserLikeDataGet();
+    const storedBrand = sessionStorage.getItem("brands");
+    const storedProduct = sessionStorage.getItem("products");
+    const storedPopup = sessionStorage.getItem("popups");
+    const followCheck = sessionStorage.getItem("followToggle") === "true";
+    console.log(followCheck)
+    if (storedBrand && storedProduct && storedPopup && !followCheck) {
+      setBrands(JSON.parse(storedBrand));
+      setProducts(JSON.parse(storedProduct));
+      setPopups(JSON.parse(storedPopup));
+      setSessionAbleCheck(true);
+    } else {
+      UserLikeDataGet();
+    }
   }, []);
 
   const UserLikeDataGet = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/popup/follow/list`)
-      if (response.status === 200) {
-        console.log(response.data)
-      }
+    if (sessionAbleCheck) {
+      return;
     }
-    catch (e: any) {
-      if (e.response.status != 401) {
-      }
-    }
-  }
 
-  return (
+    try {
+      const response = await axiosInstance.get(`/api/popup/follow/list`);
+      if (response.status === 200) {
+        const { brands, products, popups } = response.data;
+        setBrands(brands);
+        setProducts(products);
+        setPopups(popups);
+
+        sessionStorage.setItem("brands", JSON.stringify(brands));
+        sessionStorage.setItem("products", JSON.stringify(products));
+        sessionStorage.setItem("popups", JSON.stringify(popups));
+        sessionStorage.setItem("followToggle", 'false');
+        setSessionAbleCheck(true);
+      }
+    } catch (e: any) {
+      if (e.response && e.response.status === 401) {
+        alert("로그인 후 이용가능합니다.");
+        router.push("/member/signin");
+      }
+    }
+  }; return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
         <TopNavCenterContainer>
@@ -49,6 +80,10 @@ const LikesPage: React.FC = () => {
           }}
         />
         {selectedIndex === 0 && (
+
+
+
+
           <Goods
             values={[
               { image: "", brand: "test", name: "test", isLiked: true },
@@ -56,23 +91,14 @@ const LikesPage: React.FC = () => {
             ]}
           />
         )}
+
+
+
+
+
+
         {selectedIndex === 1 && (
-          <Stores
-            values={[
-              {
-                image: "",
-                isLiked: true,
-                brand: "test",
-                desc: "testtest",
-              },
-              {
-                image: "",
-                isLiked: false,
-                brand: "test2",
-                desc: "testtest",
-              },
-            ]}
-          />
+          <></>
         )}
         {selectedIndex === 2 && (
           <Following
@@ -118,7 +144,8 @@ const Container = styled.div`
 
   background: ${COLORS.primaryColor};
 
-  margin-bottom: 80px;
+
+  padding-bottom: 80px;
 `;
 
 export default LikesPage;
