@@ -2,12 +2,19 @@ import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { useRouter } from "next/router";
 import { IconHeart } from "../icons";
-import { GeoData, LocationData, PopupStoreData } from "@/public/utils/types";
+import {
+  GeoDataType,
+  LocationDataType,
+  PopupStoreDataType,
+  user,
+} from "@/public/utils/types";
 import { SetStateAction } from "react";
+import { useSelector } from "react-redux";
+import userSlice from "@/app/redux/reducers/poppingUser";
 
 //TODO : 재희님과 협의 후 Props 정의
 interface StoreInformationProps {
-  store: PopupStoreData;
+  store: PopupStoreDataType;
 }
 
 //TODO : Props 변동해야할 필요 있음.
@@ -16,6 +23,7 @@ const StoreInformation: React.FC<{
   currentStoreId: string;
   setCurrentStoreId: React.Dispatch<SetStateAction<string>>;
 }> = ({ storeId, currentStoreId, setCurrentStoreId }) => {
+  const userData: user = useSelector((state: any) => state.poppingUser.user);
   const onClickHandler = () => {
     console.log("clicked");
     setCurrentStoreId(storeId);
@@ -31,14 +39,17 @@ const StoreInformation: React.FC<{
           borderRadius: "8px",
         }}
       >
-        <div className={"heart-icon"}>
-          <IconHeart
-            width={16}
-            height={16}
-            color={COLORS.mainColor}
-            //색 처리 해야됨.
-          />
-        </div>
+        {/*접속한 user가 popper일 경우 스토어 찜 버튼 렌더링하지 않음. */}
+        {userData.isPopper || (
+          <div className={"heart-icon"}>
+            <IconHeart
+              width={16}
+              height={16}
+              color={COLORS.mainColor}
+              //색 처리 해야됨.
+            />
+          </div>
+        )}
       </div>
       <div className={"store-description-container"}>
         <p className={"store-name"}>일릭서 스토어</p>

@@ -15,8 +15,7 @@ import { useRouter } from "next/navigation";
 import StyledSelect from "@/app/components/styledSelect";
 import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
-import { PopupStoreData, PlaceData } from "@/public/utils/types";
-
+import { PopupStoreDataType, PlaceDataType } from "@/public/utils/types";
 
 const MapTestPage: React.FC = () => {
   const DUMMY_SEOUL_OPTIONS = [
@@ -108,7 +107,7 @@ const MapTestPage: React.FC = () => {
 
   useEffect(() => {
     getUserLocation();
-    // popupStoreAPI();
+    popupStoreAPI();
   }, []);
 
   // 현재 위치 가져오기
@@ -300,7 +299,7 @@ const MapTestPage: React.FC = () => {
   };
 
   useEffect(() => {
-    placeAPI();
+    // placeAPI();
   }, [selectedStore]);
 
   function createMarkerImage(src: any, size: any, options: any) {
@@ -330,10 +329,10 @@ const MapTestPage: React.FC = () => {
       };
 
       var markerImage = createMarkerImage(
-        markerImageSrc,
-        imageSize,
-        imageOptions
-      ),
+          markerImageSrc,
+          imageSize,
+          imageOptions
+        ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
@@ -358,10 +357,10 @@ const MapTestPage: React.FC = () => {
       };
 
       var markerImage = createMarkerImage(
-        markerImageSrc,
-        imageSize,
-        imageOptions
-      ),
+          markerImageSrc,
+          imageSize,
+          imageOptions
+        ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
