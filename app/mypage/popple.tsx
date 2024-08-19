@@ -1,7 +1,6 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconChevronRight, IconGear } from "../components/icons";
-import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 import { DefaultLayout, Spacer } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
@@ -13,11 +12,12 @@ import { myPagePoppleTypes } from "@/public/utils/types";
 
 type MyPagePoppleProps = {
   nickname: string;
-  signOutApi: () => void;
+  profileImage: string;
   myPageData: myPagePoppleTypes;
+  signOutApi: () => void;
 };
 
-export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, signOutApi, myPageData }) => {
+export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileImage, signOutApi, myPageData }) => {
 
   const router = useRouter();
 
@@ -36,7 +36,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, signOutApi
           <MyProfile>
             <MyProfileContainer>
               <ProfileContainer>
-                <ProfileImage image={DummyProfile.src} width={60} height={60} />
+                <ProfileImage image={profileImage} width={60} height={60} />
                 <ProfileNickname>{nickname}님</ProfileNickname>
                 <Spacer />
                 <ButtonSmall

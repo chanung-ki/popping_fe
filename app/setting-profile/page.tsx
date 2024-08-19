@@ -6,7 +6,7 @@ import { TopNavigation } from "../navigation/topnavigation";
 import { styled } from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconChevronLeft } from "../components/icons";
-import { ButtonLarge } from "../components/buttons";
+import { ButtonLarge, ButtonSmall } from "../components/buttons";
 import { InputRound } from "../components/inputs";
 import {
   RegexpHangul,
@@ -16,7 +16,6 @@ import {
 import { SelectBottomSection, SelectRound } from "../components/select";
 import { useRouter } from "next/navigation";
 
-import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
 import { ProfileImage } from "../components/main/componenets";
 import { useSelector } from "react-redux";
 import { duplicateCheckApi } from "@/public/utils/function";
@@ -25,14 +24,20 @@ import { useDispatch } from "react-redux";
 import {
   changeNickname,
   changeName,
-  changeisMale,
+  changeIsMale,
+  changeProfileImage,
 } from "../redux/reducers/poppingUser";
 
 const SettingProfilePage: React.FC = () => {
-  const { isLogin, isPopper, nickname, name, isMale } = useSelector(
+  const { isLogin, isPopper, nickname, name, isMale, profileImage } = useSelector(
     (state: any) => state.poppingUser.user
   );
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
+  // 프로필 사진
+  const [profileBlobUrl, setProfileBlobUrl] = useState<string>(profileImage);
+  const [valueProfileImage, setValueProfileImage] = useState<string>("");
+  const [isChangeValueProfileImage, setIsChangeValueProfileImage] = useState<boolean>(false);
 
   // 닉네임 or 브랜드네임
   const [valueNickname, setValueNickname] = useState<string>("");
@@ -42,6 +47,7 @@ const SettingProfilePage: React.FC = () => {
   const [statusNickname, setStatusNickname] = useState<boolean | null>(null);
   const [bottomTextNickname, setbottomTextNickname] = useState<string>("");
   const [isValidNickname, setIsValidNickname] = useState<boolean>(false);
+  const [isChangeNickname, setIsChangeNickname] = useState<boolean>(false);
 
   // 이름
   const [valueName, setValueName] = useState<string>("");
@@ -49,6 +55,7 @@ const SettingProfilePage: React.FC = () => {
   const [statusName, setStatusName] = useState<boolean | null>(null);
   const [bottomTextName, setbottomTextName] = useState<string>("");
   const [isValidName, setIsValidName] = useState<boolean>(false);
+  const [isChangeName, setIsChangeName] = useState<boolean>(false);
 
   // 성별
   const genders: string[] = ["남성", "여성", "비공개"];
@@ -60,6 +67,7 @@ const SettingProfilePage: React.FC = () => {
   const [valueGender, setValueGender] = useState<string | null>(null);
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
+  const [isChangeValueGender, setIsChangeValueGender] = useState<boolean>(false);
 
   const hasAlerted = useRef<boolean>(false);
 
@@ -87,6 +95,7 @@ const SettingProfilePage: React.FC = () => {
       requestBody = {
         isPopper: true,
         nickname: valueNickname,
+        profileImage: valueProfileImage,
       };
     } else {
       requestBody = {
@@ -94,16 +103,21 @@ const SettingProfilePage: React.FC = () => {
         nickname: valueNickname,
         name: valueName,
         isMale: isMaleOptions[valueGender ? valueGender : "비공개"],
+        profileImage: valueProfileImage,
       };
     }
     try {
       const response = await axiosInstance.patch("/api/user/", requestBody);
       if (response.status === 200) {
         dispatch(changeNickname(valueNickname));
+        if (valueProfileImage !== "") {
+          // 이미지가 변경되었을떄만 프로필 사진 변경
+          dispatch(changeProfileImage(valueProfileImage));
+        }
         if (!isPopper) {
           dispatch(changeName(valueName));
           dispatch(
-            changeisMale(isMaleOptions[valueGender ? valueGender : "비공개"])
+            changeIsMale(isMaleOptions[valueGender ? valueGender : "비공개"])
           );
         }
         alert("프로필 설정이 적용되었습니다.");
@@ -112,6 +126,32 @@ const SettingProfilePage: React.FC = () => {
     } catch (error) {
       alert("오류가 발생했습니다. 다시 시도해주세요.");
     }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+
+    if (!file) {
+      alert("파일을 선택해주세요.");
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      alert("파일이 너무 큽니다. 5MB 이하의 파일을 선택해주세요.");
+      return;
+    }
+
+    const blobUrl = URL.createObjectURL(file)
+    setProfileBlobUrl(blobUrl);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        setValueProfileImage(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   // 저장 클릭시 호출되는 핸들러
@@ -139,7 +179,6 @@ const SettingProfilePage: React.FC = () => {
     } else {
       setStatusNickname(false);
       setIsValidNickname(false);
-      setIsFormValid(false);
       setbottomTextNickname("닉네임은 공백없이 한글, 알파벳, 숫자만 가능해요.");
     }
   };
@@ -161,7 +200,6 @@ const SettingProfilePage: React.FC = () => {
       } else {
         setStatusName(false);
         setbottomTextName("한글 이외는 입력할 수 없어요.");
-        setIsFormValid(false);
       }
     } else {
       setStatusName(null);
@@ -169,38 +207,29 @@ const SettingProfilePage: React.FC = () => {
     }
   }, [isNameFocused]);
 
-  const changeValid = (option: string) => {
-    if (option == "nickname") {
-      if (nickname !== valueNickname) {
-        return isValidNickname;
-      }
-      return undefined;
-    } else {
-      if (name !== valueName) {
-        return isValidName;
-      }
-      return undefined;
-    }
-  };
-
-  const getIsValidForm = () => {
-    const isNicknameValid = changeValid("nickname");
-    const isNameValid = changeValid("name");
-
-    if (
-      isNicknameValid === false ||
-      isNameValid === false ||
-      (isNicknameValid === undefined && isNameValid === undefined)
-    ) {
-      return false;
-    }
-    // 그 외는 모두 true를 반환
-    return true;
-  };
+  useEffect(() => {
+    setIsChangeNickname(nickname !== valueNickname);
+    setIsChangeName(name !== valueName);
+    setIsChangeValueProfileImage(valueProfileImage !== "");
+    setIsChangeValueGender(isMaleOptions[valueGender ? valueGender : "비공개"] !== isMale);
+  }, [nickname, valueNickname, name, valueName, valueProfileImage, valueGender, isMale, isMaleOptions]);
 
   useEffect(() => {
-    setIsFormValid(getIsValidForm());
-  }, [isNameFocused, isNicknameFocused]);
+    let isValidForm = false;
+    if (isPopper) {
+      // 팝퍼 valid
+      isValidForm = isChangeNickname ? isValidNickname : isChangeValueProfileImage;
+    } else {
+      // 팝플 valid
+      if (isChangeNickname || isChangeName) {
+        isValidForm = (isChangeNickname && isValidNickname) && (isChangeName ? isValidName : true);
+      } else {
+        isValidForm = isChangeValueGender || isChangeValueProfileImage;
+      }
+    }
+    setIsFormValid(isValidForm);
+  }, [isChangeNickname, isChangeName, isChangeValueGender, isChangeValueProfileImage, isValidNickname, isValidName, isPopper]);
+
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -222,17 +251,31 @@ const SettingProfilePage: React.FC = () => {
       </TopNavigation>
       <Container>
         <ProfileContainer>
-          <ProfileImage image={DummyProfile.src} width={100} height={100} />
-          {/* 아직 기능 구현이 안되었음으로 주석처리 */}
-          {/* <ButtonSmall
+          <ProfileImage image={profileBlobUrl} width={100} height={100} />
+          <ButtonSmall
             text={"사진 변경"}
             backgroundColor={COLORS.mainColor}
             textColor={COLORS.primaryColor}
-            onClick={() => {}}
-          /> */}
+            onClick={() => {
+              const el = document.getElementById("profileImage");
+              if (el) {
+                el?.click();
+              }
+            }}
+          />
         </ProfileContainer>
 
         <Form>
+          <input
+            id="profileImage"
+            type="file"
+            name="profile"
+            key={Date.now()}
+            accept="image/jpeg, image/png"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+
           <InputRound
             value={valueNickname}
             placeholder="닉네임"
@@ -315,9 +358,6 @@ const SettingProfilePage: React.FC = () => {
             onClick={(gender: string) => {
               setValueGender(gender);
               setIsGenderFocused(false);
-              if (getIsValidForm()) {
-                setIsFormValid(true);
-              }
             }}
           />
         )}

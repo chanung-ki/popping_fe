@@ -15,7 +15,7 @@ const MyPage: React.FC = () => {
   const hasAlerted = useRef<boolean>(false);
 
   const [isPopple, setIsPopple] = useState<boolean | null>(null);
-  const { isLogin, isPopper, nickname } = useSelector(
+  const { isLogin, isPopper, nickname, profileImage } = useSelector(
     (state: any) => state.poppingUser.user
   );
   const [myPageData, setMyPageData] = useState<myPagePoppleTypes>({
@@ -99,13 +99,15 @@ const MyPage: React.FC = () => {
       {isLogin && isPopple && myPageData.gradeInfo.grade !== "" &&
         <MyPagePopple
           nickname={nickname}
-          signOutApi={signOutApi}
+          profileImage={profileImage}
           myPageData={myPageData}
+          signOutApi={signOutApi}
         />
       }
       {isLogin && !isPopple && 
         <MyPagePopper 
           nickname={nickname}
+          profileImage={profileImage}
           signOutApi={signOutApi}
         />
       }
