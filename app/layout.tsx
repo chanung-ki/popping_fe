@@ -13,6 +13,31 @@ export const metadata: Metadata = {
       { url: "/favicons/favicon-32x32.png", type: "image/png", sizes: "32x32" },
       { url: "/favicons/favicon-96x96.png", type: "image/png", sizes: "96x96" },
       {
+        url: "/favicons/android-icon-36x36.png",
+        type: "image/png",
+        sizes: "36x36",
+      },
+      {
+        url: "/favicons/android-icon-48x48.png",
+        type: "image/png",
+        sizes: "48x48",
+      },
+      {
+        url: "/favicons/android-icon-72x72.png",
+        type: "image/png",
+        sizes: "72x72",
+      },
+      {
+        url: "/favicons/android-icon-96x96.png",
+        type: "image/png",
+        sizes: "96x96",
+      },
+      {
+        url: "/favicons/android-icon-144x144.png",
+        type: "image/png",
+        sizes: "144x144",
+      },
+      {
         url: "/favicons/android-icon-192x192.png",
         type: "image/png",
         sizes: "192x192",
@@ -28,9 +53,7 @@ export const metadata: Metadata = {
       { url: "/favicons/apple-icon-144x144.png", sizes: "144x144" },
       { url: "/favicons/apple-icon-152x152.png", sizes: "152x152" },
       { url: "/favicons/apple-icon-180x180.png", sizes: "180x180" },
-      {
-        url: "/favicons/apple-icon.png",
-      },
+      { url: "/favicons/apple-icon.png" },
     ],
   },
   manifest: "/favicons/manifest.json",
@@ -39,13 +62,11 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="ko">
     <Head>
-      {/* Font */}
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
       />
-
-      {/* Use async and defer attributes for the script */}
+      <link rel="manifest" href="/favicons/manifest.json" />
       <script
         type="text/javascript"
         src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&libraries=services,clusterer,drawing`}

@@ -32,6 +32,10 @@ const SignInPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const redirectPath = searchParams.get("redirect");
+
+
   useEffect(() => {
     if (userData.isLogin) {
       router.push("/");
@@ -54,7 +58,11 @@ const SignInPage: React.FC = () => {
         const userData: user = response.data.user;
         dispatch(setUser(userData));
         setIsLoading(false);
-        window.location.href = "/";
+        if (redirectPath) {
+          router.push(redirectPath);
+        } else {
+          window.location.href = "/";
+        }
         /*
           django와 react 간의 로그인 세션 정보를 동기화 시키려면 최초 로그인 후 새로고침을 한번 해줘야합니다.
           그러나 router의 push는 새로고치는게 아닌 url상의 이동만 지원하다보니
@@ -66,6 +74,14 @@ const SignInPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  const Back = () => {
+    if (redirectPath) {
+      router.push(redirectPath);
+    } else {
+      window.location.href = "/";
+    }
+  }
 
   const handleClickSocialLogin = (provider: string) => {
     let socialUrl = "";
@@ -82,9 +98,7 @@ const SignInPage: React.FC = () => {
       {isLoading && <Loading />}
       <Container>
         <div
-          onClick={() => {
-            router.push("/");
-          }}
+          onClick={Back}
         >
           <MemberChevronLeft />
         </div>
@@ -104,8 +118,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -123,8 +137,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>
