@@ -72,7 +72,6 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({ brand, setCartLen, isPa
         setCartLen();
       }
     }
-
   }, [deleteComplete])
 
   const DeleteCart = async () => {

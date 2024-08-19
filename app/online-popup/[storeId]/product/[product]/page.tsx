@@ -278,7 +278,6 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
             <ProductOptionContent>
               <ProductOptionTitle>
                 AMOUNT
-                <SizeGuide>1회 최대 구매 수량 99개</SizeGuide>
               </ProductOptionTitle>
               <AmountContainer>
                 <AmountIcon onClick={() => AmountToggle(false)} disabled={amount <= 1}>
@@ -564,7 +563,7 @@ const AmountIcon = styled.button`
   justify-content: center;
   align-items: center;
   border: 1px solid ${COLORS.greyColor};
-  border-radius: 17px;
+  border-radius: 16px;
 
   box-sizing: border-box;
 
@@ -590,7 +589,7 @@ const AmountInput = styled.input`
   height: 34px;
 
   border: 1px solid ${COLORS.greyColor};
-  border-radius: 17px;
+  border-radius: 16px;
   box-sizing: border-box;
 
   &:focus {
@@ -608,7 +607,7 @@ const RadioLabel = styled.label<{ isChecked: boolean }>`
 
   cursor: pointer;
   text-align: center;
-  border-radius: 17px;
+  border-radius: 16px;
   border: 1px solid   ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
   padding: 8px 20px;
   box-sizing: border-box;

@@ -118,7 +118,6 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
             <ProductOptionContent>
               <ProductOptionTitle>
                 AMOUNT
-                <SizeGuide>1회 최대 구매 수량 99개</SizeGuide>
               </ProductOptionTitle>
               <AmountContainer>
                 <AmountIcon onClick={() => AmountToggle(false)} disabled={selectedOptions.amount <= 1}>
@@ -151,7 +150,7 @@ const ModalOverlay = styled.div<{ isVisible: boolean }>`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 1;
   opacity: ${props => (props.isVisible ? '1' : '0')};
   visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
@@ -168,7 +167,7 @@ const OptionModal = styled.div<{ isVisible: boolean }>`
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
   transform: translateY(${props => (props.isVisible ? '0%' : '100%')});
   transition: transform 0.3s ease-in-out;
-  z-index: 1000;
+  z-index: 2;
 `;
 
 const ModalHeader = styled.div`
