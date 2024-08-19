@@ -30,7 +30,6 @@ const MainPage = () => {
         router.replace("/?page=likes");
       } else {
         // index가 4일 경우
-        router.replace("/?page=mypage");
       }
     } else {
       alert("로그인 후 이용가능합니다.");
@@ -62,7 +61,7 @@ const MainPage = () => {
               loginValid(3);
               break;
             case 4:
-              loginValid(4);
+              loginValid(3);
               break;
           }
         }}

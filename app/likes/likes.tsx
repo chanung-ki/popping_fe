@@ -9,7 +9,11 @@ import Goods from "./goods";
 import Stores from "./stores";
 import Following from "./follwing";
 import axiosInstance from "@/public/network/axios";
-import { BrandType, PopupStoreDataType, ProductType } from "@/public/utils/types";
+import {
+  BrandType,
+  PopupStoreDataType,
+  ProductType,
+} from "@/public/utils/types";
 import { useRouter } from "next/navigation";
 
 const LikesPage: React.FC = () => {
@@ -28,7 +32,7 @@ const LikesPage: React.FC = () => {
     const storedProduct = sessionStorage.getItem("products");
     const storedPopup = sessionStorage.getItem("popups");
     const followCheck = sessionStorage.getItem("followToggle") === "true";
-    console.log(followCheck)
+    console.log(followCheck);
     if (storedBrand && storedProduct && storedPopup && !followCheck) {
       setBrands(JSON.parse(storedBrand));
       setProducts(JSON.parse(storedProduct));
@@ -55,7 +59,7 @@ const LikesPage: React.FC = () => {
         sessionStorage.setItem("brands", JSON.stringify(brands));
         sessionStorage.setItem("products", JSON.stringify(products));
         sessionStorage.setItem("popups", JSON.stringify(popups));
-        sessionStorage.setItem("followToggle", 'false');
+        sessionStorage.setItem("followToggle", "false");
         setSessionAbleCheck(true);
       }
     } catch (e: any) {
@@ -68,7 +72,8 @@ const LikesPage: React.FC = () => {
         );
       }
     }
-  }; return (
+  };
+  return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
         <TopNavCenterContainer>
@@ -84,10 +89,6 @@ const LikesPage: React.FC = () => {
           }}
         />
         {selectedIndex === 0 && (
-
-
-
-
           <Goods
             values={[
               { image: "", brand: "test", name: "test", isLiked: true },
@@ -96,14 +97,7 @@ const LikesPage: React.FC = () => {
           />
         )}
 
-
-
-
-
-
-        {selectedIndex === 1 && (
-          <></>
-        )}
+        {selectedIndex === 1 && <></>}
         {selectedIndex === 2 && (
           <Following
             values={[
@@ -147,7 +141,6 @@ const Container = styled.div`
   height: 100%;
 
   background: ${COLORS.primaryColor};
-
 
   padding-bottom: 80px;
 `;
