@@ -1,7 +1,6 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconGear } from "../components/icons";
-import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
 import { DefaultLayout, Spacer } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
@@ -11,13 +10,12 @@ import { useRouter } from "next/navigation";
 
 type MyPagePopperProps = {
   nickname: string;
+  profileImage: string;
   signOutApi: () => void;
 };
 
-export const MyPagePopper: React.FC<MyPagePopperProps> = ({
-  nickname,
-  signOutApi,
-}) => {
+
+export const MyPagePopper: React.FC<MyPagePopperProps> = ({nickname, profileImage, signOutApi}) => {
   const router = useRouter();
 
   return (
@@ -34,7 +32,7 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
         <MyInfo>
           <MyProfile>
             <MyProfileContainer>
-              <ProfileImage image={DummyProfile.src} width={60} height={60} />
+              <ProfileImage image={profileImage} width={60} height={60} />
               <ProfileNickname>{nickname}</ProfileNickname>
               {/* <ProfileBottomText>
                 팔로워 <span>{0}</span>
