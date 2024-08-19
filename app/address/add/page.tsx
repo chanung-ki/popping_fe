@@ -1,27 +1,54 @@
 "use client";
 
 import { ButtonLarge } from "@/app/components/buttons";
-import { IconChevronLeft } from "@/app/components/icons";
+import { IconChevronLeft, IconX } from "@/app/components/icons";
 import { InputRound } from "@/app/components/inputs";
-import { DefaultLayout } from "@/app/components/layout";
+import { DefaultLayout, Spacer } from "@/app/components/layout";
 import { TopNavigation } from "@/app/navigation/topnavigation";
 import { COLORS } from "@/public/styles/colors";
 import { RegexpInputNumber, RegexpPhone } from "@/public/utils/regexp";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import DaumPostcode from "react-daum-postcode";
 
-const AdressAddPage: React.FC = () => {
+const AddressAddPage: React.FC = () => {
   const [valueNickname, setValueNickname] = useState<string>("");
   const [valueName, setValueName] = useState<string>("");
   const [valuePhone, setValuePhone] = useState<string>("");
+  const [isPhoneFocused, setIsPhoneFocused] = useState<boolean | null>(null);
   const [isValidPhone, setIsValidPhone] = useState<boolean>(false);
+  const [statusPhone, setStatusPhone] = useState<boolean | null>(null);
+  const [bottomTextPhone, setbottomTextPhone] = useState<string>("");
+
+  const [openPostcode, setOpenPostcode] = useState<boolean>(false);
 
   const [valueZIPCode, setValueZIPCode] = useState<string>("");
   const [valueAddress, setValueAddress] = useState<string>("");
   const [valueAddressDetail, setValueAddressDetail] = useState<string>("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (isPhoneFocused === false) {
+      if (RegexpPhone.test(valuePhone)) {
+        setStatusPhone(null);
+        setbottomTextPhone("");
+      } else {
+        setStatusPhone(false);
+        setIsValidPhone(false);
+        setbottomTextPhone("전화번호 서식에 맞지 않습니다.");
+      }
+    } else {
+      setStatusPhone(null);
+      setbottomTextPhone("");
+    }
+  }, [isPhoneFocused]);
+
+  const handleComplete = (data: any) => {
+    setValueZIPCode(data.zonecode);
+    setValueAddress(data.address);
+  };
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -45,7 +72,7 @@ const AdressAddPage: React.FC = () => {
         <InputsContainer>
           <InputRound
             value={valueNickname}
-            placeholder="닉네임"
+            placeholder="배송지 별칭"
             type="text"
             maxLength={15}
             status={null}
@@ -82,16 +109,20 @@ const AdressAddPage: React.FC = () => {
             placeholder="전화번호(숫자만 입력)"
             type="text"
             maxLength={11}
-            status={null}
-            bottomText={""}
+            status={statusPhone}
+            bottomText={bottomTextPhone}
             bottomTextClickable={false}
             bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => {
+              setIsPhoneFocused(true);
+            }}
+            onBlur={() => {
+              setIsPhoneFocused(false);
+            }}
             disabled={false}
           />
 
@@ -111,7 +142,11 @@ const AdressAddPage: React.FC = () => {
               disabled={true}
             />
 
-            <FindAddressButton>
+            <FindAddressButton
+              onClick={() => {
+                setOpenPostcode(true);
+              }}
+            >
               <p>주소찾기</p>
             </FindAddressButton>
           </FindAddressContainer>
@@ -160,6 +195,34 @@ const AdressAddPage: React.FC = () => {
           onClick={() => {}}
         />
       </Container>
+
+      {openPostcode && (
+        <DaumPostBackground>
+          <DaumPostcodeContainer>
+            <DaumPostcodeClose>
+              <Spacer />
+              <div
+                onClick={() => {
+                  setOpenPostcode(false);
+                }}
+              >
+                <IconX
+                  color={COLORS.whiteColor}
+                  width={undefined}
+                  height={20}
+                />
+              </div>
+            </DaumPostcodeClose>
+            <DaumPostcode
+              onComplete={(data) => {
+                handleComplete(data);
+                setOpenPostcode(false);
+              }}
+              autoClose={true}
+            />
+          </DaumPostcodeContainer>
+        </DaumPostBackground>
+      )}
     </DefaultLayout>
   );
 };
@@ -239,4 +302,40 @@ const FindAddressButton = styled.div`
   }
 `;
 
-export default AdressAddPage;
+const DaumPostBackground = styled.div`
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+
+  overflow: hidden;
+`;
+
+const DaumPostcodeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 0 20px;
+  box-sizing: border-box;
+`;
+
+const DaumPostcodeClose = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+`;
+
+export default AddressAddPage;
