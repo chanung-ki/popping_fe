@@ -16,6 +16,7 @@ import StyledSelect from "@/app/components/styledSelect";
 import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 import StoreInfoAtMap from "@/app/components/storeInformations/StoreInfoAtMap";
 import { PopupStoreDataType, PlaceDataType } from "@/public/utils/types";
+import StoreInfoList from "@/app/components/storeInformations/StoreInfoList";
 
 const MapTestPage: React.FC = () => {
   const DUMMY_SEOUL_OPTIONS = [
@@ -107,7 +108,7 @@ const MapTestPage: React.FC = () => {
 
   useEffect(() => {
     getUserLocation();
-    popupStoreAPI();
+    // popupStoreAPI();
   }, []);
 
   // 현재 위치 가져오기
@@ -484,31 +485,12 @@ const MapTestPage: React.FC = () => {
         <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
         <ExpandableDiv isExpanded={isExpanded}>
           {clickedLocationId !== "" ? (
-            <StoreInfoAtMap />
+            <StoreInfoAtMap setStore={setClickedLocationId} />
           ) : (
-            <LocationContainer>
-              {/*TODO: 리스트 렌더링 필요 */}
-              <StoreInformation
-                storeId={"123"}
-                currentStoreId={clickedLocationId}
-                setCurrentStoreId={setClickedLocationId}
-              />
-              <StoreInformation
-                storeId={"567"}
-                currentStoreId={clickedLocationId}
-                setCurrentStoreId={setClickedLocationId}
-              />
-              <StoreInformation
-                storeId={"1234"}
-                currentStoreId={clickedLocationId}
-                setCurrentStoreId={setClickedLocationId}
-              />
-              <StoreInformation
-                storeId={"4321"}
-                currentStoreId={clickedLocationId}
-                setCurrentStoreId={setClickedLocationId}
-              />
-            </LocationContainer>
+            <StoreInfoList
+              store={clickedLocationId}
+              setStore={setClickedLocationId}
+            />
           )}
 
           {/*여기는 재희님이랑 이야기 나눠봐야할 부분. */}

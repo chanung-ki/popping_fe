@@ -4,14 +4,28 @@ import { IconHeart } from "../icons";
 import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
 import { ButtonLarge, ButtonLargeSingle, ButtonSmall } from "../buttons";
+import { IconChevronLeft } from "../icons";
+import { SetStateAction } from "react";
+
+interface StoreInfoAtMapProps {
+  setStore: React.Dispatch<SetStateAction<string>>;
+}
 
 //TODO : Props 구체화 필요함.
-const StoreInfoAtMap: React.FC = () => {
+const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
+
+  const backButtonClickhandler = () => {
+    setStore("");
+  };
 
   return (
     <PopupStoreInfoContainer>
-      <PopupStoreImage />
+      <PopupStoreImage>
+        <div className={"back-button"} onClick={backButtonClickhandler}>
+          <IconChevronLeft width={9} height={16} color={COLORS.primaryColor} />
+        </div>
+      </PopupStoreImage>
       <PopupStoreDescContainer>
         <div className={"slider-desc-header"}>
           <p className={"slider-store-name"}>일릭서 스토어</p>
@@ -77,11 +91,18 @@ const PopupStoreInfoContainer = styled.div`
   width: 100%;
 `;
 
-//TODO : 이미지로 대체
+//TODO : 추후 이미지로 삽입
 const PopupStoreImage = styled.div`
   width: 100%;
   height: 215px;
   background-color: ${COLORS.greyColor};
+
+  & .back-button {
+    position: relative;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+  }
 `;
 
 const PopupStoreDescContainer = styled.div`
