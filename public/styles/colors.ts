@@ -7,4 +7,9 @@ export const COLORS = {
   whiteColor: "#FFFFFF",
   statusNegativeColor: "#F43529",
   kakaoColor: "#FEE500",
+  RankWhitePop: "#F8F8FF",
+  RankYellowPop: "#FAB913",
+  RankRedPop: "#F6513B",
+  RankPurplePop: "#B829FB",
+  RankGoldPop: "#DCA046",
 };

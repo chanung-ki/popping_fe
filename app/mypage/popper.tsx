@@ -1,8 +1,7 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import { IconChevronRight, IconGear } from "../components/icons";
+import { IconGear } from "../components/icons";
 import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
-import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 import { DefaultLayout, Spacer } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
@@ -111,7 +110,6 @@ export const MyPagePopper: React.FC = () => {
           <MyProfile>
             <MyProfileContainer>
               <ProfileImage image={DummyProfile.src} width={60} height={60} />
-              {/* <ProfileNickname>{nickname}님</ProfileNickname> */}
               <ProfileNickname>{nickname}</ProfileNickname>
               <ProfileBottomText>
                 팔로워 <span>{300}</span>

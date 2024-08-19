@@ -53,7 +53,7 @@ export const BottomNavigationPopper = ({
         <MenuContainer>
           <IconMypage
             color={
-              currentIndex === 4 ? COLORS.secondaryColor : COLORS.greyColor
+              currentIndex === 2 ? COLORS.secondaryColor : COLORS.greyColor
             }
           />
           <p>MY</p>

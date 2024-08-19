@@ -301,6 +301,7 @@ const SettingProfilePage: React.FC = () => {
 
         {showSelectGender && (
           <SelectBottomSection
+            isVisible={showSelectGender}
             title={"성별"}
             onBackgroundClick={() => {
               setShowSelectGender(false);

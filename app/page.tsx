@@ -107,7 +107,6 @@ const MainPage = () => {
           currentIndex={getPageIndexPopple(searchParams.get("page")) ?? -1}
         />
       )}
-      {}
     </DefaultLayout>
   );
 };
