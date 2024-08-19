@@ -6,10 +6,12 @@ import HomePage from "./home/home";
 import MyPage from "./mypage/mypage";
 import LikesPage from "./likes/likes";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const MainPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isLogin } = useSelector((state: any) => state.poppingUser.user);
 
   const getPageIndex = (param: string | null) => {
     switch (param) {
@@ -19,6 +21,20 @@ const MainPage = () => {
         return 3;
       case "mypage":
         return 4;
+    }
+  };
+
+  const loginValid = (index: number) => {
+    if (isLogin) {
+      if (index === 3) {
+        router.replace("/?page=likes");
+      } else {
+        // index가 4일 경우
+        router.replace("/?page=mypage");
+      }
+    } else {
+      alert("로그인 후 이용가능합니다.");
+      router.replace("/member/signin");
     }
   };
 
@@ -39,10 +55,10 @@ const MainPage = () => {
               router.push("/online-popup/Popping/store-openning");
               break;
             case 3:
-              router.replace("/?page=likes");
+              loginValid(3);
               break;
             case 4:
-              router.replace("/?page=mypage");
+              loginValid(4);
               break;
           }
         }}
