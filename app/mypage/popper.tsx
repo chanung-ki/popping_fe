@@ -1,100 +1,22 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import { IconChevronRight, IconGear } from "../components/icons";
-import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
-import DummyStore from "@/public/images/dummy/dummy_store.jpg";
+import { IconGear } from "../components/icons";
 import { DefaultLayout, Spacer } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import { ProfileImage } from "../components/main/componenets";
 import { ButtonSmall } from "../components/buttons";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import axiosInstance from "@/public/network/axios";
-import { useEffect, useRef, useState } from "react";
-import { removeCookie } from "@/public/network/cookie";
-import { initUser } from "../redux/reducers/poppingUser";
 
-export const MyPagePopper: React.FC = () => {
-  // type myPageTypes = {
-  //   followingNum: number;
-  //   point: string;
-  //   gradeInfo: {
-  //     grade: string;
-  //     minOrderAmount: number;
-  //     maxOrderAmount: number;
-  //     earnRate: number;
-  //     discountRate: number;
-  //   };
-  // };
-  const dispatch = useDispatch();
+type MyPagePopperProps = {
+  nickname: string;
+  profileImage: string;
+  signOutApi: () => void;
+};
+
+export const MyPagePopper: React.FC<MyPagePopperProps> = ({ nickname, profileImage, signOutApi }) => {
+
   const router = useRouter();
-
-  const hasAlerted = useRef<boolean>(false);
-  const { isLogin, nickname } = useSelector(
-    (state: any) => state.poppingUser.user
-  );
-
-  // const [myPageData, setMyPageData] = useState<myPageTypes>({
-  //   followingNum: 0,
-  //   point: "",
-  //   gradeInfo: {
-  //     grade: "",
-  //     minOrderAmount: 0,
-  //     maxOrderAmount: 0,
-  //     earnRate: 0,
-  //     discountRate: 0,
-  //   },
-  // });
-
-  const cleanUserData = () => {
-    dispatch(initUser());
-    removeCookie("csrftoken");
-    removeCookie("sessionid");
-  };
-
-  const signOutApi = async () => {
-    try {
-      const response = await axiosInstance.post(`/api/user/signout`);
-      if (response.status === 200) {
-        cleanUserData();
-        alert("로그아웃이 완료되었습니다.");
-        hasAlerted.current = true;
-        router.push("/");
-      }
-    } catch (error) {
-      alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
-    }
-  };
-
-  const getMyPageDataApi = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/user/mypage`);
-      if (response.status === 200) {
-        // setMyPageData(response.data);
-      }
-    } catch (error: any) {
-      if (error.response.statue === 403) {
-        cleanUserData();
-        alert("로그인 세션이 만료되었습니다. 재로그인 후 이용해주세요.");
-        router.push("/member/signin");
-      } else {
-        alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
-      }
-      router.push("/");
-    }
-  };
-
-  useEffect(() => {
-    if (!isLogin && !hasAlerted.current) {
-      alert("로그인 후 이용가능합니다.");
-      hasAlerted.current = true; // alert 호출 후 true로 설정
-      router.push("/member/signin");
-    }
-    if (isLogin) {
-      getMyPageDataApi();
-    }
-  }, [isLogin, router]);
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -110,18 +32,17 @@ export const MyPagePopper: React.FC = () => {
         <MyInfo>
           <MyProfile>
             <MyProfileContainer>
-              <ProfileImage image={DummyProfile.src} width={60} height={60} />
-              {/* <ProfileNickname>{nickname}님</ProfileNickname> */}
+              <ProfileImage image={profileImage} width={60} height={60} />
               <ProfileNickname>{nickname}</ProfileNickname>
-              <ProfileBottomText>
-                팔로워 <span>{300}</span>
-              </ProfileBottomText>
+              {/* <ProfileBottomText>
+                팔로워 <span>{0}</span>
+              </ProfileBottomText> */}
               <ButtonSmall
                 text={"프로필 설정"}
                 backgroundColor={COLORS.mainColor}
                 textColor={COLORS.whiteColor}
                 onClick={() => {
-                  // router.push("/setting-profile");
+                  router.push("/setting-profile");
                 }}
               />
             </MyProfileContainer>
