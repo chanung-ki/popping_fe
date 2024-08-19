@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconChevronLeft } from "@/app/components/icons";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StoreInformation from "@/app/components/storeInformations/StoreInformation";
 
@@ -9,6 +10,7 @@ import StoreInformation from "@/app/components/storeInformations/StoreInformatio
 
 const SearchResultPage: React.FC = () => {
   const router = useRouter();
+  const [clickedStoreId, setClickedStoreId] = useState<string>("");
 
   return (
     <Container>
@@ -30,10 +32,26 @@ const SearchResultPage: React.FC = () => {
       </ResultHeader>
 
       <LocationContainer>
-        {/* <StoreInformation storeId="123" />
-        <StoreInformation storeId="123" />
-        <StoreInformation storeId="123" />
-        <StoreInformation storeId="123" /> */}
+        <StoreInformation
+          storeId="123"
+          currentStoreId={clickedStoreId}
+          setCurrentStoreId={setClickedStoreId}
+        />
+        <StoreInformation
+          storeId="123"
+          currentStoreId={clickedStoreId}
+          setCurrentStoreId={setClickedStoreId}
+        />
+        <StoreInformation
+          storeId="123"
+          currentStoreId={clickedStoreId}
+          setCurrentStoreId={setClickedStoreId}
+        />
+        <StoreInformation
+          storeId="123"
+          currentStoreId={clickedStoreId}
+          setCurrentStoreId={setClickedStoreId}
+        />
       </LocationContainer>
     </Container>
   );

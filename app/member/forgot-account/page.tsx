@@ -43,23 +43,22 @@ const ForgotAccountPage: React.FC = () => {
 
   const router = useRouter();
 
-  const findEmailApi = async() => {
-    
+  const findEmailApi = async () => {
     let bodyData;
 
     if (selectedIndex === 0) {
       bodyData = {
         name: valueName,
         phoneNumber: valuePhone,
-        isPopper: false
-      }
+        isPopper: false,
+      };
     } else {
       bodyData = {
         name: valueName,
         phoneNumber: valuePhone,
         businessNumber: valueBN,
-        isPopper: true
-      }
+        isPopper: true,
+      };
     }
     try {
       const response = await axiosInstance.post(
@@ -68,15 +67,17 @@ const ForgotAccountPage: React.FC = () => {
       );
       if (response.status === 200) {
         if (response.data.isExist) {
-          alert(`해당 조건에 해당하는 계정을 찾았습니다.\n${response.data.email}`)
+          alert(
+            `해당 조건에 해당하는 계정을 찾았습니다.\n${response.data.email}`
+          );
         } else {
-          alert("조건에 해당하는 계정이 존재하지 않습니다.")
+          alert("조건에 해당하는 계정이 존재하지 않습니다.");
         }
-      };
+      }
     } catch (error) {
       alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
     }
-  }
+  };
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
@@ -198,7 +199,7 @@ const ForgotAccountPage: React.FC = () => {
 
         <ButtonLarge
           text={"확인"}
-          backgroundColor={
+          buttonColor={
             selectedIndex === 0
               ? isValidName && isValidPhone
                 ? COLORS.mainColor

@@ -183,7 +183,7 @@ const StepBusinessInfo = ({ onNext }: StepType) => {
 
       <ButtonLarge
         text="다음"
-        backgroundColor={
+        buttonColor={
           isValidBN && isValidName && isValidDate
             ? COLORS.mainColor
             : COLORS.greyColor

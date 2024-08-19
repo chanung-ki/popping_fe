@@ -11,6 +11,7 @@ const initialState = {
     isPopper: false,
     isSocialuser: false,
     socialLoginProvider: '',
+    profileImage: '',
   }
 
 };
@@ -27,11 +28,14 @@ const userSlice = createSlice({
     changeName: (state, action) => {
       state.user.name = action.payload;
     },
-    changeisMale: (state, action) => {
+    changeIsMale: (state, action) => {
       state.user.isMale = action.payload;
+    },
+    changeProfileImage: (state, action) => {
+      state.user.profileImage = action.payload;
     },
   }
 });
 
-export const { setUser, initUser, changeNickname, changeName, changeisMale } = userSlice.actions;
+export const { setUser, initUser, changeNickname, changeName, changeIsMale, changeProfileImage } = userSlice.actions;
 export default userSlice;
