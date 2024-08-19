@@ -125,7 +125,7 @@ export const MyPagePopple: React.FC = () => {
               </ProfileContainer>
               <GradeContainer>
                 <CurrentGradeContainer>
-                  <p>현재등급</p>
+                  <p>현재 등급</p>
                   <GradeText color={COLORS.mainColor}>
                     {myPageData.gradeInfo.grade}
                   </GradeText>

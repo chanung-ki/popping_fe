@@ -165,9 +165,10 @@ interface SelectBottomSectionTypes {
   options: string[];
   onBackgroundClick: () => void;
   onClick: CallableFunction;
+  isVisible: boolean;
 }
 
-const BottomSectionBackground = styled.div`
+const BottomSectionBackground = styled.div<{ isVisible: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -176,18 +177,24 @@ const BottomSectionBackground = styled.div`
   left: 0;
   top: 0;
 
+  opacity: ${(props) => (props.isVisible ? "1" : "0")};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  transition: visibility 0.3s, opacity 0.3s ease-in-out;
+
   z-index: 2;
 
   overflow: hidden;
 `;
 
-const BottomSection = styled.div`
+const BottomSection = styled.div<{ isVisible: boolean }>`
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
   background: ${COLORS.primaryColor};
   border-radius: 16px 16px 0px 0px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(${(props) => (props.isVisible ? "0%" : "100%")});
   z-index: 3;
 `;
 
@@ -244,10 +251,11 @@ export const SelectBottomSection = ({
   options,
   onBackgroundClick,
   onClick,
+  isVisible,
 }: SelectBottomSectionTypes) => {
   return (
-    <BottomSectionBackground onClick={onBackgroundClick}>
-      <BottomSection>
+    <BottomSectionBackground onClick={onBackgroundClick} isVisible={isVisible}>
+      <BottomSection isVisible={isVisible}>
         <BottomSectionContainer>
           <BottomSectionTitleContainer>
             <BottomSectionTitle>{title}</BottomSectionTitle>
