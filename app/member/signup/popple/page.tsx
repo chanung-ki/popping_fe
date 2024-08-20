@@ -5,14 +5,12 @@ import {
   MemberChevronLeft,
   MemberProgressBar,
 } from "@/app/components/member/components";
-import useFunnel from "next-use-funnel";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StepEmail from "./01email";
 import StepEmailPasscode from "./02emailpasscode";
 import StepPassword from "./03password";
 import StepName from "./04name";
 import StepPhone from "./05phone";
-import StepPhonePasscode from "./06phonepasscode";
 import StepProfile from "./07profile";
 import StepDone from "./08done";
 import axiosInstance from "@/public/network/axios";
@@ -20,60 +18,84 @@ import { useRouter } from "next/navigation";
 import { Loading } from "@/app/components/loading";
 
 const SignUpUserPage: React.FC = () => {
-  type bodyTypes = {
-    email: string;
-    password: string;
-    name: string;
-    nickname: string;
-    isMale: boolean | null;
-    phoneNumber: string;
-    isPopper: boolean;
-    authCode: string;
-  };
-
-  type profileTypes = {
-    nickname: string;
-    isMale: boolean | null;
-  };
-
   const steps = [
     "Email",
     "Email Passcode",
     "Password",
     "Name",
     "Phone",
-    // "Phone Passcode",
     "Profile",
     "Done",
   ] as const;
 
-  const router = useRouter();
+  type Step = typeof steps[number];
 
-  const [Funnel, state, setState] = useFunnel(steps, {
-    initialStep: "Email",
-    onStepChange: (step) => {
-      setStepIndex(steps.indexOf(step));
-    },
-  }).withState<bodyTypes>({
+  type bodyTypes = {
+    email: string | undefined;
+    password: string | undefined;
+    name: string | undefined;
+    nickname: string | undefined;
+    isMale: boolean | null;
+    phoneNumber: string | undefined;
+    isPopper: boolean;
+    authCode: string;
+    step: Step;
+  };
+
+  const router = useRouter();
+  const hasCalledApi = useRef<boolean>(false);
+
+  const [formData, setFormData] = useState<bodyTypes>({
     email: undefined,
     password: undefined,
     name: undefined,
     nickname: undefined,
-    isMale: undefined,
+    isMale: null,
     phoneNumber: undefined,
     isPopper: false,
     authCode: "",
+    step: "Email",
   });
+
+  useEffect(() => {
+    setFormData({
+      email: undefined,
+      password: undefined,
+      name: undefined,
+      nickname: undefined,
+      isMale: null,
+      phoneNumber: undefined,
+      isPopper: false,
+      authCode: "",
+      step: "Email",
+    });
+  }, []);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const setStep = (step: Step) => {
+    setFormData((prev) => ({
+      ...prev,
+      step,
+    }));
+  };
+
+  const currentStepIndex = steps.indexOf(formData.step);
+
+  useEffect(()=>{
+    if (formData.nickname !== undefined && formData.isMale !== undefined) {
+      if (hasCalledApi.current) return;
+      poppleSignupApi();
+      hasCalledApi.current = true; 
+    }
+  },[formData])
 
   const poppleSignupApi = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post(`/api/user/signup`, state);
+      const response = await axiosInstance.post(`/api/user/signup`, formData);
       if (response.status === 201) {
-        setState((prev) => ({
-          ...prev,
-          step: "Done",
-        }));
+        setStep("Done");
         setIsLoading(false);
       }
     } catch (error) {
@@ -82,36 +104,101 @@ const SignUpUserPage: React.FC = () => {
     }
   };
 
-  const [stepIndex, setStepIndex] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    setState({
-      email: undefined,
-      password: undefined,
-      name: undefined,
-      nickname: undefined,
-      isMale: undefined,
-      phoneNumber: undefined,
-      isPopper: false,
-      authCode: "",
-      step: "Email",
-    });
-  }, []);
+  const renderStep = () => {
+    switch (formData.step) {
+      case "Email":
+        return (
+          <StepEmail
+            onNext={(email: string, authCode: string) => {
+              setFormData((prev) => ({
+                ...prev,
+                email,
+                authCode,
+              }));
+              setStep("Email Passcode");
+            }}
+          />
+        );
+      case "Email Passcode":
+        return (
+          <StepEmailPasscode
+            authCode={formData.authCode ?? ""}
+            email={formData.email ?? ""}
+            onNext={() => {
+              setStep("Password");
+            }}
+          />
+        );
+      case "Password":
+        return (
+          <StepPassword
+            onNext={(password: string) => {
+              setFormData((prev) => ({
+                ...prev,
+                password,
+              }));
+              setStep("Name");
+            }}
+          />
+        );
+      case "Name":
+        return (
+          <StepName
+            onNext={(name: string) => {
+              setFormData((prev) => ({
+                ...prev,
+                name,
+              }));
+              setStep("Phone");
+            }}
+          />
+        );
+      case "Phone":
+        return (
+          <StepPhone
+            onNext={(phoneNumber: string) => {
+              setFormData((prev) => ({
+                ...prev,
+                phoneNumber,
+              }));
+              setStep("Profile");
+            }}
+          />
+        );
+      case "Profile":
+        return (
+          <StepProfile
+            onNext={(result: { nickname: string; isMale: boolean | null }) => {
+              setFormData((prev) => ({
+                ...prev,
+                nickname: result.nickname,
+                isMale: result.isMale,
+              }));
+            }}
+          />
+        );
+      case "Done":
+        return (
+          <StepDone
+            onNext={() => {
+              router.push("/member/signin");
+            }}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       {isLoading && <Loading />}
-      <MemberProgressBar value={stepIndex * (100 / steps.length - 1)} />
-      {state.step !== "Done" && (
+      <MemberProgressBar value={currentStepIndex * (100 / (steps.length - 1))} />
+      {formData.step !== "Done" && (
         <div
           onClick={() => {
-            if (stepIndex > 0) {
-              setStepIndex((prev) => prev - 1);
-              setState((prev) => ({
-                ...prev,
-                step: steps[stepIndex - 1],
-              }));
+            if (currentStepIndex > 0) {
+              setStep(steps[currentStepIndex - 1]);
             } else {
               router.push("/signup");
             }
@@ -120,82 +207,7 @@ const SignUpUserPage: React.FC = () => {
           <MemberChevronLeft />{" "}
         </div>
       )}
-      <Funnel>
-        <Funnel.Step name="Email">
-          <StepEmail
-            onNext={(email: string, authCode: string) => {
-              setState((prev) => ({
-                ...prev,
-                email,
-                authCode,
-                step: "Email Passcode",
-              }));
-            }}
-          />
-        </Funnel.Step>
-        <Funnel.Step name="Email Passcode">
-          <StepEmailPasscode
-            authCode={state.authCode ? state.authCode : ""}
-            email={state.email ? state.email : ""}
-            onNext={() => {
-              setState((prev) => ({ ...prev, step: "Password" }));
-            }}
-          />
-        </Funnel.Step>
-        <Funnel.Step name="Password">
-          <StepPassword
-            onNext={(password: string) => {
-              setState((prev) => ({ ...prev, password, step: "Name" }));
-            }}
-          />
-        </Funnel.Step>
-        <Funnel.Step name="Name">
-          <StepName
-            onNext={(name: string) => {
-              setState((prev) => ({ ...prev, name, step: "Phone" }));
-            }}
-          />
-        </Funnel.Step>
-        <Funnel.Step name="Phone">
-          <StepPhone
-            onNext={(phoneNumber: string) => {
-              setState((prev) => ({
-                ...prev,
-                phoneNumber,
-                step: "Profile",
-              }));
-            }}
-          />
-        </Funnel.Step>
-        {/* <Funnel.Step name="Phone Passcode">
-          <StepPhonePasscode
-            onNext={() => {
-              setState((prev) => ({ ...prev, step: "Profile" }));
-            }}
-          />
-        </Funnel.Step> */}
-        <Funnel.Step name="Profile">
-          <StepProfile
-            onNext={(result: profileTypes) => {
-              setState((prev) => ({
-                ...prev,
-                nickname: result.nickname,
-                isMale: result.isMale,
-              }));
-              if (state.phoneNumber !== undefined && state.name !== undefined) {
-                poppleSignupApi();
-              }
-            }}
-          />
-        </Funnel.Step>
-        <Funnel.Step name="Done">
-          <StepDone
-            onNext={() => {
-              router.push("/member/signin");
-            }}
-          />
-        </Funnel.Step>
-      </Funnel>
+      {renderStep()}
     </DefaultLayout>
   );
 };
