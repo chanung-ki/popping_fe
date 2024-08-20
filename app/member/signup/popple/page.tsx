@@ -28,7 +28,7 @@ const SignUpUserPage: React.FC = () => {
     "Done",
   ] as const;
 
-  type Step = typeof steps[number];
+  type Step = (typeof steps)[number];
 
   type bodyTypes = {
     email: string | undefined;
@@ -82,13 +82,13 @@ const SignUpUserPage: React.FC = () => {
 
   const currentStepIndex = steps.indexOf(formData.step);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (formData.nickname !== undefined && formData.isMale !== undefined) {
       if (hasCalledApi.current) return;
       poppleSignupApi();
-      hasCalledApi.current = true; 
+      hasCalledApi.current = true;
     }
-  },[formData])
+  }, [formData]);
 
   const poppleSignupApi = async () => {
     setIsLoading(true);
@@ -193,7 +193,9 @@ const SignUpUserPage: React.FC = () => {
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
       {isLoading && <Loading />}
-      <MemberProgressBar value={currentStepIndex * (100 / (steps.length - 1))} />
+      <MemberProgressBar
+        value={currentStepIndex * (100 / (steps.length - 1))}
+      />
       {formData.step !== "Done" && (
         <div
           onClick={() => {
