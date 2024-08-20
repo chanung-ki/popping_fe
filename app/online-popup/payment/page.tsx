@@ -117,7 +117,6 @@ const Payment: React.FC = () => {
   };
 
 
-
   const handleUsePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = Number(e.target.value.replace(/[^0-9]/g, ''));
     console.log(inputValue)
@@ -129,7 +128,6 @@ const Payment: React.FC = () => {
 
 
   if (!orderData || !brandName || !point || !addressData || !gradeData || !userGrade || !finalPrice) return <Loading />;
-
 
 
 
@@ -173,29 +171,32 @@ const Payment: React.FC = () => {
                 ))
               }
               <AddressEditButton href={`/address/list?redirect=${encodeURIComponent(window.location.href)}`}>
+
                 주소 {addressData.length > 0 ? '변경' : '추가'}
               </AddressEditButton>
             </ContentsHeader>
 
-            {addressData.length > 0 && useAddress ?
-              <ContentsBody>
-                <Name>{useAddress.name}</Name>
-                <Tel>{FormatTelHyphen(useAddress.phoneNumber)}</Tel>
-                <Address>({useAddress.postNumber}) {useAddress.address}, {useAddress.detailAddress}</Address>
-                <DeliveryRequestTextArea
-                  placeholder="배송 요청사항을 입력하세요..." />
-              </ContentsBody> :
-              <ContentsBody>
-                <AddressMessage>배송지를 추가해주세요</AddressMessage>
-              </ContentsBody>
+            {
+              addressData.length > 0 && useAddress ?
+                <ContentsBody>
+                  <Name>{useAddress.name}</Name>
+                  <Tel>{FormatTelHyphen(useAddress.phoneNumber)}</Tel>
+                  <Address>({useAddress.postNumber}) {useAddress.address}, {useAddress.detailAddress}</Address>
+                  <DeliveryRequestTextArea
+                    placeholder="배송 요청사항을 입력하세요..." />
+                </ContentsBody> :
+                <ContentsBody>
+                  <AddressMessage>배송지를 추가해주세요</AddressMessage>
+
+                </ContentsBody>
             }
           </Contents>
 
-        </Section>
+        </Section >
         {/* END, CS(Delivery address) User Data Section */}
 
 
-        <Section>
+        < Section >
           <PopupHeader section={`콘`} />
           <Point>
             <PointInput
@@ -205,9 +206,9 @@ const Payment: React.FC = () => {
             />
             <span>
               보유 | {KRWLocaleString(point)}콘
-            </span>
-          </Point>
-        </Section>
+            </span >
+          </Point >
+        </Section >
 
         <Section>
           <PopupHeader section={`적립`} />
@@ -243,9 +244,9 @@ const Payment: React.FC = () => {
             <Simple>사용 콘</Simple>
             <Simple>
               {usePoint != 0 ? (
-
                 `${KRWLocaleString(usePoint)}콘`
               ) : ('-')}
+
 
             </Simple>
           </OneByOne>
@@ -261,20 +262,21 @@ const Payment: React.FC = () => {
           </FinalOneByOne>
         </Section>
 
-
-        {useAddress ? (
-          <StoreDecisionButton
-            isVisible={true}
-            onClick={() => alert('현재 결제 기능은 지원하지 않습니다.')}
-            sort={'right'}
-            title={`${KRWLocaleString(finalPrice)}원 결제하기`}
-          />
-        ) : (
-          <DisabledBottomButton>
-            주문하기
-          </DisabledBottomButton>
-        )}
-      </Container>
+        {
+          useAddress ? (
+            <StoreDecisionButton
+              isVisible={true}
+              onClick={() => alert('현재 결제 기능은 지원하지 않습니다.')}
+              sort={'right'}
+              title={`${KRWLocaleString(finalPrice)}원 결제하기`}
+            />
+          ) : (
+            <DisabledBottomButton>
+              주문하기
+            </DisabledBottomButton>
+          )
+        }
+      </Container >
 
       {grade && (
         <BottomUpModal
