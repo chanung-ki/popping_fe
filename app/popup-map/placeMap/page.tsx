@@ -69,13 +69,14 @@ const MapTestPage: React.FC = () => {
   // 검색
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
   // 지역 검색
-  const [selectedLocation, setSelectedLocation] = useState<any>();
+  const [selectedLocation, setSelectedLocation] = useState<string>('');
   // 
   const [clickedLocationId, setClickedLocationId] = useState<string>("");
   // 팝업을 선택 했는지 여부
   const [checkPopupList, setCheckPopupList] = useState<boolean>(true);
-
-  // 팝업 마커데이터 [마커, 인포]
+  // 전체 팝업 마커데이터
+  const [allPopupMarkers, setAllPopupMarkers] = useState<any[]>([]);
+  // 선택한 팝업 마커데이터 [마커, 인포]
   const [popupMakerData, setPopupMarkerData] = useState<any[]>([]);
   // 카페 마커데이터 [마커, 인포]
   const [cafeMakerData, setCafeMarkerData] = useState<any[]>([]);
@@ -84,9 +85,18 @@ const MapTestPage: React.FC = () => {
 
   const router = useRouter();
 
-  const popupStoreAPI = async () => {
+  const popupStoreAPI = async (selectedLocation:string) => {
+
+    var APIurl = ""
+
+    if (selectedLocation){
+      APIurl = `/api/maps/stores?district=${selectedLocation}`
+    }else{
+      APIurl = `/api/maps/stores`
+    }
+
     await axiosInstance
-      .get(`/api/maps/stores`)
+      .get(APIurl)
       .then((response: any) => {
         setPopupStore(response.data.popupStores);
       })
@@ -122,9 +132,18 @@ const MapTestPage: React.FC = () => {
   };
 
   useEffect(() => {
-    popupStoreAPI();
+    popupStoreAPI(selectedLocation);
     getUserLocation();
   }, []);
+
+  useEffect(() => {
+
+    if (selectedLocation) {
+
+      popupStoreAPI(selectedLocation.split(' ')[1])
+    }
+
+  }, [selectedLocation]);
 
   // 현재 위치 가져오기
   const getUserLocation = () => {
@@ -189,9 +208,16 @@ const MapTestPage: React.FC = () => {
   // 가져온 팝업리스트의 위치값과 인포를 지도에 마커로 표시
   useEffect(() => {
     if (popupCoorData && mapInstance) {
+
       const imageSrc =
         "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+      settingMarkers(false,allPopupMarkers);
+
+      var tmpList:any[] = []
+
       popupCoorData.forEach((coordata) => {
+
         var imageSize = new kakao.maps.Size(24, 35);
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -217,7 +243,12 @@ const MapTestPage: React.FC = () => {
           console.log('bbbbb')
           infowindow.close();
         });
+
+        tmpList.push(popupMarker)
+
       });
+
+      setAllPopupMarkers(tmpList)
     }
   }, [popupCoorData]);
 
@@ -298,11 +329,12 @@ const MapTestPage: React.FC = () => {
     infowindow.open(mapInstance, marker);
 
     // 선택한 마커의 위치로 지도의 중심을 이동합니다.
-    mapInstance.setCenter(markerPosition);
+    mapInstance.setLevel(2, {animate: true, anchor: markerPosition});
+    // mapInstance.setCenter(markerPosition);
 
     setPopupMarkerData([marker,infowindow])
-    settingCategoryMarkers(false,foodMakerData)
-    settingCategoryMarkers(false,cafeMakerData)
+    settingMarkers(false,foodMakerData)
+    settingMarkers(false,cafeMakerData)
     placeAPI(selectedStore!.id);
   };
 
@@ -341,12 +373,21 @@ const MapTestPage: React.FC = () => {
 
     var tmpMarkerList: any[] = [];
 
-    positionList.map((position:any) => {
-      var imageSize = new kakao.maps.Size(22, 26);
+    var imageSize = new kakao.maps.Size(22, 26);
+
+    if (category === 'coffee') {
       var imageOptions = {
         spriteOrigin: new kakao.maps.Point(10, 0),
         spriteSize: new kakao.maps.Size(36, 98),
       };
+    } else {
+      var imageOptions = {
+        spriteOrigin: new kakao.maps.Point(10, 36),
+        spriteSize: new kakao.maps.Size(36, 98),
+      };
+    }
+
+    positionList.map((position:any) => {
 
       var markerImage = createMarkerImage(
           markerImageSrc,
@@ -370,7 +411,7 @@ const MapTestPage: React.FC = () => {
     });
   }
 
-  const settingCategoryMarkers = (check:boolean, markerList:any) =>{
+  const settingMarkers = (check:boolean, markerList:any) =>{
     if (check) {
       markerList.forEach((item:any) => {
         item.setMap(mapInstance)
@@ -387,14 +428,14 @@ const MapTestPage: React.FC = () => {
 
     if (type === "coffee") {
       setCategoryMarkers("coffee", coffeePosition, mapInstance)
-      settingCategoryMarkers(false,foodMakerData)
+      settingMarkers(false,foodMakerData)
       // setCategoryMarkers("food", foodPosition, null)
       // setCoffeeMarkers(mapInstance);
       // setFoodMarkers(null);
     } else if (type === "food") {
       // setCategoryMarkers("coffee", coffeePosition, null)
       setCategoryMarkers("food",foodPosition, mapInstance)
-      settingCategoryMarkers(false,cafeMakerData)
+      settingMarkers(false,cafeMakerData)
       // setCoffeeMarkers(null);
       // setFoodMarkers(mapInstance);
     }
@@ -513,8 +554,9 @@ const MapTestPage: React.FC = () => {
             <StoreProductContainer isExpanded={isExpanded}>
               {
                 popupStore &&
-                popupStore.map((store: PopupStoreDataType) => (
+                popupStore.map((store: PopupStoreDataType, index:number) => (
                   <StoreInformation
+                    key={index}
                     store={store}
                     setCheckPopupList={setCheckPopupList}
                     setSelectedStore={setSelectedStore}
