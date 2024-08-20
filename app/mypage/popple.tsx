@@ -58,7 +58,18 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
               <GradeContainer>
                 <CurrentGradeContainer>
                   <p>현재 등급</p>
-                  <GradeText color={COLORS.mainColor} onClick={handleMoveBenefit}>
+                  <GradeText 
+                    color={
+                      myPageData.gradeInfo.grade === "WHITE POP" ? (
+                        "#000000"
+                      ) : (
+                        isGradeKey(myPageData.gradeInfo.grade)
+                        ? gradeColors[myPageData.gradeInfo.grade]
+                        : gradeColors["WHITE POP"]
+                      )
+                    }
+                    onClick={handleMoveBenefit}
+                  >
                     {myPageData.gradeInfo.grade}
                   </GradeText>
                   <div onClick={()=>{router.push("/grade");}}>
@@ -91,6 +102,9 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
                   </NextGradeContainer>
                 ) : (
                   <NextGradeContainer>
+                    <NextGradeDesc>
+                      누적 금액 {myPageData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원 이상 달성시
+                    </NextGradeDesc>
                     <NextGradeText 
                       color={
                         isGradeKey(myPageData.gradeInfo.nextGradeInfo.nextGrade)
@@ -100,9 +114,6 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
                     >
                       {myPageData.gradeInfo.nextGradeInfo.nextGrade}
                     </NextGradeText>
-                    <NextGradeDesc>
-                      까지 {myPageData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원
-                    </NextGradeDesc>
                   </NextGradeContainer>
                 )}
               </GradeContainer>
@@ -315,6 +326,7 @@ const NextGradeDesc = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  padding-right: 4px;
 `;
 
 const MyActivities = styled.div`

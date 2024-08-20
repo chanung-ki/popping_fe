@@ -129,6 +129,7 @@ const BenefitPage: React.FC = () => {
                     </NextGradeContainer>
                   ) : (
                     <NextGradeContainer>
+                      <NextGradeDesc>누적 금액 {benefitData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원 이상 달성시</NextGradeDesc>
                       <NextGradeText 
                       color={
                         isGradeKey(benefitData.gradeInfo.nextGradeInfo.nextGrade)
@@ -138,7 +139,6 @@ const BenefitPage: React.FC = () => {
                       >
                         {benefitData.gradeInfo.nextGradeInfo.nextGrade}
                       </NextGradeText>
-                      <NextGradeDesc>까지 {benefitData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원</NextGradeDesc>
                       <NextGradeInfo
                         onClick={() => {
                           router.push("/grade");
@@ -298,6 +298,7 @@ const NextGradeDesc = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  padding-right: 4px;
 `;
 
 const NextGradeInfo = styled.p`
