@@ -24,6 +24,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
   const { storeId } = params;
   const { isPopper } = useSelector((state: any) => state.poppingUser.user);
 
+
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
   const [brandData, setBrandData] = useState<BrandType>();
   const [productData, setProductData] = useState<ProductType[]>();
