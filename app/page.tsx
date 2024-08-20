@@ -88,7 +88,7 @@ const MainPage = () => {
   };
 
   return (
-    <DefaultLayout top={"0"} right={"0"} bottom={"0"} left={"0"}>
+    <>
       {searchParams.get("page") === null && <HomePage />}
       {searchParams.get("page") === "likes" && <LikesPage />}
       {searchParams.get("page") === "mypage" && <MyPage />}
@@ -107,7 +107,7 @@ const MainPage = () => {
           currentIndex={getPageIndexPopple(searchParams.get("page")) ?? -1}
         />
       )}
-    </DefaultLayout>
+    </>
   );
 };
 

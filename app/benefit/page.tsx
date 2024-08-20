@@ -20,8 +20,10 @@ const BenefitPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const hasAlerted = useRef<boolean>(false);
-  
-  const { isLogin, nickname, profileImage } = useSelector((state: any) => state.poppingUser.user);
+
+  const { isLogin, nickname, profileImage } = useSelector(
+    (state: any) => state.poppingUser.user
+  );
   const [isReady, setIsReady] = useState<boolean>(false);
   const [benefitData, setBenefitData] = useState<benefitTypes>({
     point: "",
@@ -29,16 +31,16 @@ const BenefitPage: React.FC = () => {
     gradeInfo: {
       grade: "WHITE POP",
       minOrderAmount: "",
-      maxOrderAmount: "", 
+      maxOrderAmount: "",
       earnRate: 0,
       discountRate: 0,
       gradeRatio: 0,
       nextGradeInfo: {
         nextGrade: "",
-        nextMinOrderAmount: "", 
-      }
+        nextMinOrderAmount: "",
+      },
     },
-    pointHistory: []
+    pointHistory: [],
   });
 
   const cleanUserData = () => {
@@ -87,7 +89,7 @@ const BenefitPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       {isReady ? (
         <>
           <TopNavigation>
@@ -115,8 +117,8 @@ const BenefitPage: React.FC = () => {
                   <PointsProgress
                     color={
                       isGradeKey(benefitData.gradeInfo.grade)
-                      ? gradeColors[benefitData.gradeInfo.grade]
-                      : gradeColors["WHITE POP"]
+                        ? gradeColors[benefitData.gradeInfo.grade]
+                        : gradeColors["WHITE POP"]
                     }
                     value={benefitData.gradeInfo.gradeRatio}
                     max="100"
@@ -129,13 +131,21 @@ const BenefitPage: React.FC = () => {
                     </NextGradeContainer>
                   ) : (
                     <NextGradeContainer>
-                      <NextGradeDesc>누적 금액 {benefitData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원 이상 달성시</NextGradeDesc>
-                      <NextGradeText 
-                      color={
-                        isGradeKey(benefitData.gradeInfo.nextGradeInfo.nextGrade)
-                        ? gradeColors[benefitData.gradeInfo.nextGradeInfo.nextGrade]
-                        : gradeColors["WHITE POP"]
-                      }
+                      <NextGradeDesc>
+                        누적 금액{" "}
+                        {benefitData.gradeInfo.nextGradeInfo.nextMinOrderAmount}
+                        원 이상 달성시
+                      </NextGradeDesc>
+                      <NextGradeText
+                        color={
+                          isGradeKey(
+                            benefitData.gradeInfo.nextGradeInfo.nextGrade
+                          )
+                            ? gradeColors[
+                                benefitData.gradeInfo.nextGradeInfo.nextGrade
+                              ]
+                            : gradeColors["WHITE POP"]
+                        }
                       >
                         {benefitData.gradeInfo.nextGradeInfo.nextGrade}
                       </NextGradeText>
@@ -143,8 +153,7 @@ const BenefitPage: React.FC = () => {
                         onClick={() => {
                           router.push("/grade");
                         }}
-                      >
-                      </NextGradeInfo>
+                      ></NextGradeInfo>
                     </NextGradeContainer>
                   )}
                 </MyProfileContainer>
@@ -157,7 +166,9 @@ const BenefitPage: React.FC = () => {
                 <TableRow key={index}>
                   <TableHeader>
                     <TableDataContainer>
-                      <TableNormalText>{history.changeCategory}</TableNormalText>
+                      <TableNormalText>
+                        {history.changeCategory}
+                      </TableNormalText>
                     </TableDataContainer>
                   </TableHeader>
                   <TableData>
@@ -174,7 +185,7 @@ const BenefitPage: React.FC = () => {
           </Container>
         </>
       ) : (
-        <Loading/>
+        <Loading />
       )}
     </DefaultLayout>
   );

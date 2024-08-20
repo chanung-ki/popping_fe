@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Back from "@/app/components/back";
 import { IconBookmark, IconMinus, IconPlus } from "@/app/components/icons";
@@ -7,11 +7,15 @@ import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
 import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
-import { Follow, FormatFollowers, KRWLocaleString } from "@/public/utils/function";
+import {
+  Follow,
+  FormatFollowers,
+  KRWLocaleString,
+} from "@/public/utils/function";
 import { OptionType, ProductType, SizeType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
 const fadeInOut = keyframes`
   0% {
@@ -32,8 +36,9 @@ const fadeInOut = keyframes`
   }
 `;
 
-
-const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: number } }> = ({ params }) => {
+const OnlinePopupProductPage: React.FC<{
+  params: { storeId: string; product: number };
+}> = ({ params }) => {
   const router = useRouter();
 
   const { storeId, product } = params;
@@ -42,7 +47,9 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
 
   const [productData, setProductData] = useState<ProductType>();
   const [saveState, setSaveState] = useState<boolean>();
-  const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
+  const [selectedOptions, setSelectedOptions] = useState<{
+    [key: string]: string;
+  }>({});
   const [allOptionsSelected, setAllOptionsSelected] = useState<boolean>(false);
   const [showAnimation, setShowAnimation] = useState<boolean>(true);
 
@@ -52,55 +59,54 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
   useEffect(() => {
     setTimeout(() => {
       router.push(`${window.location.hash}`);
-    }, 100)
-  }, [router])
+    }, 100);
+  }, [router]);
 
   useEffect(() => {
     if (storeId && product) {
-      ProductDataGetAPI()
+      ProductDataGetAPI();
     }
-  }, [storeId, product])
-
+  }, [storeId, product]);
 
   useEffect(() => {
-    const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+    const hasSeenAnimation = sessionStorage.getItem("hasSeenAnimation");
 
-    if (hasSeenAnimation === null || hasSeenAnimation === 'false') {
+    if (hasSeenAnimation === null || hasSeenAnimation === "false") {
       setShowAnimation(true);
 
       const timer = setTimeout(() => {
         setShowAnimation(false);
-        sessionStorage.setItem('hasSeenAnimation', 'true');
+        sessionStorage.setItem("hasSeenAnimation", "true");
       }, 4000);
 
       const hideOnTouch = () => {
         setShowAnimation(false);
-        sessionStorage.setItem('hasSeenAnimation', 'true');
+        sessionStorage.setItem("hasSeenAnimation", "true");
       };
 
-      window.addEventListener('touchstart', hideOnTouch);
+      window.addEventListener("touchstart", hideOnTouch);
 
       return () => {
         clearTimeout(timer);
-        window.removeEventListener('touchstart', hideOnTouch);
+        window.removeEventListener("touchstart", hideOnTouch);
       };
     } else {
       setShowAnimation(false);
     }
   }, [router]);
 
-
   const ProductDataGetAPI = async () => {
     try {
-      const response = await axiosInstance.get(`/api/popup/product/data/${storeId}/${product}`)
+      const response = await axiosInstance.get(
+        `/api/popup/product/data/${storeId}/${product}`
+      );
 
       if (response.status === 200) {
-        setProductData(response.data)
-        setSaveState(response.data.isSaved)
-        setIsCarted(response.data.isCarted)
+        setProductData(response.data);
+        setSaveState(response.data.isSaved);
+        setIsCarted(response.data.isCarted);
       }
-    }
-    catch (e: any) {
+    } catch (e: any) {
       if (e.response.sataus === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
@@ -108,8 +114,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
         );
       }
     }
-  }
-
+  };
 
   if (!productData) return null;
 
@@ -118,47 +123,52 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
       const response = await axiosInstance.post(`/api/popup/cart/data`, {
         id: productData.id,
         amount: amount,
-        option: selectedOptions
-      })
+        option: selectedOptions,
+      });
 
       if (response.status === 201) {
-        if (window.confirm('장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?')) {
-          router.push('/online-popup/cart')
+        if (
+          window.confirm(
+            "장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?"
+          )
+        ) {
+          router.push("/online-popup/cart");
         }
-        setIsCarted(true)
+        setIsCarted(true);
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       if (error.response.data === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
           `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
         );
-      }
-      else if (error.response.status === 400) {
+      } else if (error.response.status === 400) {
         if (error.response.data.status === 1) {
-          if (window.confirm('장바구니에 이미 존재하는 상품입니다.\n장바구니로 이동하시겠습니까?')) {
-            router.push('/online-popup/cart')
+          if (
+            window.confirm(
+              "장바구니에 이미 존재하는 상품입니다.\n장바구니로 이동하시겠습니까?"
+            )
+          ) {
+            router.push("/online-popup/cart");
           }
-
         } else {
-          alert(error.response.data.message)
+          alert(error.response.data.message);
         }
       }
     }
-  }
+  };
 
   const handleBookmarkClick = async (id: number) => {
     setSaveState(!saveState);
     if (saveState) {
       setProductData({
         ...productData,
-        saved: productData.saved - 1
+        saved: productData.saved - 1,
       });
     } else {
       setProductData({
         ...productData,
-        saved: productData.saved + 1
+        saved: productData.saved + 1,
       });
     }
     Follow("Product", id, router);
@@ -186,22 +196,20 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
   //   });
   // };
 
-
   const AmountToggle = (increment: boolean) => {
     if (amount >= 0 && increment) {
-      setAmount(amount + 1)
+      setAmount(amount + 1);
     }
     if (amount > 0 && !increment) {
-      setAmount(amount - 1)
+      setAmount(amount - 1);
     }
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === '') {
+    if (value === "") {
       setAmount(0);
-    }
-    else if (/^\d*$/.test(value)) {
+    } else if (/^\d*$/.test(value)) {
       const number = parseInt(value, 10);
       if (number >= 1 && number <= 99) {
         setAmount(number);
@@ -210,22 +218,21 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
       }
     }
   };
-  const sizeOptions = productData?.option.find(option => option.name.toLowerCase() === "size");
+  const sizeOptions = productData?.option.find(
+    (option) => option.name.toLowerCase() === "size"
+  );
 
   return (
-    <DefaultLayout top="16px" right="0" bottom="0" left="0">
+    <DefaultLayout top={16} right={0} bottom={0} left={0}>
       <Top>
         <Back url={undefined} />
-        <ProductThumbnailImg
-          src={productData.thumbnail} />
+        <ProductThumbnailImg src={productData.thumbnail} />
       </Top>
       <ProductContainer>
         <ProductInfo>
           <ProductHeader>
             <HeaderLeft>
-              <ProductTitle>
-                {productData.name}
-              </ProductTitle>
+              <ProductTitle>{productData.name}</ProductTitle>
               <ProductPrice>
                 {KRWLocaleString(productData.price * amount)} KRW
                 <span>배송비 무료</span>
@@ -233,16 +240,16 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
             </HeaderLeft>
             <ProductBookmark
               onClick={(event) => {
-                event.stopPropagation();  // 부모 요소로의 이벤트 전파를 막음
+                event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
                 handleBookmarkClick(productData.id);
-              }} >
+              }}
+            >
               <IconBookmark
                 color={saveState ? COLORS.mainColor : COLORS.greyColor}
                 width={20}
-                height={27} />
-              <span>
-                {FormatFollowers(productData.saved)}
-              </span>
+                height={27}
+              />
+              <span>{FormatFollowers(productData.saved)}</span>
             </ProductBookmark>
           </ProductHeader>
 
@@ -250,9 +257,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
             {productData.option.map((data: OptionType, index: number) => (
               <ProductOption key={index}>
                 <ProductOptionTitle>
-                  <span>
-                    {data.name.toUpperCase()}
-                  </span>
+                  <span>{data.name.toUpperCase()}</span>
                   {data.name.toLowerCase() === "size" && (
                     <SizeGuide href="#sizeGuide">사이즈 가이드 ⓘ</SizeGuide>
                   )}
@@ -268,11 +273,11 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                         name={data.name}
                         value={option.name}
                         checked={selectedOptions[data.name] === option.name}
-                        onChange={() => handleOptionChange(data.name, option.name)}
+                        onChange={() =>
+                          handleOptionChange(data.name, option.name)
+                        }
                       />
-                      <span>
-                        {option.name}
-                      </span>
+                      <span>{option.name}</span>
                     </RadioLabel>
                   ))}
                 </ProductRadioContent>
@@ -280,12 +285,17 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
             ))}
 
             <ProductOptionContent>
-              <ProductOptionTitle>
-                AMOUNT
-              </ProductOptionTitle>
+              <ProductOptionTitle>AMOUNT</ProductOptionTitle>
               <AmountContainer>
-                <AmountIcon onClick={() => AmountToggle(false)} disabled={amount <= 1}>
-                  <IconMinus color={COLORS.secondaryColor} width={10} height={10} />
+                <AmountIcon
+                  onClick={() => AmountToggle(false)}
+                  disabled={amount <= 1}
+                >
+                  <IconMinus
+                    color={COLORS.secondaryColor}
+                    width={10}
+                    height={10}
+                  />
                 </AmountIcon>
 
                 <AmountInput
@@ -295,43 +305,50 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
                   maxLength={2} // Limit the input length to 2 characters
                 />
 
-                <AmountIcon onClick={() => AmountToggle(true)} disabled={amount >= 99}>
-                  <IconPlus color={COLORS.secondaryColor} width={10} height={10} />
+                <AmountIcon
+                  onClick={() => AmountToggle(true)}
+                  disabled={amount >= 99}
+                >
+                  <IconPlus
+                    color={COLORS.secondaryColor}
+                    width={10}
+                    height={10}
+                  />
                 </AmountIcon>
               </AmountContainer>
             </ProductOptionContent>
 
             <ProductOptionContent>
-              <ProductOptionTitle>
-                DETAILS
-              </ProductOptionTitle>
-              <ProductDescription>
-                {productData.description}
-              </ProductDescription>
+              <ProductOptionTitle>DETAILS</ProductOptionTitle>
+              <ProductDescription>{productData.description}</ProductDescription>
             </ProductOptionContent>
 
             {sizeOptions && sizeOptions.option && (
               <>
                 <ProductOptionContent ref={sizeGuideRef}>
-                  <ProductOptionTitle id="sizeGuide" >
+                  <ProductOptionTitle id="sizeGuide">
                     SIZE GUIDE
                   </ProductOptionTitle>
                   <SizeGuideTable>
                     <thead>
                       <tr>
                         <th></th>
-                        {Object.keys(sizeOptions.option[0] || {}).map((key, index) => key !== 'name' && (
-                          <th key={index}>{key}</th>
-                        ))}
+                        {Object.keys(sizeOptions.option[0] || {}).map(
+                          (key, index) =>
+                            key !== "name" && <th key={index}>{key}</th>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
                       {sizeOptions.option.map((item, index) => (
                         <tr key={index}>
                           <td style={{ fontWeight: 600 }}>{item.name}</td>
-                          {Object.keys(sizeOptions.option[0] || {}).map((key, keyIndex) => key !== 'name' && (
-                            <td key={keyIndex}>{(item as any)[key]}</td>
-                          ))}
+                          {Object.keys(sizeOptions.option[0] || {}).map(
+                            (key, keyIndex) =>
+                              key !== "name" && (
+                                <td key={keyIndex}>{(item as any)[key]}</td>
+                              )
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -345,26 +362,21 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
           <StoreDecisionButton
             isVisible={allOptionsSelected && amount > 0}
             onClick={AddCart}
-            title={isCarted ? '장바구니 존재' : '장바구니 담기'}
-            sort={'left'}
+            title={isCarted ? "장바구니 존재" : "장바구니 담기"}
+            sort={"left"}
           />
           <StoreDecisionButton
             isVisible={allOptionsSelected && amount > 0}
-            onClick={() => alert('구매 로직 구현중.')}
+            onClick={() => alert("구매 로직 구현중.")}
             title="구매하기"
-            sort={'right'}
+            sort={"right"}
           />
         </BottomButtonContainer>
-
       </ProductContainer>
 
       {showAnimation && (
-        <AnimationContainer>
-          상품의 옵션을 선택해주세요.
-        </AnimationContainer>
+        <AnimationContainer>상품의 옵션을 선택해주세요.</AnimationContainer>
       )}
-
-
     </DefaultLayout>
   );
 };
@@ -387,8 +399,8 @@ const BottomButtonContainer = styled.div<{ isVisible: boolean }>`
   transform: translate(-50%, 0);
 
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
-  pointer-events: ${({ isVisible }) => (isVisible ? 'auto' : 'none')};
+  visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
+  pointer-events: ${({ isVisible }) => (isVisible ? "auto" : "none")};
   transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 `;
 
@@ -402,7 +414,7 @@ const Top = styled.div`
   & > div {
     margin-left: 20px;
   }
-`
+`;
 
 const ProductContainer = styled.div`
   width: calc(100% - 20px);
@@ -418,13 +430,11 @@ const ProductContainer = styled.div`
   gap: 24px;
   padding-left: 20px;
   padding-bottom: 80px;
-
-`
-
+`;
 
 const ProductThumbnailImg = styled.img`
   max-width: 100%;
-`
+`;
 
 const ProductBookmark = styled.div`
   display: flex;
@@ -446,7 +456,7 @@ const ProductInfo = styled.div`
   flex-direction: column;
 
   gap: 24px;
-`
+`;
 
 const ProductHeader = styled.div`
   display: flex;
@@ -458,7 +468,7 @@ const ProductHeader = styled.div`
   align-items: start;
   justify-content: space-between;
   padding-right: 20px;
-`
+`;
 
 const HeaderLeft = styled.div`
   display: flex;
@@ -466,7 +476,7 @@ const HeaderLeft = styled.div`
 
   align-items: flex-start;
   gap: 20px;
-`
+`;
 
 const ProductTitle = styled.h3`
   font-size: 24px;
@@ -493,7 +503,7 @@ const ProductOptionContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 36px;
-`
+`;
 
 const ProductRadioContent = styled.div`
   display: flex;
@@ -504,20 +514,18 @@ const ProductRadioContent = styled.div`
   overflow-x: scroll;
 
   &::-webkit-scrollbar {
-    display: none;  
+    display: none;
   }
 
   -ms-overflow-style: none;
-  scrollbar-width: none;  
-
+  scrollbar-width: none;
 `;
-
 
 const ProductOption = styled.div`
   display: flex;
   flex-direction: column;
-  gap:16px;
-`
+  gap: 16px;
+`;
 
 const ProductOptionTitle = styled.p`
   display: flex;
@@ -527,7 +535,7 @@ const ProductOptionTitle = styled.p`
   gap: 8px;
 
   padding-right: 20px;
-`
+`;
 
 const SizeGuide = styled.a`
   font-size: 10px;
@@ -571,8 +579,8 @@ const AmountIcon = styled.button`
 
   box-sizing: border-box;
 
-  &:enabled{
-    border:none;
+  &:enabled {
+    border: none;
     background-color: ${COLORS.mainColor};
     line {
       stroke: ${COLORS.primaryColor};
@@ -602,7 +610,7 @@ const AmountInput = styled.input`
   }
 `;
 
-const RadioButton = styled.input.attrs({ type: 'radio' })`
+const RadioButton = styled.input.attrs({ type: "radio" })`
   display: none;
 `;
 
@@ -612,7 +620,8 @@ const RadioLabel = styled.label<{ isChecked: boolean }>`
   cursor: pointer;
   text-align: center;
   border-radius: 16px;
-  border: 1px solid   ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
+  border: 1px solid
+    ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
   padding: 8px 20px;
   box-sizing: border-box;
 
@@ -627,7 +636,7 @@ const ProductDescription = styled.div`
   font-weight: 500;
   line-height: 160%;
   white-space: pre-line; /* 줄 바꿈을 그대로 반영 */
-`
+`;
 
 const SizeGuideTable = styled.table`
   width: 100%;
@@ -635,7 +644,8 @@ const SizeGuideTable = styled.table`
   margin-top: 16px;
   box-sizing: border-box;
 
-  th, td {
+  th,
+  td {
     padding: 8px;
     text-align: center;
     border: 1px solid ${COLORS.greyColor};
@@ -667,22 +677,20 @@ const SizeGuideTable = styled.table`
   }
 `;
 
-
 const StoreBottomButton = styled.div`
   width: calc(100% - 40px);
   height: 48px;
-  
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  
   position: fixed;
   z-index: 100;
   bottom: 32px;
-  
+
   background-color: ${COLORS.mainColor};
-  
+
   border-radius: 8px;
 
   & > span {
@@ -691,10 +699,9 @@ const StoreBottomButton = styled.div`
     font-weight: 600;
     color: rgba(255, 255, 255, 1);
   }
-`
+`;
 
 const AnimationContainer = styled.div`
-
   position: fixed;
   top: 10px;
   width: 60%;
@@ -704,12 +711,11 @@ const AnimationContainer = styled.div`
   right: 0;
   /* 다른 것들 */
   display: flex;
-  
+
   align-items: center;
   justify-content: center;
 
-
-  background-color: rgb(250, 141, 14, .8);
+  background-color: rgb(250, 141, 14, 0.8);
   padding: 16px 24px;
   border-radius: 16px;
   color: ${COLORS.primaryColor};
@@ -718,9 +724,5 @@ const AnimationContainer = styled.div`
   z-index: 200;
   animation: ${fadeInOut} 4s ease-in-out forwards; /* 애니메이션을 부드럽게 적용 */
 `;
-
-
-
-
 
 export default OnlinePopupProductPage;

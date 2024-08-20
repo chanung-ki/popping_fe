@@ -80,7 +80,7 @@ const LikesPage: React.FC = () => {
   if (!products || !brands || !popups) return <Loading />
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>관심</TopNavTitle>

@@ -35,14 +35,14 @@ const AddressEditPage: React.FC = () => {
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [addressId, setAddressId] = useState<string | null>()
+  const [addressId, setAddressId] = useState<string | null>();
   const [originalData, setOriginalData] = useState<UserAddress>();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const encodedRedirectPath = searchParams.get("redirect");
     const idParam = searchParams.get("id");
-    setAddressId(idParam)
+    setAddressId(idParam);
 
     if (encodedRedirectPath) {
       const decodedPath = decodeURIComponent(encodedRedirectPath);
@@ -65,8 +65,7 @@ const AddressEditPage: React.FC = () => {
     if (addressId) {
       OriginalDataGET(addressId);
     }
-  }, [addressId])
-
+  }, [addressId]);
 
   useEffect(() => {
     if (isPhoneFocused === false) {
@@ -91,7 +90,7 @@ const AddressEditPage: React.FC = () => {
 
   const OriginalDataGET = async (id: string | null) => {
     if (!id) {
-      alert('잘못된 접근입니다.');
+      alert("잘못된 접근입니다.");
       if (redirectPath) {
         window.location.href = redirectPath;
       } else {
@@ -109,11 +108,11 @@ const AddressEditPage: React.FC = () => {
         setValueNickname(data.addressName);
         setValuePhone(data.phoneNumber);
         setValueZIPCode(data.postNumber);
-        setIsDefaultAddress(data.default)
+        setIsDefaultAddress(data.default);
         setIsValidPhone(true);
         setIsLoading(false);
       }
-    } catch (error: any) { }
+    } catch (error: any) {}
   };
 
   const AddressDataPut = async (id: string | null) => {
@@ -127,7 +126,13 @@ const AddressEditPage: React.FC = () => {
         originalData.detailAddress !== valueAddressDetail ||
         originalData.default !== isDefaultAddress)
     ) {
-      if (valueNickname !== "" && valueName !== "" && isValidPhone && valueAddress !== '' && valueZIPCode !== '')
+      if (
+        valueNickname !== "" &&
+        valueName !== "" &&
+        isValidPhone &&
+        valueAddress !== "" &&
+        valueZIPCode !== ""
+      )
         try {
           const response = await axiosInstance.put(`/api/user/address`, {
             id: id,
@@ -140,7 +145,7 @@ const AddressEditPage: React.FC = () => {
             default: isDefaultAddress,
           });
           if (response.status === 202) {
-            alert('배송지 정보가 수정 되었습니다.');
+            alert("배송지 정보가 수정 되었습니다.");
             if (redirectPath) {
               window.location.href = redirectPath;
             } else {
@@ -159,7 +164,7 @@ const AddressEditPage: React.FC = () => {
           }
         }
     } else {
-      alert('배송지 정보가 수정 되었습니다.');
+      alert("배송지 정보가 수정 되었습니다.");
       if (redirectPath) {
         window.location.href = redirectPath;
       } else {
@@ -167,10 +172,10 @@ const AddressEditPage: React.FC = () => {
       }
     }
   };
-  if (isLoading || !addressId) return <Loading />
+  if (isLoading || !addressId) return <Loading />;
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>배송지 수정</TopNavTitle>
@@ -201,12 +206,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueNickname(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -218,12 +223,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueName(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -235,7 +240,7 @@ const AddressEditPage: React.FC = () => {
             status={statusPhone}
             bottomText={bottomTextPhone}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
@@ -258,10 +263,10 @@ const AddressEditPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => { }}
-              onChange={(text: string) => { }}
-              onFocus={() => { }}
-              onBlur={() => { }}
+              bottomTextOnClick={() => {}}
+              onChange={(text: string) => {}}
+              onFocus={() => {}}
+              onBlur={() => {}}
               disabled={true}
             />
 
@@ -282,10 +287,10 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
-            onChange={(text: string) => { }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            bottomTextOnClick={() => {}}
+            onChange={(text: string) => {}}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={true}
           />
 
@@ -297,12 +302,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueAddressDetail(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -321,16 +326,19 @@ const AddressEditPage: React.FC = () => {
         <ButtonLarge
           text={"저장"}
           buttonColor={
-            valueNickname !== "" && valueName !== "" && isValidPhone && valueAddress !== '' && valueZIPCode !== ''
+            valueNickname !== "" &&
+            valueName !== "" &&
+            isValidPhone &&
+            valueAddress !== "" &&
+            valueZIPCode !== ""
               ? COLORS.mainColor
               : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
-          onClick={() => { AddressDataPut(addressId) }}
+          onClick={() => {
+            AddressDataPut(addressId);
+          }}
         />
-
-
-
       </Container>
 
       {openPostcode && (
@@ -414,7 +422,6 @@ const InputsContainer = styled.div`
   margin-top: 12px;
 `;
 
-
 const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
@@ -434,13 +441,13 @@ const CheckboxLabel = styled.label`
   gap: 8px;
 `;
 
-const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
+const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
   cursor: pointer;
-  appearance: none; 
+  appearance: none;
   border: none;
   margin: 0;
   width: 16px;
-  height: 16px; 
+  height: 16px;
   background-color: ${COLORS.primaryColor};
   border: 1px solid ${COLORS.greyColor};
   border-radius: 3px;
@@ -448,15 +455,14 @@ const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
 
   &:checked {
     border-color: transparent;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNyIgdmlld0JveD0iMCAwIDEwIDciIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTMuMzMzMzMgN0wwIDRMMS4xMTExMSAzTDMuMzMzMzMgNUw4Ljg4ODg5IDBMMTAgMUwzLjMzMzMzIDdaIiBmaWxsPSIjRkE4RDBFIi8+PC9zdmc+');    
-    background-size:  10px 7px;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNyIgdmlld0JveD0iMCAwIDEwIDciIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTMuMzMzMzMgN0wwIDRMMS4xMTExMSAzTDMuMzMzMzMgNUw4Ljg4ODg5IDBMMTAgMUwzLjMzMzMzIDdaIiBmaWxsPSIjRkE4RDBFIi8+PC9zdmc+");
+    background-size: 10px 7px;
     background-position: 50%;
     background-repeat: no-repeat;
     background-color: ${COLORS.lightGreyColor};
     border: 1px solid ${COLORS.greyColor};
   }
 `;
-
 
 const FindAddressContainer = styled.div`
   display: flex;

@@ -1,8 +1,10 @@
+"use client";
+
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconGear } from "../components/icons";
-import { DefaultLayout, Spacer } from "../components/layout";
-import { TopNavigation } from "../navigation/topnavigation";
+import { BottomBox, DefaultLayout, Spacer } from "../components/layout";
+import { TopNavigation } from "@/app/navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import { ProfileImage } from "../components/main/componenets";
 import { ButtonSmall } from "../components/buttons";
@@ -14,11 +16,15 @@ type MyPagePopperProps = {
   signOutApi: () => void;
 };
 
-export const MyPagePopper: React.FC<MyPagePopperProps> = ({ nickname, profileImage, signOutApi }) => {
+export const MyPagePopper: React.FC<MyPagePopperProps> = ({
+  nickname,
+  profileImage,
+  signOutApi,
+}) => {
   const router = useRouter();
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <>
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -70,7 +76,9 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({ nickname, profileIma
           </div>
         </MenuContainer>
       </Container>
-    </DefaultLayout>
+
+      <BottomBox />
+    </>
   );
 };
 
@@ -107,8 +115,6 @@ const Container = styled.div`
   height: 100%;
 
   background: ${COLORS.primaryColor};
-
-  padding-bottom: 80px;
 `;
 
 const MyInfo = styled.div`

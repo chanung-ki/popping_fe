@@ -9,8 +9,9 @@ import { IconX } from "@/app/components/icons";
 import { useRouter } from "next/navigation";
 import { BrandType } from "@/public/utils/types";
 
-
-const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
+const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
+  params,
+}) => {
   const router = useRouter();
 
   const [openingData, setOpeningData] = useState<BrandType>();
@@ -23,57 +24,45 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ pa
 
   const BrandDataGetAPI = async () => {
     try {
-      const response = await axiosInstance.get(`/api/popup/brand/opening/${storeId}`)
+      const response = await axiosInstance.get(
+        `/api/popup/brand/opening/${storeId}`
+      );
       if (response.status === 200) {
-        setOpeningData(response.data)
+        setOpeningData(response.data);
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       if (error.response.status === 400) {
-        alert('없음')
+        alert("없음");
       }
     }
-  }
+  };
 
   if (!openingData) return null;
 
   return (
-    <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
-
+    <DefaultLayout top={16} right={20} bottom={32} left={20}>
       <>
         <OpeningImage src={openingData.thumbnail} />
         <Link
-          href={'/'}
-          style={{ position: 'absolute', top: 16, left: 20, zIndex: 100 }}
+          href={"/"}
+          style={{ position: "absolute", top: 16, left: 20, zIndex: 100 }}
         >
-          <IconX
-            color={COLORS.primaryColor}
-            width={undefined}
-            height={16} />
+          <IconX color={COLORS.primaryColor} width={undefined} height={16} />
         </Link>
         <Overlay />
       </>
 
-
-
       <OpenningPageContainer>
         <OpenningPageContentsContainer>
           <BrandInfo>
-            <BrandIcon
-              src={openingData.logo}
-              alt="Brand Icon" />
-            <BrandName>
-              {storeId.toUpperCase()}
-            </BrandName>
-            <BrandDesc>
-              {openingData.description}
-            </BrandDesc>
+            <BrandIcon src={openingData.logo} alt="Brand Icon" />
+            <BrandName>{storeId.toUpperCase()}</BrandName>
+            <BrandDesc>{openingData.description}</BrandDesc>
           </BrandInfo>
-          <Button
-            href={`store-main`}>입장하기</Button>
+          <Button href={`store-main`}>입장하기</Button>
         </OpenningPageContentsContainer>
       </OpenningPageContainer>
-    </DefaultLayout >
+    </DefaultLayout>
   );
 };
 
@@ -86,7 +75,7 @@ const OpeningImage = styled.img`
   left: 0;
   object-fit: cover;
   z-index: 0;
-`
+`;
 
 const Overlay = styled.div`
   position: absolute;
@@ -95,9 +84,9 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    to top, 
-    rgba(25, 25, 25, .8) 0%, 
-    rgba(0, 0, 0, .3) 100%
+    to top,
+    rgba(25, 25, 25, 0.8) 0%,
+    rgba(0, 0, 0, 0.3) 100%
   );
   z-index: 1;
 `;
@@ -117,12 +106,11 @@ const OpenningPageContentsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  
+
   align-items: flex-end;
   justify-content: flex-end;
   gap: 40px;
 `;
-
 
 const BrandInfo = styled.div`
   width: 100%;
@@ -132,7 +120,7 @@ const BrandInfo = styled.div`
 
   gap: 8px;
   color: ${COLORS.greyColor};
-`
+`;
 
 const BrandIcon = styled.img`
   width: 100px;
@@ -140,21 +128,20 @@ const BrandIcon = styled.img`
   border-radius: 8px;
 
   object-fit: cover;
-`
-
+`;
 
 const BrandName = styled.h2`
   font-size: 32px;
   font-weight: 700;
   color: ${COLORS.primaryColor};
-`
+`;
 
 const BrandDesc = styled.p`
   margin-top: 16px;
   font-size: 16px;
   font-weight: 550;
   line-height: 160%;
-`
+`;
 
 const Button = styled(Link)`
   cursor: pointer;

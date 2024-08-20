@@ -8,8 +8,17 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { COLORS } from "@/public/styles/colors";
 import { DefaultLayout } from "@/app/components/layout";
 import axiosInstance from "@/public/network/axios";
-import { Follow, FormatFollowers, KRWLocaleString } from "@/public/utils/function";
-import { IconBookmark, IconCart, IconChevronLeft, IconFollow } from "@/app/components/icons";
+import {
+  Follow,
+  FormatFollowers,
+  KRWLocaleString,
+} from "@/public/utils/function";
+import {
+  IconBookmark,
+  IconCart,
+  IconChevronLeft,
+  IconFollow,
+} from "@/app/components/icons";
 import { BrandType, ProductType } from "@/public/utils/types";
 import Back from "@/app/components/back";
 import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
@@ -18,17 +27,19 @@ import CartButton from "@/app/components/online-popup/cartButton";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/app/components/loading";
 
-
-const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
+const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
+  params,
+}) => {
   const router = useRouter();
   const { storeId } = params;
   const { isPopper } = useSelector((state: any) => state.poppingUser.user);
 
-
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
   const [brandData, setBrandData] = useState<BrandType>();
   const [productData, setProductData] = useState<ProductType[]>();
-  const [savedProducts, setSavedProducts] = useState<{ [key: number]: boolean }>({});
+  const [savedProducts, setSavedProducts] = useState<{
+    [key: number]: boolean;
+  }>({});
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState<number>(0);
@@ -42,7 +53,6 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
     }
   };
 
-
   useLayoutEffect(() => {
     if (containerRef.current) {
       updateParentWidth();
@@ -54,16 +64,15 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
     };
   }, [containerRef.current]);
 
-
-
   useEffect(() => {
     StoreDataGet();
   }, []);
 
-
   const storeFollowHandler = () => {
     if (brandData) {
-      const updatedSaved = isFollowed ? brandData.saved - 1 : brandData.saved + 1;
+      const updatedSaved = isFollowed
+        ? brandData.saved - 1
+        : brandData.saved + 1;
       Follow("Brands", brandData.id, router);
       setBrandData({
         ...brandData,
@@ -75,27 +84,30 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
 
   const StoreDataGet = async () => {
     try {
-      const response = await axiosInstance.get(`/api/popup/brand/store/main/${storeId}`)
+      const response = await axiosInstance.get(
+        `/api/popup/brand/store/main/${storeId}`
+      );
       if (response.status === 200) {
-        console.log(response.data)
-        setBrandData(response.data.brand)
-        setProductData(response.data.product)
-        setIsFollowed(response.data.brand.isSaved)
+        console.log(response.data);
+        setBrandData(response.data.brand);
+        setProductData(response.data.product);
+        setIsFollowed(response.data.brand.isSaved);
 
-        const savedStates = response.data.product.reduce((acc: any, product: ProductType) => {
-          acc[product.id] = product.isSaved;
-          return acc;
-        }, {});
+        const savedStates = response.data.product.reduce(
+          (acc: any, product: ProductType) => {
+            acc[product.id] = product.isSaved;
+            return acc;
+          },
+          {}
+        );
         setSavedProducts(savedStates);
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       if (error.response.status === 400) {
-        alert('없음')
+        alert("없음");
       }
     }
-  }
-
+  };
 
   const handleBookmarkClick = async (id: number) => {
     const newSavedState = !savedProducts[id];
@@ -109,11 +121,9 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
   if (!brandData || !productData) return <Loading />;
 
   return (
-    <DefaultLayout top="0" right="0" bottom="0" left="0">
-      <div style={{ position: 'absolute', top: 16, left: 20 }}>
-        <Back
-          url={'store-openning'}
-          color={undefined} />
+    <DefaultLayout top={0} right={0} bottom={0} left={0}>
+      <div style={{ position: "absolute", top: 16, left: 20 }}>
+        <Back url={"store-openning"} color={undefined} />
       </div>
 
       <Container ref={containerRef}>
@@ -126,22 +136,26 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
           <CartButton />
           <StoreInfoContainer>
             <StoreInfoHeader>
-              <StoreName>
-                {storeId.toUpperCase()} STORE
-              </StoreName>
-              <StoreDesc>
-                {brandData.description}
-              </StoreDesc>
+              <StoreName>{storeId.toUpperCase()} STORE</StoreName>
+              <StoreDesc>{brandData.description}</StoreDesc>
             </StoreInfoHeader>
 
-            <StoreSave
-              onClick={() => storeFollowHandler()}>
-              {isFollowed ? <IconFollow color={COLORS.mainColor} width={undefined} height={30} /> : <IconFollow color={COLORS.greyColor} width={undefined} height={30} />}
-              <span>
-                {FormatFollowers(brandData.saved)}
-              </span>
+            <StoreSave onClick={() => storeFollowHandler()}>
+              {isFollowed ? (
+                <IconFollow
+                  color={COLORS.mainColor}
+                  width={undefined}
+                  height={30}
+                />
+              ) : (
+                <IconFollow
+                  color={COLORS.greyColor}
+                  width={undefined}
+                  height={30}
+                />
+              )}
+              <span>{FormatFollowers(brandData.saved)}</span>
             </StoreSave>
-
           </StoreInfoContainer>
           {isPopper && (
             <PopperManageContainer>
@@ -151,7 +165,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
               <StoreDecisionButton
                 isVisible={true}
                 title="스토어 관리"
-                onClick={() => alert('test')}
+                onClick={() => alert("test")}
                 sort="right"
               />
             </PopperManageContainer>
@@ -159,32 +173,30 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
 
           <StoreProductContainer>
             {productData.map((item: ProductType, index: number) => (
-              <Product
-                key={index}
-                href={`product/${item.id}`}
-              >
+              <Product key={index} href={`product/${item.id}`}>
                 <ProductThumbnail>
-                  <ProductThumbnailImage
-                    src={item.thumbnail}
-                  />
-                  <ProductBookmark onClick={(event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    handleBookmarkClick(item.id);
-                  }} >
+                  <ProductThumbnailImage src={item.thumbnail} />
+                  <ProductBookmark
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      event.preventDefault();
+                      handleBookmarkClick(item.id);
+                    }}
+                  >
                     <IconBookmark
-                      color={savedProducts[item.id] ? COLORS.mainColor : COLORS.greyColor}
+                      color={
+                        savedProducts[item.id]
+                          ? COLORS.mainColor
+                          : COLORS.greyColor
+                      }
                       width={20}
-                      height={27} />
+                      height={27}
+                    />
                   </ProductBookmark>
                 </ProductThumbnail>
 
-                <ProductTitle>
-                  {item.name}
-                </ProductTitle>
-                <ProductPrice>
-                  {KRWLocaleString(item.price)} KRW
-                </ProductPrice>
+                <ProductTitle>{item.name}</ProductTitle>
+                <ProductPrice>{KRWLocaleString(item.price)} KRW</ProductPrice>
               </Product>
             ))}
           </StoreProductContainer>
@@ -216,7 +228,6 @@ const StoreThumbnailContainer = styled.img`
   object-fit: cover;
 `;
 
-
 const StoreInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -227,14 +238,12 @@ const StoreInfoContainer = styled.div`
   padding-top: 20px;
 `;
 
-
 const StoreInfoHeader = styled.div`
   display: flex;
   flex-direction: column;
 
   gap: 8px;
 `;
-
 
 const StoreName = styled.h2`
   font-size: 32px;
@@ -259,8 +268,7 @@ const StoreDesc = styled.p`
   font-size: 14px;
   font-weight: 500;
   line-height: 120%;
-  `;
-
+`;
 
 const PopperManageContainer = styled.div`
   display: flex;
@@ -268,15 +276,15 @@ const PopperManageContainer = styled.div`
 
   gap: 8px;
   margin-top: 12px;
-`
+`;
 
 const FollowerUpdate = styled.p`
   font-size: 14px;
   font-weight: 600;
   & > span {
-  color: ${COLORS.mainColor};
+    color: ${COLORS.mainColor};
   }
-`
+`;
 
 const StoreProductContainer = styled.div`
   display: flex;
@@ -292,12 +300,10 @@ const Product = styled(Link)`
 
   flex: 0 0 calc(50% - 12px);
   margin-bottom: 20px;
-  
 
   @media (min-width: 768px) {
-    flex: 0 0 calc(33.333% - 12px); 
-  };
-
+    flex: 0 0 calc(33.333% - 12px);
+  }
 `;
 
 const ProductThumbnail = styled.div`
@@ -305,9 +311,8 @@ const ProductThumbnail = styled.div`
   margin-bottom: 8px;
 `;
 
-
 const ProductThumbnailImage = styled.img`
-  width: 100%; 
+  width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 8px;
@@ -335,6 +340,4 @@ const ProductPrice = styled.span`
   bottom: 0;
 `;
 
-
 export default StoreMainPage;
-
