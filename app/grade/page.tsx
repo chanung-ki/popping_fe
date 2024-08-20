@@ -29,21 +29,6 @@ const GradePage: React.FC = () => {
         </TopNavLeftContainer>
       </TopNavigation>
       <Container>
-        <YourGradeContainer>
-          <YourGradeText color={COLORS.GradeWhitePop}>
-            현재 {}님의 등급은,
-            <br />
-            <span>{}</span>입니다.
-          </YourGradeText>
-          <PointsProgress color={COLORS.GradeWhitePop} value={80} max="100" />
-          <NextGradeContainer>
-            <NextGradeText color={COLORS.GradeYellowPop}>
-              {"YELLOW POP"}
-            </NextGradeText>
-            <NextGradeDesc>까지 {30000}원</NextGradeDesc>
-          </NextGradeContainer>
-        </YourGradeContainer>
-        <GradeInfoTitle>등급 안내</GradeInfoTitle>
         <GradesContainer>
           {/* 등급 안내 시작 */}
           <GradeBox color={COLORS.secondaryColor}>
@@ -139,9 +124,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-
+  
   width: 100%;
   height: 100%;
+  margin-top: 24px;
 
   background: ${COLORS.primaryColor};
 `;

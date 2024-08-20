@@ -152,16 +152,36 @@ export interface PaymentType {
   totalDiscount: number;
   item: CartType[];
 }
+export type gradeTypes = {
+  grade: string;
+  minOrderAmount: string;
+  maxOrderAmount: string;
+  earnRate: number;
+  discountRate: number;
+  gradeRatio: number;
+  nextGradeInfo: {
+    nextGrade: string;
+    nextMinOrderAmount: string;
+  };
+};
+
+export type pointHistoryTypes = {
+  changeCategory: string;
+  changePoint: string;
+  changeAt: string;
+};
 
 // 팝플용 마이페이지 타입
 export type myPagePoppleTypes = {
   followingNum: number;
   point: string;
-  gradeInfo: {
-    grade: string;
-    minOrderAmount: number;
-    maxOrderAmount: number;
-    earnRate: number;
-    discountRate: number;
-  };
+  gradeInfo: gradeTypes;
+};
+
+// 베네핏 타입 (유저 등급, 포인트 정보)
+export type benefitTypes = {
+  point: string;
+  orderAmount: string;
+  gradeInfo: gradeTypes;
+  pointHistory: pointHistoryTypes[];
 };

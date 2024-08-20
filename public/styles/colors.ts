@@ -13,3 +13,12 @@ export const COLORS = {
   GradePurplePop: "#B829FB",
   GradeGoldPop: "#DCA046",
 };
+
+// 회원등급용 색상
+export const gradeColors = {
+  "WHITE POP":  COLORS.GradeWhitePop,
+  "YELLOW POP":  COLORS.GradeYellowPop,
+  "RED POP":  COLORS.GradeRedPop,
+  "PURPLE POP":  COLORS.GradePurplePop,
+  "GOLD POP":  COLORS.GradeGoldPop,
+}
