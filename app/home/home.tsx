@@ -2,11 +2,14 @@ import { COLORS } from "@/public/styles/colors";
 import { useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 
-import DummyBanner from "@/public/images/dummy/dummy_banner.jpg";
+import DummyBanner1 from "@/public/images/dummy/dummy_banner1.jpg";
+import DummyBanner2 from "@/public/images/dummy/dummy_banner2.jpg";
+import DummyBanner3 from "@/public/images/dummy/dummy_banner3.jpg";
 
 import DummyPlace1 from "@/public/images/dummy/dummy_place1.png";
 import DummyPlace2 from "@/public/images/dummy/dummy_place2.png";
@@ -14,7 +17,6 @@ import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
 import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
 
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
-import { DefaultLayout } from "../components/layout";
 
 const HomePage = () => {
   const parentDiv = useRef<HTMLDivElement>(null);
@@ -52,11 +54,26 @@ const HomePage = () => {
             slidesPerView={1}
             spaceBetween={0}
             loop={true}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            modules={[Autoplay]}
           >
             <SwiperSlide>
-              <SlideBannerContainer height={parentWidth}>
-                <img src={DummyBanner.src} alt={"dummy banner"} />
-              </SlideBannerContainer>
+              <SlideBannerContainer
+                height={parentWidth}
+                image={DummyBanner2.src}
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <SlideBannerContainer
+                height={parentWidth}
+                image={DummyBanner1.src}
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <SlideBannerContainer
+                height={parentWidth}
+                image={DummyBanner3.src}
+              />
             </SwiperSlide>
           </Swiper>
         </SwiperContainer>
@@ -132,19 +149,15 @@ const SwiperContainer = styled.div`
   width: 100%;
 `;
 
-const SlideBannerContainer = styled.div<{ height: number }>`
+const SlideBannerContainer = styled.div<{ height: number; image: string }>`
   width: 100%;
   height: ${(props) => props.height}px;
-  background: ${COLORS.greyColor};
+  background: ${(props) =>
+    props.image ? `url(${props.image})` : COLORS.greyColor};
+  background-position: center;
+  background-size: cover;
 
   cursor: grab;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-position: center;
-    object-fit: cover;
-  }
 `;
 
 const Sections = styled.div`
