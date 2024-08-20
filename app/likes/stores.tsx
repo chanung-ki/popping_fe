@@ -1,29 +1,33 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconHeart } from "../components/icons";
-import { Spacer } from "../components/layout";
+import { PopupStoreDataType } from "@/public/utils/types";
+import Link from "next/link";
 
-type storesTypes = {
-  image: string;
-  isLiked: boolean;
-  brand: string;
-  desc: string;
-};
 
 type storesType = {
-  values: storesTypes[];
+  values: PopupStoreDataType[];
 };
 
-const Stores = ({ values }: storesType) => {
+const Stores: React.FC<storesType> = ({ values }) => {
+
+  if (values.length == 0) return (
+    <Container>
+      <div>
+        <span>관심 오프라인 팝업이 없습니다.</span>
+        <span>팝업지도 <Link href={`/online-popup/Popping/store-openning`}>이동하기</Link></span>
+      </div>
+    </Container>
+  )
   return (
     <Grid>
-      {values.map((value: storesTypes, index: number) => {
+      {values.map((value: PopupStoreDataType, index: number) => {
         return (
           <Store key={index}>
             <StoreImage image={value.image}>
               <IsLiked>
                 <IconHeart
-                  color={value.isLiked ? COLORS.mainColor : COLORS.greyColor}
+                  color={value.isSaved ? COLORS.mainColor : COLORS.greyColor}
                   width={undefined}
                   height={16}
                 />
@@ -31,8 +35,8 @@ const Stores = ({ values }: storesType) => {
             </StoreImage>
 
             <StoreDesc>
-              <p>{value.brand}</p>
-              <p>{value.desc}</p>
+              <p>{value.title}</p>
+              <p>{value.event[0]}</p>
             </StoreDesc>
           </Store>
         );
@@ -40,6 +44,31 @@ const Stores = ({ values }: storesType) => {
     </Grid>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  & > div {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    align-items:center;
+  }
+  & > div span {
+      color: ${COLORS.greyColor};
+  }
+
+  & > div span a {
+    color: ${COLORS.mainColor}
+  }
+`
+
 
 const Grid = styled.div`
   display: grid;

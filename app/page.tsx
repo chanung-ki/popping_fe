@@ -34,7 +34,7 @@ const MainPage = () => {
         router.replace("/");
         break;
       case 1:
-        // router.push("");
+        router.push("/popup-map/placeMap");
         break;
       case 2:
         router.push("/online-popup/Popping/store-openning");

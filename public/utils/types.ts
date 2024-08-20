@@ -67,6 +67,7 @@ export interface PopupStoreDataType {
   openTime: string[];
   event: string[];
   image: any;
+  isSaved: boolean;
 }
 
 export interface PlaceDataType {

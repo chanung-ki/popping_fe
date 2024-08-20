@@ -129,8 +129,6 @@ const Payment: React.FC = () => {
 
   if (!orderData || !brandName || !point || !addressData || !gradeData || !userGrade || !finalPrice) return <Loading />;
 
-
-
   return (
     <DefaultLayout top="16px" right="20px" bottom="0" left="20px">
       <Back url={undefined} color={undefined} />
@@ -229,7 +227,7 @@ const Payment: React.FC = () => {
           <OneByOne>
             <Guide>할인 금액 ⓘ</Guide>
             <Simple>
-              {orderData.totalDiscount != 0 ? (
+              {orderData.totalDiscount && orderData.totalDiscount != 0 ? (
                 <>
                   {KRWLocaleString(orderData.totalDiscount)}콘
                 </>
@@ -243,7 +241,7 @@ const Payment: React.FC = () => {
           <OneByOne>
             <Simple>사용 콘</Simple>
             <Simple>
-              {usePoint != 0 ? (
+              {usePoint && usePoint != 0 ? (
                 `${KRWLocaleString(usePoint)}콘`
               ) : ('-')}
 
@@ -258,12 +256,12 @@ const Payment: React.FC = () => {
 
           <FinalOneByOne>
             <Strong>총 결제 금액</Strong>
-            <Strong>{KRWLocaleString(finalPrice)}원</Strong>
+            <Strong>{finalPrice && finalPrice != 0 && KRWLocaleString(finalPrice)}원</Strong>
           </FinalOneByOne>
         </Section>
 
         {
-          useAddress ? (
+          finalPrice && useAddress ? (
             <StoreDecisionButton
               isVisible={true}
               onClick={() => alert('현재 결제 기능은 지원하지 않습니다.')}

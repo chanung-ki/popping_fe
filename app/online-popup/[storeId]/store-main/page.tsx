@@ -169,6 +169,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
                   />
                   <ProductBookmark onClick={(event) => {
                     event.stopPropagation();
+                    event.preventDefault();
                     handleBookmarkClick(item.id);
                   }} >
                     <IconBookmark

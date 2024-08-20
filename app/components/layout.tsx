@@ -38,7 +38,6 @@ const Container = styled.div<ContainerPaddingTypes>`
   align-items: flex-start;
 
 
-  height: 100%;
   min-height: calc(
     100% - (${(props) => props.top} + ${(props) => props.bottom})
   );

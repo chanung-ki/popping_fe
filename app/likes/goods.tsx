@@ -1,3 +1,5 @@
+"use client"
+
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconBookmark } from "../components/icons";
@@ -10,12 +12,20 @@ interface GoodsProps {
 }
 
 const Goods: React.FC<GoodsProps> = ({ values }) => {
+  if (values.length == 0) return (
+    <Container>
+      <div>
+        <span>관심 상품이 없습니다.</span>
+        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup/Popping/store-openning`}>이동하기</Link></span>
+      </div>
+    </Container>
+  )
   return (
     <Grid>
       {values.map((value: ProductType, index: number) => (
         <Stuff
           key={index}
-          href={`product/${value.id}`}>
+          href={`online-popup/${value.brandFK.name}/product/${value.id}`}>
 
           <ProductThumbnail>
             <ProductThumbnailImage
@@ -23,7 +33,8 @@ const Goods: React.FC<GoodsProps> = ({ values }) => {
             />
             <ProductBookmark onClick={(event) => {
               event.stopPropagation();
-              // handleBookmarkClick(item.id);
+              event.stopPropagation();
+              event.preventDefault();
             }} >
               <IconBookmark
                 color={value.isSaved ? COLORS.mainColor : COLORS.greyColor}
@@ -43,6 +54,30 @@ const Goods: React.FC<GoodsProps> = ({ values }) => {
     </Grid>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  & > div {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    align-items:center;
+  }
+  & > div span {
+      color: ${COLORS.greyColor};
+  }
+
+  & > div span a {
+    color: ${COLORS.mainColor}
+  }
+`
 
 const Grid = styled.div`
   display: grid;
