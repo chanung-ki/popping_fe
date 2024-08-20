@@ -17,6 +17,7 @@ import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
 import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
 
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
+import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 const HomePage = () => {
   const parentDiv = useRef<HTMLDivElement>(null);
@@ -37,7 +38,7 @@ const HomePage = () => {
   }, [parentDiv]);
 
   return (
-    <>
+    <Layout>
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -116,9 +117,23 @@ const HomePage = () => {
           </Section>
         </Sections>
       </Container>
-    </>
+    </Layout>
   );
 };
+
+const Layout = styled.div`
+  position: relative;
+
+  min-width: ${MobileMinWidth}px;
+  max-width: ${MobileMaxWidth}px;
+  width: 100%;
+  min-height: 100dvh;
+  height: 100dvh;
+
+  background-color: ${COLORS.primaryColor};
+
+  border: 0;
+`;
 
 const TopNavLogoContainer = styled.div`
   position: absolute;
@@ -137,12 +152,9 @@ const Container = styled.div`
   flex-direction: column;
 
   width: 100%;
-  height: 100%;
   overflow: auto;
 
   background: ${COLORS.primaryColor};
-
-  padding-bottom: 80px;
 `;
 
 const SwiperContainer = styled.div`
