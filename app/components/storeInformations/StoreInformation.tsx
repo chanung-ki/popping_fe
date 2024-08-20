@@ -19,13 +19,10 @@ interface StoreInformationProps {
 
 //TODO : Props 변동해야할 필요 있음.
 const StoreInformation: React.FC<{
-  // storeId: string;
-  // currentStoreId: string;
   store : PopupStoreDataType;
   setCheckPopupList: React.Dispatch<SetStateAction<boolean>>;
   setSelectedStore: React.Dispatch<SetStateAction<PopupStoreDataType| undefined>>;
 }> = ({ store, setCheckPopupList, setSelectedStore }) => {
-// }> = ({ storeId, currentStoreId, setCurrentStoreId }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
   const onClickHandler = () => {
     setSelectedStore(store);
@@ -81,40 +78,6 @@ const StoreInformation: React.FC<{
       </PopupstoreDate>
     </PopupStore>
 
-
-
-    // <EachLocationContainer onClick={onClickHandler}>
-    //   <div
-    //     style={{
-    //       width: "100%",
-    //       height: "166px",
-    //       backgroundColor: `${COLORS.greyColor}`,
-    //       borderRadius: "8px",
-    //     }}
-    //   >
-    //     <ImgContainer>
-    //       <img
-    //         src={`data:image/jpeg;base64,${store.image}`}
-    //         // alt={store.title}
-    //       />
-    //     </ImgContainer>
-    //     <div className={"heart-icon"}>
-    //       <IconHeart
-    //         width={16}
-    //         height={16}
-    //         color={COLORS.mainColor}
-    //       //색 처리 해야됨.
-    //       />
-    //     </div>
-    //   </div>
-    //   <div className={"store-description-container"}>
-    //     <p className={"store-name"}>{store.title}</p>
-    //     <p className={"store-description"}>
-    //       {store.event}
-    //       {/* 일어나라 노예들이여 이 텍스트는 두줄까지만 가능 */}
-    //     </p>
-    //   </div>
-    // </EachLocationContainer>
   );
 };
 
@@ -186,66 +149,6 @@ const PopupstoreDate = styled.span`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-`;
-
-
-
-
-const ImgContainer = styled.div`
-
-  img {
-    width: 100%;
-    height: 100%;
-    max-width: 160px;
-  }
-`;
-
-const EachLocationContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  width: 166px;
-
-  & .heart-icon {
-    position: relative;
-    top: 138px;
-    left: 138px;
-  }
-
-  & .store-description-container {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    
-    & .store-name {
-
-      /* 줄이 넘어가면 '...'으로 표시되도록 설정합니다. */
-      white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 합니다. */
-      overflow: hidden; /* 넘치는 텍스트를 숨깁니다. */
-      text-overflow: ellipsis; /* 넘치는 텍스트를 '...'으로 표시합니다. */
-
-      font-size: 14px;
-      font-weight: 600;
-      font-style: normal;
-      line-height: normal;
-    }
-
-    & .store-description {
-
-      /* 줄이 넘어가면 '...'으로 표시되도록 설정합니다. */
-      white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 합니다. */
-      overflow: hidden; /* 넘치는 텍스트를 숨깁니다. */
-      text-overflow: ellipsis; /* 넘치는 텍스트를 '...'으로 표시합니다. */
-
-      width: 100%;
-      font-size: 10px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: normal;
-    }
-  }
 `;
 
 export default StoreInformation;
