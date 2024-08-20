@@ -1,41 +1,45 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconBookmark } from "../components/icons";
+import { ProductType } from "@/public/utils/types";
+import Link from "next/link";
+import { KRWLocaleString } from "@/public/utils/function";
 
-type goodsTypes = {
-  image: string;
-  brand: string;
-  name: string;
-  isLiked: boolean;
-};
+interface GoodsProps {
+  values: ProductType[];
+}
 
-type goodsType = {
-  values: goodsTypes[];
-};
-
-const Goods = ({ values }: goodsType) => {
+const Goods: React.FC<GoodsProps> = ({ values }) => {
   return (
     <Grid>
-      {values.map((value: goodsTypes, index: number) => {
-        return (
-          <Stuff key={index}>
-            <StuffImage image={value.image}>
-              <IsLiked>
-                <IconBookmark
-                  color={value.isLiked ? COLORS.mainColor : COLORS.greyColor}
-                  width={undefined}
-                  height={16}
-                />
-              </IsLiked>
-            </StuffImage>
+      {values.map((value: ProductType, index: number) => (
+        <Stuff
+          key={index}
+          href={`product/${value.id}`}>
 
-            <StuffDesc>
-              <p>{value.brand}</p>
-              <p>{value.name}</p>
-            </StuffDesc>
-          </Stuff>
-        );
-      })}
+          <ProductThumbnail>
+            <ProductThumbnailImage
+              src={value.thumbnail}
+            />
+            <ProductBookmark onClick={(event) => {
+              event.stopPropagation();
+              // handleBookmarkClick(item.id);
+            }} >
+              <IconBookmark
+                color={value.isSaved ? COLORS.mainColor : COLORS.greyColor}
+                width={undefined}
+                height={16} />
+            </ProductBookmark>
+          </ProductThumbnail>
+          <ProductTitle>
+            {value.brandFK.name}
+          </ProductTitle>
+          <ProductPrice>
+            {value.name}
+          </ProductPrice>
+
+        </Stuff>
+      ))}
     </Grid>
   );
 };
@@ -47,53 +51,53 @@ const Grid = styled.div`
   row-gap: 20px;
 `;
 
-const Stuff = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
+const Stuff = styled(Link)`
   cursor: pointer;
-`;
-
-const StuffImage = styled.div<{ image: string | null }>`
   position: relative;
-  width: 100%; /* 그리드 셀의 너비에 맞춤 */
-  padding-bottom: 100%;
-  border-radius: 8px;
-  background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.secondaryColor};
-  object-position: center;
-  object-fit: cover;
+
+  flex: 0 0 calc(50% - 12px);
+  margin-bottom: 20px;
+  
+
+  @media (min-width: 768px) {
+    flex: 0 0 calc(33.333% - 12px); 
+  };
 `;
 
-const IsLiked = styled.div`
+const ProductThumbnail = styled.div`
+  position: relative;
+  margin-bottom: 8px;
+`;
+
+
+const ProductThumbnailImage = styled.img`
+  width: 100%; 
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+`;
+
+const ProductBookmark = styled.div`
   position: absolute;
-  bottom: 12px;
+  bottom: 13px;
   right: 12px;
 `;
 
-const StuffDesc = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+const ProductTitle = styled.h3`
+  word-break: break-all;
+  white-space: normal;
 
-  p:first-child {
-    color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
+  font-size: 14px;
+  font-weight: 500;
 
-  p:last-child {
-    color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
+  font-weight: 500;
+  margin-bottom: 4px;
 `;
+
+const ProductPrice = styled.span`
+  font-weight: 500;
+  font-size: 14px;
+`;
+
 
 export default Goods;

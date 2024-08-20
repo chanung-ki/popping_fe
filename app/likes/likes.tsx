@@ -15,15 +15,16 @@ import {
   ProductType,
 } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
+import { Loading } from "../components/loading";
 
 const LikesPage: React.FC = () => {
   const router = useRouter();
   const tabValues: string[] = ["상품", "스토어", "팔로잉"];
 
   const [sessionAbleCheck, setSessionAbleCheck] = useState<boolean>(false);
-  const [brands, setBrands] = useState<BrandType>();
-  const [products, setProducts] = useState<ProductType>();
-  const [popups, setPopups] = useState<PopupStoreDataType>();
+  const [brands, setBrands] = useState<BrandType[]>();
+  const [products, setProducts] = useState<ProductType[]>();
+  const [popups, setPopups] = useState<PopupStoreDataType[]>();
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
@@ -66,11 +67,16 @@ const LikesPage: React.FC = () => {
       if (e.response && e.response.status === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
-          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
+          `/member/signin?redirect=${encodeURIComponent(
+            window.location.pathname
+          )}`
         );
       }
     }
   };
+
+  if (!products) return <Loading />
+
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
@@ -88,10 +94,7 @@ const LikesPage: React.FC = () => {
         />
         {selectedIndex === 0 && (
           <Goods
-            values={[
-              { image: "", brand: "test", name: "test", isLiked: true },
-              { image: "", brand: "test", name: "test", isLiked: false },
-            ]}
+            values={products}
           />
         )}
 
