@@ -47,22 +47,40 @@ const MapTestPage: React.FC = () => {
     { value: "서울시 송파구", label: "서울시 송파구" },
     { value: "서울시 강동구", label: "서울시 강동구" },
   ];
+  // 선택된 오프라인 팝업스토어
   const [selectedStore, setSelectedStore] = useState<PopupStoreDataType>();
+  // 유저 위치데이터
   const [userLocation, setUserLocation] = useState<number[]>();
   const [isExpanded, setIsExpanded] = useState(false); // 접었다 펴는 상태 관리
+  // 오프라인 팝업 스토어 리스트
   const [popupStore, setPopupStore] = useState<PopupStoreDataType[]>();
+  // 오프라인 팝업 스토어의 위치데이터
   const [popupCoorData, setPopupCoorData] = useState<any[]>([]);
+  // 카카오 맵
   const [mapInstance, setMapInstance] = useState<any>();
+  // 카카오
   const [kakao, setKakao] = useState<any>();
-
+  // 선택된 카페 or 맛집
   const [selectedCategory, setSelectedCategory] = useState<string>();
+  // 카페 위치 데이터
   const [coffeePosition, setCoffeePosition] = useState<any[]>();
+  // 맛집 위치 데이터
   const [foodPosition, setFoodPosition] = useState<any[]>();
-
+  // 검색
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
+  // 지역 검색
   const [selectedLocation, setSelectedLocation] = useState<any>();
+  // 
   const [clickedLocationId, setClickedLocationId] = useState<string>("");
+  // 팝업을 선택 했는지 여부
   const [checkPopupList, setCheckPopupList] = useState<boolean>(true);
+
+  // 팝업 마커데이터 [마커, 인포]
+  const [popupMakerData, setPopupMarkerData] = useState<any[]>([]);
+  // 카페 마커데이터 [마커, 인포]
+  const [cafeMakerData, setCafeMarkerData] = useState<any[]>([]);
+  // 맛집 마커데이터 [마커, 인포]
+  const [foodMakerData, setFoodMarkerData] = useState<any[]>([]);
 
   const router = useRouter();
 
@@ -136,7 +154,6 @@ const MapTestPage: React.FC = () => {
       const script = document.createElement("script");
       script.src =
         `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiId}&autoload=false`;
-        // "//dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&autoload=false";
       script.async = true;
       document.body.appendChild(script);
 
@@ -190,17 +207,16 @@ const MapTestPage: React.FC = () => {
           removable : true,
         });
 
-        (function (marker, infowindow) {
-          // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다
-          kakao.maps.event.addListener(marker, "mouseover", function () {
-            infowindow.open(mapInstance, marker);
-          });
+        // 이벤트 핸들러 등록
+        kakao.maps.event.addListener(popupMarker, "click", () => {
+          console.log('aaaaa')
+          infowindow.open(mapInstance, popupMarker);
+        });
 
-          // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
-          kakao.maps.event.addListener(marker, "mouseout", function () {
-            infowindow.close();
-          });
-        })(popupMarker, infowindow);
+        kakao.maps.event.addListener(popupMarker, 'mouseout', () => {
+          console.log('bbbbb')
+          infowindow.close();
+        });
       });
     }
   }, [popupCoorData]);
@@ -222,6 +238,12 @@ const MapTestPage: React.FC = () => {
   }, [popupStore]);
 
   const SelectPopup = (store: PopupStoreDataType) => {
+
+    if (popupMakerData.length !== 0){
+      popupMakerData[0].setMap(null)
+      popupMakerData[1].close()
+    }
+
     const imageSrc =
       "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
     const imageSize = new kakao.maps.Size(30, 41);
@@ -240,38 +262,31 @@ const MapTestPage: React.FC = () => {
       map: mapInstance, // 맵을 설정하여 바로 표시
     });
 
-    // const iwContent = `
-    //   <div class="wrap">
-    //     <div class="info">
-    //       <div class="title">
-    //         ${store.title}
-    //         <div class="close" onclick="closeOverlay()" title="닫기"></div>
-    //       </div>
-    //       <div class="body">
-    //         <div class="img">
-    //           <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">
-    //         </div>
-    //         <div class="desc">
-    //           <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-    //           <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>
-    //           <a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // ` ;
-
     const iwContent = `
-      <div style="padding:3px;">
-        ${store.title} <a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
+      <div className="wrap">
+        <div className="info">
+          <div className="img">
+            <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">
+          </div>
+          <div className="body">
+            <div className="title">
+              ${store.title}
+              <div className="close" onclick="closeOverlay()" title="닫기"></div>
+            </div>
+            <div className="desc">
+              <div className="ellipsis">${store.location.address}</div>
+              <div className="jibun ellipsis">${store.location.placeName}</div>
+              <a href="https://map.kakao.com/link/to/${store.title},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}" style="color:blue" target="_blank">길찾기</a>
+            </div>
+          </div>
+        </div>
       </div>
-    `;
+    ` ;
 
     // 인포윈도우를 생성합니다
     const infowindow = new kakao.maps.InfoWindow({
       content: iwContent,
     });
-
     // const infowindow = new kakao.maps.CustomOverlay({
     //     content: iwContent,
     //     position: marker.getPosition(),
@@ -285,13 +300,13 @@ const MapTestPage: React.FC = () => {
     // 선택한 마커의 위치로 지도의 중심을 이동합니다.
     mapInstance.setCenter(markerPosition);
 
-    // setSelectedStore(store);
-
+    setPopupMarkerData([marker,infowindow])
+    settingCategoryMarkers(false,foodMakerData)
+    settingCategoryMarkers(false,cafeMakerData)
     placeAPI(selectedStore!.id);
   };
 
   useEffect(() => {
-
     if (selectedStore) {
       placeAPI(selectedStore.id);
       SelectPopup(selectedStore)
@@ -319,11 +334,14 @@ const MapTestPage: React.FC = () => {
     return marker;
   }
 
-  const setCoffeeMarkers = (mapInstance: any) => {
+  const setCategoryMarkers = (category:string, positionList:any, mapInstance:any) =>{
+
     var markerImageSrc =
       "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png";
-    var coffeeMarkers: any[] = [];
-    coffeePosition!.map((position) => {
+
+    var tmpMarkerList: any[] = [];
+
+    positionList.map((position:any) => {
       var imageSize = new kakao.maps.Size(22, 26);
       var imageOptions = {
         spriteOrigin: new kakao.maps.Point(10, 0),
@@ -338,51 +356,47 @@ const MapTestPage: React.FC = () => {
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
-      coffeeMarkers.push(marker);
+      tmpMarkerList.push(marker);
     });
 
-    coffeeMarkers.map((item) => {
+    if (category === 'coffee') {
+      setCafeMarkerData(tmpMarkerList)
+    } else {
+      setFoodMarkerData(tmpMarkerList)
+    }
+
+    tmpMarkerList.map((item) => {
       item.setMap(mapInstance);
     });
-  };
+  }
 
-  const setFoodMarkers = (mapInstance: any) => {
-    var markerImageSrc =
-      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png";
-    var foodMarkers: any[] = [];
-
-    foodPosition!.map((position) => {
-      var imageSize = new kakao.maps.Size(22, 26);
-      var imageOptions = {
-        spriteOrigin: new kakao.maps.Point(10, 0),
-        spriteSize: new kakao.maps.Size(36, 98),
-      };
-
-      var markerImage = createMarkerImage(
-          markerImageSrc,
-          imageSize,
-          imageOptions
-        ),
-        marker = createMarker(position, markerImage);
-
-      // 생성된 마커를 커피숍 마커 배열에 추가합니다
-      foodMarkers.push(marker);
-    });
-
-    foodMarkers.map((item) => {
-      item.setMap(mapInstance);
-    });
-  };
+  const settingCategoryMarkers = (check:boolean, markerList:any) =>{
+    if (check) {
+      markerList.forEach((item:any) => {
+        item.setMap(mapInstance)
+      });
+    } else{
+      markerList.forEach((item:any) => {
+        item.setMap(null)
+      });
+    }
+  }
 
   const changeMarker = (type: string) => {
     setSelectedCategory(type);
 
     if (type === "coffee") {
-      setCoffeeMarkers(mapInstance);
-      setFoodMarkers(null);
+      setCategoryMarkers("coffee", coffeePosition, mapInstance)
+      settingCategoryMarkers(false,foodMakerData)
+      // setCategoryMarkers("food", foodPosition, null)
+      // setCoffeeMarkers(mapInstance);
+      // setFoodMarkers(null);
     } else if (type === "food") {
-      setCoffeeMarkers(null);
-      setFoodMarkers(mapInstance);
+      // setCategoryMarkers("coffee", coffeePosition, null)
+      setCategoryMarkers("food",foodPosition, mapInstance)
+      settingCategoryMarkers(false,cafeMakerData)
+      // setCoffeeMarkers(null);
+      // setFoodMarkers(mapInstance);
     }
   };
 
@@ -471,7 +485,7 @@ const MapTestPage: React.FC = () => {
                 onClick={() => changeMarker("coffee")}
               >
                 <span className="ico_comm ico_coffee"></span>
-                커피숍
+                카페
               </li>
               <li
                 id="foodMenu"
@@ -489,15 +503,14 @@ const MapTestPage: React.FC = () => {
         <ExpandableDiv isExpanded={isExpanded}>
          <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
           {/*여기는 재희님이랑 이야기 나눠봐야할 부분. */}
-          {/* {selectedStore ? ( */}
           {selectedStore ? (
             <StoreInfoAtMap 
+            isExpanded={isExpanded}
             store={selectedStore}
             setStore={setCheckPopupList}
             />
           ) : (
             <StoreProductContainer isExpanded={isExpanded}>
-            {/* <LocationContainer> */}
               {
                 popupStore &&
                 popupStore.map((store: PopupStoreDataType) => (

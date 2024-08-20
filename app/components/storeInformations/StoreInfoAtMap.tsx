@@ -10,18 +10,18 @@ import { SetStateAction } from "react";
 interface StoreInfoAtMapProps {
   store: PopupStoreDataType
   setStore: React.Dispatch<SetStateAction<boolean>>;
+  isExpanded: boolean
 }
 import { PopupStoreDataType } from "@/public/utils/types";
 
 //TODO : Props 구체화 필요함.
-const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
+const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpanded }) => {
 // const StoreInfoAtMap: React.FC<{store: PopupStoreDataType, setStore: React.Dispatch<SetStateAction<null>>}> = ({ store, setStore }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   const backButtonClickhandler = () => {
     setStore(true);
   };
-
 
   // 날짜를 YYYY.MM.DD 형식으로 포맷하는 함수
   const formatDate = (dateString: string) => {
@@ -33,7 +33,7 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
   };
 
   return (
-    <PopupStoreInfoContainer>
+    <PopupStoreInfoContainer $isExpanded={isExpanded}>
       <PopupStoreImage>
         <div className={"back-button"} onClick={backButtonClickhandler}>
           <IconChevronLeft width={9} height={16} color={COLORS.primaryColor} />
@@ -51,9 +51,9 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
 
         <div className={"slider-store-desc"}>
           {store.event.map((item:string, index:number)=>(
-            <div>
+            <p>
               {item}
-            </div>
+            </p>
           ))}
         </div>
         <p className={"slider-store-address"}>
@@ -65,10 +65,12 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
         {userData.isPopper ? (
           <>
             <ButtonLarge
-              text={"방문하기"}
+              text={"길찾기"}
               buttonColor={COLORS.mainColor}
               textColor={COLORS.primaryColor}
               onClick={() => {
+                // 여기로
+                // `https://map.kakao.com/link/to/${store.location.placeName},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}`
                 console.log("router 처리 필요");
               }}
             />
@@ -86,10 +88,12 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
         ) : (
           <>
             <ButtonLarge
-              text={"방문하기"}
+              text={"길찾기"}
               buttonColor={COLORS.mainColor}
               textColor={COLORS.primaryColor}
               onClick={() => {
+                // 여기로
+                // `https://map.kakao.com/link/to/${store.location.placeName},${store.location.geoData.coordinates[1]},${store.location.geoData.coordinates[0]}`
                 console.log("router 처리 필요");
               }}
             />
@@ -100,13 +104,16 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store }) => {
   );
 };
 
-const PopupStoreInfoContainer = styled.div`
+const PopupStoreInfoContainer = styled.div<{ $isExpanded: Boolean }>`
+
   display: flex;
   flex-direction: column;
   align-items: center;
 
   padding: 16px 0px;
   width: 100%;
+  height: ${({ $isExpanded }) => ($isExpanded ? "100%" : "92px")};
+
 `;
 
 //TODO : 추후 이미지로 삽입
@@ -133,8 +140,8 @@ const PopupStoreDescContainer = styled.div`
   flex-direction: column;
   gap: 8px;
 
-  /* overflow: hidden; */
-  overflow-y: auto;
+  overflow: hidden;
+  /* overflow-y: auto; */
   padding: 16px 20px;
   width: calc(100% - 40px);
 
