@@ -85,13 +85,13 @@ const MapTestPage: React.FC = () => {
 
   const router = useRouter();
 
-  const popupStoreAPI = async (selectedLocation:string) => {
+  const popupStoreAPI = async (selectedLocation: string) => {
 
     var APIurl = ""
 
-    if (selectedLocation){
+    if (selectedLocation) {
       APIurl = `/api/maps/stores?district=${selectedLocation}`
-    }else{
+    } else {
       APIurl = `/api/maps/stores`
     }
 
@@ -212,9 +212,9 @@ const MapTestPage: React.FC = () => {
       const imageSrc =
         "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
-      settingMarkers(false,allPopupMarkers);
+      settingMarkers(false, allPopupMarkers);
 
-      var tmpList:any[] = []
+      var tmpList: any[] = []
 
       popupCoorData.forEach((coordata) => {
 
@@ -230,7 +230,7 @@ const MapTestPage: React.FC = () => {
 
         var infowindow = new kakao.maps.InfoWindow({
           content: coordata.content,
-          removable : true,
+          removable: true,
         });
 
         // 이벤트 핸들러 등록
@@ -270,7 +270,7 @@ const MapTestPage: React.FC = () => {
 
   const SelectPopup = (store: PopupStoreDataType) => {
 
-    if (popupMakerData.length !== 0){
+    if (popupMakerData.length !== 0) {
       popupMakerData[0].setMap(null)
       popupMakerData[1].close()
     }
@@ -329,12 +329,12 @@ const MapTestPage: React.FC = () => {
     infowindow.open(mapInstance, marker);
 
     // 선택한 마커의 위치로 지도의 중심을 이동합니다.
-    mapInstance.setLevel(2, {animate: true, anchor: markerPosition});
+    mapInstance.setLevel(2, { animate: true, anchor: markerPosition });
     // mapInstance.setCenter(markerPosition);
 
-    setPopupMarkerData([marker,infowindow])
-    settingMarkers(false,foodMakerData)
-    settingMarkers(false,cafeMakerData)
+    setPopupMarkerData([marker, infowindow])
+    settingMarkers(false, foodMakerData)
+    settingMarkers(false, cafeMakerData)
     placeAPI(selectedStore!.id);
   };
 
@@ -345,11 +345,11 @@ const MapTestPage: React.FC = () => {
     }
   }, [selectedStore]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (checkPopupList) {
       setSelectedStore(undefined)
     }
-  },[checkPopupList])
+  }, [checkPopupList])
 
   function createMarkerImage(src: any, size: any, options: any) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
@@ -366,7 +366,7 @@ const MapTestPage: React.FC = () => {
     return marker;
   }
 
-  const setCategoryMarkers = (category:string, positionList:any, mapInstance:any) =>{
+  const setCategoryMarkers = (category: string, positionList: any, mapInstance: any) => {
 
     var markerImageSrc =
       "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png";
@@ -387,13 +387,13 @@ const MapTestPage: React.FC = () => {
       };
     }
 
-    positionList.map((position:any) => {
+    positionList.map((position: any) => {
 
       var markerImage = createMarkerImage(
-          markerImageSrc,
-          imageSize,
-          imageOptions
-        ),
+        markerImageSrc,
+        imageSize,
+        imageOptions
+      ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
@@ -411,13 +411,13 @@ const MapTestPage: React.FC = () => {
     });
   }
 
-  const settingMarkers = (check:boolean, markerList:any) =>{
+  const settingMarkers = (check: boolean, markerList: any) => {
     if (check) {
-      markerList.forEach((item:any) => {
+      markerList.forEach((item: any) => {
         item.setMap(mapInstance)
       });
-    } else{
-      markerList.forEach((item:any) => {
+    } else {
+      markerList.forEach((item: any) => {
         item.setMap(null)
       });
     }
@@ -428,14 +428,14 @@ const MapTestPage: React.FC = () => {
 
     if (type === "coffee") {
       setCategoryMarkers("coffee", coffeePosition, mapInstance)
-      settingMarkers(false,foodMakerData)
+      settingMarkers(false, foodMakerData)
       // setCategoryMarkers("food", foodPosition, null)
       // setCoffeeMarkers(mapInstance);
       // setFoodMarkers(null);
     } else if (type === "food") {
       // setCategoryMarkers("coffee", coffeePosition, null)
-      setCategoryMarkers("food",foodPosition, mapInstance)
-      settingMarkers(false,cafeMakerData)
+      setCategoryMarkers("food", foodPosition, mapInstance)
+      settingMarkers(false, cafeMakerData)
       // setCoffeeMarkers(null);
       // setFoodMarkers(mapInstance);
     }
@@ -517,8 +517,8 @@ const MapTestPage: React.FC = () => {
             </UpperButtonContainer>
           </UpperContainer>
         )}
-        {selectedStore&&
-          <CategoryBox className="category" $isSearchOpen={isSearchClicked}>
+        {selectedStore &&
+          <CategoryBox className="category" isSearchOpen={isSearchClicked}>
             <ul>
               <li
                 id="coffeeMenu"
@@ -542,26 +542,26 @@ const MapTestPage: React.FC = () => {
         <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
 
         <ExpandableDiv isExpanded={isExpanded}>
-         <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
+          <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
           {/*여기는 재희님이랑 이야기 나눠봐야할 부분. */}
           {selectedStore ? (
-            <StoreInfoAtMap 
-            isExpanded={isExpanded}
-            store={selectedStore}
-            setStore={setCheckPopupList}
+            <StoreInfoAtMap
+              isExpanded={isExpanded}
+              store={selectedStore}
+              setStore={setCheckPopupList}
             />
           ) : (
             <StoreProductContainer isExpanded={isExpanded}>
               {
                 popupStore &&
-                popupStore.map((store: PopupStoreDataType, index:number) => (
+                popupStore.map((store: PopupStoreDataType, index: number) => (
                   <StoreInformation
                     key={index}
                     store={store}
                     setCheckPopupList={setCheckPopupList}
                     setSelectedStore={setSelectedStore}
                   />
-    
+
                 ))
               }
             </StoreProductContainer>
@@ -572,7 +572,7 @@ const MapTestPage: React.FC = () => {
   );
 };
 
-const StoreProductContainer = styled.div<{isExpanded: boolean}>`
+const StoreProductContainer = styled.div<{ isExpanded: boolean }>`
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -679,7 +679,7 @@ const UpperButtonContainer = styled.div`
   cursor: pointer;
 `;
 
-const CategoryBox = styled.div<{ $isSearchOpen: boolean }>`
+const CategoryBox = styled.div<{ isSearchOpen: boolean }>`
   position: absolute;
   overflow: hidden;
   top: ${({ isSearchOpen }) => (isSearchOpen ? "140px" : "60px")};
@@ -775,7 +775,7 @@ const ToggleButton = styled.button`
   cursor: pointer;
 `;
 
-const ExpandableDiv = styled.div<{ $isExpanded: Boolean }>`
+const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: center;

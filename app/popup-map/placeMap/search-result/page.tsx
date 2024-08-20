@@ -32,7 +32,7 @@ const SearchResultPage: React.FC = () => {
       </ResultHeader>
 
       <LocationContainer>
-        <StoreInformation
+        {/* <StoreInformation
           storeId="123"
           currentStoreId={clickedStoreId}
           setCurrentStoreId={setClickedStoreId}
@@ -51,7 +51,7 @@ const SearchResultPage: React.FC = () => {
           storeId="123"
           currentStoreId={clickedStoreId}
           setCurrentStoreId={setClickedStoreId}
-        />
+        /> */}
       </LocationContainer>
     </Container>
   );

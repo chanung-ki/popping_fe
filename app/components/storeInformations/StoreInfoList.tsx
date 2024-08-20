@@ -25,11 +25,11 @@ const StoreInfoList: React.FC<StoreInfoListProps> = ({ store, setStore }) => {
         <ListTheme>내 팝업 스토어</ListTheme>
         <StoreList>
           {/*TODO: 리스트 렌더링 필요 */}
-          <StoreInformation
+          {/* <StoreInformation
             storeId={"123"}
             currentStoreId={store}
             setCurrentStoreId={setStore}
-          />
+          /> */}
         </StoreList>
       </ListContainer>
 
@@ -37,7 +37,7 @@ const StoreInfoList: React.FC<StoreInfoListProps> = ({ store, setStore }) => {
         <ListTheme>기타</ListTheme>
         <StoreList>
           {/*TODO: 리스트 렌더링 필요 */}
-          <StoreInformation
+          {/* <StoreInformation
             storeId={"123"}
             currentStoreId={store}
             setCurrentStoreId={setStore}
@@ -56,7 +56,7 @@ const StoreInfoList: React.FC<StoreInfoListProps> = ({ store, setStore }) => {
             storeId={"123"}
             currentStoreId={store}
             setCurrentStoreId={setStore}
-          />
+          /> */}
         </StoreList>
       </ListContainer>
     </Container>
@@ -64,7 +64,7 @@ const StoreInfoList: React.FC<StoreInfoListProps> = ({ store, setStore }) => {
     <Container>
       <StoreListContainer>
         {/*TODO: 리스트 렌더링 필요 */}
-        <StoreInformation
+        {/* <StoreInformation
           storeId={"123"}
           currentStoreId={store}
           setCurrentStoreId={setStore}
@@ -83,7 +83,7 @@ const StoreInfoList: React.FC<StoreInfoListProps> = ({ store, setStore }) => {
           storeId={"4321"}
           currentStoreId={store}
           setCurrentStoreId={setStore}
-        />
+        /> */}
       </StoreListContainer>
     </Container>
   );
