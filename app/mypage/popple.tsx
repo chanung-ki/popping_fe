@@ -1,4 +1,4 @@
-import { COLORS } from "@/public/styles/colors";
+import { COLORS, gradeColors } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconChevronRight, IconGear } from "../components/icons";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
@@ -19,6 +19,14 @@ type MyPagePoppleProps = {
 
 export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileImage, signOutApi, myPageData }) => {
   const router = useRouter();
+
+  const handleMoveBenefit = () => {
+    router.push("/benefit");
+  };
+
+  const isGradeKey = (key: string): key is keyof typeof gradeColors => {
+    return key in gradeColors;
+  };
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -50,29 +58,53 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
               <GradeContainer>
                 <CurrentGradeContainer>
                   <p>현재 등급</p>
-                  <GradeText color={COLORS.mainColor}>
+                  <GradeText color={COLORS.mainColor} onClick={handleMoveBenefit}>
                     {myPageData.gradeInfo.grade}
                   </GradeText>
-                  {/* <IconNext
-                    color={COLORS.greyColor}
-                    width={undefined}
-                    height={10}
-                  /> */}
+                  <div onClick={()=>{router.push("/grade");}}>
+                    <IconNext
+                      color={COLORS.greyColor}
+                      width={undefined}
+                      height={10}
+                    />
+                  </div>
                   <Spacer />
                   <p>
                     {myPageData.gradeInfo.earnRate}% 적립 ·{" "}
                     {myPageData.gradeInfo.discountRate}% 할인
                   </p>
                 </CurrentGradeContainer>
-                <PointsProgress value={80} max="100" />
-                {/* <NextGradeContainer>
-                  <NextGradeText color={COLORS.statusNegativeColor}>
-                    {"SVIP"}
-                  </NextGradeText>
-                  <NextGradeDesc>
-                    까지 {256}/{300} pts
-                  </NextGradeDesc>
-                </NextGradeContainer> */}
+                  <PointsProgress
+                    color={
+                      isGradeKey(myPageData.gradeInfo.grade)
+                      ? gradeColors[myPageData.gradeInfo.grade]
+                      : gradeColors["WHITE POP"]
+                    }
+                    value={myPageData.gradeInfo.gradeRatio}
+                    max="100"
+                  />
+                {myPageData.gradeInfo.grade === "GOLD POP" ? (
+                  <NextGradeContainer>
+                    <NextGradeDesc>
+                      회원님은 현재 최고등급 입니다.
+                    </NextGradeDesc>
+                  </NextGradeContainer>
+                ) : (
+                  <NextGradeContainer>
+                    <NextGradeText 
+                      color={
+                        isGradeKey(myPageData.gradeInfo.nextGradeInfo.nextGrade)
+                        ? gradeColors[myPageData.gradeInfo.nextGradeInfo.nextGrade]
+                        : gradeColors["WHITE POP"]
+                      }
+                    >
+                      {myPageData.gradeInfo.nextGradeInfo.nextGrade}
+                    </NextGradeText>
+                    <NextGradeDesc>
+                      까지 {myPageData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원
+                    </NextGradeDesc>
+                  </NextGradeContainer>
+                )}
               </GradeContainer>
             </MyProfileContainer>
           </MyProfile>
@@ -83,7 +115,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
                 <p>{myPageData.followingNum}</p>
                 <p>{"팔로잉"}</p>
               </Activity>
-              <Activity>
+              <Activity onClick={handleMoveBenefit}>
                 <p>{myPageData.point}</p>
                 <p>{"콘 포인트"}</p>
               </Activity>
@@ -228,6 +260,8 @@ const GradeText = styled.span`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+
+  cursor: pointer;
 `;
 
 const IconNext = styled(IconChevronRight)`
@@ -243,6 +277,8 @@ const PointsProgress = styled.progress`
     height: 100%;
     border-radius: 4px;
     background-color: ${COLORS.lightGreyColor};
+    border: 1px solid ${COLORS.lightGreyColor};
+
     overflow: hidden;
   }
 
@@ -250,7 +286,7 @@ const PointsProgress = styled.progress`
     height: 100%;
     border-radius: 4px;
 
-    background-color: ${COLORS.mainColor};
+    background-color: ${(props) => props.color};
     transition: width 0.3s ease;
   }
 `;
@@ -301,7 +337,7 @@ const Activity = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-
+  
   p:first-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
@@ -311,7 +347,7 @@ const Activity = styled.div`
     font-weight: 600;
     line-height: normal;
   }
-
+  
   p:last-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
@@ -321,6 +357,8 @@ const Activity = styled.div`
     font-weight: 600;
     line-height: normal;
   }
+
+  cursor: pointer;
 `;
 
 const Section = styled.div`

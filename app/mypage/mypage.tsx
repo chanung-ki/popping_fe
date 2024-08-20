@@ -7,6 +7,7 @@ import { removeCookie } from "@/public/network/cookie";
 import { initUser } from "../redux/reducers/poppingUser";
 import axiosInstance from "@/public/network/axios";
 import { myPagePoppleTypes } from "@/public/utils/types";
+import { Loading } from "../components/loading";
 
 const MyPage: React.FC = () => {
 
@@ -15,6 +16,7 @@ const MyPage: React.FC = () => {
   const hasAlerted = useRef<boolean>(false);
 
   const [isPopple, setIsPopple] = useState<boolean | null>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const { isLogin, isPopper, nickname, profileImage } = useSelector(
     (state: any) => state.poppingUser.user
   );
@@ -23,11 +25,16 @@ const MyPage: React.FC = () => {
     point: "",
     gradeInfo: {
       grade: "",
-      minOrderAmount: 0,
-      maxOrderAmount: 0,
+      minOrderAmount: "",
+      maxOrderAmount: "",
       earnRate: 0,
       discountRate: 0,
-    },
+      gradeRatio: 0,
+      nextGradeInfo: {
+        nextGrade: "",
+        nextMinOrderAmount: "",
+      }
+    }
   });
 
   useEffect(() => {
@@ -44,7 +51,7 @@ const MyPage: React.FC = () => {
       setIsPopple(!isPopper);
       if (!isPopper) {
         getMyPageDataApi();
-      }
+      } 
     }
   }, [isLogin, router]);
 
@@ -80,6 +87,7 @@ const MyPage: React.FC = () => {
       const response = await axiosInstance.get(`/api/user/mypage`);
       if (response.status === 200) {
         setMyPageData(response.data);
+        setIsReady(true);
       }
     } catch (error: any) {
       if (error.response.statue === 403) {
@@ -95,22 +103,42 @@ const MyPage: React.FC = () => {
 
 
   return (
+    // <>
+    //   {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
+    //     <MyPagePopple
+    //       nickname={nickname}
+    //       profileImage={profileImage}
+    //       myPageData={myPageData}
+    //       signOutApi={signOutApi}
+    //     />
+    //   ) : (
+    //     <Loading/>
+    //   )}
+    //   {isLogin && !isPopple && 
+    //     <MyPagePopper 
+    //       nickname={nickname}
+    //       profileImage={profileImage}
+    //       signOutApi={signOutApi}
+    //     />
+    //   }
+    // </>
     <>
-      {isLogin && isPopple && myPageData.gradeInfo.grade !== "" &&
+      {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
         <MyPagePopple
           nickname={nickname}
           profileImage={profileImage}
           myPageData={myPageData}
           signOutApi={signOutApi}
         />
-      }
-      {isLogin && !isPopple && 
+      ) : isLogin && !isPopple ? (
         <MyPagePopper 
           nickname={nickname}
           profileImage={profileImage}
           signOutApi={signOutApi}
         />
-      }
+      ) : (
+        <Loading/>
+      )}
     </>
   );
 };
