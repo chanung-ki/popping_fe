@@ -6,95 +6,176 @@ import { TopNavigation } from "@/app/navigation/topnavigation";
 import { COLORS } from "@/public/styles/colors";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { styled } from "styled-components";
 import { ProfileImage } from "../components/main/componenets";
-
-import DummyProfile from "@/public/images/dummy/dummy_profile.jpg";
+import { gradeColors } from "@/public/styles/colors";
+import { benefitTypes } from "@/public/utils/types";
+import axiosInstance from "@/public/network/axios";
+import { removeCookie } from "@/public/network/cookie";
+import { initUser } from "../redux/reducers/poppingUser";
+import { Loading } from "../components/loading";
 
 const BenefitPage: React.FC = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const hasAlerted = useRef<boolean>(false);
+  
+  const { isLogin, nickname, profileImage } = useSelector((state: any) => state.poppingUser.user);
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const [benefitData, setBenefitData] = useState<benefitTypes>({
+    point: "",
+    orderAmount: "",
+    gradeInfo: {
+      grade: "WHITE POP",
+      minOrderAmount: "",
+      maxOrderAmount: "", 
+      earnRate: 0,
+      discountRate: 0,
+      gradeRatio: 0,
+      nextGradeInfo: {
+        nextGrade: "",
+        nextMinOrderAmount: "", 
+      }
+    },
+    pointHistory: []
+  });
 
-  const { isLogin } = useSelector((state: any) => state.poppingUser.user);
+  const cleanUserData = () => {
+    dispatch(initUser());
+    removeCookie("csrftoken");
+    removeCookie("sessionid");
+  };
 
-  // useEffect(() => {
-  //   if (!isLogin && !hasAlerted.current) {
-  //     alert("로그인 후 이용가능합니다.");
-  //     hasAlerted.current = true; // alert 호출 후 true로 설정
-  //     router.push(
-  //       `/member/signin?redirect=${encodeURIComponent(
-  //         window.location.pathname
-  //       )}`
-  //     );
-  //   }
-  // }, [isLogin, router]);
+  useEffect(() => {
+    if (!isLogin && !hasAlerted.current) {
+      alert("로그인 후 이용가능합니다.");
+      hasAlerted.current = true; // alert 호출 후 true로 설정
+      router.push(
+        `/member/signin?redirect=${encodeURIComponent(
+          window.location.pathname
+        )}`
+      );
+    }
+    if (isLogin) {
+      getbenefitDataApi();
+    }
+  }, [isLogin, router]);
+
+  // api
+  const getbenefitDataApi = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/user/benefit`);
+      if (response.status === 200) {
+        setBenefitData(response.data);
+        setIsReady(true);
+      }
+    } catch (error: any) {
+      if (error.response.statue === 403) {
+        cleanUserData();
+        alert("로그인 세션이 만료되었습니다. 재로그인 후 이용해주세요.");
+        router.push("/member/signin");
+      } else {
+        alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+      }
+      router.push("/");
+    }
+  };
+
+  const isGradeKey = (key: string): key is keyof typeof gradeColors => {
+    return key in gradeColors;
+  };
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
-      <TopNavigation>
-        <TopNavCenterContainer>
-          <TopNavTitle>혜택</TopNavTitle>
-        </TopNavCenterContainer>
-        <TopNavLeftContainer
-          onClick={() => {
-            router.push("/?page=mypage");
-          }}
-        >
-          <IconChevronLeft
-            color={COLORS.secondaryColor}
-            width={undefined}
-            height={16}
-          />
-        </TopNavLeftContainer>
-      </TopNavigation>
-      <Container>
-        <MyInfo>
-          <MyProfile>
-            <MyProfileContainer>
-              <ProfileImage image={DummyProfile.src} width={60} height={60} />
-              <ProfileNickname>{"test"}님</ProfileNickname>
-              <PointsProgress
-                color={COLORS.GradeWhitePop}
-                value={80}
-                max="100"
+      {isReady ? (
+        <>
+          <TopNavigation>
+            <TopNavCenterContainer>
+              <TopNavTitle>혜택</TopNavTitle>
+            </TopNavCenterContainer>
+            <TopNavLeftContainer
+              onClick={() => {
+                router.push("/?page=mypage");
+              }}
+            >
+              <IconChevronLeft
+                color={COLORS.secondaryColor}
+                width={undefined}
+                height={16}
               />
-              <NextGradeContainer>
-                <NextGradeText color={COLORS.GradeYellowPop}>
-                  {"YELLOW POP"}
-                </NextGradeText>
-                <NextGradeDesc>까지 {30000}원</NextGradeDesc>
-                <NextGradeInfo
-                  onClick={() => {
-                    router.push("/grade");
-                  }}
-                >
-                  ⓘ
-                </NextGradeInfo>
-              </NextGradeContainer>
-            </MyProfileContainer>
-          </MyProfile>
-        </MyInfo>
-        <HistoryTitle>콘 기록</HistoryTitle>
-        <HistoryTable>
-          {/* 데이터 시작 */}
-          <TableRow>
-            <TableHeader>
-              <TableDataContainer>
-                <TableNormalText>신규회원 적립</TableNormalText>
-              </TableDataContainer>
-            </TableHeader>
-            <TableData>
-              <TableDataContainer>
-                <TableStrongText>+1,500</TableStrongText>
-                <Spacer />
-                <TableNormalText>2024. 8. 19</TableNormalText>
-              </TableDataContainer>
-            </TableData>
-          </TableRow>
-          {/* 데이터 끝 */}
-        </HistoryTable>
-      </Container>
+            </TopNavLeftContainer>
+          </TopNavigation>
+          <Container>
+            <MyInfo>
+              <MyProfile>
+                <MyProfileContainer>
+                  <ProfileImage image={profileImage} width={60} height={60} />
+                  <ProfileNickname>{nickname}님</ProfileNickname>
+                  <PointsProgress
+                    color={
+                      isGradeKey(benefitData.gradeInfo.grade)
+                      ? gradeColors[benefitData.gradeInfo.grade]
+                      : gradeColors["WHITE POP"]
+                    }
+                    value={benefitData.gradeInfo.gradeRatio}
+                    max="100"
+                  />
+                  {benefitData.gradeInfo.grade === "GOLD POP" ? (
+                    <NextGradeContainer>
+                      <NextGradeText color={gradeColors["GOLD POP"]}>
+                        GOLD POP
+                      </NextGradeText>
+                    </NextGradeContainer>
+                  ) : (
+                    <NextGradeContainer>
+                      <NextGradeText 
+                      color={
+                        isGradeKey(benefitData.gradeInfo.nextGradeInfo.nextGrade)
+                        ? gradeColors[benefitData.gradeInfo.nextGradeInfo.nextGrade]
+                        : gradeColors["WHITE POP"]
+                      }
+                      >
+                        {benefitData.gradeInfo.nextGradeInfo.nextGrade}
+                      </NextGradeText>
+                      <NextGradeDesc>까지 {benefitData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원</NextGradeDesc>
+                      <NextGradeInfo
+                        onClick={() => {
+                          router.push("/grade");
+                        }}
+                      >
+                      </NextGradeInfo>
+                    </NextGradeContainer>
+                  )}
+                </MyProfileContainer>
+              </MyProfile>
+            </MyInfo>
+            <HistoryTitle>콘 기록</HistoryTitle>
+            <HistoryTable>
+              {/* 데이터 시작 */}
+              {benefitData.pointHistory?.map((history, index) => (
+                <TableRow key={index}>
+                  <TableHeader>
+                    <TableDataContainer>
+                      <TableNormalText>{history.changeCategory}</TableNormalText>
+                    </TableDataContainer>
+                  </TableHeader>
+                  <TableData>
+                    <TableDataContainer>
+                      <TableStrongText>{history.changePoint}</TableStrongText>
+                      <Spacer />
+                      <TableNormalText>{history.changeAt}</TableNormalText>
+                    </TableDataContainer>
+                  </TableData>
+                </TableRow>
+              ))}
+              {/* 데이터 끝 */}
+            </HistoryTable>
+          </Container>
+        </>
+      ) : (
+        <Loading/>
+      )}
     </DefaultLayout>
   );
 };
