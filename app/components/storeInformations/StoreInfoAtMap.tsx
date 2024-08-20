@@ -16,7 +16,7 @@ import { PopupStoreDataType } from "@/public/utils/types";
 
 //TODO : Props 구체화 필요함.
 const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpanded }) => {
-// const StoreInfoAtMap: React.FC<{store: PopupStoreDataType, setStore: React.Dispatch<SetStateAction<null>>}> = ({ store, setStore }) => {
+  // const StoreInfoAtMap: React.FC<{store: PopupStoreDataType, setStore: React.Dispatch<SetStateAction<null>>}> = ({ store, setStore }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   const backButtonClickhandler = () => {
@@ -38,7 +38,7 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
         <div className={"back-button"} onClick={backButtonClickhandler}>
           <IconChevronLeft width={9} height={16} color={COLORS.primaryColor} />
         </div>
-        <img src={`data:image/jpeg;base64,${store.image}`}/>
+        <img src={`data:image/jpeg;base64,${store.image}`} />
       </PopupStoreImage>
       <PopupStoreDescContainer>
         <div className={"slider-desc-header"}>
@@ -50,8 +50,8 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
         </div>
 
         <div className={"slider-store-desc"}>
-          {store.event.map((item:string, index:number)=>(
-            <p>
+          {store.event.map((item: string, index: number) => (
+            <p key={index}>
               {item}
             </p>
           ))}

@@ -37,7 +37,8 @@ const Container = styled.div<ContainerPaddingTypes>`
   justify-content: flex-start;
   align-items: flex-start;
 
-  max-height: calc(
+
+  height: calc(
     100% - (${(props) => props.top} + ${(props) => props.bottom})
   );
 

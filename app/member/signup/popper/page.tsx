@@ -85,18 +85,16 @@ const SignUpUserPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    useEffect(() => {
-      setState({
-        email: undefined,
-        password: undefined,
-        nickname: undefined,
-        businessInfo: undefined,
-        phoneNumber: undefined,
-        isPopper: true,
-        authCode: "",
-        step: "Email",
-      });
-    }, []);
+    setState({
+      email: undefined,
+      password: undefined,
+      nickname: undefined,
+      businessInfo: undefined,
+      phoneNumber: undefined,
+      isPopper: true,
+      authCode: "",
+      step: "Email",
+    });
   }, []);
 
   return (
