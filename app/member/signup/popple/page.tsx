@@ -200,7 +200,7 @@ const SignUpUserPage: React.FC = () => {
             if (currentStepIndex > 0) {
               setStep(steps[currentStepIndex - 1]);
             } else {
-              router.push("/signup");
+              router.push("/member/signin");
             }
           }}
         >
