@@ -66,33 +66,20 @@ const SignUpUserPage: React.FC = () => {
   
   const [stepIndex, setStepIndex] = useState<number>(0);
 
-  const checkValidForm = () => {
-    return(
-      state.email !== undefined &&
-      state.password !== undefined &&
-      state.businessInfo !== undefined &&
-      state.nickname !== undefined &&
-      state.phoneNumber !== undefined &&
-      state.isPopper === true 
-    )      
-  };
-
   const popperSignupApi = async () => {
-    if (checkValidForm()) {
-      setIsLoading(true);
-      try {
-        const response = await axiosInstance.post(`/api/user/signup`, state);
-        if (response.status === 201) {
-          setState((prev) => ({
-            ...prev,
-            step: "Done",
-          }));
-          setIsLoading(false);
-        }
-      } catch (error) {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.post(`/api/user/signup`, state);
+      if (response.status === 201) {
+        setState((prev) => ({
+          ...prev,
+          step: "Done",
+        }));
         setIsLoading(false);
-        alert("회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.");
       }
+    } catch (error) {
+      setIsLoading(false);
+      alert("회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
