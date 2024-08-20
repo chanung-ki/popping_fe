@@ -191,6 +191,13 @@ const ContentsContainer = styled.div`
   flex-wrap: nowrap;
   overflow-x: scroll;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
   div:last-child {
     margin-right: 16px;
   }
