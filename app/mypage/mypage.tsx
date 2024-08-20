@@ -35,9 +35,7 @@ const MyPage: React.FC = () => {
       alert("로그인 후 이용가능합니다.");
       hasAlerted.current = true; // alert 호출 후 true로 설정
       router.push(
-        `/member/signin?redirect=${encodeURIComponent(
-          window.location.pathname
-        )}`
+        `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
       );
     }
     if (isLogin) {

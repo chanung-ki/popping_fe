@@ -26,12 +26,31 @@ export type user = {
   savedPopup: string[];
 };
 
+export interface UserAddress {
+  id: number;
+  addressName: string;
+  name: string;
+  phoneNumber: string;
+  postNumber: string;
+  address: string;
+  detailAddress: string;
+  default: boolean;
+}
+
+export interface UserGrade {
+  grade: string;
+  minOrderAmount: number;
+  maxOrderAmount: number;
+  earnRate: number;
+  discountRate: number;
+  color: string;
+}
+
 // Popup Type INTERFACE
 export interface GeoDataType {
   type: string;
   coordinates: number[];
 }
-
 
 export interface LocationDataType {
   address: string;
@@ -49,7 +68,6 @@ export interface PopupStoreDataType {
   event: string[];
   image: any;
 }
-
 
 export interface PlaceDataType {
   title: string;
@@ -106,9 +124,18 @@ export interface SizeType {
   sleeve: number;
 }
 
+export interface SimpleProductType {
+  id: number;
+  name: string;
+  option: OptionType[];
+  price: number;
+  thumbnail: string;
+  isSaved: boolean;
+}
+
 export interface CartType {
   id: number;
-  product: ProductType;
+  product: SimpleProductType;
   option: CartOption;
 }
 
@@ -116,6 +143,14 @@ export interface CartOption {
   color: string;
   size: string;
   amount: number;
+}
+
+export interface PaymentType {
+  id: number;
+  name: string;
+  totalPrice: number;
+  totalDiscount: number;
+  item: CartType[];
 }
 
 // 팝플용 마이페이지 타입

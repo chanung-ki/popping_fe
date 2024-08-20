@@ -8,6 +8,7 @@ import HorizontalCard from "@/app/components/online-popup/horizontalCard";
 import axiosInstance from "@/public/network/axios";
 import { COLORS } from "@/public/styles/colors";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
+import { KRWLocaleString } from "@/public/utils/function";
 import { CartType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,26 +16,34 @@ import styled from "styled-components";
 
 const MyCartPage: React.FC = () => {
   const router = useRouter();
-  const [selectedCards, setSelectedCards] = useState<Set<number>>(new Set());
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [brandName, setBrandName] = useState<string>();
   const [cartData, setCartData] = useState<CartType[]>();
   const [cartLen, setCartLen] = useState<number>(0);
 
-  const handleCheckboxChange = (index: number, selected: boolean) => {
-    setSelectedCards(prevSelected => {
-      const newSelected = new Set(prevSelected);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+
+
+  const handleCheckboxChange = (item: CartType, selected: boolean) => {
+    setSelectedItems((prevSelectedItems) => {
       if (selected) {
-        newSelected.add(index);
+        if (!prevSelectedItems.includes(item.id)) {
+          setTotalPrice(totalPrice + (item.option.amount * item.product.price))
+          return [...prevSelectedItems, item.id];
+        }
+
+        return prevSelectedItems;
       } else {
-        newSelected.delete(index);
+        setTotalPrice(totalPrice - (item.option.amount * item.product.price))
+        return prevSelectedItems.filter((id) => id !== item.id);
       }
-      return newSelected;
     });
   };
 
   const Payment = () => {
-    router.push(`payment`);
+    CreateOrder()
   };
+
 
   useEffect(() => {
     CartDataGetAPI();
@@ -53,9 +62,7 @@ const MyCartPage: React.FC = () => {
       if (error.response?.status === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
-          `/member/signin?redirect=${encodeURIComponent(
-            window.location.pathname
-          )}`
+          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
         );
       }
     }
@@ -66,6 +73,28 @@ const MyCartPage: React.FC = () => {
   };
 
   if (!cartData || !brandName) return null;
+
+  const CreateOrder = async () => {
+    try {
+      const response = await axiosInstance.post(`/api/popup/order`, {
+        totalPrice: totalPrice,
+        order: selectedItems
+      })
+
+      if (response.status === 201) {
+        router.push(`payment?`)
+      }
+    }
+    catch (error: any) {
+      if (error.response.status === 401) {
+        alert("로그인 후 이용가능합니다.");
+        router.push(`/member/signin?redirect=${encodeURIComponent(window.location.href)}`);
+      }
+    }
+
+
+  }
+
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="0" left="20px">
@@ -83,16 +112,23 @@ const MyCartPage: React.FC = () => {
               key={index}
               data={data}
               brand={brandName}
-              onCheckboxChange={(selected) => handleCheckboxChange(index, selected)}
+              onCheckboxChange={(selected) => handleCheckboxChange(data, selected)}
             />
           ))}
+          {cartLen == 0 && (
+            <DisabledBottomButton>
+              주문하기
+            </DisabledBottomButton>
+          )}
         </Content>
-        <BottomButtonContainer isVisible={selectedCards.size > 0}>
+
+
+        <BottomButtonContainer isVisible={selectedItems.length > 0}>
           <StoreDecisionButton
-            isVisible={selectedCards.size > 0}
+            isVisible={true}
             onClick={Payment}
             sort={undefined}
-            title={`주문하기`}
+            title={`${KRWLocaleString(totalPrice)}원 주문하기`}
           />
         </BottomButtonContainer>
       </Container>
@@ -153,5 +189,39 @@ const EmptyCart = styled.div`
   color: ${COLORS.greyColor}
   }
 `
+
+const DisabledBottomButton = styled.div`
+  width: calc(100% - 40px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 100%); /* 시작 위치를 아래로 설정 */
+  z-index: 1;
+
+  background-color: ${COLORS.greyColor};
+  padding: 16px 0;
+  border-radius: 8px;
+
+  font-size: 16px;
+  font-weight: 600;
+  color: ${COLORS.primaryColor};
+
+  /* 애니메이션 추가 */
+  animation: slide-up 0.5s ease-out forwards;
+  @keyframes slide-up {
+    from {
+      transform: translate(-50%, 100%); /* 아래에서 시작 */
+    }
+    to {
+      transform: translate(-50%, 0); /* 원래 위치로 이동 */
+    }
+  }
+`;
 
 export default MyCartPage;

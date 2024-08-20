@@ -46,7 +46,6 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({ nickname, profileIma
               />
             </MyProfileContainer>
           </MyProfile>
-
           <MyActivities>
             <MyActivitiesContainer>
               <Activity>

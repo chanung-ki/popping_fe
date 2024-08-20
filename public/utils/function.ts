@@ -93,9 +93,7 @@ export const Follow = async (
     if (e.response.status === 401) {
       alert("로그인 이후 가능한 기능입니다.");
       router.push(
-        `/member/signin?redirect=${encodeURIComponent(
-          window.location.pathname
-        )}`
+        `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
       );
     }
   }

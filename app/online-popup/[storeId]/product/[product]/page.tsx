@@ -104,9 +104,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
       if (e.response.sataus === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
-          `/member/signin?redirect=${encodeURIComponent(
-            window.location.pathname
-          )}`
+          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
         );
       }
     }
@@ -134,9 +132,7 @@ const OnlinePopupProductPage: React.FC<{ params: { storeId: string, product: num
       if (error.response.data === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
-          `/member/signin?redirect=${encodeURIComponent(
-            window.location.pathname
-          )}`
+          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
         );
       }
       else if (error.response.status === 400) {

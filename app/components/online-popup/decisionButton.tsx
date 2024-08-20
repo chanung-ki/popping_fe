@@ -1,6 +1,7 @@
 import { COLORS } from "@/public/styles/colors";
 import styled, { keyframes } from "styled-components";
 import React, { useEffect, useState } from "react";
+import { slideIn, slideOut } from "@/public/utils/keyframe";
 
 interface DataProps {
   title: string;
@@ -9,27 +10,7 @@ interface DataProps {
   sort?: string;
 }
 
-const slideIn = keyframes`
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
 
-const slideOut = keyframes`
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-`;
 
 const StoreDecisionButton: React.FC<DataProps> = ({ title, onClick, isVisible, sort }) => {
   const [isMounted, setIsMounted] = useState(isVisible);

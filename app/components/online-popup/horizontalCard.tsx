@@ -24,7 +24,6 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({ brand, setCartLen, isPa
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [deleteComplete, setDeleteComplete] = useState<boolean>(false);
-
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [option, setOption] = useState<CartOption>(data.option);
 
@@ -32,35 +31,14 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({ brand, setCartLen, isPa
     setRealPrice(data.product.price * option.amount);
   }, [option.amount, data.product.price]);
 
-
-  useEffect(() => {
-    onCheckboxChange(isChecked);
-  }, [isChecked]);
-
-  useEffect(() => {
-    if (isModalVisible) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.overflow = 'auto';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
-
-    return () => {
-      document.body.style.overflow = 'auto';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    };
-  }, [isModalVisible]);
-
+  // handleCheckboxChange 함수 수정
   const handleCheckboxChange = () => {
-    setIsChecked(prevChecked => !prevChecked);
+    const newChecked = !isChecked;
+    setIsChecked(newChecked);
+    onCheckboxChange(newChecked);
   };
 
   const DeleteClick = () => {
-    // TODO 실 데이터 반영 코드 추가
     DeleteCart();
   };
 
@@ -72,36 +50,27 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({ brand, setCartLen, isPa
         setCartLen();
       }
     }
-  }, [deleteComplete])
+  }, [deleteComplete]);
 
   const DeleteCart = async () => {
     try {
       const response = await axiosInstance.delete('/api/popup/cart/data', {
-        data: {
-          id: data.id
-        }
-      })
+        data: { id: data.id }
+      });
       if (response.status === 202) {
         setDeleteComplete(true);
       }
-    }
-    catch (error: any) {
-      if (error.response.status === 401) {
+    } catch (error: any) {
+      if (error.response?.status === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push(
-          `/member/signin?redirect=${encodeURIComponent(
-            window.location.pathname
-          )}`
-        );
+        router.push(`/member/signin?redirect=${encodeURIComponent(window.location.href)}`);
       }
     }
-  }
-
-
-  const handleOptionChange = (updatedOption: CartOption) => {
-    setOption(updatedOption); // 업데이트된 옵션을 상태로 설정
   };
 
+  const handleOptionChange = (updatedOption: CartOption) => {
+    setOption(updatedOption);
+  };
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -109,14 +78,13 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({ brand, setCartLen, isPa
 
   const GoToProductDetail = (brand: string, product: number) => {
     router.push(`/online-popup/${brand}/product/${product}`);
-  }
-
+  };
 
   if (!isVisible) return null;
 
   return (
     <Container>
-      {!isPayment &&
+      {!isPayment && (
         <CheckboxLabel>
           <CheckboxButton
             type="checkbox"
@@ -124,35 +92,36 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({ brand, setCartLen, isPa
             onChange={handleCheckboxChange}
           />
         </CheckboxLabel>
-      }
+      )}
       <div style={{ cursor: 'pointer' }} onClick={() => GoToProductDetail(brand, data.product.id)}>
         <Thumbnail src={data.product.thumbnail} />
       </div>
-
       <Info>
         <Header>
-          <Title onClick={() => GoToProductDetail(brand, data.product.id)}>{data.product.name}</Title>
-          {!isPayment &&
-            <DeleteBtn onClick={DeleteClick}>삭제</DeleteBtn>
-          }
+          <Title onClick={() => GoToProductDetail(brand, data.product.id)}>
+            {data.product.name}
+          </Title>
+          {!isPayment && <DeleteBtn onClick={DeleteClick}>삭제</DeleteBtn>}
         </Header>
         <Spacer />
-
         <Option>
           <span>{option.color}({option.size}) / {option.amount}개</span>
-          {!isPayment &&
-            <OptionChangeBtn onClick={toggleModal}>변경</OptionChangeBtn>
-          }
+          {!isPayment && <OptionChangeBtn onClick={toggleModal}>변경</OptionChangeBtn>}
         </Option>
-
         <Price>{KRWLocaleString(realPrice)} KRW</Price>
       </Info>
-      {!isPayment &&
-        <BottomModal toggleModal={toggleModal} isVisible={isModalVisible} data={data} onOptionChange={handleOptionChange} />
-      }
+      {!isPayment && (
+        <BottomModal
+          toggleModal={toggleModal}
+          isVisible={isModalVisible}
+          data={data}
+          onOptionChange={handleOptionChange}
+        />
+      )}
     </Container>
   );
 };
+
 
 const CheckboxLabel = styled.label`
   cursor: pointer;
