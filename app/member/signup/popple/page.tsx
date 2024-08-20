@@ -6,7 +6,7 @@ import {
   MemberProgressBar,
 } from "@/app/components/member/components";
 import useFunnel from "next-use-funnel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StepEmail from "./01email";
 import StepEmailPasscode from "./02emailpasscode";
 import StepPassword from "./03password";
@@ -47,8 +47,6 @@ const SignUpUserPage: React.FC = () => {
     "Done",
   ] as const;
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const router = useRouter();
 
   const [Funnel, state, setState] = useFunnel(steps, {
@@ -66,7 +64,7 @@ const SignUpUserPage: React.FC = () => {
     isPopper: false,
     authCode: "",
   });
-  
+
   const poppleSignupApi = async () => {
     setIsLoading(true);
     try {
@@ -85,10 +83,25 @@ const SignUpUserPage: React.FC = () => {
   };
 
   const [stepIndex, setStepIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setState({
+      email: undefined,
+      password: undefined,
+      name: undefined,
+      nickname: undefined,
+      isMale: undefined,
+      phoneNumber: undefined,
+      isPopper: false,
+      authCode: "",
+      step: "Email",
+    });
+  }, []);
 
   return (
     <DefaultLayout top="16px" right="20px" bottom="32px" left="20px">
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <MemberProgressBar value={stepIndex * (100 / steps.length - 1)} />
       {state.step !== "Done" && (
         <div
