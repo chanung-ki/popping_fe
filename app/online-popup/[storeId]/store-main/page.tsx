@@ -16,13 +16,13 @@ import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
 import { useSelector } from "react-redux";
 import CartButton from "@/app/components/online-popup/cartButton";
 import { useRouter } from "next/navigation";
+import { Loading } from "@/app/components/loading";
 
 
 const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
   const router = useRouter();
   const { storeId } = params;
   const { isPopper } = useSelector((state: any) => state.poppingUser.user);
-
 
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
   const [brandData, setBrandData] = useState<BrandType>();
@@ -105,7 +105,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({ params }) =>
     Follow("Product", id, router);
   };
 
-  if (!brandData || !productData) return null;
+  if (!brandData || !productData) return <Loading />;
 
   return (
     <DefaultLayout top="0" right="0" bottom="0" left="0">

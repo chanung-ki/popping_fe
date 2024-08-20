@@ -11,8 +11,44 @@ interface BottomModalProps {
   toggleModal: () => void;
   isVisible: boolean;
   data: CartType;
-  onOptionChange: (updatedOption: CartOption) => void; // 새로운 prop 추가
+  onOptionChange: (updatedOption: CartOption) => void;
 }
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
 
 const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data, onOptionChange }) => {
   const router = useRouter();
@@ -62,9 +98,7 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
       if (error.response.status === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
-          `/member/signin?redirect=${encodeURIComponent(
-            window.location.pathname
-          )}`
+          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
         );
       } else {
         console.log(`${error.response}`);
@@ -157,6 +191,7 @@ const ModalOverlay = styled.div<{ isVisible: boolean }>`
   z-index: 1;
   opacity: ${props => (props.isVisible ? '1' : '0')};
   visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
+  animation: ${props => (props.isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
 `;
 
@@ -170,7 +205,7 @@ const OptionModal = styled.div<{ isVisible: boolean }>`
   border-radius: 16px 16px 0 0;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
   transform: translateY(${props => (props.isVisible ? '0%' : '100%')});
-  transition: transform 0.3s ease-in-out;
+  animation: ${props => (props.isVisible ? slideIn : slideOut)} 0.3s ease-in-out;
   z-index: 2;
 `;
 
@@ -237,6 +272,7 @@ const ProductRadioContent = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
+
 
 const SizeGuide = styled.a`
   font-size: 10px;

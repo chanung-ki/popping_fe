@@ -14,8 +14,7 @@ type MyPagePopperProps = {
   signOutApi: () => void;
 };
 
-
-export const MyPagePopper: React.FC<MyPagePopperProps> = ({nickname, profileImage, signOutApi}) => {
+export const MyPagePopper: React.FC<MyPagePopperProps> = ({ nickname, profileImage, signOutApi }) => {
   const router = useRouter();
 
   return (
@@ -47,7 +46,6 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({nickname, profileImag
               />
             </MyProfileContainer>
           </MyProfile>
-
           <MyActivities>
             <MyActivitiesContainer>
               <Activity>

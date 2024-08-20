@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/public/network/axios";
-import { DefaultLayout } from "@/app/components/layout";
+import { DefaultLayout, Spacer } from "@/app/components/layout";
 import Link from "next/link";
 import { IconX } from "@/app/components/icons";
 import { useRouter } from "next/navigation";
@@ -54,6 +54,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({ pa
         <Overlay />
       </>
 
+
+
       <OpenningPageContainer>
         <OpenningPageContentsContainer>
           <BrandInfo>
@@ -101,14 +103,14 @@ const Overlay = styled.div`
 `;
 
 const OpenningPageContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 40px);
 
-  display: flex;
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translate(-50%, 0);
 
-  align-items: flex-end;
-  justify-content: flex-end;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const OpenningPageContentsContainer = styled.div`
@@ -118,7 +120,6 @@ const OpenningPageContentsContainer = styled.div`
   
   align-items: flex-end;
   justify-content: flex-end;
-  
   gap: 40px;
 `;
 

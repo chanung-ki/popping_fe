@@ -33,7 +33,12 @@ const SignInPage: React.FC = () => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   const searchParams = new URLSearchParams(window.location.search);
-  const redirectPath = searchParams.get("redirect");
+  const encodedRedirectPath = searchParams.get("redirect");
+
+  let redirectPath = null;
+  if (encodedRedirectPath) {
+    redirectPath = decodeURIComponent(encodedRedirectPath); // 인코딩된 URL을 디코딩
+  }
 
   useEffect(() => {
     if (userData.isLogin) {
@@ -117,8 +122,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -136,8 +141,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>

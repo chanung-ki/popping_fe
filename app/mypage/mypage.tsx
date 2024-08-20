@@ -42,16 +42,14 @@ const MyPage: React.FC = () => {
       alert("로그인 후 이용가능합니다.");
       hasAlerted.current = true; // alert 호출 후 true로 설정
       router.push(
-        `/member/signin?redirect=${encodeURIComponent(
-          window.location.pathname
-        )}`
+        `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
       );
     }
     if (isLogin) {
       setIsPopple(!isPopper);
       if (!isPopper) {
         getMyPageDataApi();
-      } 
+      }
     }
   }, [isLogin, router]);
 
@@ -73,11 +71,11 @@ const MyPage: React.FC = () => {
         router.push("/");
       }
     } catch (error) {
-        // 오류가 발생해도 프론트단에서 로그아웃 처리
-        cleanUserData();
-        alert("로그아웃이 완료되었습니다.");
-        hasAlerted.current = true;
-        router.push("/");
+      // 오류가 발생해도 프론트단에서 로그아웃 처리
+      cleanUserData();
+      alert("로그아웃이 완료되었습니다.");
+      hasAlerted.current = true;
+      router.push("/");
     }
   };
 
@@ -131,13 +129,13 @@ const MyPage: React.FC = () => {
           signOutApi={signOutApi}
         />
       ) : isLogin && !isPopple ? (
-        <MyPagePopper 
+        <MyPagePopper
           nickname={nickname}
           profileImage={profileImage}
           signOutApi={signOutApi}
         />
       ) : (
-        <Loading/>
+        <Loading />
       )}
     </>
   );

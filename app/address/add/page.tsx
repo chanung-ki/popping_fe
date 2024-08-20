@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import DaumPostcode from "react-daum-postcode";
+import axiosInstance from "@/public/network/axios";
 
 const AddressAddPage: React.FC = () => {
   const [valueNickname, setValueNickname] = useState<string>("");
@@ -26,8 +27,32 @@ const AddressAddPage: React.FC = () => {
   const [valueZIPCode, setValueZIPCode] = useState<string>("");
   const [valueAddress, setValueAddress] = useState<string>("");
   const [valueAddressDetail, setValueAddressDetail] = useState<string>("");
+  const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
+
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const encodedRedirectPath = searchParams.get("redirect");
+
+    if (encodedRedirectPath) {
+      const decodedPath = decodeURIComponent(encodedRedirectPath);
+
+      const urlObject = new URL(decodedPath);
+      const decodedSearchParams = new URLSearchParams(urlObject.search);
+      const innerRedirect = decodedSearchParams.get("redirect");
+
+      if (innerRedirect) {
+        const reEncodedRedirect = encodeURIComponent(innerRedirect);
+        const reEncodedPath = `${urlObject.origin}${urlObject.pathname}?redirect=${reEncodedRedirect}`;
+        setRedirectPath(reEncodedPath);
+      } else {
+        setRedirectPath(decodedPath);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (isPhoneFocused === false) {
@@ -50,6 +75,47 @@ const AddressAddPage: React.FC = () => {
     setValueAddress(data.address);
   };
 
+
+  const AddressAddAxios = async () => {
+    if (valueNickname !== "" && valueName !== "" && isValidPhone && valueAddress !== '' && valueZIPCode !== '') {
+      try {
+        const response = await axiosInstance.post(`/api/user/address`, {
+          addressName: valueNickname,
+          name: valueName,
+          phoneNumber: valuePhone,
+          address: valueAddress,
+          postNumber: valueZIPCode,
+          detailAddress: valueAddressDetail,
+          default: isDefaultAddress
+        })
+        if (response.status === 201) {
+          alert('배송지가 추가 되었습니다.')
+          if (redirectPath) {
+            window.location.href = redirectPath;
+          } else {
+            router.push("/?page=mypage");
+          }
+        }
+      }
+      catch (error: any) {
+        if (error.response.status === 401) {
+
+        }
+        else if (error.response.status === 400) {
+          alert(error.response.data.message)
+          if (redirectPath) {
+            window.location.href = redirectPath;
+          } else {
+            router.push("/?page=mypage");
+          }
+        }
+      }
+    }
+  }
+
+
+
+
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
       <TopNavigation>
@@ -58,7 +124,11 @@ const AddressAddPage: React.FC = () => {
         </TopNavCenterContainer>
         <TopNavLeftContainer
           onClick={() => {
-            router.push("/?page=mypage");
+            if (redirectPath) {
+              window.location.href = redirectPath;
+            } else {
+              router.push("/?page=mypage");
+            }
           }}
         >
           <IconChevronLeft
@@ -74,16 +144,16 @@ const AddressAddPage: React.FC = () => {
             value={valueNickname}
             placeholder="배송지 별칭"
             type="text"
-            maxLength={15}
+            maxLength={10}
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueNickname(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -95,24 +165,24 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueName(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
           <InputRound
             value={valuePhone}
             placeholder="전화번호(숫자만 입력)"
-            type="text"
+            type="tel"
             maxLength={11}
             status={statusPhone}
             bottomText={bottomTextPhone}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
@@ -135,10 +205,10 @@ const AddressAddPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
-              onChange={(text: string) => {}}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              bottomTextOnClick={() => { }}
+              onChange={(text: string) => { }}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={true}
             />
 
@@ -159,10 +229,10 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
-            onChange={(text: string) => {}}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            bottomTextOnClick={() => { }}
+            onChange={(text: string) => { }}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={true}
           />
 
@@ -174,25 +244,37 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueAddressDetail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
+
+          <CheckboxContainer>
+            <CheckboxLabel>
+              <CheckboxInput
+                type="checkbox"
+                checked={isDefaultAddress}
+                onChange={() => setIsDefaultAddress(!isDefaultAddress)}
+              />
+              기본 배송지로 설정
+            </CheckboxLabel>
+          </CheckboxContainer>
+
         </InputsContainer>
 
         <ButtonLarge
           text={"저장"}
           buttonColor={
-            valueNickname !== "" && valueName !== "" && isValidPhone
+            valueNickname !== "" && valueName !== "" && isValidPhone && valueAddress !== '' && valueZIPCode !== ''
               ? COLORS.mainColor
               : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
-          onClick={() => {}}
+          onClick={() => { AddressAddAxios() }}
         />
       </Container>
 
@@ -268,6 +350,49 @@ const Container = styled.div`
 
   background: ${COLORS.primaryColor};
 `;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+`;
+
+const CheckboxLabel = styled.label`
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  user-select: none;
+
+  color: ${COLORS.greyColor};
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
+  cursor: pointer;
+  appearance: none; 
+  border: none;
+  margin: 0;
+  width: 16px;
+  height: 16px; 
+  background-color: ${COLORS.primaryColor};
+  border: 1px solid ${COLORS.greyColor};
+  border-radius: 3px;
+  z-index: 1;
+
+  &:checked {
+    border-color: transparent;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNyIgdmlld0JveD0iMCAwIDEwIDciIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTMuMzMzMzMgN0wwIDRMMS4xMTExMSAzTDMuMzMzMzMgNUw4Ljg4ODg5IDBMMTAgMUwzLjMzMzMzIDdaIiBmaWxsPSIjRkE4RDBFIi8+PC9zdmc+');    
+    background-size:  10px 7px;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-color: ${COLORS.lightGreyColor};
+    border: 1px solid ${COLORS.greyColor};
+  }
+`;
+
 
 const InputsContainer = styled.div`
   display: flex;

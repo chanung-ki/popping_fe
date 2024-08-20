@@ -51,7 +51,7 @@ const Container = styled.div`
   width: 44px;
   height: 44px;
 
-  bottom: 20px;
+  bottom: 32px;
   right: 20px;
   
   border: 1px solid ${COLORS.greyColor};
