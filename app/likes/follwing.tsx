@@ -2,6 +2,8 @@ import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconHeart } from "../components/icons";
 import { Spacer } from "../components/layout";
+import { BrandType } from "@/public/utils/types";
+import Link from "next/link";
 
 type followingTypes = {
   image: string;
@@ -10,21 +12,29 @@ type followingTypes = {
 };
 
 type followingType = {
-  values: followingTypes[];
+  values: BrandType[];
 };
 
-const Following = ({ values }: followingType) => {
-  return (
+const Following: React.FC<followingType> = ({ values }) => {
+  if (values.length == 0) return (
     <Container>
-      {values.map((value: followingTypes, index: number) => {
+      <div>
+        <span>브랜드 팔로잉이 없습니다.</span>
+        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup/Popping/store-openning`}>이동하기</Link></span>
+      </div>
+    </Container>
+  )
+  return (
+    <Grid>
+      {values.map((value: BrandType, index: number) => {
         return (
           <Store key={index}>
-            <StoreImage image={value.image}>
-              <BrandText>{value.brand}</BrandText>
+            <StoreImage image={value.thumbnail}>
+              <BrandText>{value.name}</BrandText>
 
               <IsLiked>
                 <IconHeart
-                  color={value.isLiked ? COLORS.mainColor : COLORS.greyColor}
+                  color={value.isSaved ? COLORS.mainColor : COLORS.greyColor}
                   width={undefined}
                   height={16}
                 />
@@ -33,11 +43,36 @@ const Following = ({ values }: followingType) => {
           </Store>
         );
       })}
-    </Container>
+    </Grid>
   );
 };
 
 const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  & > div {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    align-items:center;
+  }
+  & > div span {
+      color: ${COLORS.greyColor};
+  }
+
+  & > div span a {
+    color: ${COLORS.mainColor}
+  }
+`
+
+
+const Grid = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -63,7 +98,7 @@ const BrandText = styled.span`
   left: 12px;
   bottom: 12px;
 
-  color: ${COLORS.primaryColor};
+  color: ${COLORS.secondaryColor};
   font-family: "Pretendard";
   font-size: 16px;
   font-style: normal;

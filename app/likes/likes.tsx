@@ -1,3 +1,5 @@
+"use client"
+
 import { styled } from "styled-components";
 import { DefaultLayout } from "../components/layout";
 import { COLORS } from "@/public/styles/colors";
@@ -19,7 +21,7 @@ import { Loading } from "../components/loading";
 
 const LikesPage: React.FC = () => {
   const router = useRouter();
-  const tabValues: string[] = ["상품", "스토어", "팔로잉"];
+  const tabValues: string[] = ["상품", "팝업스토어", "브랜드"];
 
   const [sessionAbleCheck, setSessionAbleCheck] = useState<boolean>(false);
   const [brands, setBrands] = useState<BrandType[]>();
@@ -75,7 +77,7 @@ const LikesPage: React.FC = () => {
     }
   };
 
-  if (!products) return <Loading />
+  if (!products || !brands || !popups) return <Loading />
 
   return (
     <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
@@ -98,13 +100,10 @@ const LikesPage: React.FC = () => {
           />
         )}
 
-        {selectedIndex === 1 && <></>}
+        {selectedIndex === 1 && <Stores values={popups} />}
         {selectedIndex === 2 && (
           <Following
-            values={[
-              { image: "", isLiked: true, brand: "test" },
-              { image: "", isLiked: false, brand: "test" },
-            ]}
+            values={brands}
           />
         )}
       </Container>

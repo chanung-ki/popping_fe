@@ -82,7 +82,7 @@ const MyCartPage: React.FC = () => {
       })
 
       if (response.status === 201) {
-        router.push(`payment?`)
+        router.push(`payment?oid=${response.data.oid}`)
       }
     }
     catch (error: any) {
