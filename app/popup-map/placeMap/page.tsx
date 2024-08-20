@@ -69,8 +69,8 @@ const MapTestPage: React.FC = () => {
   // 검색
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
   // 지역 검색
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
-  // 
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  //
   const [clickedLocationId, setClickedLocationId] = useState<string>("");
   // 팝업을 선택 했는지 여부
   const [checkPopupList, setCheckPopupList] = useState<boolean>(true);
@@ -86,13 +86,12 @@ const MapTestPage: React.FC = () => {
   const router = useRouter();
 
   const popupStoreAPI = async (selectedLocation: string) => {
-
-    var APIurl = ""
+    var APIurl = "";
 
     if (selectedLocation) {
-      APIurl = `/api/maps/stores?district=${selectedLocation}`
+      APIurl = `/api/maps/stores?district=${selectedLocation}`;
     } else {
-      APIurl = `/api/maps/stores`
+      APIurl = `/api/maps/stores`;
     }
 
     await axiosInstance
@@ -137,12 +136,9 @@ const MapTestPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-
     if (selectedLocation) {
-
-      popupStoreAPI(selectedLocation.split(' ')[1])
+      popupStoreAPI(selectedLocation.split(" ")[1]);
     }
-
   }, [selectedLocation]);
 
   // 현재 위치 가져오기
@@ -171,8 +167,7 @@ const MapTestPage: React.FC = () => {
   useEffect(() => {
     if (userLocation) {
       const script = document.createElement("script");
-      script.src =
-        `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiId}&autoload=false`;
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiId}&autoload=false`;
       script.async = true;
       document.body.appendChild(script);
 
@@ -208,16 +203,14 @@ const MapTestPage: React.FC = () => {
   // 가져온 팝업리스트의 위치값과 인포를 지도에 마커로 표시
   useEffect(() => {
     if (popupCoorData && mapInstance) {
-
       const imageSrc =
         "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
       settingMarkers(false, allPopupMarkers);
 
-      var tmpList: any[] = []
+      var tmpList: any[] = [];
 
       popupCoorData.forEach((coordata) => {
-
         var imageSize = new kakao.maps.Size(24, 35);
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -235,20 +228,19 @@ const MapTestPage: React.FC = () => {
 
         // 이벤트 핸들러 등록
         kakao.maps.event.addListener(popupMarker, "click", () => {
-          console.log('aaaaa')
+          console.log("aaaaa");
           infowindow.open(mapInstance, popupMarker);
         });
 
-        kakao.maps.event.addListener(popupMarker, 'mouseout', () => {
-          console.log('bbbbb')
+        kakao.maps.event.addListener(popupMarker, "mouseout", () => {
+          console.log("bbbbb");
           infowindow.close();
         });
 
-        tmpList.push(popupMarker)
-
+        tmpList.push(popupMarker);
       });
 
-      setAllPopupMarkers(tmpList)
+      setAllPopupMarkers(tmpList);
     }
   }, [popupCoorData]);
 
@@ -269,10 +261,9 @@ const MapTestPage: React.FC = () => {
   }, [popupStore]);
 
   const SelectPopup = (store: PopupStoreDataType) => {
-
     if (popupMakerData.length !== 0) {
-      popupMakerData[0].setMap(null)
-      popupMakerData[1].close()
+      popupMakerData[0].setMap(null);
+      popupMakerData[1].close();
     }
 
     const imageSrc =
@@ -312,7 +303,7 @@ const MapTestPage: React.FC = () => {
           </div>
         </div>
       </div>
-    ` ;
+    `;
 
     // 인포윈도우를 생성합니다
     const infowindow = new kakao.maps.InfoWindow({
@@ -332,24 +323,24 @@ const MapTestPage: React.FC = () => {
     mapInstance.setLevel(2, { animate: true, anchor: markerPosition });
     // mapInstance.setCenter(markerPosition);
 
-    setPopupMarkerData([marker, infowindow])
-    settingMarkers(false, foodMakerData)
-    settingMarkers(false, cafeMakerData)
+    setPopupMarkerData([marker, infowindow]);
+    settingMarkers(false, foodMakerData);
+    settingMarkers(false, cafeMakerData);
     placeAPI(selectedStore!.id);
   };
 
   useEffect(() => {
     if (selectedStore) {
       placeAPI(selectedStore.id);
-      SelectPopup(selectedStore)
+      SelectPopup(selectedStore);
     }
   }, [selectedStore]);
 
   useEffect(() => {
     if (checkPopupList) {
-      setSelectedStore(undefined)
+      setSelectedStore(undefined);
     }
-  }, [checkPopupList])
+  }, [checkPopupList]);
 
   function createMarkerImage(src: any, size: any, options: any) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
@@ -366,8 +357,11 @@ const MapTestPage: React.FC = () => {
     return marker;
   }
 
-  const setCategoryMarkers = (category: string, positionList: any, mapInstance: any) => {
-
+  const setCategoryMarkers = (
+    category: string,
+    positionList: any,
+    mapInstance: any
+  ) => {
     var markerImageSrc =
       "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png";
 
@@ -375,7 +369,7 @@ const MapTestPage: React.FC = () => {
 
     var imageSize = new kakao.maps.Size(22, 26);
 
-    if (category === 'coffee') {
+    if (category === "coffee") {
       var imageOptions = {
         spriteOrigin: new kakao.maps.Point(10, 0),
         spriteSize: new kakao.maps.Size(36, 98),
@@ -388,61 +382,60 @@ const MapTestPage: React.FC = () => {
     }
 
     positionList.map((position: any) => {
-
       var markerImage = createMarkerImage(
-        markerImageSrc,
-        imageSize,
-        imageOptions
-      ),
+          markerImageSrc,
+          imageSize,
+          imageOptions
+        ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
       tmpMarkerList.push(marker);
     });
 
-    if (category === 'coffee') {
-      setCafeMarkerData(tmpMarkerList)
+    if (category === "coffee") {
+      setCafeMarkerData(tmpMarkerList);
     } else {
-      setFoodMarkerData(tmpMarkerList)
+      setFoodMarkerData(tmpMarkerList);
     }
 
     tmpMarkerList.map((item) => {
       item.setMap(mapInstance);
     });
-  }
+  };
 
   const settingMarkers = (check: boolean, markerList: any) => {
     if (check) {
       markerList.forEach((item: any) => {
-        item.setMap(mapInstance)
+        item.setMap(mapInstance);
       });
     } else {
       markerList.forEach((item: any) => {
-        item.setMap(null)
+        item.setMap(null);
       });
     }
-  }
+  };
 
   const changeMarker = (type: string) => {
     setSelectedCategory(type);
 
     if (type === "coffee") {
-      setCategoryMarkers("coffee", coffeePosition, mapInstance)
-      settingMarkers(false, foodMakerData)
+      setCategoryMarkers("coffee", coffeePosition, mapInstance);
+      settingMarkers(false, foodMakerData);
       // setCategoryMarkers("food", foodPosition, null)
       // setCoffeeMarkers(mapInstance);
       // setFoodMarkers(null);
     } else if (type === "food") {
       // setCategoryMarkers("coffee", coffeePosition, null)
-      setCategoryMarkers("food", foodPosition, mapInstance)
-      settingMarkers(false, cafeMakerData)
+      setCategoryMarkers("food", foodPosition, mapInstance);
+      settingMarkers(false, cafeMakerData);
       // setCoffeeMarkers(null);
       // setFoodMarkers(mapInstance);
     }
   };
 
   return (
-    <DefaultLayout top="0" right="20px" bottom="0" left="20px">
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <KakaoMap id="map"></KakaoMap>
       <Container>
         {isSearchClicked ? (
@@ -517,7 +510,7 @@ const MapTestPage: React.FC = () => {
             </UpperButtonContainer>
           </UpperContainer>
         )}
-        {selectedStore &&
+        {selectedStore && (
           <CategoryBox className="category" isSearchOpen={isSearchClicked}>
             <ul>
               <li
@@ -538,7 +531,7 @@ const MapTestPage: React.FC = () => {
               </li>
             </ul>
           </CategoryBox>
-        }
+        )}
         <ToggleButton onClick={() => setIsExpanded(!isExpanded)} />
 
         <ExpandableDiv isExpanded={isExpanded}>
@@ -552,8 +545,7 @@ const MapTestPage: React.FC = () => {
             />
           ) : (
             <StoreProductContainer isExpanded={isExpanded}>
-              {
-                popupStore &&
+              {popupStore &&
                 popupStore.map((store: PopupStoreDataType, index: number) => (
                   <StoreInformation
                     key={index}
@@ -561,9 +553,7 @@ const MapTestPage: React.FC = () => {
                     setCheckPopupList={setCheckPopupList}
                     setSelectedStore={setSelectedStore}
                   />
-
-                ))
-              }
+                ))}
             </StoreProductContainer>
           )}
         </ExpandableDiv>
@@ -765,7 +755,6 @@ const ToggleButton = styled.button`
   left: 50%;
   transform: translate(-50%, 0);
 
-
   width: 54px;
   height: 4px;
 
@@ -782,7 +771,7 @@ const ExpandableDiv = styled.div<{ isExpanded: Boolean }>`
 
   width: calc(100% - 40px);
   height: ${({ isExpanded }) => (isExpanded ? "70%" : "92px")};
-  
+
   border-radius: 20px 20px 0 0;
 
   background-color: ${COLORS.primaryColor};

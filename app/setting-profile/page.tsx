@@ -256,7 +256,7 @@ const SettingProfilePage: React.FC = () => {
   ]);
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>프로필 설정</TopNavTitle>

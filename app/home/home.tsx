@@ -17,7 +17,7 @@ import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
 import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
 
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
-import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
+import { BottomBox, DefaultLayout } from "../components/layout";
 
 const HomePage = () => {
   const parentDiv = useRef<HTMLDivElement>(null);
@@ -38,7 +38,7 @@ const HomePage = () => {
   }, [parentDiv]);
 
   return (
-    <Layout>
+    <DefaultLayout top={0} right={0} bottom={0} left={0}>
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -117,23 +117,10 @@ const HomePage = () => {
           </Section>
         </Sections>
       </Container>
-    </Layout>
+      <BottomBox />
+    </DefaultLayout>
   );
 };
-
-const Layout = styled.div`
-  position: relative;
-
-  min-width: ${MobileMinWidth}px;
-  max-width: ${MobileMaxWidth}px;
-  width: 100%;
-  min-height: 100dvh;
-  height: 100dvh;
-
-  background-color: ${COLORS.primaryColor};
-
-  border: 0;
-`;
 
 const TopNavLogoContainer = styled.div`
   position: absolute;

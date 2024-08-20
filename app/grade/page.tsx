@@ -11,7 +11,7 @@ const GradePage: React.FC = () => {
   const router = useRouter();
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>등급 안내</TopNavTitle>
@@ -124,7 +124,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  
+
   width: 100%;
   height: 100%;
   margin-top: 24px;

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Back from "@/app/components/back";
 import { DefaultLayout } from "@/app/components/layout";
@@ -23,27 +23,25 @@ const MyCartPage: React.FC = () => {
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
-
   const handleCheckboxChange = (item: CartType, selected: boolean) => {
     setSelectedItems((prevSelectedItems) => {
       if (selected) {
         if (!prevSelectedItems.includes(item.id)) {
-          setTotalPrice(totalPrice + (item.option.amount * item.product.price))
+          setTotalPrice(totalPrice + item.option.amount * item.product.price);
           return [...prevSelectedItems, item.id];
         }
 
         return prevSelectedItems;
       } else {
-        setTotalPrice(totalPrice - (item.option.amount * item.product.price))
+        setTotalPrice(totalPrice - item.option.amount * item.product.price);
         return prevSelectedItems.filter((id) => id !== item.id);
       }
     });
   };
 
   const Payment = () => {
-    CreateOrder()
+    CreateOrder();
   };
-
 
   useEffect(() => {
     CartDataGetAPI();
@@ -69,7 +67,7 @@ const MyCartPage: React.FC = () => {
   };
 
   const decreaseCartLen = () => {
-    setCartLen(prevLen => prevLen - 1);
+    setCartLen((prevLen) => prevLen - 1);
   };
 
   if (!cartData || !brandName) return null;
@@ -78,50 +76,50 @@ const MyCartPage: React.FC = () => {
     try {
       const response = await axiosInstance.post(`/api/popup/order`, {
         totalPrice: totalPrice,
-        order: selectedItems
-      })
+        order: selectedItems,
+      });
 
       if (response.status === 201) {
-        router.push(`payment?oid=${response.data.oid}`)
+        router.push(`payment?oid=${response.data.oid}`);
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       if (error.response.status === 401) {
         alert("로그인 후 이용가능합니다.");
-        router.push(`/member/signin?redirect=${encodeURIComponent(window.location.href)}`);
+        router.push(
+          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
+        );
       }
     }
-
-
-  }
-
+  };
 
   return (
-    <DefaultLayout top="16px" right="20px" bottom="0" left="20px">
+    <DefaultLayout top={16} right={20} bottom={0} left={20}>
       <Back url={undefined} color={undefined} />
       <Container>
-        <PopupHeader main={'장바구니'} sub={`${brandName} STORE`} />
+        <PopupHeader main={"장바구니"} sub={`${brandName} STORE`} />
         <Content>
           {cartLen === 0 && (
-            <EmptyCart><span>장바구니가 비어있어요!</span></EmptyCart>
+            <EmptyCart>
+              <span>장바구니가 비어있어요!</span>
+            </EmptyCart>
           )}
-          {cartLen !== 0 && cartData.map((data: CartType, index: number) => (
-            <HorizontalCard
-              setCartLen={decreaseCartLen}
-              isPayment={false}
-              key={index}
-              data={data}
-              brand={brandName}
-              onCheckboxChange={(selected) => handleCheckboxChange(data, selected)}
-            />
-          ))}
+          {cartLen !== 0 &&
+            cartData.map((data: CartType, index: number) => (
+              <HorizontalCard
+                setCartLen={decreaseCartLen}
+                isPayment={false}
+                key={index}
+                data={data}
+                brand={brandName}
+                onCheckboxChange={(selected) =>
+                  handleCheckboxChange(data, selected)
+                }
+              />
+            ))}
           {cartLen == 0 && (
-            <DisabledBottomButton>
-              주문하기
-            </DisabledBottomButton>
+            <DisabledBottomButton>주문하기</DisabledBottomButton>
           )}
         </Content>
-
 
         <BottomButtonContainer isVisible={selectedItems.length > 0}>
           <StoreDecisionButton
@@ -154,12 +152,12 @@ const BottomButtonContainer = styled.div<{ isVisible: boolean }>`
   transform: translate(-50%, 0);
 
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
-  pointer-events: ${({ isVisible }) => (isVisible ? 'auto' : 'none')};
+  visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
+  pointer-events: ${({ isVisible }) => (isVisible ? "auto" : "none")};
   transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 `;
 const Container = styled.div`
-  height: calc(100dvh - 36px); 
+  height: calc(100dvh - 36px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -184,11 +182,11 @@ const EmptyCart = styled.div`
   transform: translate(-50%, 0);
 
   & > span {
-  font-size: 16px;
-  font-weight: 500;
-  color: ${COLORS.greyColor}
+    font-size: 16px;
+    font-weight: 500;
+    color: ${COLORS.greyColor};
   }
-`
+`;
 
 const DisabledBottomButton = styled.div`
   width: calc(100% - 40px);
@@ -198,7 +196,7 @@ const DisabledBottomButton = styled.div`
   justify-content: center;
 
   position: absolute;
-  
+
   bottom: 20px;
   left: 50%;
   transform: translate(-50%, 100%); /* 시작 위치를 아래로 설정 */

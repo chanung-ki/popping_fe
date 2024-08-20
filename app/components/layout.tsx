@@ -3,18 +3,18 @@ import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 import { styled } from "styled-components";
 
 type LayoutTypes = {
-  top: string;
-  right: string;
-  bottom: string;
-  left: string;
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
   children: React.ReactNode;
 };
 
 type ContainerPaddingTypes = {
-  top: string;
-  right: string;
-  bottom: string;
-  left: string;
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
 };
 
 const Layout = styled.div`
@@ -24,8 +24,6 @@ const Layout = styled.div`
   max-width: ${MobileMaxWidth}px;
   width: 100%;
   min-height: 100dvh;
-  height: 100dvh;
-
   background-color: ${COLORS.primaryColor};
 
   border: 0;
@@ -37,15 +35,17 @@ const Container = styled.div<ContainerPaddingTypes>`
   justify-content: flex-start;
   align-items: flex-start;
 
-
   min-height: calc(
-    100% - (${(props) => props.top} + ${(props) => props.bottom})
+    100% - (${(props) => props.top}px + ${(props) => props.bottom}px)
   );
 
-  padding: ${(props) => props.top} ${(props) => props.right}
-    ${(props) => props.bottom} ${(props) => props.left};
+  padding: ${(props) => props.top}px ${(props) => props.right}px
+    ${(props) => props.bottom}px ${(props) => props.left}px;
 
   background: ${COLORS.primaryColor};
+
+  overflow-x: hidden;
+  overflow-y: scroll;
 
   @media (min-width: ${MobileMaxWidth + 1}px) {
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);

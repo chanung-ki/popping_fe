@@ -8,9 +8,9 @@ import { initUser } from "../redux/reducers/poppingUser";
 import axiosInstance from "@/public/network/axios";
 import { myPagePoppleTypes } from "@/public/utils/types";
 import { Loading } from "../components/loading";
+import { DefaultLayout } from "../components/layout";
 
 const MyPage: React.FC = () => {
-
   const dispatch = useDispatch();
   const router = useRouter();
   const hasAlerted = useRef<boolean>(false);
@@ -33,8 +33,8 @@ const MyPage: React.FC = () => {
       nextGradeInfo: {
         nextGrade: "",
         nextMinOrderAmount: "",
-      }
-    }
+      },
+    },
   });
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const MyPage: React.FC = () => {
     }
   };
   return (
-    <>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
         <MyPagePopple
           nickname={nickname}
@@ -116,7 +116,7 @@ const MyPage: React.FC = () => {
       ) : (
         <Loading />
       )}
-    </>
+    </DefaultLayout>
   );
 };
 

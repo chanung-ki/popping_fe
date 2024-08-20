@@ -2,7 +2,7 @@ import { COLORS, gradeColors } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconChevronRight, IconGear } from "../components/icons";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
-import { DefaultLayout, Spacer } from "../components/layout";
+import { BottomBox, DefaultLayout, Spacer } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import { ProfileImage } from "../components/main/componenets";
@@ -17,7 +17,12 @@ type MyPagePoppleProps = {
   signOutApi: () => void;
 };
 
-export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileImage, signOutApi, myPageData }) => {
+export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
+  nickname,
+  profileImage,
+  signOutApi,
+  myPageData,
+}) => {
   const router = useRouter();
 
   const handleMoveBenefit = () => {
@@ -29,7 +34,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
   };
 
   return (
-    <DefaultLayout top={"0"} right={"20px"} bottom={"0"} left={"20px"}>
+    <>
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -58,21 +63,23 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
               <GradeContainer>
                 <CurrentGradeContainer>
                   <p>현재 등급</p>
-                  <GradeText 
+                  <GradeText
                     color={
-                      myPageData.gradeInfo.grade === "WHITE POP" ? (
-                        "#000000"
-                      ) : (
-                        isGradeKey(myPageData.gradeInfo.grade)
+                      myPageData.gradeInfo.grade === "WHITE POP"
+                        ? COLORS.secondaryColor
+                        : isGradeKey(myPageData.gradeInfo.grade)
                         ? gradeColors[myPageData.gradeInfo.grade]
                         : gradeColors["WHITE POP"]
-                      )
                     }
                     onClick={handleMoveBenefit}
                   >
                     {myPageData.gradeInfo.grade}
                   </GradeText>
-                  <div onClick={()=>{router.push("/grade");}}>
+                  <div
+                    onClick={() => {
+                      router.push("/grade");
+                    }}
+                  >
                     <IconNext
                       color={COLORS.greyColor}
                       width={undefined}
@@ -85,15 +92,15 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
                     {myPageData.gradeInfo.discountRate}% 할인
                   </p>
                 </CurrentGradeContainer>
-                  <PointsProgress
-                    color={
-                      isGradeKey(myPageData.gradeInfo.grade)
+                <PointsProgress
+                  color={
+                    isGradeKey(myPageData.gradeInfo.grade)
                       ? gradeColors[myPageData.gradeInfo.grade]
                       : gradeColors["WHITE POP"]
-                    }
-                    value={myPageData.gradeInfo.gradeRatio}
-                    max="100"
-                  />
+                  }
+                  value={myPageData.gradeInfo.gradeRatio}
+                  max="100"
+                />
                 {myPageData.gradeInfo.grade === "GOLD POP" ? (
                   <NextGradeContainer>
                     <NextGradeDesc>
@@ -103,13 +110,17 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
                 ) : (
                   <NextGradeContainer>
                     <NextGradeDesc>
-                      누적 금액 {myPageData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원 이상 달성시
+                      누적 금액{" "}
+                      {myPageData.gradeInfo.nextGradeInfo.nextMinOrderAmount}원
+                      이상 달성시
                     </NextGradeDesc>
-                    <NextGradeText 
+                    <NextGradeText
                       color={
                         isGradeKey(myPageData.gradeInfo.nextGradeInfo.nextGrade)
-                        ? gradeColors[myPageData.gradeInfo.nextGradeInfo.nextGrade]
-                        : gradeColors["WHITE POP"]
+                          ? gradeColors[
+                              myPageData.gradeInfo.nextGradeInfo.nextGrade
+                            ]
+                          : gradeColors["WHITE POP"]
                       }
                     >
                       {myPageData.gradeInfo.nextGradeInfo.nextGrade}
@@ -158,7 +169,9 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({ nickname, profileIma
           </div>
         </MenuContainer>
       </Container>
-    </DefaultLayout>
+
+      <BottomBox />
+    </>
   );
 };
 
@@ -349,7 +362,7 @@ const Activity = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  
+
   p:first-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
@@ -359,7 +372,7 @@ const Activity = styled.div`
     font-weight: 600;
     line-height: normal;
   }
-  
+
   p:last-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
@@ -395,6 +408,13 @@ const ContentsContainer = styled.div`
 
   flex-wrap: nowrap;
   overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   div:last-child {
     margin-right: 16px;
