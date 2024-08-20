@@ -98,28 +98,7 @@ const MyPage: React.FC = () => {
       router.push("/");
     }
   };
-
-
   return (
-    // <>
-    //   {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
-    //     <MyPagePopple
-    //       nickname={nickname}
-    //       profileImage={profileImage}
-    //       myPageData={myPageData}
-    //       signOutApi={signOutApi}
-    //     />
-    //   ) : (
-    //     <Loading/>
-    //   )}
-    //   {isLogin && !isPopple && 
-    //     <MyPagePopper 
-    //       nickname={nickname}
-    //       profileImage={profileImage}
-    //       signOutApi={signOutApi}
-    //     />
-    //   }
-    // </>
     <>
       {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
         <MyPagePopple
