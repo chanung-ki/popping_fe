@@ -1,6 +1,6 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import { IconHome, IconMap, IconMypage } from "../icons";
+import { IconHome, IconMap, IconMypage, IconOnlinePopupStore } from "../icons";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 type BottomNavTypes = {
@@ -44,16 +44,31 @@ export const BottomNavigationPopper = ({
           <p>팝업 지도</p>
         </MenuContainer>
       </Menu>
-      {/* 마이페이지 */}
+      {/* 온라인 팝업 */}
       <Menu
         onClick={() => {
           onClick(2);
         }}
       >
         <MenuContainer>
-          <IconMypage
+          <IconOnlinePopupStore
             color={
               currentIndex === 2 ? COLORS.secondaryColor : COLORS.greyColor
+            }
+          />
+          <p>둘러보기</p>
+        </MenuContainer>
+      </Menu>
+      {/* 마이페이지 */}
+      <Menu
+        onClick={() => {
+          onClick(3);
+        }}
+      >
+        <MenuContainer>
+          <IconMypage
+            color={
+              currentIndex === 3 ? COLORS.secondaryColor : COLORS.greyColor
             }
           />
           <p>MY</p>

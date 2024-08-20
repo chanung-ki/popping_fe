@@ -20,7 +20,7 @@ const MainPage = () => {
   const getPageIndexPopple = (param: string | null) => {
     switch (param) {
       case null:
-        return 0;
+        return 2;
       case "likes":
         return 3;
       case "mypage":
@@ -31,13 +31,13 @@ const MainPage = () => {
   const btmnavOnClickPopple = (index: number) => {
     switch (index) {
       case 0:
-        router.replace("/");
+        router.push("/online-popup/Popping/store-openning");
         break;
       case 1:
         router.push("/popup-map/placeMap");
         break;
       case 2:
-        router.push("/online-popup/Popping/store-openning");
+        router.replace("/");
         break;
       case 3:
         if (isLogin) {
@@ -64,7 +64,7 @@ const MainPage = () => {
       case null:
         return 0;
       case "mypage":
-        return 2;
+        return 3;
     }
   };
 
@@ -74,9 +74,12 @@ const MainPage = () => {
         router.replace("/");
         break;
       case 1:
-        // router.push("");
+        router.push("/popup-map/placeMap");
         break;
       case 2:
+        router.push("/online-popup/Popping/store-openning");
+        break;
+      case 3:
         if (isLogin) {
           router.replace("/?page=mypage");
         } else {

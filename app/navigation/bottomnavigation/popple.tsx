@@ -1,6 +1,13 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
-import { IconCenter, IconHome, IconLikes, IconMap, IconMypage } from "../icons";
+import {
+  IconCenter,
+  IconHome,
+  IconLikes,
+  IconMap,
+  IconMypage,
+  IconOnlinePopupStore,
+} from "../icons";
 import { MobileMaxWidth, MobileMinWidth } from "@/public/styles/size";
 
 type BottomNavTypes = {
@@ -14,19 +21,19 @@ export const BottomNavigationPopple = ({
 }: BottomNavTypes) => {
   return (
     <Container>
-      {/* 홈 */}
+      {/* 온라인 팝업 */}
       <Menu
         onClick={() => {
           onClick(0);
         }}
       >
         <MenuContainer>
-          <IconHome
+          <IconOnlinePopupStore
             color={
               currentIndex === 0 ? COLORS.secondaryColor : COLORS.greyColor
             }
           />
-          <p>홈</p>
+          <p>둘러보기</p>
         </MenuContainer>
       </Menu>
       {/* 팝업 지도 */}
