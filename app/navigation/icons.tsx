@@ -6,7 +6,7 @@ type SVGTypes = {
   color: string;
 };
 
-const SVG = styled.svg` 
+const SVG = styled.svg`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   cursor: pointer;
@@ -101,6 +101,28 @@ export const IconCenter = () => {
     <IconCenterContainer width={62} height={62}>
       <Image src={ImageCenter.src} alt={""} width={62} height={62} />
     </IconCenterContainer>
+  );
+};
+
+export const IconOnlinePopupStore = ({ color }: SVGTypes) => {
+  return (
+    <SVG
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      width={undefined}
+      height={21}
+      viewBox="0 0 21 21"
+      fill="none"
+    >
+      <path
+        d="M20.9,6.5c0-0.1,0-0.2-0.1-0.4l-2.4-4.8C18.3,1,18,0.9,17.7,0.9H3.3C3,0.9,2.7,1,2.6,1.3L0.2,6.1
+ C0.1,6.2,0.1,6.3,0.1,6.5v0.8c0,0.9,0.4,1.7,0.9,2.2v5.2v3.5c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2v-3.5V9.5c0.6-0.6,0.9-1.4,0.9-2.2
+ V6.5z M17.9,14.7H3.1c-0.1,0-0.2-0.1-0.2-0.2v-4c0.2,0,0.3,0,0.5,0c1,0,1.8-0.4,2.4-1.1c0.6,0.7,1.4,1.1,2.4,1.1
+ c1,0,1.8-0.4,2.4-1.1c0.6,0.7,1.4,1.1,2.4,1.1s1.8-0.4,2.4-1.1c0.6,0.7,1.4,1.1,2.4,1.1c0.2,0,0.3,0,0.5,0v4
+ C18.2,14.5,18.1,14.7,17.9,14.7z"
+        fill={color}
+      />
+    </SVG>
   );
 };
 
