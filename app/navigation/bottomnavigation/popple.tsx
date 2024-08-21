@@ -33,7 +33,7 @@ export const BottomNavigationPopple = ({
               currentIndex === 0 ? COLORS.secondaryColor : COLORS.greyColor
             }
           />
-          <p>둘러보기</p>
+          <p>스토어</p>
         </MenuContainer>
       </Menu>
       {/* 팝업 지도 */}

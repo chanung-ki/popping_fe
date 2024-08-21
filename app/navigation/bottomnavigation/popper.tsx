@@ -56,7 +56,7 @@ export const BottomNavigationPopper = ({
               currentIndex === 2 ? COLORS.secondaryColor : COLORS.greyColor
             }
           />
-          <p>둘러보기</p>
+          <p>스토어</p>
         </MenuContainer>
       </Menu>
       {/* 마이페이지 */}
