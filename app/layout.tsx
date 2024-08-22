@@ -43,13 +43,21 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
       />
-      <script
+      {/* <script
         type="text/javascript"
         src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=ac2db24dbfbd7f14b74f515ed599011d&libraries=services,clusterer,drawing`}
         async
         defer
-      ></script>
+      ></script> */}
     </Head>
+    <head>
+      <script
+        type="text/javascript"
+        src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_SOCIAL_AUTH_NAVER_CLIENT_ID}&language=ko`}
+        async
+      ></script>
+    </head>
+
     <GlobalStyle />
     <body>
       <CommonProvider>{children}</CommonProvider>
