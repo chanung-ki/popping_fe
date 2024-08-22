@@ -1,3 +1,4 @@
+import { COLORS } from "@/public/styles/colors";
 import React from "react";
 import styled from "styled-components";
 
@@ -243,4 +244,21 @@ export const IconFollow = ({ color, width, height }: SVGTypes) => {
         fill={color} />
     </SVG>
   )
-} 
+}
+
+
+
+export const IconUser = ({ color, width, height }: SVGTypes) => {
+  return (
+    <SVG
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" r="10" fill={color} />
+      <path d="M9.97771 10.4C11.1927 10.4 12.1777 9.41503 12.1777 8.2C12.1777 6.98497 11.1927 6 9.97771 6C8.76268 6 7.77771 6.98497 7.77771 8.2C7.77771 9.41503 8.76268 10.4 9.97771 10.4Z" fill={COLORS.primaryColor} />
+      <path d="M7.3913 10.3999H12.6087C12.9777 10.3999 13.3316 10.5685 13.5925 10.8685C13.8534 11.1686 14 11.5756 14 11.9999V13.9999H6V11.9999C6 11.5756 6.14658 11.1686 6.4075 10.8685C6.66842 10.5685 7.02231 10.3999 7.3913 10.3999Z" fill={COLORS.primaryColor} />
+    </SVG>
+  )
+}
