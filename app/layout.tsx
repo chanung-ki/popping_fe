@@ -3,6 +3,7 @@ import React from "react";
 import GlobalStyle from "@/public/styles/global";
 import CommonProvider from "./redux/provider";
 import Head from "next/head";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: 'POPPING',
@@ -39,6 +40,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="ko">
     <Head>
+      <GoogleAnalytics />
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
