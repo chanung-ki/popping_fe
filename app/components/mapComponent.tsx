@@ -1,9 +1,10 @@
-import { COLORS } from '@/public/styles/colors';
-import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-import { IconUser } from './icons';
-import { Loading } from './loading';
-import { fadeIn } from '@/public/utils/keyframe';
+import { COLORS } from "@/public/styles/colors";
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import { IconUser } from "./icons";
+import { Loading } from "./loading";
+import { fadeIn } from "@/public/utils/keyframe";
+import { IconChevronLeft, IconSearch } from "./icons";
 
 declare global {
   interface Window {
@@ -12,10 +13,18 @@ declare global {
 }
 
 const MapComponent: React.FC = () => {
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number }>();
+  //지도 관련 states
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  }>();
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  //이외 states
+  const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
+
+  //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
 
@@ -30,7 +39,7 @@ const MapComponent: React.FC = () => {
           setIsLoading(false); // 위치를 성공적으로 가져오면 로딩 상태 해제
         },
         (error) => {
-          console.error('Error getting location:', error);
+          console.error("Error getting location:", error);
           setIsLoading(false); // 위치를 가져오지 못하더라도 로딩 상태 해제
         },
         {
@@ -53,7 +62,10 @@ const MapComponent: React.FC = () => {
     if (userLocation && window.naver) {
       if (!mapRef.current) {
         const mapOptions = {
-          center: new window.naver.maps.LatLng(userLocation.lat, userLocation.lng),
+          center: new window.naver.maps.LatLng(
+            userLocation.lat,
+            userLocation.lng
+          ),
           zoom: 15,
           scaleControl: false,
           logoControl: false,
@@ -64,15 +76,17 @@ const MapComponent: React.FC = () => {
             position: window.naver.maps.Position.BOTTOM_LEFT,
           },
         };
-        mapRef.current = new window.naver.maps.Map('map', mapOptions);
+        mapRef.current = new window.naver.maps.Map("map", mapOptions);
 
         // 지도 이동 시 버튼을 보이게 하는 이벤트 추가
-        window.naver.maps.Event.addListener(mapRef.current, 'idle', () => {
+        window.naver.maps.Event.addListener(mapRef.current, "idle", () => {
           const center = mapRef.current.getCenter();
           const distance = Math.sqrt(
-            Math.pow(center.lat() - userLocation.lat, 2) + Math.pow(center.lng() - userLocation.lng, 2)
+            Math.pow(center.lat() - userLocation.lat, 2) +
+              Math.pow(center.lng() - userLocation.lng, 2)
           );
-          if (distance > 0.001) { // 사용자가 위치에서 벗어났다고 판단할 거리
+          if (distance > 0.001) {
+            // 사용자가 위치에서 벗어났다고 판단할 거리
             setIsButtonVisible(true);
           } else {
             setIsButtonVisible(false);
@@ -82,7 +96,10 @@ const MapComponent: React.FC = () => {
 
       if (!markerRef.current) {
         markerRef.current = new window.naver.maps.Marker({
-          position: new window.naver.maps.LatLng(userLocation.lat, userLocation.lng),
+          position: new window.naver.maps.LatLng(
+            userLocation.lat,
+            userLocation.lng
+          ),
           map: mapRef.current,
           icon: {
             content: `<div style="background-color: ${COLORS.mainColor}; padding: 5px; border-radius: 50%; width: 10px; height: 10px; display: flex; justify-content: center; align-items: center;">
@@ -92,14 +109,19 @@ const MapComponent: React.FC = () => {
         });
       } else {
         // 위치가 업데이트될 때마다 마커 위치를 업데이트합니다.
-        markerRef.current.setPosition(new window.naver.maps.LatLng(userLocation.lat, userLocation.lng));
+        markerRef.current.setPosition(
+          new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)
+        );
       }
     }
   }, [userLocation]);
 
   const handleLocationButtonClick = () => {
     if (userLocation && mapRef.current) {
-      const newCenter = new window.naver.maps.LatLng(userLocation.lat, userLocation.lng);
+      const newCenter = new window.naver.maps.LatLng(
+        userLocation.lat,
+        userLocation.lng
+      );
       // 부드럽게 지도 이동
       mapRef.current.panTo(newCenter, { duration: 500 }); // 500ms 동안 슬라이드 이동
       mapRef.current.setZoom(15); // 줌 레벨 설정
@@ -107,15 +129,41 @@ const MapComponent: React.FC = () => {
     }
   };
 
-
   return (
     <MapContainer>
       {!isLoading && (
         <LocationResetBtn onClick={handleLocationButtonClick}>
-          <IconUser color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor} width={undefined} height={35} />
+          <IconUser
+            color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor}
+            width={undefined}
+            height={35}
+          />
         </LocationResetBtn>
       )}
-      {isLoading ? <Loading /> : <div id="map" style={{ width: '100%', height: '100%' }} />}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <StyledNaverMap id="map" style={{ width: "100%", height: "100%" }} />
+          <SearchControlContainer>
+            <CircleButton>
+              <IconChevronLeft
+                width={16}
+                height={16}
+                color={COLORS.secondaryColor}
+              />
+            </CircleButton>
+
+            <CircleButton>
+              <IconSearch
+                width={16}
+                height={16}
+                color={COLORS.secondaryColor}
+              />
+            </CircleButton>
+          </SearchControlContainer>
+        </>
+      )}
     </MapContainer>
   );
 };
@@ -136,6 +184,55 @@ const LocationResetBtn = styled.button`
   right: 20px;
   padding: 0;
   transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+`;
+
+const StyledNaverMap = styled.div`
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+`;
+
+const SearchControlContainer = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  left: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0px 20px;
+  width: calc(100% - 40px);
+  height: 32px;
+`;
+
+const CircleButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border: 1px solid ${COLORS.greyColor};
+  border-radius: 50%;
+  background-color: ${COLORS.whiteColor};
+
+  cursor: pointer;
+`;
+
+const SearchContainer = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  left: 0;
+
+  display: flex;
 `;
 
 export default MapComponent;
