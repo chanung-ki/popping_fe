@@ -1,4 +1,5 @@
-'use client'
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import { DefaultLayout } from '@/app/components/layout';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
