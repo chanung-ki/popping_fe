@@ -109,16 +109,23 @@ const MapComponent: React.FC = () => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <MapContainer>
       {isButtonVisible && (
         <LocationResetBtn onClick={handleLocationButtonClick}>
           <IconUser color={COLORS.mainColor} width={undefined} height={30} />
         </LocationResetBtn>
       )}
-      {isLoading ? <Loading /> : <div id="map" style={{ width: '100%', height: '100%' }} />}
-    </div>
+      {isLoading ? <Loading /> : <div id="maps" style={{ width: '100%', height: '100%' }} />}
+    </MapContainer>
   );
 };
+
+const MapContainer = styled.div`
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+`
 
 
 const LocationResetBtn = styled.button`
@@ -129,7 +136,7 @@ const LocationResetBtn = styled.button`
   position: fixed;
   z-index: 1;
   
-  bottom: 20px;
+  bottom: 40px;
   right: 20px;
   padding: 0;
 
