@@ -131,7 +131,7 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
                 <ProductOptionTitle>
                   <span>{optionData.name.toUpperCase()}</span>
                   {optionData.name.toLowerCase() === "size" && (
-                    <SizeGuide href={`/online-popup/Popping/product/${data.product.id}#sizeGuide`}>사이즈 가이드 ⓘ</SizeGuide>
+                    <SizeGuide href={`/online-popup/POPPING/product/${data.product.id}#sizeGuide`}>사이즈 가이드 ⓘ</SizeGuide>
                   )}
                 </ProductOptionTitle>
                 <ProductRadioContent>

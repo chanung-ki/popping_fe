@@ -68,8 +68,8 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
                       myPageData.gradeInfo.grade === "WHITE POP"
                         ? COLORS.secondaryColor
                         : isGradeKey(myPageData.gradeInfo.grade)
-                        ? gradeColors[myPageData.gradeInfo.grade]
-                        : gradeColors["WHITE POP"]
+                          ? gradeColors[myPageData.gradeInfo.grade]
+                          : gradeColors["WHITE POP"]
                     }
                     onClick={handleMoveBenefit}
                   >
@@ -118,8 +118,8 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
                       color={
                         isGradeKey(myPageData.gradeInfo.nextGradeInfo.nextGrade)
                           ? gradeColors[
-                              myPageData.gradeInfo.nextGradeInfo.nextGrade
-                            ]
+                          myPageData.gradeInfo.nextGradeInfo.nextGrade
+                          ]
                           : gradeColors["WHITE POP"]
                       }
                     >

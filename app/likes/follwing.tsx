@@ -20,7 +20,7 @@ const Following: React.FC<followingType> = ({ values }) => {
     <Container>
       <div>
         <span>브랜드 팔로잉이 없습니다.</span>
-        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup/Popping/store-openning`}>이동하기</Link></span>
+        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup`}>이동하기</Link></span>
       </div>
     </Container>
   )

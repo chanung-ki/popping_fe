@@ -10,8 +10,11 @@ interface BottomModalProps {
   isVisible: boolean;
   children: React.ReactNode;
   title: string;
+  heightRate: number;
 }
-const BottomUpModal: React.FC<BottomModalProps> = ({ title, isVisible, toggleModal, children }) => {
+
+
+const BottomUpModal: React.FC<BottomModalProps> = ({ title, isVisible, toggleModal, children, heightRate }) => {
   const wasVisible = useRef(isVisible);
 
   useEffect(() => {
@@ -21,7 +24,7 @@ const BottomUpModal: React.FC<BottomModalProps> = ({ title, isVisible, toggleMod
   return (
     <Container>
       <ModalOverlay isVisible={isVisible} onClick={toggleModal} />
-      <OptionModal isVisible={isVisible}>
+      <OptionModal isVisible={isVisible} heightRate={heightRate}>
         <ModalHeader>
           <Title>{title}</Title>
           <ModalClose onClick={toggleModal}>
@@ -45,25 +48,27 @@ const ModalOverlay = styled.div<{ isVisible: boolean }>`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  z-index: 3;
   opacity: ${props => (props.isVisible ? '1' : '0')};
   visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
   animation: ${props => (props.isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
 `;
 
-const OptionModal = styled.div<{ isVisible: boolean }>`
+const OptionModal = styled.div<{ isVisible: boolean, heightRate: number }>`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 50%;
+  height: ${(props) => props.heightRate}%;
   background-color: white;
   border-radius: 16px 16px 0 0;
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
   transform: translateY(${props => (props.isVisible ? '0%' : '100%')});
   animation: ${props => (props.isVisible ? slideIn : slideOut)} 0.3s ease-in-out;
-  z-index: 2;
+  z-index: 4;
   overflow-y: scroll;
   padding-bottom: 80px;
 `;
