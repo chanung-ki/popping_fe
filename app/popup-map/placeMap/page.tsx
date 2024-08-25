@@ -383,10 +383,10 @@ const MapTestPage: React.FC = () => {
 
     positionList.map((position: any) => {
       var markerImage = createMarkerImage(
-          markerImageSrc,
-          imageSize,
-          imageOptions
-        ),
+        markerImageSrc,
+        imageSize,
+        imageOptions
+      ),
         marker = createMarker(position, markerImage);
 
       // 생성된 마커를 커피숍 마커 배열에 추가합니다
@@ -435,7 +435,7 @@ const MapTestPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={false}>
       <KakaoMap id="map"></KakaoMap>
       <Container>
         {isSearchClicked ? (

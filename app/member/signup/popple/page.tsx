@@ -191,7 +191,13 @@ const SignUpUserPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={16} right={20} bottom={32} left={20}>
+    <DefaultLayout
+      top={16}
+      right={20}
+      bottom={32}
+      left={20}
+      isScrollable={false}
+    >
       {isLoading && <Loading />}
       <MemberProgressBar
         value={currentStepIndex * (100 / (steps.length - 1))}

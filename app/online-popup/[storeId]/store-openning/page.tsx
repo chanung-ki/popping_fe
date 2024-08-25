@@ -41,7 +41,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   if (!openingData) return null;
 
   return (
-    <DefaultLayout top={16} right={20} bottom={32} left={20}>
+    <DefaultLayout top={16} right={20} bottom={32} left={20} isScrollable={false}>
       <>
         <OpeningImage src={openingData.thumbnail} />
         <div style={{ position: 'absolute', left: 20, top: 16, zIndex: 2 }}>

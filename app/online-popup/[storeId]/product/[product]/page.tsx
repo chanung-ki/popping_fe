@@ -223,7 +223,7 @@ const OnlinePopupProductPage: React.FC<{
   );
 
   return (
-    <DefaultLayout top={16} right={0} bottom={0} left={0}>
+    <DefaultLayout top={16} right={0} bottom={0} left={0} isScrollable={true}>
       <Top>
         <Back url={undefined} />
         <ProductThumbnailImg src={productData.thumbnail} />

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandType } from "@/public/utils/types";
 import { Loading } from "../components/loading";
-import { IconCheck, IconRoundTriangle, IconX } from "../components/icons";
+import { IconCheck, IconRoundTriangle, IconTrash, IconX } from "../components/icons";
 import { COLORS } from "@/public/styles/colors";
 import Link from "next/link";
 import BottomUpModal from "../components/BottomUpModal";
@@ -39,7 +39,9 @@ const OnlinePopupPage: React.FC = () => {
   const [brandsData, setBrandsData] = useState<BrandType[]>([]);
   const [selectFilter, setSelectFilter] = useState<number>(0);
   const [selectActionFilter, setSelectActionFilter] = useState<number>(0);
+
   const [modalShow, setModalShow] = useState<boolean>(false);
+  const [actionModalShow, setActionModalShow] = useState<boolean>(false);
 
   const parseDate = (dateString: string) => dayjs(dateString, 'YY.MM.DD');
 
@@ -122,6 +124,19 @@ const OnlinePopupPage: React.FC = () => {
     setModalShow(!modalShow);
   };
 
+  const toggleActionModal = () => {
+    setActionModalShow(!actionModalShow);
+  };
+
+  const toggleReset = () => {
+    setModalShow(false);
+    setActionModalShow(false);
+    setSelectFilter(0);
+    setSelectActionFilter(0);
+
+  }
+
+
   const handleFilterSelect = (filterValue: number) => {
     setSelectFilter(filterValue);
     toggleModal();
@@ -129,14 +144,14 @@ const OnlinePopupPage: React.FC = () => {
 
   const handleActionFilterSelect = (filterValue: number) => {
     setSelectActionFilter(filterValue);
-    toggleModal();
+    toggleActionModal();
   };
 
 
-  if (!brandsData) return <Loading />;
+  if (!originalData || originalData.length === 0) return <Loading />;
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
       <Container>
         <Top>
           <Link href={'/'} style={{ position: 'absolute', top: 16 }}>
@@ -146,26 +161,41 @@ const OnlinePopupPage: React.FC = () => {
         </Top>
 
         <Content>
-          <Filter onClick={toggleModal}>
-            <span>{filterData.find(filter => filter.value === selectFilter)?.label}</span>
-            <SelectUnderlineTriangleContainer>
-              <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
-            </SelectUnderlineTriangleContainer>
-          </Filter>
-          {brandsData.map((brand: BrandType) => (
+          <Filters>
+            <Filter onClick={toggleActionModal}>
+              <span>{activeFilterData.find(filter => filter.value === selectActionFilter)?.label}</span>
+              <SelectUnderlineTriangleContainer>
+                <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
+              </SelectUnderlineTriangleContainer>
+            </Filter>
+            <Filter onClick={toggleModal}>
+              <span>{filterData.find(filter => filter.value === selectFilter)?.label}</span>
+              <SelectUnderlineTriangleContainer>
+                <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
+              </SelectUnderlineTriangleContainer>
+            </Filter>
+            {(selectActionFilter !== 0 || selectFilter !== 0) &&
+              <Filter onClick={toggleReset}>
+                <IconTrash color={COLORS.secondaryColor} width={12} height={undefined} />
+              </Filter>
+            }
+          </Filters>
+          {brandsData.length === 0 ? (
+            <NoData>온라인 팝업스토어가 없습니다.</NoData>
+          ) : brandsData.map((brand: BrandType) => (
             <BrandComponent key={`brand-${brand.id}`} data={brand} />
           ))}
+
         </Content>
       </Container>
 
       <BottomUpModal
-        title={"정렬"}
-        toggleModal={toggleModal}
-        isVisible={modalShow}
-        heightRate={50}
+        title={"옵션"}
+        toggleModal={toggleActionModal}
+        isVisible={actionModalShow}
+        heightRate={30}
       >
         <Options>
-          팝업상태
           {activeFilterData.map((filter: FilterType) => (
             <Option key={filter.value} onClick={() => handleActionFilterSelect(filter.value)}>
               <span>{filter.label}</span>
@@ -174,9 +204,15 @@ const OnlinePopupPage: React.FC = () => {
               }
             </Option>
           ))}
-          <div style={{ width: '100%', backgroundColor: COLORS.lightGreyColor, height: 2 }} />
-
-          정렬
+        </Options>
+      </BottomUpModal>
+      <BottomUpModal
+        title={"정렬"}
+        toggleModal={toggleModal}
+        isVisible={modalShow}
+        heightRate={25}
+      >
+        <Options>
           {filterData.map((filter: FilterType) => (
             <Option key={filter.value} onClick={() => handleFilterSelect(filter.value)}>
               <span>{filter.label}</span>
@@ -230,6 +266,26 @@ const Content = styled.div`
   justify-content: center;
   padding-bottom: 80px;
 `;
+
+const Filters = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+`
+
+const NoData = styled.span`
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+  color: ${COLORS.greyColor};
+
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+`
 
 const Filter = styled.div`
   display: flex;
