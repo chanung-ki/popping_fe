@@ -23,7 +23,7 @@ const Layout = styled.div`
   min-width: ${MobileMinWidth}px;
   max-width: ${MobileMaxWidth}px;
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   background-color: ${COLORS.primaryColor};
 
   border: 0;
@@ -35,7 +35,7 @@ const Container = styled.div<ContainerPaddingTypes>`
   justify-content: flex-start;
   align-items: flex-start;
 
-  min-height: calc(
+  height: calc(
     100% - (${(props) => props.top}px + ${(props) => props.bottom}px)
   );
 

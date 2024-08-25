@@ -88,7 +88,7 @@ const MyPage: React.FC = () => {
         setIsReady(true);
       }
     } catch (error: any) {
-      if (error.response.statue === 403) {
+      if (error.response.status === 403) {
         cleanUserData();
         alert("로그인 세션이 만료되었습니다. 재로그인 후 이용해주세요.");
         router.push("/member/signin");
