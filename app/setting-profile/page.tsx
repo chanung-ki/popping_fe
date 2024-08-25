@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { DefaultLayout } from "../components/layout";
+import { BottomBox, DefaultLayout } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { styled } from "styled-components";
 import { COLORS } from "@/public/styles/colors";
@@ -386,6 +386,8 @@ const SettingProfilePage: React.FC = () => {
           />
         )}
       </Container>
+
+      <BottomBox />
     </DefaultLayout>
   );
 };

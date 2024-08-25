@@ -2,7 +2,7 @@ import { COLORS, gradeColors } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconChevronRight, IconGear } from "../components/icons";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
-import { BottomBox, DefaultLayout, Spacer } from "../components/layout";
+import { Spacer } from "../components/layout";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import { ProfileImage } from "../components/main/componenets";
@@ -169,8 +169,6 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
           </div>
         </MenuContainer>
       </Container>
-
-      <BottomBox />
     </>
   );
 };

@@ -3,7 +3,6 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconGear } from "../components/icons";
-import { BottomBox, DefaultLayout, Spacer } from "../components/layout";
 import { TopNavigation } from "@/app/navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import { ProfileImage } from "../components/main/componenets";
@@ -76,8 +75,6 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
           </div>
         </MenuContainer>
       </Container>
-
-      <BottomBox />
     </>
   );
 };

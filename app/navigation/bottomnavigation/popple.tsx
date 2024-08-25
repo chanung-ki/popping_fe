@@ -120,6 +120,8 @@ const Container = styled.div`
 
   background: ${COLORS.primaryColor};
 
+  z-index: 2;
+
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
