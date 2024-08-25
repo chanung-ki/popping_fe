@@ -1,7 +1,7 @@
 "use client";
 
 import { ButtonLarge } from "@/app/components/buttons";
-import { DefaultLayout } from "@/app/components/layout";
+import { BottomBox, DefaultLayout } from "@/app/components/layout";
 import {
   MEMBER_PADDING_BOTTOM,
   MEMBER_PADDING_HORIZONTAL,
@@ -59,6 +59,8 @@ const SignUpPage: React.FC = () => {
             <p>팝업스토어를 운영하고 관리하려고 가입해요</p>
           </RadioBox>
         </RadioBoxContainer>
+
+        <BottomBox />
 
         <MemberBottomButtonContainer>
           <ButtonLarge

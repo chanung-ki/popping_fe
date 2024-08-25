@@ -1,6 +1,6 @@
 "use client";
 
-import { DefaultLayout } from "@/app/components/layout";
+import { BottomBox, DefaultLayout } from "@/app/components/layout";
 import {
   MEMBER_PADDING_BOTTOM,
   MEMBER_PADDING_HORIZONTAL,
@@ -218,6 +218,7 @@ const SignUpUserPage: React.FC = () => {
         </div>
       )}
       {renderStep()}
+      <BottomBox />
     </DefaultLayout>
   );
 };
