@@ -1,7 +1,7 @@
 import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
-import { Spacer } from "@/app/components/layout";
 import {
+  MemberBottomButtonContainer,
   MemberSignupForm,
   MemberTitle,
 } from "@/app/components/member/components";
@@ -79,18 +79,18 @@ const StepPhonePasscode = ({ onNext }: StepType) => {
         />
       </MemberSignupForm>
 
-      <Spacer />
-
-      <ButtonLarge
-        text="다음"
-        buttonColor={isValidPasscode ? COLORS.mainColor : COLORS.greyColor}
-        textColor={COLORS.primaryColor}
-        onClick={() => {
-          if (isValidPasscode) {
-            onNext(valuePasscode);
-          }
-        }}
-      />
+      <MemberBottomButtonContainer>
+        <ButtonLarge
+          text="다음"
+          buttonColor={isValidPasscode ? COLORS.mainColor : COLORS.greyColor}
+          textColor={COLORS.primaryColor}
+          onClick={() => {
+            if (isValidPasscode) {
+              onNext(valuePasscode);
+            }
+          }}
+        />
+      </MemberBottomButtonContainer>
     </Container>
   );
 };

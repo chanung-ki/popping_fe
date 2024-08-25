@@ -8,7 +8,7 @@ import { initUser } from "../redux/reducers/poppingUser";
 import axiosInstance from "@/public/network/axios";
 import { myPagePoppleTypes } from "@/public/utils/types";
 import { Loading } from "../components/loading";
-import { DefaultLayout } from "../components/layout";
+import { BottomBox, DefaultLayout } from "../components/layout";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -116,6 +116,8 @@ const MyPage: React.FC = () => {
       ) : (
         <Loading />
       )}
+
+      <BottomBox />
     </DefaultLayout>
   );
 };
