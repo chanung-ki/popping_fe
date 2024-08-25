@@ -99,7 +99,7 @@ const MyPage: React.FC = () => {
     }
   };
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
       {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
         <MyPagePopple
           nickname={nickname}

@@ -38,7 +38,7 @@ const HomePage = () => {
   }, [parentDiv]);
 
   return (
-    <DefaultLayout top={0} right={0} bottom={0} left={0}>
+    <DefaultLayout top={0} right={0} bottom={0} left={0} isScrollable={true}>
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -46,8 +46,6 @@ const HomePage = () => {
       </TopNavigation>
 
       <Container ref={parentDiv}>
-        {/* Top Navigation */}
-
         {/* 배너 */}
         <SwiperContainer>
           <Swiper
@@ -139,7 +137,6 @@ const Container = styled.div`
   flex-direction: column;
 
   width: 100%;
-  overflow: auto;
 
   background: ${COLORS.primaryColor};
 `;
@@ -189,13 +186,6 @@ const ContentsContainer = styled.div`
 
   flex-wrap: nowrap;
   overflow-x: scroll;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 
   div:last-child {
     margin-right: 16px;
