@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { styled } from "styled-components";
 import { DefaultLayout } from "../components/layout";
@@ -77,10 +77,10 @@ const LikesPage: React.FC = () => {
     }
   };
 
-  if (!products || !brands || !popups) return <Loading />
+  if (!products || !brands || !popups) return <Loading />;
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>관심</TopNavTitle>
@@ -94,18 +94,10 @@ const LikesPage: React.FC = () => {
             setSelectedIndex(index);
           }}
         />
-        {selectedIndex === 0 && (
-          <Goods
-            values={products}
-          />
-        )}
+        {selectedIndex === 0 && <Goods values={products} />}
 
         {selectedIndex === 1 && <Stores values={popups} />}
-        {selectedIndex === 2 && (
-          <Following
-            values={brands}
-          />
-        )}
+        {selectedIndex === 2 && <Following values={brands} />}
       </Container>
     </DefaultLayout>
   );
