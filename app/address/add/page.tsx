@@ -116,7 +116,7 @@ const AddressAddPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>배송지 추가</TopNavTitle>

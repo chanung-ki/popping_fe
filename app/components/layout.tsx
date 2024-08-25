@@ -7,6 +7,7 @@ type LayoutTypes = {
   right: number;
   bottom: number;
   left: number;
+  isScrollable: boolean;
   children: React.ReactNode;
 };
 
@@ -17,16 +18,30 @@ type ContainerPaddingTypes = {
   left: number;
 };
 
-const Layout = styled.div`
+const Layout = styled.div<{ isScrollable: boolean }>`
   position: relative;
 
   min-width: ${MobileMinWidth}px;
   max-width: ${MobileMaxWidth}px;
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
+  height: ${(props) => (props.isScrollable ? "auto" : "100dvh")};
+
+  overflow-y: scroll;
   background-color: ${COLORS.primaryColor};
 
   border: 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  @media (min-width: ${MobileMaxWidth + 1}px) {
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Container = styled.div<ContainerPaddingTypes>`
@@ -46,10 +61,6 @@ const Container = styled.div<ContainerPaddingTypes>`
 
   overflow-x: hidden;
   overflow-y: scroll;
-
-  @media (min-width: ${MobileMaxWidth + 1}px) {
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
 `;
 
 const SpacerContainer = styled.div`
@@ -61,10 +72,11 @@ export const DefaultLayout = ({
   right,
   bottom,
   left,
+  isScrollable,
   children,
 }: LayoutTypes) => {
   return (
-    <Layout>
+    <Layout isScrollable={isScrollable}>
       <Container top={top} right={right} bottom={bottom} left={left}>
         <>{children}</>
       </Container>

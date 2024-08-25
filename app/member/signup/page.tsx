@@ -16,7 +16,13 @@ const SignUpPage: React.FC = () => {
   const router = useRouter();
 
   return (
-    <DefaultLayout top={16} right={20} bottom={32} left={20}>
+    <DefaultLayout
+      top={16}
+      right={20}
+      bottom={32}
+      left={20}
+      isScrollable={false}
+    >
       <Container>
         <div
           onClick={() => {
