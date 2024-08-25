@@ -1,8 +1,12 @@
 "use client";
 
 import { ButtonLarge } from "@/app/components/buttons";
-import { DefaultLayout, Spacer } from "@/app/components/layout";
+import { DefaultLayout } from "@/app/components/layout";
 import {
+  MEMBER_PADDING_BOTTOM,
+  MEMBER_PADDING_HORIZONTAL,
+  MEMBER_PADDING_TOP,
+  MemberBottomButtonContainer,
   MemberChevronLeft,
   MemberTitle,
 } from "@/app/components/member/components";
@@ -16,7 +20,12 @@ const SignUpPage: React.FC = () => {
   const router = useRouter();
 
   return (
-    <DefaultLayout top={16} right={20} bottom={32} left={20}>
+    <DefaultLayout
+      top={MEMBER_PADDING_TOP}
+      right={MEMBER_PADDING_HORIZONTAL}
+      bottom={MEMBER_PADDING_BOTTOM}
+      left={MEMBER_PADDING_HORIZONTAL}
+    >
       <Container>
         <div
           onClick={() => {
@@ -50,21 +59,25 @@ const SignUpPage: React.FC = () => {
             <p>팝업스토어를 운영하고 관리하려고 가입해요</p>
           </RadioBox>
         </RadioBoxContainer>
-        <Spacer />
-        <ButtonLarge
-          text="다음"
-          buttonColor={isPopper !== null ? COLORS.mainColor : COLORS.greyColor}
-          textColor={COLORS.primaryColor}
-          onClick={() => {
-            if (isPopper != null) {
-              if (isPopper) {
-                router.push("/member/signup/popper");
-              } else {
-                router.push("/member/signup/popple");
-              }
+
+        <MemberBottomButtonContainer>
+          <ButtonLarge
+            text="다음"
+            buttonColor={
+              isPopper !== null ? COLORS.mainColor : COLORS.greyColor
             }
-          }}
-        />
+            textColor={COLORS.primaryColor}
+            onClick={() => {
+              if (isPopper != null) {
+                if (isPopper) {
+                  router.push("/member/signup/popper");
+                } else {
+                  router.push("/member/signup/popple");
+                }
+              }
+            }}
+          />
+        </MemberBottomButtonContainer>
       </Container>
     </DefaultLayout>
   );

@@ -23,10 +23,23 @@ const Layout = styled.div`
   min-width: ${MobileMinWidth}px;
   max-width: ${MobileMaxWidth}px;
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
+
   background-color: ${COLORS.primaryColor};
 
   border: 0;
+
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  @media (min-width: ${MobileMaxWidth + 1}px) {
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Container = styled.div<ContainerPaddingTypes>`
@@ -45,11 +58,6 @@ const Container = styled.div<ContainerPaddingTypes>`
   background: ${COLORS.primaryColor};
 
   overflow-x: hidden;
-  overflow-y: scroll;
-
-  @media (min-width: ${MobileMaxWidth + 1}px) {
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
 `;
 
 const SpacerContainer = styled.div`

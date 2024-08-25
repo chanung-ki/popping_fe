@@ -1,10 +1,9 @@
 import { ButtonLarge } from "@/app/components/buttons";
-import { Spacer } from "@/app/components/layout";
 import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
 import { styled } from "styled-components";
-import Link from "next/link";
 import LogoDone from "@/public/images/logo_done.png";
+import { MemberBottomButtonContainer } from "@/app/components/member/components";
 
 type StepType = {
   onNext: CallableFunction;
@@ -22,16 +21,16 @@ const StepDone = ({ onNext }: StepType) => {
         </p>
       </MiddleContainer>
 
-      <Spacer />
-
-      <ButtonLarge
-        text="로그인"
-        buttonColor={COLORS.mainColor}
-        textColor={COLORS.primaryColor}
-        onClick={() => {
-          onNext();
-        }}
-      />
+      <MemberBottomButtonContainer>
+        <ButtonLarge
+          text="로그인"
+          buttonColor={COLORS.mainColor}
+          textColor={COLORS.primaryColor}
+          onClick={() => {
+            onNext();
+          }}
+        />
+      </MemberBottomButtonContainer>
     </Container>
   );
 };

@@ -6,7 +6,6 @@ import { LogoLettersMain } from "../logo";
 import { useRouter } from "next/navigation";
 
 // Title
-
 type ChildrenType = {
   children: React.ReactNode;
 };
@@ -135,5 +134,36 @@ export const MemberLogoAndTitle = ({ children }: ChildrenType) => {
       </div>
       <Title>{children}</Title>
     </LogoAndTitleContainer>
+  );
+};
+
+// Bottom Button
+export const MEMBER_PADDING_TOP: number = 16;
+export const MEMBER_PADDING_BOTTOM: number = 32;
+export const MEMBER_PADDING_HORIZONTAL: number = 20;
+
+const BottomButtonContainer = styled.div<{
+  paddingHorizontal: number;
+  paddingBottom: number;
+}>`
+  position: absolute;
+
+  left: 50%;
+  bottom: ${(props) => props.paddingBottom}px;
+  transform: translate(-50%, 0);
+
+  width: calc(100% - ${(props) => props.paddingHorizontal * 2}px);
+
+  text-align: center;
+`;
+
+export const MemberBottomButtonContainer = ({ children }: ChildrenType) => {
+  return (
+    <BottomButtonContainer
+      paddingHorizontal={MEMBER_PADDING_HORIZONTAL}
+      paddingBottom={MEMBER_PADDING_BOTTOM}
+    >
+      {children}
+    </BottomButtonContainer>
   );
 };

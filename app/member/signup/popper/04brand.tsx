@@ -1,7 +1,7 @@
 import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
-import { Spacer } from "@/app/components/layout";
 import {
+  MemberBottomButtonContainer,
   MemberSignupForm,
   MemberTitle,
 } from "@/app/components/member/components";
@@ -78,18 +78,18 @@ const StepBrand = ({ onNext }: StepType) => {
         />
       </MemberSignupForm>
 
-      <Spacer />
-
-      <ButtonLarge
-        text="다음"
-        buttonColor={isValidBrand ? COLORS.mainColor : COLORS.greyColor}
-        textColor={COLORS.primaryColor}
-        onClick={() => {
-          if (isValidBrand === true) {
-            onNext(valueBrand);
-          }
-        }}
-      />
+      <MemberBottomButtonContainer>
+        <ButtonLarge
+          text="다음"
+          buttonColor={isValidBrand ? COLORS.mainColor : COLORS.greyColor}
+          textColor={COLORS.primaryColor}
+          onClick={() => {
+            if (isValidBrand === true) {
+              onNext(valueBrand);
+            }
+          }}
+        />
+      </MemberBottomButtonContainer>
     </Container>
   );
 };

@@ -1,7 +1,7 @@
 import { ButtonLarge } from "@/app/components/buttons";
 import { InputUnderline } from "@/app/components/inputs";
-import { Spacer } from "@/app/components/layout";
 import {
+  MemberBottomButtonContainer,
   MemberSignupForm,
   MemberTitle,
 } from "@/app/components/member/components";
@@ -103,20 +103,20 @@ const StepProfile = ({ onNext }: StepType) => {
         />
       </MemberSignupForm>
 
-      <Spacer />
-
-      <ButtonLarge
-        text="다음"
-        buttonColor={
-          isValidNickname && valueGender ? COLORS.mainColor : COLORS.greyColor
-        }
-        textColor={COLORS.primaryColor}
-        onClick={() => {
-          if (isValidNickname && valueGender) {
-            onNext({ nickname: valueNickname, isMale: isMale[valueGender] });
+      <MemberBottomButtonContainer>
+        <ButtonLarge
+          text="다음"
+          buttonColor={
+            isValidNickname && valueGender ? COLORS.mainColor : COLORS.greyColor
           }
-        }}
-      />
+          textColor={COLORS.primaryColor}
+          onClick={() => {
+            if (isValidNickname && valueGender) {
+              onNext({ nickname: valueNickname, isMale: isMale[valueGender] });
+            }
+          }}
+        />
+      </MemberBottomButtonContainer>
 
       {showSelectGender && (
         <SelectBottomSection

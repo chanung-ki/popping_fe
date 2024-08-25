@@ -2,6 +2,9 @@
 
 import { DefaultLayout } from "@/app/components/layout";
 import {
+  MEMBER_PADDING_BOTTOM,
+  MEMBER_PADDING_HORIZONTAL,
+  MEMBER_PADDING_TOP,
   MemberChevronLeft,
   MemberProgressBar,
 } from "@/app/components/member/components";
@@ -192,7 +195,12 @@ const SignUpUserPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={16} right={20} bottom={32} left={20}>
+    <DefaultLayout
+      top={MEMBER_PADDING_TOP}
+      right={MEMBER_PADDING_HORIZONTAL}
+      bottom={MEMBER_PADDING_BOTTOM}
+      left={MEMBER_PADDING_HORIZONTAL}
+    >
       {isLoading && <Loading />}
       <MemberProgressBar
         value={currentStepIndex * (100 / (steps.length - 1))}
