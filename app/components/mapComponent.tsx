@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { IconUser } from "./icons";
 import { Loading } from "./loading";
 import { fadeIn } from "@/public/utils/keyframe";
-import { IconChevronLeft, IconSearch } from "./icons";
+import { IconChevronLeft, IconSearch, IconX } from "./icons";
+import StyledSelect from "./styledSelect";
 
 declare global {
   interface Window {
@@ -13,6 +14,34 @@ declare global {
 }
 
 const MapComponent: React.FC = () => {
+  // 서울 25개구 더미 데이터
+  const DUMMY_SEOUL_OPTIONS = [
+    { value: "서울시 종로구", label: "서울시 종로구" },
+    { value: "서울시 중구", label: "서울시 중구" },
+    { value: "서울시 용산구", label: "서울시 용산구" },
+    { value: "서울시 성동구", label: "서울시 성동구" },
+    { value: "서울시 광진구", label: "서울시 광진구" },
+    { value: "서울시 동대문구", label: "서울시 동대문구" },
+    { value: "서울시 중랑구", label: "서울시 중랑구" },
+    { value: "서울시 성북구", label: "서울시 성북구" },
+    { value: "서울시 강북구", label: "서울시 강북구" },
+    { value: "서울시 도봉구", label: "서울시 도봉구" },
+    { value: "서울시 노원구", label: "서울시 노원구" },
+    { value: "서울시 은평구", label: "서울시 은평구" },
+    { value: "서울시 서대문구", label: "서울시 서대문구" },
+    { value: "서울시 마포구", label: "서울시 마포구" },
+    { value: "서울시 양천구", label: "서울시 양천구" },
+    { value: "서울시 강서구", label: "서울시 강서구" },
+    { value: "서울시 구로구", label: "서울시 구로구" },
+    { value: "서울시 금천구", label: "서울시 금천구" },
+    { value: "서울시 영등포구", label: "서울시 영등포구" },
+    { value: "서울시 동작구", label: "서울시 동작구" },
+    { value: "서울시 관악구", label: "서울시 관악구" },
+    { value: "서울시 서초구", label: "서울시 서초구" },
+    { value: "서울시 강남구", label: "서울시 강남구" },
+    { value: "서울시 송파구", label: "서울시 송파구" },
+    { value: "서울시 강동구", label: "서울시 강동구" },
+  ];
   //지도 관련 states
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -23,6 +52,10 @@ const MapComponent: React.FC = () => {
 
   //이외 states
   const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
+  // 선택된 지역
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  // 하단 메뉴 오픈 여부
+  const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -116,6 +149,24 @@ const MapComponent: React.FC = () => {
     }
   }, [userLocation]);
 
+  useEffect(() => {
+    if (mapRef.current && userLocation) {
+      const mapHeight = isOpenMenu
+        ? "calc(100% - 568px)"
+        : "calc(100% - 100px)";
+      mapRef.current.getElement().style.height = mapHeight;
+
+      const newCenter = new window.naver.maps.LatLng(
+        userLocation.lat,
+        userLocation.lng
+      );
+
+      // 지도 높이 변경 후 중심 조정
+      window.naver.maps.Event.trigger(mapRef.current, "resize");
+      mapRef.current.setCenter(newCenter);
+    }
+  }, [isOpenMenu, userLocation]);
+
   const handleLocationButtonClick = () => {
     if (userLocation && mapRef.current) {
       const newCenter = new window.naver.maps.LatLng(
@@ -129,44 +180,112 @@ const MapComponent: React.FC = () => {
     }
   };
 
-  return (
-    <MapContainer>
-      {!isLoading && (
-        <LocationResetBtn onClick={handleLocationButtonClick}>
-          <IconUser
-            color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor}
-            width={undefined}
-            height={35}
-          />
-        </LocationResetBtn>
-      )}
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <StyledNaverMap id="map" style={{ width: "100%", height: "100%" }} />
-          <SearchControlContainer>
-            <CircleButton>
-              <IconChevronLeft
-                width={16}
-                height={16}
-                color={COLORS.secondaryColor}
-              />
-            </CircleButton>
+  // 검색 활성화 핸들러
+  const activeSearchHandler = () => {
+    setIsActiveSearch(!isActiveSearch);
+  };
 
-            <CircleButton>
-              <IconSearch
-                width={16}
-                height={16}
-                color={COLORS.secondaryColor}
-              />
-            </CircleButton>
-          </SearchControlContainer>
-        </>
-      )}
-    </MapContainer>
+  return (
+    <Container>
+      <MapContainer>
+        <StyledNaverMap
+          id="map"
+          style={{
+            width: "100%",
+          }}
+        />
+        {!isLoading && (
+          <LocationResetBtn onClick={handleLocationButtonClick}>
+            <IconUser
+              color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor}
+              width={undefined}
+              height={35}
+            />
+          </LocationResetBtn>
+        )}
+        {isLoading ? (
+          <Loading />
+        ) : !isActiveSearch ? (
+          <>
+            <SearchControlContainer>
+              <CircleButton>
+                <IconChevronLeft
+                  width={16}
+                  height={16}
+                  color={COLORS.secondaryColor}
+                />
+              </CircleButton>
+
+              <CircleButton onClick={activeSearchHandler}>
+                <IconSearch
+                  width={16}
+                  height={16}
+                  color={COLORS.secondaryColor}
+                />
+              </CircleButton>
+            </SearchControlContainer>
+          </>
+        ) : (
+          <>
+            <SearchContainer>
+              <SearchControlContainer>
+                <TransparentButton>
+                  <IconChevronLeft
+                    width={16}
+                    height={16}
+                    color={COLORS.secondaryColor}
+                  />
+                </TransparentButton>
+
+                <p>검색</p>
+
+                <TransparentButton onClick={activeSearchHandler}>
+                  <IconX width={16} height={16} color={COLORS.secondaryColor} />
+                </TransparentButton>
+              </SearchControlContainer>
+              <SearchContentsContainer>
+                <StyledSelect
+                  options={DUMMY_SEOUL_OPTIONS}
+                  placeholder={"지역선택"}
+                  styles={{
+                    width: "78px",
+                    height: "22px",
+                    color: COLORS.secondaryColor,
+                    backgroundColor: COLORS.whiteColor,
+                    border: false,
+                    borderRadius: "12px",
+                  }}
+                  onChangeHandler={(e: any) => {
+                    setSelectedLocation(e.value);
+                  }}
+                />
+                <SelectedLocationBanner>
+                  {selectedLocation ? selectedLocation : "지역 선택"}
+                </SelectedLocationBanner>
+              </SearchContentsContainer>
+            </SearchContainer>
+          </>
+        )}
+      </MapContainer>
+      <SlideBottomMenu $isOpen={isOpenMenu}>
+        <ToggleButton
+          onClick={() => {
+            setIsOpenMenu(!isOpenMenu);
+          }}
+        />
+      </SlideBottomMenu>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const MapContainer = styled.div`
   width: 100%;
@@ -206,9 +325,32 @@ const SearchControlContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  padding: 0px 20px;
+  padding: 12px 20px;
   width: calc(100% - 40px);
   height: 32px;
+
+  & > p {
+    text-align: center;
+    font-family: "Pretendard";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+`;
+
+const TransparentButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+
+  all: unset;
+  cursor: pointer;
 `;
 
 const CircleButton = styled.button`
@@ -229,10 +371,92 @@ const CircleButton = styled.button`
 const SearchContainer = styled.div`
   position: absolute;
   z-index: 1;
-  top: 16px;
+  top: 0px;
   left: 0;
 
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  padding: 28px 20px;
+  width: calc(100% - 40px);
+
+  background-color: ${COLORS.whiteColor};
+  font-family: "Pretendard";
+`;
+
+const SearchContentsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 44px;
+  padding: 4px 8px;
+  width: calc(100% - 28px);
+  border-radius: 16px;
+  background-color: ${COLORS.lightGreyColor};
+
+  & > input {
+    border: none;
+    background-color: ${COLORS.lightGreyColor};
+
+    &::placeholder {
+      font-size: 12px;
+      font-weight: 700;
+      color: ${COLORS.greyColor};
+    }
+  }
+`;
+
+const SelectedLocationBanner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 12px;
+  border-radius: 12px;
+  background-color: ${COLORS.whiteColor};
+
+  font-size: 12px;
+`;
+
+const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  height: ${(props) => (props.$isOpen ? "568px" : "100px")};
+
+  border-radius: 16px 16px 0px 0px;
+  background-color: ${COLORS.whiteColor};
+
+  transition: height 0.3s ease, transform 0.3s ease;
+
+  /* transform: ${(props) =>
+    props.$isOpen ? "translateY(-468px)" : "translateY(0)"}; */
+`;
+
+const ToggleButton = styled.button`
+  margin-top: 8px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  width: 54px;
+  height: 4px;
+
+  border: none;
+  border-radius: 2px;
+  background-color: ${COLORS.greyColor};
+  cursor: pointer;
 `;
 
 export default MapComponent;
