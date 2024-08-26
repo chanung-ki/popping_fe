@@ -189,3 +189,11 @@ export type benefitTypes = {
   gradeInfo: gradeTypes;
   pointHistory: pointHistoryTypes[];
 };
+
+export type brandManageTypes = {
+  id: number;
+  logo: string;
+  thumbnail: string;
+  description: string;
+};
+

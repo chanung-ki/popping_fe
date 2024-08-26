@@ -10,11 +10,13 @@ import { ButtonSmall } from "../components/buttons";
 import { useRouter } from "next/navigation";
 import { myPagePoppleTypes } from "@/public/utils/types";
 
+
 type MyPagePoppleProps = {
   nickname: string;
   profileImage: string;
   myPageData: myPagePoppleTypes;
   signOutApi: () => void;
+  accountChangeApi: () => void;
 };
 
 export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
@@ -22,6 +24,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
   profileImage,
   signOutApi,
   myPageData,
+  accountChangeApi,
 }) => {
   const router = useRouter();
 
@@ -32,7 +35,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
   const isGradeKey = (key: string): key is keyof typeof gradeColors => {
     return key in gradeColors;
   };
-
+  
   return (
     <>
       <TopNavigation>
@@ -158,14 +161,17 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
         </Section>
 
         <MenuContainer>
-          <p>주문 내역</p>
+          {/* <p>주문 내역</p>
           <p>취소/환불 내역</p>
           <p>리뷰 관리</p>
           <p>공지사항</p>
           <p>고객센터</p>
-          <p>1:1 문의 내역</p>
+          <p>1:1 문의 내역</p> */}
           <div onClick={signOutApi}>
             <p>로그아웃</p>
+          </div>
+          <div className="main-color-text" onClick={accountChangeApi}>
+            <p>팝퍼로 계정 전환</p>
           </div>
         </MenuContainer>
       </Container>
@@ -471,4 +477,9 @@ const MenuContainer = styled.div`
 
     cursor: pointer;
   }
+
+  .main-color-text p {
+    color: ${COLORS.mainColor}; 
+  }
+
 `;
