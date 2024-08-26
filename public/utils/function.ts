@@ -21,7 +21,6 @@ export const duplicateCheckApi = async (
     return true;
   }
 };
-
 // 회원가입 인증 메일 전송 api
 export const callEmailAuthApi = async (email: string): Promise<string> => {
   try {

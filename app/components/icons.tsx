@@ -99,6 +99,21 @@ export const IconRoundTriangle = ({ color, width, height }: SVGTypes) => {
   );
 };
 
+export const IconTrash = ({ color, width, height }: SVGTypes) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 45 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 0L15 3V6H0V9H3V54L9 60H36L42 54V9H45V6H30V3L27 0H18ZM19.2422 3H25.7578L27 4.24219V6H18V4.24219L19.2422 3ZM6 9H39V52.7578L34.7578 57H10.2422L6 52.7578V9Z" fill={color} />
+    </svg>
+
+  )
+
+}
+
 export const IconX = ({ color, width, height }: SVGTypes) => {
   return (
     <SVG

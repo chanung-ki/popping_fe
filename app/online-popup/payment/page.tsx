@@ -144,7 +144,7 @@ const Payment: React.FC = () => {
     return <Loading />;
 
   return (
-    <DefaultLayout top={16} right={20} bottom={0} left={20}>
+    <DefaultLayout top={16} right={20} bottom={0} left={20} isScrollable={true}>
       <Back url={undefined} color={undefined} />
       <Container>
         <PopupHeader main={"주문"} sub={`${brandName} STORE`} />
@@ -295,6 +295,7 @@ const Payment: React.FC = () => {
           title={"등급 설명"}
           toggleModal={toggleModal}
           isVisible={grade}
+          heightRate={50}
         >
           <GradeContainer>
             {gradeData?.map((data: UserGrade, index: number) => (

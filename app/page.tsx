@@ -31,7 +31,7 @@ const MainPage = () => {
   const btmnavOnClickPopple = (index: number) => {
     switch (index) {
       case 0:
-        router.push("/online-popup/Popping/store-openning");
+        router.push("/online-popup");
         break;
       case 1:
         router.push("/popup-map/placeMap");
@@ -77,7 +77,7 @@ const MainPage = () => {
         router.push("/popup-map/placeMap");
         break;
       case 2:
-        router.push("/online-popup/Popping/store-openning");
+        router.push("/online-popup");
         break;
       case 3:
         if (isLogin) {

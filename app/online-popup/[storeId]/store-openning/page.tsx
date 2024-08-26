@@ -8,6 +8,7 @@ import Link from "next/link";
 import { IconX } from "@/app/components/icons";
 import { useRouter } from "next/navigation";
 import { BrandType } from "@/public/utils/types";
+import Back from "@/app/components/back";
 
 const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   params,
@@ -40,15 +41,12 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   if (!openingData) return null;
 
   return (
-    <DefaultLayout top={16} right={20} bottom={32} left={20}>
+    <DefaultLayout top={16} right={20} bottom={32} left={20} isScrollable={false}>
       <>
         <OpeningImage src={openingData.thumbnail} />
-        <Link
-          href={"/"}
-          style={{ position: "absolute", top: 16, left: 20, zIndex: 100 }}
-        >
-          <IconX color={COLORS.primaryColor} width={undefined} height={16} />
-        </Link>
+        <div style={{ position: 'absolute', left: 20, top: 16, zIndex: 2 }}>
+          <Back url={'/online-popup'} />
+        </div>
         <Overlay />
       </>
 

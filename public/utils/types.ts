@@ -105,12 +105,15 @@ export interface BrandType {
   id: number;
   logo: string;
   name: string;
-  proceeding: boolean;
+  proceeding: number;
+  isAble: boolean;
   conditions: {};
   saved: number;
   isSaved: boolean;
   description: string;
   thumbnail: string;
+  contractStart: string;
+  contractEnd: string;
 }
 
 export interface OptionType {
