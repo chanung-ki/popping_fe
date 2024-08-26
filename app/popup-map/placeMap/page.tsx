@@ -435,7 +435,7 @@ const MapTestPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={false}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <KakaoMap id="map"></KakaoMap>
       <Container>
         {isSearchClicked ? (

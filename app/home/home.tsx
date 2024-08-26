@@ -38,7 +38,7 @@ const HomePage = () => {
   }, [parentDiv]);
 
   return (
-    <DefaultLayout top={0} right={0} bottom={0} left={0} isScrollable={true}>
+    <DefaultLayout top={0} right={0} bottom={0} left={0}>
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />

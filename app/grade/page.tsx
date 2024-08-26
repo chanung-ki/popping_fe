@@ -11,7 +11,7 @@ const GradePage: React.FC = () => {
   const router = useRouter();
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>등급 안내</TopNavTitle>

@@ -64,7 +64,6 @@ const SocialAuthPage: React.FC = () => {
       right={20}
       bottom={32}
       left={20}
-      isScrollable={true}
     >
       <Container>
         <Loading />

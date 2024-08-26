@@ -10,7 +10,7 @@ const MapComponent = dynamic(() => import('@/app/components/mapComponent'), {
 
 const MapPage: React.FC = () => {
   return (
-    <DefaultLayout top={0} bottom={0} left={0} right={0} isScrollable={false}>
+    <DefaultLayout top={0} bottom={0} left={0} right={0}>
       <Container>
         <MapComponent />
       </Container>

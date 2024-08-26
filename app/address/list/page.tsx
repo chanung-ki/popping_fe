@@ -40,7 +40,7 @@ const AdressListPage: React.FC = () => {
         setAddressData(sortedData);
         setAddAble(data.length < 5);
       }
-    } catch (error: any) {}
+    } catch (error: any) { }
   };
 
   const AddressDelete = async (id: number, deleteAble: boolean) => {
@@ -60,7 +60,7 @@ const AdressListPage: React.FC = () => {
           setAddressData(updatedAddressData);
           setAddAble(true);
         }
-      } catch (error: any) {}
+      } catch (error: any) { }
     }
   };
 
@@ -85,7 +85,7 @@ const AdressListPage: React.FC = () => {
           );
           setAddressData(sortedData);
         }
-      } catch (error: any) {}
+      } catch (error: any) { }
     }
   };
 
@@ -112,7 +112,7 @@ const AdressListPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>배송지 관리</TopNavTitle>

@@ -116,7 +116,7 @@ const AddressAddPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>배송지 추가</TopNavTitle>
@@ -147,12 +147,12 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueNickname(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -164,12 +164,12 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueName(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -181,7 +181,7 @@ const AddressAddPage: React.FC = () => {
             status={statusPhone}
             bottomText={bottomTextPhone}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
@@ -204,10 +204,10 @@ const AddressAddPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
-              onChange={(text: string) => {}}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              bottomTextOnClick={() => { }}
+              onChange={(text: string) => { }}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={true}
             />
 
@@ -228,10 +228,10 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
-            onChange={(text: string) => {}}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            bottomTextOnClick={() => { }}
+            onChange={(text: string) => { }}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={true}
           />
 
@@ -243,12 +243,12 @@ const AddressAddPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueAddressDetail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -268,10 +268,10 @@ const AddressAddPage: React.FC = () => {
           text={"저장"}
           buttonColor={
             valueNickname !== "" &&
-            valueName !== "" &&
-            isValidPhone &&
-            valueAddress !== "" &&
-            valueZIPCode !== ""
+              valueName !== "" &&
+              isValidPhone &&
+              valueAddress !== "" &&
+              valueZIPCode !== ""
               ? COLORS.mainColor
               : COLORS.greyColor
           }

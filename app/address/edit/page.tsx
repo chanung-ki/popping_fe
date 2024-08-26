@@ -112,7 +112,7 @@ const AddressEditPage: React.FC = () => {
         setIsValidPhone(true);
         setIsLoading(false);
       }
-    } catch (error: any) {}
+    } catch (error: any) { }
   };
 
   const AddressDataPut = async (id: string | null) => {
@@ -175,7 +175,7 @@ const AddressEditPage: React.FC = () => {
   if (isLoading || !addressId) return <Loading />;
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>배송지 수정</TopNavTitle>
@@ -206,12 +206,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueNickname(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -223,12 +223,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueName(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -240,7 +240,7 @@ const AddressEditPage: React.FC = () => {
             status={statusPhone}
             bottomText={bottomTextPhone}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
@@ -263,10 +263,10 @@ const AddressEditPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
-              onChange={(text: string) => {}}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              bottomTextOnClick={() => { }}
+              onChange={(text: string) => { }}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={true}
             />
 
@@ -287,10 +287,10 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
-            onChange={(text: string) => {}}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            bottomTextOnClick={() => { }}
+            onChange={(text: string) => { }}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={true}
           />
 
@@ -302,12 +302,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueAddressDetail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -327,10 +327,10 @@ const AddressEditPage: React.FC = () => {
           text={"저장"}
           buttonColor={
             valueNickname !== "" &&
-            valueName !== "" &&
-            isValidPhone &&
-            valueAddress !== "" &&
-            valueZIPCode !== ""
+              valueName !== "" &&
+              isValidPhone &&
+              valueAddress !== "" &&
+              valueZIPCode !== ""
               ? COLORS.mainColor
               : COLORS.greyColor
           }
