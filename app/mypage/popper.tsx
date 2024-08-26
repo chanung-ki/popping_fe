@@ -9,18 +9,25 @@ import { ProfileImage } from "../components/main/componenets";
 import { ButtonSmall } from "../components/buttons";
 import { useRouter } from "next/navigation";
 
+
 type MyPagePopperProps = {
   nickname: string;
   profileImage: string;
   signOutApi: () => void;
+  accountChangeApi: () => void;
 };
 
 export const MyPagePopper: React.FC<MyPagePopperProps> = ({
   nickname,
   profileImage,
   signOutApi,
+  accountChangeApi,
 }) => {
   const router = useRouter();
+
+  const handleClickBrand = () => {
+    router.push("/brand/manage");
+  };
 
   return (
     <>
@@ -66,12 +73,18 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
         </MyInfo>
 
         <MenuContainer>
-          <p>스토어 관리</p>
+          {/* <p>스토어 관리</p>
           <p>공지사항</p>
           <p>고객센터</p>
-          <p>1:1 문의 내역</p>
+          <p>1:1 문의 내역</p> */}
+          <div onClick={handleClickBrand}>
+            <p>브랜드 관리</p>
+          </div>
           <div onClick={signOutApi}>
             <p>로그아웃</p>
+          </div>
+          <div className="main-color-text" onClick={accountChangeApi}>
+            <p>팝플로 계정 전환</p>
           </div>
         </MenuContainer>
       </Container>
@@ -221,4 +234,9 @@ const MenuContainer = styled.div`
 
     cursor: pointer;
   }
+
+  .main-color-text p {
+    color: ${COLORS.mainColor}; 
+  }
+
 `;
