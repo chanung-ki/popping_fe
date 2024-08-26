@@ -93,8 +93,7 @@ const MyCartPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={16} right={20} bottom={0} left={20} isScrollable={true}>
-      <Back url={undefined} color={undefined} />
+    <DefaultLayout top={16} right={20} bottom={0} left={20}>
       <Container>
         <PopupHeader main={"장바구니"} sub={`${brandName} STORE`} />
         <Content>

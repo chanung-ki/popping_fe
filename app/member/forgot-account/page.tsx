@@ -85,7 +85,6 @@ const ForgotAccountPage: React.FC = () => {
       right={20}
       bottom={32}
       left={20}
-      isScrollable={true}
     >
       <Container>
         <div
@@ -114,14 +113,14 @@ const ForgotAccountPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
+              bottomTextOnClick={() => { }}
               onChange={(text: string) => {
                 // setValueName(text.replace(RegexpInputHangul, "")); // 오류 있음 수정 요망
                 setValueName(text); // 오류 있음 수정 요망
                 setIsValidName(RegexpHangul.test(text) && text.length > 1);
               }}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={false}
             />
 
@@ -133,13 +132,13 @@ const ForgotAccountPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
+              bottomTextOnClick={() => { }}
               onChange={(text: string) => {
                 setValuePhone(text.replace(RegexpInputNumber, ""));
                 setIsValidPhone(RegexpPhone.test(text));
               }}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={false}
             />
           </MemberAccountForm>
@@ -155,13 +154,13 @@ const ForgotAccountPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
+              bottomTextOnClick={() => { }}
               onChange={(text: string) => {
                 setValueName(text);
                 setIsValidBrand(RegexpNickname.test(text) && text.length > 1);
               }}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={false}
             />
 
@@ -173,13 +172,13 @@ const ForgotAccountPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
+              bottomTextOnClick={() => { }}
               onChange={(text: string) => {
                 setValueBN(text.replace(RegexpInputNumber, ""));
                 setIsValidBN(text.length === 10);
               }}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={false}
             />
 
@@ -191,13 +190,13 @@ const ForgotAccountPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => {}}
+              bottomTextOnClick={() => { }}
               onChange={(text: string) => {
                 setValuePhone(text.replace(RegexpInputNumber, ""));
                 setIsValidPhone(RegexpPhone.test(text));
               }}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={false}
             />
           </MemberAccountForm>
@@ -211,10 +210,10 @@ const ForgotAccountPage: React.FC = () => {
                 ? COLORS.mainColor
                 : COLORS.greyColor
               : selectedIndex === 1
-              ? isValidBrand && isValidPhone && isValidBN
-                ? COLORS.mainColor
+                ? isValidBrand && isValidPhone && isValidBN
+                  ? COLORS.mainColor
+                  : COLORS.greyColor
                 : COLORS.greyColor
-              : COLORS.greyColor
           }
           textColor={COLORS.primaryColor}
           onClick={findEmailApi}

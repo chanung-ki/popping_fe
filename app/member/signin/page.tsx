@@ -105,7 +105,6 @@ const SignInPage: React.FC = () => {
       right={20}
       bottom={32}
       left={20}
-      isScrollable={true}
     >
       {isLoading && <Loading />}
       <Container>
@@ -128,8 +127,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -147,8 +146,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>

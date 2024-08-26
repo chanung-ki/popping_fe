@@ -89,7 +89,7 @@ const BenefitPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       {isReady ? (
         <>
           <TopNavigation>
@@ -142,8 +142,8 @@ const BenefitPage: React.FC = () => {
                             benefitData.gradeInfo.nextGradeInfo.nextGrade
                           )
                             ? gradeColors[
-                                benefitData.gradeInfo.nextGradeInfo.nextGrade
-                              ]
+                            benefitData.gradeInfo.nextGradeInfo.nextGrade
+                            ]
                             : gradeColors["WHITE POP"]
                         }
                       >

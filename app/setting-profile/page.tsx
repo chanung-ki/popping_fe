@@ -256,7 +256,7 @@ const SettingProfilePage: React.FC = () => {
   ]);
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>프로필 설정</TopNavTitle>
@@ -308,7 +308,7 @@ const SettingProfilePage: React.FC = () => {
             status={statusNickname}
             bottomText={bottomTextNickname}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueNickname(text);
               setIsValidNickname(RegexpNickname.test(text));
@@ -332,7 +332,7 @@ const SettingProfilePage: React.FC = () => {
                 status={statusName}
                 bottomText={bottomTextName}
                 bottomTextClickable={false}
-                bottomTextOnClick={() => {}}
+                bottomTextOnClick={() => { }}
                 onChange={(text: string) => {
                   setValueName(text.replace(RegexpInputHangul, ""));
                   setIsValidName(RegexpHangul.test(text) && text.length > 1);

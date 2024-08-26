@@ -106,7 +106,6 @@ const ResetPasswordPage: React.FC = () => {
       right={20}
       bottom={32}
       left={20}
-      isScrollable={true}
     >
       <Container>
         <div
@@ -127,7 +126,7 @@ const ResetPasswordPage: React.FC = () => {
             status={statusPassword}
             bottomText={bottomTextPassword}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePassword(text);
               setIsValidPassword(RegexpPassword.test(text));
@@ -149,7 +148,7 @@ const ResetPasswordPage: React.FC = () => {
             status={statusPasswordConfirm}
             bottomText={bottomTextPasswordConfirm}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePasswordConfirm(text);
               setIsSame(valuePassword === text);

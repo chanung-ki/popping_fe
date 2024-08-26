@@ -121,7 +121,6 @@ const ForgotPasswordPage: React.FC = () => {
       right={20}
       bottom={32}
       left={20}
-      isScrollable={true}
     >
       {isLoading && <Loading />}
       <Container>
@@ -143,13 +142,13 @@ const ForgotPasswordPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValueEmail(text);
               setIsValidEmail(RegexpEmail.test(text));
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -161,13 +160,13 @@ const ForgotPasswordPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => {}}
+            bottomTextOnClick={() => { }}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -182,12 +181,12 @@ const ForgotPasswordPage: React.FC = () => {
                 isResendable
                   ? "인증번호 재전송"
                   : `${String(Math.floor(count / 60)).padStart(
-                      2,
-                      "0"
-                    )}:${String(Math.floor(count % 60)).padStart(
-                      2,
-                      "0"
-                    )} 후에 재전송 가능`
+                    2,
+                    "0"
+                  )}:${String(Math.floor(count % 60)).padStart(
+                    2,
+                    "0"
+                  )} 후에 재전송 가능`
               }
               bottomTextClickable={isResendable}
               bottomTextOnClick={() => {
@@ -202,8 +201,8 @@ const ForgotPasswordPage: React.FC = () => {
                 // setIsValidPasscode(valuePasscode.length === 8); // 이상하게 7글자여야 true가 되어서 잠시 주석걸게요
                 setIsValidPasscode(valuePasscode !== "");
               }}
-              onFocus={() => {}}
-              onBlur={() => {}}
+              onFocus={() => { }}
+              onBlur={() => { }}
               disabled={false}
             />
           )}

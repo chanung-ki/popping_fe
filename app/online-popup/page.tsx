@@ -151,7 +151,7 @@ const OnlinePopupPage: React.FC = () => {
   if (!originalData || originalData.length === 0) return <Loading />;
 
   return (
-    <DefaultLayout top={0} right={20} bottom={0} left={20} isScrollable={true}>
+    <DefaultLayout top={0} right={20} bottom={0} left={20}>
       <Container>
         <Top>
           <Link href={'/'} style={{ position: 'absolute', top: 16 }}>
