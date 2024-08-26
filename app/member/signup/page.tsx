@@ -11,13 +11,21 @@ import {
   MemberTitle,
 } from "@/app/components/member/components";
 import { COLORS } from "@/public/styles/colors";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { useRouter } from "next/navigation";
 
 const SignUpPage: React.FC = () => {
   const [isPopper, setIsPopper] = useState<boolean | null>(null);
   const router = useRouter();
+  const hasAlerted = useRef<boolean>(false);
+
+  useEffect(()=>{
+    if (!hasAlerted.current) {
+      alert("사이드임팩트 라운드 1 진행중에는\n팝플로 가입해도 팝퍼 기능을 체험 해보실 수 있습니다.");
+      hasAlerted.current = true;
+    }
+  },[router])
 
   return (
     <DefaultLayout
@@ -51,15 +59,14 @@ const SignUpPage: React.FC = () => {
           </RadioBox>
           <RadioBox
             isSelect={isPopper === true}
-            onClick={() => {
-              setIsPopper(true);
-            }}
+            // onClick={() => {
+            //   setIsPopper(true);
+            // }}
           >
             <p>팝퍼</p>
             <p>팝업스토어를 운영하고 관리하려고 가입해요</p>
           </RadioBox>
         </RadioBoxContainer>
-
         <BottomBox />
 
         <MemberBottomButtonContainer>
@@ -99,9 +106,20 @@ const RadioBoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  // 임시 css
+  div:first-child {
+    cursor: pointer;
+  }
+
+  // 임시 css
+  div:nth-of-type(2) {
+    opacity: 0.5
+  }
 `;
 
 const RadioBox = styled.div<{ isSelect: boolean }>`
+
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -133,7 +151,7 @@ const RadioBox = styled.div<{ isSelect: boolean }>`
   -webkit-user-select: none;
   user-select: none;
 
-  cursor: pointer;
+  /* cursor: pointer; */
 
   p:first-child {
     font-size: 24px;
@@ -142,6 +160,7 @@ const RadioBox = styled.div<{ isSelect: boolean }>`
   p:last-child {
     font-size: 14px;
   }
+  
 `;
 
 export default SignUpPage;

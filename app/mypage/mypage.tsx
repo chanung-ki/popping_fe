@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { MyPagePopper } from "./popper";
 import { MyPagePopple } from "./popple";
 import { removeCookie } from "@/public/network/cookie";
-import { initUser } from "../redux/reducers/poppingUser";
+import { initUser, setUser } from "../redux/reducers/poppingUser";
 import axiosInstance from "@/public/network/axios";
-import { myPagePoppleTypes } from "@/public/utils/types";
+import { myPagePoppleTypes, user } from "@/public/utils/types";
 import { Loading } from "../components/loading";
 import { BottomBox, DefaultLayout } from "../components/layout";
 
@@ -98,6 +98,35 @@ const MyPage: React.FC = () => {
       router.push("/");
     }
   };
+
+  // api
+  const accountChangeApi = async () => {
+
+    let message;
+
+    if (isPopper) {
+      message = "팝플로 계정을 다시 전환하시겠습니까?\n팝플로 계정 전환시 등록했던 브랜드와 상품은 모두 삭제됩니다.";
+    } else {
+      message = "팝퍼 체험을 진행하시겠습니까?";
+    }
+
+    const userConfirmed = window.confirm(message); 
+
+    if (userConfirmed) {
+      try {
+        const response = await axiosInstance.post("/api/user/change");
+        if (response.status === 200) {
+          dispatch(initUser());
+          const userData: user = response.data.user;
+          dispatch(setUser(userData));
+          window.location.reload();
+        }
+      } catch (error) {
+        alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+      }
+    }
+  };
+
   return (
     <DefaultLayout top={0} right={20} bottom={0} left={20}>
       {isLogin && isPopple && myPageData.gradeInfo.grade !== "" && isReady ? (
@@ -106,12 +135,14 @@ const MyPage: React.FC = () => {
           profileImage={profileImage}
           myPageData={myPageData}
           signOutApi={signOutApi}
+          accountChangeApi={accountChangeApi}
         />
       ) : isLogin && !isPopple ? (
         <MyPagePopper
           nickname={nickname}
           profileImage={profileImage}
           signOutApi={signOutApi}
+          accountChangeApi={accountChangeApi}
         />
       ) : (
         <Loading />
