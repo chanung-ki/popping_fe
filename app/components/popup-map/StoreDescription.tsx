@@ -1,25 +1,48 @@
+"use client";
 import styled from "styled-components";
 import { IconChevronLeft, IconHeart } from "../icons";
 import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Store } from "@/public/utils/types";
 
-const StoreDescription: React.FC = () => {
+interface StoreDescriptionProps {
+  store: Store;
+  isViewDesc: boolean;
+  setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const StoreDescription: React.FC<StoreDescriptionProps> = ({
+  store,
+  isViewDesc,
+  setIsViewDesc,
+}) => {
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
-  
+
+  const onClickBackToList = () => {
+    setIsViewDesc(!isViewDesc);
+  };
+
+  useEffect(() => {
+    console.log(store);
+  }, [store]);
+
   return (
     <StoreDescContainer>
       <StoreDescThumbnail>
         <GradientOverlay />
+        {/*실제 데이터용 이미지 */}
+        {/* <Image src={`data:image/jpeg;base64,${store.image}`} fill alt={store.title} /> */}
+        {/*더미 데이터용 이미지 */}
         <Image src={"/images/popping-banner.png"} fill alt={"썸네일"} />
-        <div className={"back-to-list"}>
+        <div className={"back-to-list"} onClick={onClickBackToList}>
           <IconChevronLeft width={9} height={16} color={COLORS.whiteColor} />
         </div>
       </StoreDescThumbnail>
 
       <DescContainer>
         <div className={"store-title-container"}>
-          <div className={"store-title"}>일릭서 스토어</div>
+          <div className={"store-title"}>{store.title}</div>
           <div className={"store-like"}>
             <div
               className={"icon"}
@@ -33,18 +56,16 @@ const StoreDescription: React.FC = () => {
                 color={isLikedStore ? COLORS.mainColor : COLORS.greyColor}
               />
             </div>
-            <div className={"like-count"}>99만</div>
+            <div className={"like-count"}>{store.isSaved}만</div>
           </div>
         </div>
-        <div className={"store-desc"}>
-          일어나라 노예들이여 이 텍스트는 무한정 늘릴 수 있긴 하다네요 김태은
-          편도선 수술 무사 회복을 기원하는 마음으로 컴포넌트를 만들고 있습니다.
-        </div>
+        <div className={"store-desc"}>{store.description[1]}</div>
 
         <div className={"store-info"}>
           <div className={"store-address"}>
-            서울특별시 용산구 한강대로 어딘가
+            {store.location.address} {store.location.placeName}
           </div>
+          {/*response body에 날짜 정보 없음 */}
           <div className={"store-date"}>2024.07.24 ~ 2024.08.15</div>
         </div>
       </DescContainer>
@@ -86,6 +107,8 @@ const StoreDescThumbnail = styled.div`
     z-index: 5;
     top: 20px;
     left: 20px;
+
+    cursor: pointer;
   }
 `;
 

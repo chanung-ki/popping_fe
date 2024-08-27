@@ -66,6 +66,8 @@ const MapComponent: React.FC = () => {
   const [clickedStore, setClickedStore] = useState<Store | null>(null);
   // 스토어 좋아요 여부
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
+  // 스토어 상세보기 여부
+  const [isViewDesc, setIsViewDesc] = useState<boolean>(false);
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -349,20 +351,28 @@ const MapComponent: React.FC = () => {
           }}
         />
 
-        {isOpenMenu && !clickedStore ? (
+        {isOpenMenu && !isViewDesc ? (
           <StoreInformationList>
             {/*Store Card 더미 데이터 리스트 렌더링 */}
             {DUMMY_LIST.map((store: Store) => (
               <StoreCard
                 key={store.id}
                 store={store}
+                isViewDesc={isViewDesc}
+                setIsViewDesc={setIsViewDesc}
                 clickedStore={clickedStore}
                 setClickedStore={setClickedStore}
               />
             ))}
           </StoreInformationList>
         ) : (
-          <StoreDescription />
+          clickedStore && (
+            <StoreDescription
+              store={clickedStore}
+              isViewDesc={isViewDesc}
+              setIsViewDesc={setIsViewDesc}
+            />
+          )
         )}
       </SlideBottomMenu>
     </Container>

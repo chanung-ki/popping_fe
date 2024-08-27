@@ -11,23 +11,26 @@ interface StoreCardProps {
   store: Store;
   clickedStore: Store | null;
   setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
+  isViewDesc: boolean;
+  setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //TODO : Props interface 정의 필요
-const StoreCard: React.FC<StoreCardProps> = ({store, clickedStore, setClickedStore} : StoreCardProps) => {
+const StoreCard: React.FC<StoreCardProps> = ({
+  store,
+  clickedStore,
+  setClickedStore,
+  isViewDesc,
+  setIsViewDesc,
+}: StoreCardProps) => {
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  
+
   // 스토어 클릭시
   const onClickHandler = () => {
     setClickedStore(store);
+    setIsViewDesc(!isViewDesc);
   };
-
-  useEffect(() => {
-    if (clickedStore) {
-      console.log(clickedStore.id);
-    }
-  }, [clickedStore]);
 
   return (
     <StoreCardContainer onClick={onClickHandler}>
