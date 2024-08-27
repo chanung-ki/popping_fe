@@ -1,14 +1,14 @@
 import { COLORS } from "@/public/styles/colors";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { IconUser } from "./icons";
+import { IconHeart, IconUser } from "./icons";
 import { Loading } from "./loading";
-import { fadeIn } from "@/public/utils/keyframe";
 import { IconChevronLeft, IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
 import StoreCard from "./popup-map/StoreCard";
 import { Store } from "@/public/utils/types";
 import Image from "next/image";
+import { formatDate } from "@/public/utils/function";
 
 declare global {
   interface Window {
@@ -63,15 +63,12 @@ const MapComponent: React.FC = () => {
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   // 하단 메뉴 리스트 스토어 클릭 여부
   const [clickedStore, setClickedStore] = useState<Store | null>(null);
+  // 스토어 좋아요 여부
+  const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
 
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
-
-  // 이미지용 ref
-  const thumbnailRef = useRef<HTMLDivElement>(null);
-  // 이미지용 state
-  const [thumbnailWidth, setThumbnailWidth] = useState<number>(0);
 
   // 더미데이터
   const DUMMY_LIST: Store[] = [
@@ -244,30 +241,6 @@ const MapComponent: React.FC = () => {
     }
   }, [isOpenMenu, userLocation]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (thumbnailRef.current) {
-        setThumbnailWidth(thumbnailRef.current.offsetWidth);
-      }
-    };
-
-    // ResizeObserver를 사용하여 div 요소의 크기 변화를 감지
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
-
-    if (thumbnailRef.current) {
-      resizeObserver.observe(thumbnailRef.current);
-    }
-
-    // 컴포넌트가 언마운트될 때 옵저버를 해제
-    return () => {
-      if (thumbnailRef.current) {
-        resizeObserver.unobserve(thumbnailRef.current);
-      }
-    };
-  }, [thumbnailRef]);
-
   const handleLocationButtonClick = () => {
     if (userLocation && mapRef.current) {
       const newCenter = new window.naver.maps.LatLng(
@@ -400,6 +373,40 @@ const MapComponent: React.FC = () => {
                 />
               </div>
             </StoreDescThumbnail>
+
+            <DescContainer>
+              <div className={"store-title-container"}>
+                <div className={"store-title"}>일릭서 스토어</div>
+                <div className={"store-like"}>
+                  <div
+                    className={"icon"}
+                    onClick={() => {
+                      setIsLikedStore(!isLikedStore);
+                    }}
+                  >
+                    <IconHeart
+                      width={32}
+                      height={30}
+                      color={isLikedStore ? COLORS.mainColor : COLORS.greyColor}
+                    />
+                  </div>
+                  <div className={"like-count"}>99만</div>
+                </div>
+              </div>
+              <div className={"store-desc"}>
+                일어나라 노예들이여 이 텍스트는 무한정 늘릴 수 있긴 하다네요
+                김태은 편도선 수술 무사 회복을 기원하는 마음으로 컴포넌트를
+                만들고 있습니다.
+              </div>
+
+              <div className={"store-info"}>
+                <div className={"store-address"}>
+                  서울특별시 용산구 한강대로 어딘가
+                </div>
+                <div className={"store-date"}>2024.07.24 ~ 2024.08.15</div>
+              </div>
+            </DescContainer>
+            <VisitButton>방문하기</VisitButton>
           </StoreDescContainer>
         )}
       </SlideBottomMenu>
@@ -568,9 +575,6 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   background-color: ${COLORS.whiteColor};
 
   transition: height 0.3s ease, transform 0.3s ease;
-
-  /* transform: ${(props) =>
-    props.$isOpen ? "translateY(-468px)" : "translateY(0)"}; */
 `;
 
 const ToggleButton = styled.button`
@@ -605,6 +609,7 @@ const StoreDescContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 16px;
 
   margin: 40px 0px;
 
@@ -644,6 +649,99 @@ const GradientOverlay = styled.div`
   height: 50px;
   background: linear-gradient(to bottom, rgba(103, 102, 102, 0.5), transparent);
   z-index: 4; /* 그라데이션이 이미지 위에 오도록 z-index 설정 */
+`;
+
+const DescContainer = styled.div`
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 0px 20px;
+  width: calc(100% - 40px);
+  overflow-y: auto;
+
+  .store-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    .store-like {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .like-count {
+      text-align: center;
+      font-family: Pretendard;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+  }
+
+  .store-title {
+    font-family: Pretendard;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  .store-desc {
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+
+    padding-right: 80px;
+    margin-top: 8px;
+  }
+
+  .store-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-top: 32px;
+    padding-right: 80px;
+
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+`;
+
+const VisitButton = styled.button`
+  all: unset;
+
+  position: absolute;
+  bottom: 16px;
+  z-index: 4;
+
+  width: calc(100% - 40px);
+  height: 48px;
+
+  border-radius: 8px;
+  background-color: ${COLORS.mainColor};
+  color: ${COLORS.whiteColor};
+
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  cursor: pointer;
 `;
 
 export default MapComponent;
