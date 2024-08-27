@@ -4,10 +4,11 @@ import styled from "styled-components";
 import { IconUser } from "./icons";
 import { Loading } from "./loading";
 import { fadeIn } from "@/public/utils/keyframe";
-import { IconChevronLeft, IconSearch, IconX, IconMarker } from "./icons";
+import { IconChevronLeft, IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
-import StoreInformation from "./storeInformations/StoreInformation";
 import StoreCard from "./popup-map/StoreCard";
+import { Store } from "@/public/utils/types";
+import Image from "next/image";
 
 declare global {
   interface Window {
@@ -60,10 +61,72 @@ const MapComponent: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   // 하단 메뉴 오픈 여부
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
+  // 하단 메뉴 리스트 스토어 클릭 여부
+  const [clickedStore, setClickedStore] = useState<Store | null>(null);
 
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
+
+  // 이미지용 ref
+  const thumbnailRef = useRef<HTMLDivElement>(null);
+  // 이미지용 state
+  const [thumbnailWidth, setThumbnailWidth] = useState<number>(0);
+
+  // 더미데이터
+  const DUMMY_LIST: Store[] = [
+    {
+      id: "store123",
+      title: "일릭서 스토어",
+      location: {
+        address: "서울시 강남구",
+        placeName: "일릭서",
+        geoData: {
+          type: "Point",
+          coordinates: [127.024612, 37.5326],
+        },
+      },
+      description: [
+        "일어나라 노예들이여 이 텍스트는 두줄까지만 가능",
+        "일어나라 노예들이여 이 텍스트는 두줄까지만 가능",
+      ],
+      isSaved: false,
+      image: "/images/popping-orange.png",
+      viewCount: 1,
+    },
+    {
+      id: "store124",
+      title: "김태은 전립선 클리닉",
+      location: {
+        address: "서울시 도봉구",
+        placeName: "전립선",
+        geoData: {
+          type: "Point",
+          coordinates: [127.024612, 37.5326],
+        },
+      },
+      description: ["김태은 전립선 절제술", "김태은 전립선 절제술"],
+      isSaved: false,
+      image: "/images/popping-orange.png",
+      viewCount: 1,
+    },
+    {
+      id: "store125",
+      title: "GS THE FRESH 관악점",
+      location: {
+        address: "서울시 관악구",
+        placeName: "GS THE FRESH 관악점",
+        geoData: {
+          type: "Point",
+          coordinates: [127.024612, 37.5326],
+        },
+      },
+      description: ["우리동네 지에스", "우리동네 지에스"],
+      isSaved: false,
+      image: "/images/popping-orange.png",
+      viewCount: 1,
+    },
+  ];
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -181,6 +244,30 @@ const MapComponent: React.FC = () => {
     }
   }, [isOpenMenu, userLocation]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (thumbnailRef.current) {
+        setThumbnailWidth(thumbnailRef.current.offsetWidth);
+      }
+    };
+
+    // ResizeObserver를 사용하여 div 요소의 크기 변화를 감지
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+
+    if (thumbnailRef.current) {
+      resizeObserver.observe(thumbnailRef.current);
+    }
+
+    // 컴포넌트가 언마운트될 때 옵저버를 해제
+    return () => {
+      if (thumbnailRef.current) {
+        resizeObserver.unobserve(thumbnailRef.current);
+      }
+    };
+  }, [thumbnailRef]);
+
   const handleLocationButtonClick = () => {
     if (userLocation && mapRef.current) {
       const newCenter = new window.naver.maps.LatLng(
@@ -288,23 +375,32 @@ const MapComponent: React.FC = () => {
           }}
         />
 
-        {isOpenMenu && (
+        {isOpenMenu && !clickedStore ? (
           <StoreInformationList>
-            {/*이 부분에 리스트 렌더링 (map) */}
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
             {/*Store Card 더미 데이터 리스트 렌더링 */}
+            {DUMMY_LIST.map((store: Store) => (
+              <StoreCard
+                key={store.id}
+                store={store}
+                clickedStore={clickedStore}
+                setClickedStore={setClickedStore}
+              />
+            ))}
           </StoreInformationList>
+        ) : (
+          <StoreDescContainer>
+            <StoreDescThumbnail>
+              <GradientOverlay />
+              <Image src={"/images/popping-banner.png"} fill alt={"썸네일"} />
+              <div className={"back-to-list"}>
+                <IconChevronLeft
+                  width={9}
+                  height={16}
+                  color={COLORS.whiteColor}
+                />
+              </div>
+            </StoreDescThumbnail>
+          </StoreDescContainer>
         )}
       </SlideBottomMenu>
     </Container>
@@ -463,7 +559,7 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   width: 100%;
   height: ${(props) => (props.$isOpen ? "568px" : "100px")};
@@ -495,7 +591,7 @@ const ToggleButton = styled.button`
 
 const StoreInformationList = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex-flow: row wrap;
   gap: 28px;
@@ -503,6 +599,51 @@ const StoreInformationList = styled.div`
   width: 100%;
   overflow-y: auto;
   width: 100%;
+`;
+
+const StoreDescContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 40px 0px;
+
+  width: 100%;
+`;
+
+const StoreDescThumbnail = styled.div`
+  position: relative;
+  width: 100%;
+  height: 215px;
+  overflow: hidden;
+
+  /* background-color: ${COLORS.greyColor}; */
+
+  & > img {
+    position: relative;
+    object-fit: cover;
+  }
+
+  .back-to-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    z-index: 5;
+    top: 20px;
+    left: 20px;
+  }
+`;
+
+const GradientOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(to bottom, rgba(103, 102, 102, 0.5), transparent);
+  z-index: 4; /* 그라데이션이 이미지 위에 오도록 z-index 설정 */
 `;
 
 export default MapComponent;

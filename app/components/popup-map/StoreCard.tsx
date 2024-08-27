@@ -2,15 +2,51 @@
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Store } from "@/public/utils/types";
+
+interface StoreCardProps {
+  store: Store;
+  clickedStore: Store | null;
+  setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
+}
 
 //TODO : Props interface 정의 필요
-const StoreCard: React.FC = () => {
+const StoreCard: React.FC<StoreCardProps> = ({store, clickedStore, setClickedStore} : StoreCardProps) => {
+  const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  
+  // 스토어 클릭시
+  const onClickHandler = () => {
+    setClickedStore(store);
+  };
+
+  useEffect(() => {
+    if (clickedStore) {
+      console.log(clickedStore.id);
+    }
+  }, [clickedStore]);
+
   return (
-    <StoreCardContainer>
-      {/*StoreThumbnail에 이미지가 들어가도록 변경 필요*/}
+    <StoreCardContainer onClick={onClickHandler}>
       <StoreThumbnail>
+        {/*실제 데이터 이미지*/}
+        {/* <Image
+          src={`data:image/jpeg;base64,${store.image}`}
+          width={166}
+          height={166}
+          alt={store.description[0]}
+        /> */}
+
+        {/*더미 데이터 이미지*/}
+        <Image
+          src={"/images/popping-orange.png"}
+          width={166}
+          height={166}
+          alt={"앨랠래"}
+        />
         <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
           <IconHeart
             color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
@@ -19,10 +55,8 @@ const StoreCard: React.FC = () => {
           />
         </div>
       </StoreThumbnail>
-      <p className={"store-name"}>일릭서 스토어</p>
-      <p className={"store-desc"}>
-        일어나라 노예들이여 이 텍스트는 두줄까지만 가능
-      </p>
+      <div className={"store-name"}>{store.title}</div>
+      <div className={"store-desc"}>{store.description[0]}</div>
     </StoreCardContainer>
   );
 };
@@ -33,6 +67,8 @@ const StoreCardContainer = styled.div`
   gap: 8px;
 
   width: 166px;
+
+  cursor: pointer;
 
   .store-name {
     font-family: Pretendard;
@@ -49,6 +85,11 @@ const StoreCardContainer = styled.div`
     font-style: normal;
     font-weight: 300;
     line-height: normal;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 `;
 
@@ -59,6 +100,7 @@ const StoreThumbnail = styled.div`
 
   border-radius: 8px;
   background-color: ${COLORS.greyColor};
+  overflow: hidden;
 
   .icon {
     position: absolute;

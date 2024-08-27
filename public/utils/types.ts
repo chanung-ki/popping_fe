@@ -83,6 +83,24 @@ export interface PlaceDataType {
   geoData: GeoDataType;
 }
 
+//Store
+export interface Store {
+  id: string;
+  title: string;
+  location: {
+    address: string;
+    placeName: string;
+    geoData: {
+      type: "Point";
+      coordinates: number[];
+    }
+  };
+  description: string[];
+  isSaved: boolean;
+  image: string;
+  viewCount: number;
+}
+
 // online Popup Type INTERFACE
 
 export interface ProductType {
