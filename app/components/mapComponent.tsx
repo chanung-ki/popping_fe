@@ -303,6 +303,7 @@ const MapComponent: React.FC = () => {
             <StoreCard />
             <StoreCard />
             <StoreCard />
+            {/*Store Card 더미 데이터 리스트 렌더링 */}
           </StoreInformationList>
         )}
       </SlideBottomMenu>

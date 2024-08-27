@@ -4,6 +4,7 @@ import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
 import { useState } from "react";
 
+//TODO : Props interface 정의 필요
 const StoreCard: React.FC = () => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   return (
