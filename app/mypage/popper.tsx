@@ -36,7 +36,7 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
           <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
         <TopNavRightContainer>
-          <IconGear color={COLORS.secondaryColor} width={20} height={20} />
+          {/* <IconGear color={COLORS.secondaryColor} width={20} height={20} /> */}
         </TopNavRightContainer>
       </TopNavigation>
       <Container>
