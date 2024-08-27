@@ -8,6 +8,7 @@ import { Store } from "@/public/utils/types";
 
 interface StoreDescriptionProps {
   store: Store;
+  setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -16,11 +17,13 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
   store,
   isViewDesc,
   setIsViewDesc,
+  setClickedStore,
 }) => {
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
 
   const onClickBackToList = () => {
     setIsViewDesc(!isViewDesc);
+    setClickedStore(null);
   };
 
   useEffect(() => {

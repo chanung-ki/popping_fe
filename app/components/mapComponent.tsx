@@ -351,9 +351,9 @@ const MapComponent: React.FC = () => {
           }}
         />
 
-        {isOpenMenu && !isViewDesc ? (
+        {isOpenMenu && !isViewDesc && !clickedStore ? (
           <StoreInformationList>
-            {/*Store Card 더미 데이터 리스트 렌더링 */}
+            {/* Store Card 더미 데이터 리스트 렌더링 */}
             {DUMMY_LIST.map((store: Store) => (
               <StoreCard
                 key={store.id}
@@ -366,11 +366,14 @@ const MapComponent: React.FC = () => {
             ))}
           </StoreInformationList>
         ) : (
-          clickedStore && (
+          isOpenMenu &&
+          clickedStore &&
+          isViewDesc && (
             <StoreDescription
               store={clickedStore}
               isViewDesc={isViewDesc}
               setIsViewDesc={setIsViewDesc}
+              setClickedStore={setClickedStore}
             />
           )
         )}
