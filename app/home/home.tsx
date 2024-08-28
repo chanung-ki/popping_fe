@@ -8,6 +8,8 @@ import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import axiosInstance from "@/public/network/axios";
 import { useRouter } from "next/navigation";
+import { SubwayMap, MainSortedData } from "@/public/utils/types";
+import PopupCard from "../components/main/popupCardComponents";
 
 import DummyBanner1 from "@/public/images/dummy/dummy_banner1.jpg";
 import DummyBanner2 from "@/public/images/dummy/dummy_banner2.jpg";
@@ -21,18 +23,6 @@ import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 import { BottomBox, DefaultLayout } from "../components/layout";
 import Router from "@/node_modules/next/router";
-
-interface SubwayMap {
-  [key: string]: number[]; // 인덱스 시그니처 추가
-  성수역: number[];
-  강남역: number[];
-  잠실역: number[];
-  용산역: number[];
-  여의도역: number[];
-  홍대입구역: number[];
-  압구정역: number[];
-  삼성역: number[];
-}
 
 const subway: SubwayMap = {
   성수역: [127.055983543396, 37.54457732085582],
@@ -49,6 +39,9 @@ const HomePage = () => {
   const router = useRouter();
   const parentDiv = useRef<HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState<number>(0);
+  const [sortPopularity, setSortPopularity] = useState<MainSortedData[] >([]);
+  const [sortDate, setSortDate] = useState<MainSortedData[] >([]);
+
 
   const updateParentWidth = () => {
     if (parentDiv.current) {
@@ -73,6 +66,24 @@ const HomePage = () => {
 
   };
 
+  const popupCardListAPI = async () => {
+    
+    try {
+      const response = await axiosInstance.get(`/api/maps/main-popups`);
+
+      if (response.status === 200 ){
+        setSortPopularity(response.data.sortPopularity)
+        setSortDate(response.data.sortDate)
+      }
+    }catch{
+
+    }
+
+  };
+
+  useEffect(()=>{
+    popupCardListAPI()
+  },[])
 
   useEffect(() => {
     updateParentWidth();
@@ -133,31 +144,15 @@ const HomePage = () => {
             </ContentsContainer>
           </Section>
 
-          <Section>
-            <p>최근 본 팝업스토어</p>
-            <ContentsContainer>
-              <StoreContainer>
-                <StoreImage image={DummyStore.src} />
-                <StoreDesc>
-                  <p>팝핑 스토어</p>
-                  <p>서울 용산구</p>
-                </StoreDesc>
-              </StoreContainer>
-            </ContentsContainer>
-          </Section>
-
-          <Section>
-            <p>새로운 팝업스토어</p>
-            <ContentsContainer>
-              <StoreContainer>
-                <StoreImage image={DummyStore.src} />
-                <StoreDesc>
-                  <p>팝핑 스토어</p>
-                  <p>서울 용산구</p>
-                </StoreDesc>
-              </StoreContainer>
-            </ContentsContainer>
-          </Section>
+          <PopupCard
+            title="인기 팝업스토어"
+            storeData={sortPopularity}
+          />
+          <PopupCard
+            title="새로운 팝업스토어"
+            storeData={sortDate}
+          />
+          
         </Sections>
       </Container>
       <BottomBox />
@@ -230,7 +225,7 @@ const ContentsContainer = styled.div`
   gap: 16px;
 
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
 
   div:last-child {
     margin-right: 16px;
@@ -260,8 +255,8 @@ const StoreContainer = styled.div`
 const StoreImage = styled.div<{ image: string | null }>`
   flex: 0 0 auto;
 
-  width: 82px;
-  height: 82px;
+  width: 120px;
+  height: 120px;
   border-radius: 8px;
   background: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.greyColor};
@@ -279,7 +274,7 @@ const StoreDesc = styled.div`
   p:first-child {
     color: ${COLORS.secondaryColor};
     font-family: "Pretendard";
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -288,7 +283,7 @@ const StoreDesc = styled.div`
   p:last-child {
     color: ${COLORS.greyColor};
     font-family: "Pretendard";
-    font-size: 8px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;

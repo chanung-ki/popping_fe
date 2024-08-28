@@ -2,35 +2,83 @@
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
-import { useState } from "react";
-import {
-  PopupStoreDataType,
-} from "@/public/utils/types";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
+import axiosInstance from "@/public/network/axios";
+
+interface StoreCardProps {
+  store: PopupStoreSimpleData;
+  clickedStore: PopupStoreSimpleData | null;
+  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
+  isViewDesc: boolean;
+  setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  isPopper: boolean;
+}
 
 //TODO : Props interface 정의 필요
-const StoreCard: React.FC<{
-  store : PopupStoreDataType;
-}> = ({ store }) => {
+const StoreCard: React.FC<StoreCardProps> = ({
+  store,
+  clickedStore,
+  setClickedStore,
+  isViewDesc,
+  setIsViewDesc,
+  isPopper,
+}: StoreCardProps) => {
+  const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
+
+  const popupStoreAPI = async (popupId:string) => {
+
+    await axiosInstance
+      .get(`/api/maps/popup/${popupId}`)
+      .then((response: any) => {
+        setClickedStore(response.data.popupData);
+      })
+      .catch((error: any) => {
+        console.error("There was an error making the GET request!", error);
+      });
+  };
+
+
+  // 스토어 클릭시
+  const onClickHandler = (popupId:string) => {
+    popupStoreAPI(popupId)
+    setIsViewDesc(!isViewDesc);
+  };
+
   return (
-    <StoreCardContainer>
-      {/*StoreThumbnail에 이미지가 들어가도록 변경 필요*/}
+    <StoreCardContainer onClick={()=>onClickHandler(store.id)}>
       <StoreThumbnail>
-        <PopupStoreThumbnailImage
+        {/*실제 데이터 이미지*/}
+        {/* <Image
           src={`data:image/jpeg;base64,${store.image}`}
+          width={166}
+          height={166}
+          alt={store.description[0]}
+        /> */}
+
+        {/*더미 데이터 이미지*/}
+        <Image
+          src={`data:image/jpeg;base64,${store.image}`}
+          width={166}
+          height={166}
+          alt={"앨랠래"}
         />
-        <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
-          <IconHeart
-            color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
-            width={16}
-            height={15}
-          />
-        </div>
+        {isPopper || (
+          <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
+            <IconHeart
+              color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
+              width={16}
+              height={15}
+            />
+          </div>
+        )}
       </StoreThumbnail>
-      <p className={"store-name"}>{store.title}</p>
-      <p className={"store-desc"}>
-        {store.description}
-      </p>
+      <div className={"store-name"}>{store.title}</div>
+      <div className={"store-desc"}>{store.description[0]}</div>
     </StoreCardContainer>
   );
 };
@@ -49,6 +97,8 @@ const StoreCardContainer = styled.div`
 
   width: 166px;
 
+  cursor: pointer;
+
   .store-name {
     font-family: Pretendard;
     font-size: 16px;
@@ -65,9 +115,10 @@ const StoreCardContainer = styled.div`
     font-weight: 300;
     line-height: normal;
 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 `;
 
@@ -78,6 +129,7 @@ const StoreThumbnail = styled.div`
 
   border-radius: 8px;
   background-color: ${COLORS.greyColor};
+  overflow: hidden;
 
   .icon {
     position: absolute;
