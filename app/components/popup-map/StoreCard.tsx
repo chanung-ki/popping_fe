@@ -3,14 +3,22 @@ import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
 import { useState } from "react";
+import {
+  PopupStoreDataType,
+} from "@/public/utils/types";
 
 //TODO : Props interface 정의 필요
-const StoreCard: React.FC = () => {
+const StoreCard: React.FC<{
+  store : PopupStoreDataType;
+}> = ({ store }) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   return (
     <StoreCardContainer>
       {/*StoreThumbnail에 이미지가 들어가도록 변경 필요*/}
       <StoreThumbnail>
+        <PopupStoreThumbnailImage
+          src={`data:image/jpeg;base64,${store.image}`}
+        />
         <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
           <IconHeart
             color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
@@ -19,13 +27,20 @@ const StoreCard: React.FC = () => {
           />
         </div>
       </StoreThumbnail>
-      <p className={"store-name"}>일릭서 스토어</p>
+      <p className={"store-name"}>{store.title}</p>
       <p className={"store-desc"}>
-        일어나라 노예들이여 이 텍스트는 두줄까지만 가능
+        {store.description}
       </p>
     </StoreCardContainer>
   );
 };
+
+const PopupStoreThumbnailImage = styled.img`
+  width: 100%; 
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+`;
 
 const StoreCardContainer = styled.div`
   display: flex;
@@ -49,6 +64,10 @@ const StoreCardContainer = styled.div`
     font-style: normal;
     font-weight: 300;
     line-height: normal;
+
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
   }
 `;
 

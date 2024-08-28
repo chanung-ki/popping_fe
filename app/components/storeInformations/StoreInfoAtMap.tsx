@@ -6,13 +6,13 @@ import { user } from "@/public/utils/types";
 import { ButtonLarge } from "../buttons";
 import { IconChevronLeft } from "../icons";
 import { SetStateAction } from "react";
+import { PopupStoreDataType } from "@/public/utils/types";
 
 interface StoreInfoAtMapProps {
   store: PopupStoreDataType
   setStore: React.Dispatch<SetStateAction<boolean>>;
   isExpanded: boolean
 }
-import { PopupStoreDataType } from "@/public/utils/types";
 
 //TODO : Props 구체화 필요함.
 const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpanded }) => {
@@ -50,7 +50,7 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
         </div>
 
         <div className={"slider-store-desc"}>
-          {store.event.map((item: string, index: number) => (
+          {store.description.map((item: string, index: number) => (
             <p key={index}>
               {item}
             </p>
