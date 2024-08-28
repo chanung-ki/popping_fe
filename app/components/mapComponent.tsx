@@ -10,7 +10,7 @@ import { Store } from "@/public/utils/types";
 import Image from "next/image";
 import { formatDate } from "@/public/utils/function";
 import StoreDescription from "./popup-map/StoreDescription";
-
+import { useRouter, useSearchParams } from "next/navigation";
 declare global {
   interface Window {
     naver: any;
@@ -18,6 +18,8 @@ declare global {
 }
 
 const MapComponent: React.FC = () => {
+  const router = useRouter();
+
   // 서울 25개구 더미 데이터
   const DUMMY_SEOUL_OPTIONS = [
     { value: "서울시 종로구", label: "서울시 종로구" },
@@ -129,6 +131,18 @@ const MapComponent: React.FC = () => {
       viewCount: 1,
     },
   ];
+
+  const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (!selectedLocation) {
+        alert("검색할 지역을 선택해주세요.");
+      } else {
+        router.push(
+          `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
+        );
+      }
+    }
+  };
 
   const changeMarker = (markerType: string) => {
     setSelectedCategory(markerType);
@@ -351,6 +365,11 @@ const MapComponent: React.FC = () => {
                 <SelectedLocationBanner>
                   {selectedLocation ? selectedLocation : "지역 선택"}
                 </SelectedLocationBanner>
+                <input
+                  type="text"
+                  placeholder="검색어를 입력하세요."
+                  onKeyDown={searchHandler}
+                />
               </SearchContentsContainer>
             </SearchContainer>
           </>
@@ -536,6 +555,7 @@ const SearchContentsContainer = styled.div`
   & > input {
     border: none;
     background-color: ${COLORS.lightGreyColor};
+    width: 60%;
 
     &::placeholder {
       font-size: 12px;
