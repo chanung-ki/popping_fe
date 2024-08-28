@@ -60,14 +60,34 @@ export interface LocationDataType {
 
 export interface PopupStoreDataType {
   id: string;
+  brandName:string;
   title: string;
   location: LocationDataType;
-  startDate: string;
-  endDate: string;
-  openTime: string[];
+  date:{
+    start:string;
+    end:string;
+  }
+  openTime: {
+    day:string;
+    startTime:string;
+    endTime:string;
+  }
   description: string[];
-  image: any;
   isSaved: boolean;
+  image: any;
+  homepage:string;
+  sns:string[];
+  viewCount: number;
+}
+
+export interface PopupStoreSimpleData {
+  id: string;
+  title: string;
+  location: LocationDataType;
+  description: string[];
+  isSaved: boolean;
+  image: any;
+  viewCount: number;
 }
 
 export interface PlaceDataType {
@@ -83,23 +103,23 @@ export interface PlaceDataType {
   geoData: GeoDataType;
 }
 
-//Store
-export interface Store {
-  id: string;
-  title: string;
-  location: {
-    address: string;
-    placeName: string;
-    geoData: {
-      type: "Point";
-      coordinates: number[];
-    }
-  };
-  description: string[];
-  isSaved: boolean;
-  image: string;
-  viewCount: number;
-}
+// //Store
+// export interface Store {
+//   id: string;
+//   title: string;
+//   location: {
+//     address: string;
+//     placeName: string;
+//     geoData: {
+//       type: "Point";
+//       coordinates: number[];
+//     }
+//   };
+//   description: string[];
+//   isSaved: boolean;
+//   image: string;
+//   viewCount: number;
+// }
 
 // online Popup Type INTERFACE
 
@@ -212,3 +232,26 @@ export type brandManageTypes = {
   thumbnail: string;
   description: string;
 };
+
+export type SubwayMap = {
+  [key: string]: number[]; // 인덱스 시그니처 추가
+  성수역: number[];
+  강남역: number[];
+  잠실역: number[];
+  용산역: number[];
+  여의도역: number[];
+  홍대입구역: number[];
+  압구정역: number[];
+  삼성역: number[];
+}
+
+export type MainSortedData = {
+  id:string;
+  title:string;
+  location:LocationDataType;
+  image: any;
+}
+
+
+
+

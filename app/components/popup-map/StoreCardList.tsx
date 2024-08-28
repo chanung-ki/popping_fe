@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import StoreCard from "./StoreCard";
-import { Store } from "@/public/utils/types";
+import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
 
 interface StoreCardListProps {
-  storeList: Store[];
+  storeList: PopupStoreSimpleData[];
   isPopper: boolean;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
-  clickedStore: Store | null;
-  setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
+  clickedStore: PopupStoreSimpleData | null;
+  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
 }
 
 const StoreCardList: React.FC<StoreCardListProps> = ({
@@ -27,7 +27,7 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
         <ThemeContainer>
           <div className={"theme-title"}>내 팝업 스토어</div>
           <StoreCardListContainer>
-            {storeList.map((store: Store) => (
+            {storeList.map((store: PopupStoreSimpleData) => (
               <StoreCard
                 key={store.id}
                 store={store}
@@ -41,10 +41,10 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
           </StoreCardListContainer>
         </ThemeContainer>
 
-        <ThemeContainer>
+        {/* <ThemeContainer>
           <div className={"theme-title"}>기타</div>
           <StoreCardListContainer>
-            {storeList.map((store: Store) => (
+            {storeList.map((store: PopupStoreSimpleData) => (
               <StoreCard
                 key={store.id}
                 store={store}
@@ -56,13 +56,13 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
               />
             ))}
           </StoreCardListContainer>
-        </ThemeContainer>
+        </ThemeContainer> */}
       </ThemeListContainer>
     </Container>
   ) : (
     <Container>
       <StoreCardListContainer>
-        {storeList.map((store: Store) => (
+        {storeList.map((store: PopupStoreSimpleData) => (
           <StoreCard
             key={store.id}
             store={store}
