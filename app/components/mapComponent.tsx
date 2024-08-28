@@ -11,6 +11,8 @@ import Image from "next/image";
 import { formatDate } from "@/public/utils/function";
 import StoreDescription from "./popup-map/StoreDescription";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import { user } from "@/public/utils/types";
 declare global {
   interface Window {
     naver: any;
@@ -19,6 +21,8 @@ declare global {
 
 const MapComponent: React.FC = () => {
   const router = useRouter();
+
+  const userData: user = useSelector((state: any) => state.poppingUser.user);
 
   // 서울 25개구 더미 데이터
   const DUMMY_SEOUL_OPTIONS = [
@@ -112,7 +116,7 @@ const MapComponent: React.FC = () => {
       description: ["김태은 전립선 절제술", "김태은 전립선 절제술"],
       isSaved: false,
       image: "/images/popping-orange.png",
-      viewCount: 1,
+      viewCount: 333,
     },
     {
       id: "store125",
@@ -425,6 +429,7 @@ const MapComponent: React.FC = () => {
               isViewDesc={isViewDesc}
               setIsViewDesc={setIsViewDesc}
               setClickedStore={setClickedStore}
+              isPopper={true}
             />
           )
         )}

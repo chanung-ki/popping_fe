@@ -5,12 +5,15 @@ import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Store } from "@/public/utils/types";
+import { ButtonLarge, ButtonSmall } from "../buttons";
+import { useRouter } from "next/navigation";
 
 interface StoreDescriptionProps {
   store: Store;
   setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  isPopper: boolean;
 }
 
 const StoreDescription: React.FC<StoreDescriptionProps> = ({
@@ -18,7 +21,9 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
   isViewDesc,
   setIsViewDesc,
   setClickedStore,
+  isPopper,
 }) => {
+  const router = useRouter();
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
 
   const onClickBackToList = () => {
@@ -47,22 +52,32 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
         <div className={"store-title-container"}>
           <div className={"store-title"}>{store.title}</div>
           <div className={"store-like"}>
-            <div
-              className={"icon"}
-              onClick={() => {
-                setIsLikedStore(!isLikedStore);
-              }}
-            >
-              <IconHeart
-                width={32}
-                height={30}
-                color={isLikedStore ? COLORS.mainColor : COLORS.greyColor}
-              />
-            </div>
-            <div className={"like-count"}>{store.isSaved}만</div>
+            {!isPopper && (
+              <>
+                <div
+                  className={"icon"}
+                  onClick={() => {
+                    setIsLikedStore(!isLikedStore);
+                  }}
+                >
+                  <IconHeart
+                    width={32}
+                    height={30}
+                    color={isLikedStore ? COLORS.mainColor : COLORS.greyColor}
+                  />
+                </div>
+                <div className={"like-count"}>{store.isSaved}만</div>
+              </>
+            )}
           </div>
         </div>
         <div className={"store-desc"}>{store.description[1]}</div>
+
+        {isPopper && (
+          <div className={"store-visitors"}>
+            오늘 하루 <span>{store.viewCount}</span>명이 방문했습니다.
+          </div>
+        )}
 
         <div className={"store-info"}>
           <div className={"store-address"}>
@@ -72,7 +87,30 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
           <div className={"store-date"}>2024.07.24 ~ 2024.08.15</div>
         </div>
       </DescContainer>
-      <VisitButton>방문하기</VisitButton>
+      {isPopper ? (
+        <PopperButtonContainer>
+          <ButtonLarge
+            text={"방문하기"}
+            buttonColor={COLORS.mainColor}
+            textColor={COLORS.whiteColor}
+            onClick={() => {
+              router.push(`/online-popup/${store.id}`);
+            }}
+          />
+          <ButtonLarge
+            text={"통계"}
+            buttonColor={COLORS.whiteColor}
+            textColor={COLORS.mainColor}
+            borderColor={COLORS.mainColor}
+            borderWidth={2}
+            onClick={() => {
+              router.push("/");
+            }}
+          />
+        </PopperButtonContainer>
+      ) : (
+        <VisitButton>방문하기</VisitButton>
+      )}
     </StoreDescContainer>
   );
 };
@@ -178,6 +216,20 @@ const DescContainer = styled.div`
     margin-top: 8px;
   }
 
+  .store-visitors {
+    & > span {
+      color: ${COLORS.mainColor};
+    }
+
+    margin-top: 8px;
+
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
   .store-info {
     display: flex;
     flex-direction: column;
@@ -216,6 +268,19 @@ const VisitButton = styled.button`
   line-height: normal;
 
   cursor: pointer;
+`;
+
+const PopperButtonContainer = styled.div`
+  position: absolute;
+  bottom: 16px;
+  z-index: 4;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  width: calc(100% - 40px);
+  height: 48px;
 `;
 
 export default StoreDescription;
