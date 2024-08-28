@@ -16,7 +16,7 @@ const Goods: React.FC<GoodsProps> = ({ values }) => {
     <Container>
       <div>
         <span>관심 상품이 없습니다.</span>
-        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup/POPPING/store-openning`}>이동하기</Link></span>
+        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup`}>이동하기</Link></span>
       </div>
     </Container>
   )

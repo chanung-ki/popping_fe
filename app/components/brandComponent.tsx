@@ -1,4 +1,4 @@
-'use client;'
+'use client';
 import styled from "styled-components";
 import { IconHeart } from "./icons";
 import { COLORS } from "@/public/styles/colors";
@@ -7,11 +7,10 @@ import { Loading } from "./loading";
 import { useRouter } from "next/navigation";
 import { Follow, FormatFollowers } from "@/public/utils/function";
 import { useState } from "react";
-
+import dayjs from 'dayjs';
 
 interface BrandProps {
-  data: BrandType
-
+  data: BrandType;
 }
 
 function ContractFormatDate(isoDateTime: string) {
@@ -23,25 +22,28 @@ function ContractFormatDate(isoDateTime: string) {
   return `${year}.${month}.${day}`;
 }
 
-
-
 const BrandComponent: React.FC<BrandProps> = ({ data }) => {
   const router = useRouter();
 
   const [isFollowed, setIsFollowed] = useState<boolean>(data.isSaved);
   const [brandData, setBrandData] = useState<BrandType>(data);
 
-  if (!data) return <Loading />
+  if (!data) return <Loading />;
 
+  const now = dayjs();
+  const contractStart = dayjs(data.contractStart);
+  const contractEnd = dayjs(data.contractEnd);
+
+  const isAble = now.isAfter(contractStart) && now.isBefore(contractEnd);
 
   const StoreClickHandler = (brandName: string, isAble: boolean) => {
+    console.log(brandName, isAble)
     if (isAble) {
-      router.push(`online-popup/${brandName}/store-openning`)
+      router.push(`online-popup/${brandName}/store-opening`);
+    } else {
+      alert('종료된 팝업스토어입니다.');
     }
-    else {
-      alert('종료된 팝업스토어입니다.')
-    }
-  }
+  };
 
   const storeFollowHandler = () => {
     if (data) {
@@ -58,9 +60,8 @@ const BrandComponent: React.FC<BrandProps> = ({ data }) => {
   };
 
   return (
-    <Store onClick={() => StoreClickHandler(data.name, data.isAble)} $isAble={data.isAble}>
+    <Store onClick={() => StoreClickHandler(data.name, isAble)} $isAble={isAble}>
       <Top>
-
         <BrandText>{data.name} STORE</BrandText>
         <IsLiked
           onClick={(event) => {
@@ -81,10 +82,10 @@ const BrandComponent: React.FC<BrandProps> = ({ data }) => {
           <SubInfo>
             <BrandStateBadge
               style={{
-                color: data.proceeding === 1 ? COLORS.primaryColor : COLORS.secondaryColor,
-                backgroundColor: data.proceeding === 1 ? COLORS.mainColor : data.proceeding === 2 ? COLORS.greyColor : COLORS.lightGreyColor,
+                color: isAble ? COLORS.primaryColor : COLORS.secondaryColor,
+                backgroundColor: isAble ? COLORS.mainColor : COLORS.lightGreyColor,
               }}>
-              {data.proceeding === 1 ? '진행중' : data.proceeding === 2 ? '종료' : '진행 예정'}
+              {isAble ? '진행중' : now.isBefore(contractStart) ? '종료' : '진행 예정'}
             </BrandStateBadge>
             <BrandDate>
               {ContractFormatDate(data.contractStart)} ~ {ContractFormatDate(data.contractEnd)}
@@ -93,8 +94,8 @@ const BrandComponent: React.FC<BrandProps> = ({ data }) => {
         </Layout>
       </StoreImage>
     </Store>
-  )
-}
+  );
+};
 
 const Layout = styled.div`
   position: absolute;
@@ -113,31 +114,26 @@ const SubInfo = styled.div`
   position: absolute;
   bottom: 12px;
   left: 12px;
-
-
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
-`
+`;
 
 const Store = styled.div<{ $isAble: boolean }>`
   display: flex;
   flex-direction: column;
-
-  cursor: pointer;
   gap: 8px;
   position: relative;
+  cursor: pointer;
+  opacity: ${(props) => (props.$isAble ? 1 : 0.5)};
 `;
 
 const Top = styled.div`
   display: flex;
   flex-direction: row;
-
   justify-content: space-between;
-  
-`
-
+`;
 
 const StoreImage = styled.div<{ image: string | null }>`
   position: relative;
@@ -165,7 +161,7 @@ const BrandStateBadge = styled.span`
   font-weight: 600;
   font-style: normal;
   line-height: normal;
-`
+`;
 
 const BrandDate = styled.p`
   font-size: 16px;
@@ -173,22 +169,19 @@ const BrandDate = styled.p`
   font-weight: 600;
   line-height: normal;
   color: ${COLORS.primaryColor};
-`
+`;
 
 const IsLiked = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   gap: 4px;
   font-size: 14px;
   line-height: normal;
 
   & > span {
-  font-weight: 500;
+    font-weight: 500;
   }
 `;
-
-
 
 export default BrandComponent;

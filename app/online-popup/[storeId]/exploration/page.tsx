@@ -1,39 +1,115 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
+import { DefaultLayout } from "@/app/components/layout";
+import Back from "@/app/components/back";
+import VideoPlayerModal from "@/app/components/VideoPlayer";
+import { IconHomes, IconInstagram } from "@/app/components/icons";
+import { IconHome } from "@/app/navigation/icons";
+
+
+const urlsData = [
+  { value: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', label: '유튜브' },
+  { value: '/videos/sample.mp4', label: '테스트 동영상' },
+  { value: 'https://your-bucket-name.s3.amazonaws.com/your-video.mp4', label: '버킷 동영상' },
+]
 
 const StorePage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
   const router = useRouter();
   const { storeId } = params;
 
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isInStoreName, setIsInStoreName] = useState(false);
+  const [position, setPosition] = useState({ x: window.innerWidth * 0.5, y: 0 });
   const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0); // Progress state
+  const [progress, setProgress] = useState(0);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [progressTitle, setProgressTitle] = useState<string>();
+
+  //  BASE REF
   const characterRef = useRef<HTMLImageElement>(null);
-  const storeNameRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  //  SECTION
+  const shopRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+  const playRef = useRef<HTMLDivElement>(null);
+
+  const [isInStoreName, setIsInStoreName] = useState<boolean>(false);
+  const [isInVideoSection, setIsInVideoSection] = useState<boolean>(false);
+  const [isInPlaySection, setIsInPlaySection] = useState<boolean>(false);
+
+
+  const SectionData = [
+    { location: { top: 15, left: 10 }, name: '영상', type: 'video' },
+    { location: { top: 85, left: 10 }, name: '상점', type: 'shop' },
+    { location: { top: 15, left: 90 }, name: '즐길거리', type: 'play' },
+    { location: { top: 85, left: 90 }, name: 'test3', type: 'video' },
+  ];
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const { clientX, clientY } = event;
-    setPosition({ x: clientX, y: clientY });
+    if (!isModalOpen && containerRef.current) {
+      const { clientX, clientY } = event;
+      const { left, top } = containerRef.current.getBoundingClientRect();
+      setPosition({ x: clientX - left, y: clientY - top });
+    }
   };
+
 
   const checkCollision = useCallback(() => {
     const characterRect = characterRef.current?.getBoundingClientRect();
-    const storeNameRect = storeNameRef.current?.getBoundingClientRect();
+    const shopRect = shopRef.current?.getBoundingClientRect();
+    const videoRect = videoRef.current?.getBoundingClientRect();
+    const playRect = playRef.current?.getBoundingClientRect();
 
-    if (characterRect && storeNameRect) {
-      const isColliding =
-        characterRect.left < storeNameRect.right &&
-        characterRect.right > storeNameRect.left &&
-        characterRect.top < storeNameRect.bottom &&
-        characterRect.bottom > storeNameRect.top;
 
-      setIsInStoreName(isColliding);
+    if (characterRect && playRect) {
+      const isInPlaySection =
+        characterRect.left < playRect.right &&
+        characterRect.right > playRect.left &&
+        characterRect.top < playRect.bottom &&
+        characterRect.bottom > playRect.top;
+      setIsInPlaySection(isInPlaySection);
+      if (isInPlaySection) setProgressTitle(SectionData[2].name);
+    }
+
+
+    if (characterRect && videoRect) {
+      const isInVideoSection =
+        characterRect.left < videoRect.right &&
+        characterRect.right > videoRect.left &&
+        characterRect.top < videoRect.bottom &&
+        characterRect.bottom > videoRect.top;
+
+      setIsInVideoSection(isInVideoSection);
+      if (isInVideoSection) setProgressTitle(SectionData[0].name);
+    }
+
+    if (characterRect && shopRect) {
+      const isInStoreName =
+        characterRect.left < shopRect.right &&
+        characterRect.right > shopRect.left &&
+        characterRect.top < shopRect.bottom &&
+        characterRect.bottom > shopRect.top;
+
+
+      setIsInStoreName(isInStoreName);
+      if (isInStoreName) setProgressTitle(SectionData[1].name);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (containerRef.current && characterRef.current) {
+      const { height } = containerRef.current.getBoundingClientRect();
+      const { height: charHeight } = characterRef.current.getBoundingClientRect();
+
+      setPosition({
+        x: (containerRef.current.offsetWidth - charHeight) / 2 + 25, // Center horizontally
+        y: height * 0.5 // 20% from the bottom
+      });
     }
   }, []);
 
@@ -42,16 +118,13 @@ const StorePage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
       checkCollision();
       requestAnimationFrame(handleAnimationFrame);
     };
-
     requestAnimationFrame(handleAnimationFrame);
-
     return () => {
-      // Cleanup code here if needed
     };
   }, [position, checkCollision]);
 
   useEffect(() => {
-    if (isInStoreName) {
+    if (isInStoreName || isInVideoSection || isInPlaySection) {
       setIsLoading(true);
       setProgress(0); // Reset progress to 0
 
@@ -65,15 +138,20 @@ const StorePage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
 
         if (elapsed >= duration) {
           clearInterval(timer);
-          setProgress(100); // Ensure progress is set to 100%
-          // Delay page transition until after progress bar is hidden
+          setProgress(100);
           setTimeout(() => {
             setIsLoading(false);
-            router.push(`/`);
-          }, 500); // Delay to allow for fade out effect
+            if (isInStoreName) {
+              router.push(`store-main`);
+            } else if (isInVideoSection) {
+              setIsModalOpen(true);
+            }
+            else if (isInPlaySection) {
+              router.push(`/`)
+            }
+          }, 500);
         }
-      }, 100); // Update every 100ms
-
+      }, 100);
       setTimerId(timer);
     } else {
       if (timerId) {
@@ -82,41 +160,109 @@ const StorePage: React.FC<{ params: { storeId: string } }> = ({ params }) => {
       }
       setIsLoading(false);
     }
-  }, [isInStoreName, router]);
+  }, [isInStoreName, isInVideoSection, isInPlaySection, router]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    <Container onClick={handleClick}>
-      <CharacterImage
-        ref={characterRef}
-        src="/images/logo_done.png"
-        alt="Character"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transform: 'translate(-50%, -50%)',
-        }}
-      />
-      <StoreName ref={storeNameRef}>
-        <span>{storeId}</span>
-        <p>STORE</p>
-      </StoreName>
-      {isLoading && (
-        <LoadingOverlay>
-          <ProgressBarContainer>
-            <ProgressBar progress={progress} />
-            <ProgressText>{Math.round(progress)}%</ProgressText>
-          </ProgressBarContainer>
-          <OverlayText>Moving to new page...</OverlayText>
-        </LoadingOverlay>
-      )}
-    </Container>
+    <DefaultLayout top={0} left={0} right={0} bottom={0}>
+      <Container ref={containerRef} onClick={handleClick}>
+        <div style={{ position: 'absolute', left: 20, top: 16, zIndex: 2 }}>
+          <Back url={'/online-popup'} color={COLORS.primaryColor} />
+        </div>
+
+        <CharacterImage
+          ref={characterRef}
+          src="/images/logo_done.png"
+          alt="Character"
+          style={{
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+
+        <StoreName>
+          <span>{storeId}</span>
+          <p>STORE</p>
+        </StoreName>
+
+        <Section
+          ref={videoRef}
+          top={SectionData[0].location.top}
+          left={SectionData[0].location.left}>
+          <span>{SectionData[0].name}</span>
+        </Section>
+
+        <Section
+          ref={shopRef}
+          top={SectionData[1].location.top}
+          left={SectionData[1].location.left}>
+          <span>{SectionData[1].name}</span>
+        </Section>
+
+        <Section
+          ref={playRef}
+          top={SectionData[2].location.top}
+          left={SectionData[2].location.left}>
+          <span>{SectionData[2].name}</span>
+        </Section>
+
+        <Section
+          ref={playRef}
+          top={SectionData[3].location.top}
+          left={SectionData[3].location.left}>
+          <span>{SectionData[3].name}</span>
+        </Section>
+
+        <SNSSection>
+          <SNSIcon>
+            <IconInstagram color={COLORS.secondaryColor} width={undefined} height={30} />
+          </SNSIcon>
+
+          <SNSIcon>
+            <IconHomes color={COLORS.secondaryColor} width={undefined} height={30} />
+          </SNSIcon>
+        </SNSSection>
+
+        {/* <Section
+          key={`section-${index}`}
+          ref={(el) => {
+            sectionRefs.current[index] = el;
+          }}
+          top={item.location.top}
+          left={item.location.left}
+        >
+          <span>{item.name}</span>
+        </Section>
+ */}
+        <VideoPlayerModal
+          urls={urlsData}
+          onClose={handleCloseModal}
+          isVisible={isModalOpen}
+        />
+
+        {isLoading && (
+          <LoadingOverlay>
+            <ProgressBarContainer>
+              <ProgressBar progress={progress} />
+              <ProgressText>{Math.round(progress)}%</ProgressText>
+            </ProgressBarContainer>
+            <OverlayText>{progressTitle}</OverlayText>
+          </LoadingOverlay>
+        )}
+      </Container>
+    </DefaultLayout>
   );
 };
 
 const Container = styled.div`
   width: 100%;
   height: 100dvh;
-  background-color: ${COLORS.mainColor};
+  /* background-image: url('https://www.shutterstock.com/shutterstock/photos/2483951389/display_1500/stock-photo-high-resolution-green-soccer-field-grass-texture-background-2483951389.jpg'); */
+  background-color: ${COLORS.GradeYellowPop};
   position: relative;
   overflow: hidden;
 `;
@@ -130,27 +276,65 @@ const StoreName = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: ${COLORS.primaryColor};
-  padding: 15px 30px;
+  padding: 5% 10%;
   border-radius: 100px;
   z-index: 1;  // StoreName 컴포넌트를 다른 요소보다 위에 표시
   
   & > span {
-    font-size: 28px;
+    font-size: 3em;
     font-weight: 700;
   }
 
   & > p {
-    font-size: 25px;
+    font-size: 2.5em;
     font-weight: 600;
   }
 `;
+
+const Section = styled.div<{ top: number, left: number }>`
+  position: absolute;
+  width: 25%;
+  height: 5%;
+  top: ${(props) => (props.top)}%;
+  left: ${(props) => (props.left)}%;
+  transform: translate(-${(props) => (props.left)}%, -${(props) => (props.top)}%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${COLORS.primaryColor};
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 1;  // StoreName 컴포넌트를 다른 요소보다 위에 표시
+  
+  & > span {
+    font-size: 20px;
+    font-weight: 700;
+  }
+`;
+
+const SNSSection = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  gap: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  z-index: 1;  // StoreName 컴포넌트를 다른 요소보다 위에 표시
+`
+
+const SNSIcon = styled.div`
+  
+`
+
 
 const CharacterImage = styled.img`
   position: absolute;
   width: 50px;  // 필요에 따라 조정
   height: 50px; // 필요에 따라 조정
   z-index: 2;  // 캐릭터 이미지를 StoreName보다 위에 표시
-  transition: left 0.2s, top 0.2s; // 부드러운 이동을 위한 전환 효과
+  transition: left .8s, top 1s; // 부드러운 이동을 위한 전환 효과
 `;
 
 const LoadingOverlay = styled.div`
@@ -182,7 +366,7 @@ const LoadingOverlay = styled.div`
 const ProgressBarContainer = styled.div`
   width: 80%;
   max-width: 400px;
-  background-color: rgba(255, 255, 255, 0.2); // 반투명한 배경
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 25px;
   margin-bottom: 20px;
   position: relative;
