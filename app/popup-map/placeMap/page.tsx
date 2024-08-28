@@ -1,6 +1,6 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { DefaultLayout } from "@/app/components/layout";
 import { styled } from "styled-components";
 import axiosInstance from "@/public/network/axios";
@@ -20,6 +20,18 @@ import StoreInfoList from "@/app/components/storeInformations/StoreInfoList";
 
 const MapTestPage: React.FC = () => {
   const kakaoMapApiId = process.env.NEXT_PUBLIC_KAKAO_API_KEY;
+
+  // 이하 Naver 지도 관련
+  const NAVER_MAP_API_KEY = process.env.NEXT_PUBLIC_NAVER_SECRET_KEY;
+  // 지도 Ref
+  const naverMapElement = useRef<HTMLDivElement | null>(null);
+  //지도 State
+  const [newMap, setNewMap] = useState<naver.maps.Map | null>(null);
+  // 지도 생성
+  let map: naver.maps.Map;
+  // 네이버?
+  const { naver } = window;
+
   const DUMMY_SEOUL_OPTIONS = [
     { value: "서울시 종로구", label: "서울시 종로구" },
     { value: "서울시 중구", label: "서울시 중구" },
@@ -129,6 +141,31 @@ const MapTestPage: React.FC = () => {
         console.error("There was an error making the GET request!", error);
       });
   };
+
+  useEffect(() => {
+    if (!naverMapElement.current || !naver) return;
+    else if (userLocation) {
+      // Map Class : 지도 표현 클래스
+      // 새 지도 인스턴스 생성 -> getUserLocation에서 구한 userLocation을 통해 지도 중심 인스턴스 생성
+      const center = new naver.maps.LatLng(userLocation[0], userLocation[1]);
+
+      const mapOptions = {
+        center: center,
+        zoom: 12,
+        minZoom: 11,
+        maxZoom: 19,
+        zoomControl: true,
+        zoomControlOptions: {
+          style: naver.maps.ZoomControlStyle.SMALL,
+          position: naver.maps.Position.TOP_RIGHT,
+        },
+        mapDataControl: true,
+        scaleControl: false,
+      };
+
+      map = new naver.maps.Map(naverMapElement.current, mapOptions);
+    }
+  }, [userLocation]);
 
   useEffect(() => {
     popupStoreAPI(selectedLocation);
@@ -436,7 +473,7 @@ const MapTestPage: React.FC = () => {
 
   return (
     <DefaultLayout top={0} right={20} bottom={0} left={20}>
-      <KakaoMap id="map"></KakaoMap>
+      <StyledNaverMaps id="naverMap" ref={naverMapElement}></StyledNaverMaps>
       <Container>
         {isSearchClicked ? (
           <UpperSearchContainer>
@@ -737,7 +774,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const KakaoMap = styled.div`
+const StyledNaverMaps = styled.div`
   position: absolute;
 
   top: 0;

@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { Loading } from "@/app/components/loading";
 import { ButtonLarge } from "@/app/components/buttons";
 import { brandManageTypes } from "@/public/utils/types";
+import { Tooltip } from 'react-tooltip'
 
 const OnlinePopUpOpenningPage: React.FC = () => {
 
@@ -48,11 +49,12 @@ const OnlinePopUpOpenningPage: React.FC = () => {
   // api
   const getBrandApi = async () => {
     try {
+      setIsLoading(true);
       const response = await axiosInstance.get(`/api/popup/brand`);
       if (response.status === 200) {
         setIsExist(response.data.isExist);
         if (!response.data.isExist && !hasAlerted.current) {
-          alert("등록된 브랜드 정보가 없습니다. 브랜드 정보를 등록해주세요.\n(로고, 썸네일, 브랜드 소개)");
+          alert("등록된 브랜드 정보가 없습니다. 브랜드 정보를 등록해주세요.\n(브랜드네임은 팝퍼의 닉네임이 사용됩니다.)");
           hasAlerted.current = true;
         } 
         if (response.data.isExist) {
@@ -65,15 +67,12 @@ const OnlinePopUpOpenningPage: React.FC = () => {
           setValueThumbnail(thumbnail);
           setThumbnailBlobUrl(thumbnail);
           setValueDescription(description);
-          setBrandData({
-            id: response.data.brandData.id,
-            logo: logo,
-            thumbnail: thumbnail,
-            description: description,
-          });
+          setBrandData(response.data.brandData);
         }
+        setIsLoading(false);
       }
     } catch (error: any) {
+      setIsLoading(false);
       if (error.response.code === 401) {
         alert("해당 페이지에 접근권한이 없습니다.");
         router.push("/");
@@ -114,12 +113,42 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     }
   };
 
+  const modifyBrandApi = async () => {
+    if (brandData.id !== 0) {
+      setIsLoading(true);
+      try {
+        const response = await axiosInstance.patch(
+          `/api/popup/brand`,
+          {
+            brandId: brandData.id,
+            logo: valueLogo,
+            thumbnail: valueThumbnail,
+            description: valueDescription
+          }
+        );
+        if (response.status === 200) {
+          alert("브랜드 정보가 성공적으로 수정되었습니다.");
+          setIsLoading(true);
+          window.location.reload();
+        }
+      } catch (error: any) {
+        if (error.response.code === 400) {
+          alert("올바른 정보를 입력해주세요.");
+          setIsLoading(false);
+        } else {
+          alert("일시적인 오류가 발생했습니다.");
+          setIsLoading(false);
+        }
+      }
+    }
+  };
+
   const handleClickRegisterBrand = () => {
     registerBrandApi();
   };
 
   const handleClickModifyBrand = () => {
-    alert("수정 api 연동만 하면댐");
+    modifyBrandApi();
   };
 
   const handleChangeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -167,13 +196,13 @@ const OnlinePopUpOpenningPage: React.FC = () => {
       >
         <OpeningImage src={thumbnailBlobUrl} />
         <input
-            id="thumbnailImage"
-            type="file"
-            name="thumbnail"
-            key={Date.now()}
-            accept="image/jpeg, image/png"
-            style={{ display: "none" }}
-            onChange={handleImageChange}
+          id="thumbnailImage"
+          type="file"
+          name="thumbnail"
+          key={Date.now()}
+          accept="image/jpeg, image/png"
+          style={{ display: "none" }}
+          onChange={handleImageChange}
         />
         <Overlay />
       </PointerBox>
@@ -199,7 +228,13 @@ const OnlinePopUpOpenningPage: React.FC = () => {
                   onChange={handleImageChange}
               />
             </PointerBox>
-            <BrandName>{nickname}</BrandName>
+            <BrandName data-tooltip-id="tooltip" data-tooltip-content="브랜드네임은 프로필 설정에서 변경할 수 있습니다." >
+              {nickname}
+            </BrandName>
+            <TooltipCustom 
+              id="tooltip" 
+              place="bottom"
+            />
             <BrandDesc>
               <BrandDescriptionTextArea 
                 placeholder="브랜드 소개를 입력해주세요." 
@@ -236,6 +271,18 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     </DefaultLayout>
   );
 };
+
+const TopNavRightContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0, -50%);
+
+  width: auto;
+  height: 20px;
+
+  cursor: pointer;
+`;
 
 const OpeningImage = styled.img`
   position: absolute;
@@ -305,6 +352,11 @@ const BrandName = styled.h2`
   font-size: 32px;
   font-weight: 700;
   color: ${COLORS.primaryColor};
+  text-align: left;  // Align the text to the left
+`;
+
+const TooltipCustom = styled(Tooltip)`
+  left: 0 !important; // Ensure the tooltip aligns to the left side
 `;
 
 const BrandDesc = styled.p`
@@ -360,6 +412,5 @@ const BrandDescriptionTextArea = styled.textarea`
     border-radius: 4px;
   }
 `;
-
 
 export default OnlinePopUpOpenningPage;
