@@ -36,7 +36,7 @@ const Stores: React.FC<storesType> = ({ values }) => {
 
             <StoreDesc>
               <p>{value.title}</p>
-              <p>{value.event[0]}</p>
+              <p>{value.description[0]}</p>
             </StoreDesc>
           </Store>
         );

@@ -6,6 +6,8 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
+import axiosInstance from "@/public/network/axios";
+import { useRouter } from "next/navigation";
 
 import DummyBanner1 from "@/public/images/dummy/dummy_banner1.jpg";
 import DummyBanner2 from "@/public/images/dummy/dummy_banner2.jpg";
@@ -18,8 +20,33 @@ import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
 
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 import { BottomBox, DefaultLayout } from "../components/layout";
+import Router from "@/node_modules/next/router";
+
+interface SubwayMap {
+  [key: string]: number[]; // 인덱스 시그니처 추가
+  성수역: number[];
+  강남역: number[];
+  잠실역: number[];
+  용산역: number[];
+  여의도역: number[];
+  홍대입구역: number[];
+  압구정역: number[];
+  삼성역: number[];
+}
+
+const subway: SubwayMap = {
+  성수역: [127.055983543396, 37.54457732085582],
+  강남역: [127.02761650085449, 37.49796319921411],
+  잠실역: [127.10013270378113, 37.5132661890097],
+  용산역: [126.96480184793472, 37.52988484762269],
+  여의도역: [126.92406177520752, 37.52163980072133],
+  홍대입구역: [126.925950050354, 37.55811021038101],
+  압구정역: [127.02849626541138, 37.52633678124275],
+  삼성역: [127.06318259239197, 37.50887477317293],
+};
 
 const HomePage = () => {
+  const router = useRouter();
   const parentDiv = useRef<HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState<number>(0);
 
@@ -28,6 +55,24 @@ const HomePage = () => {
       setParentWidth((parentDiv.current.offsetWidth / 4) * 3);
     }
   };
+
+  const handlePlaceClick = async (value: string) => {
+    
+    const geoData = subway[`${value}`]
+
+    try {
+      const response = await axiosInstance.get(`/api/maps/surround-popup?geoX=${geoData[0]}&geoY=${geoData[1]}&sorted=distance&meter=1000`);
+
+      if (response.status === 200 ){
+        sessionStorage.setItem('popupStores', JSON.stringify(response.data.popupStores));
+        router.push("/popup-map?hotPlace=true");
+      }
+    }catch{
+
+    }
+
+  };
+
 
   useEffect(() => {
     updateParentWidth();
@@ -81,10 +126,10 @@ const HomePage = () => {
           <Section>
             <p>HOT PLACE</p>
             <ContentsContainer>
-              <Place image={DummyPlace1.src} />
-              <Place image={DummyPlace2.src} />
-              <Place image={DummyPlace3.src} />
-              <Place image={DummyPlace4.src} />
+              <Place image={DummyPlace1.src} onClick={() => handlePlaceClick('성수역')}/>
+              <Place image={DummyPlace2.src} onClick={() => handlePlaceClick('강남역')}/>
+              <Place image={DummyPlace3.src} onClick={() => handlePlaceClick('잠실역')}/>
+              {/* <Place image={DummyPlace4.src} onClick={() => handlePlaceClick('value')}/> */}
             </ContentsContainer>
           </Section>
 

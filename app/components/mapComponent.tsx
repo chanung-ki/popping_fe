@@ -8,6 +8,9 @@ import { IconChevronLeft, IconSearch, IconX, IconMarker } from "./icons";
 import StyledSelect from "./styledSelect";
 import StoreInformation from "./storeInformations/StoreInformation";
 import StoreCard from "./popup-map/StoreCard";
+import { PopupStoreDataType } from "@/public/utils/types";
+import axiosInstance from "@/public/network/axios";
+import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -16,6 +19,7 @@ declare global {
 }
 
 const MapComponent: React.FC = () => {
+  const router = useRouter();
   // 서울 25개구 더미 데이터
   const DUMMY_SEOUL_OPTIONS = [
     { value: "서울시 종로구", label: "서울시 종로구" },
@@ -53,7 +57,7 @@ const MapComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 팝업 스토어 목록
-  const [storeList, setStoreList] = useState<any[]>([]);
+  const [storeList, setStoreList] = useState<PopupStoreDataType[]>([]);
   // 검색 영역 활성화
   const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
   // 선택된 지역
@@ -65,7 +69,40 @@ const MapComponent: React.FC = () => {
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
 
+  const popupStoreAPI = async (selectedLocation: string|null=null) => {
+    var APIurl = "";
+
+    if (selectedLocation) {
+      const district = selectedLocation.split(' ')[1]
+      APIurl = `/api/maps/off-popups?district=${district}`;
+    } else {
+      APIurl = `/api/maps/off-popups`;
+    }
+
+    await axiosInstance
+      .get(APIurl)
+      .then((response: any) => {
+        setStoreList(response.data.popupStores);
+      })
+      .catch((error: any) => {
+        console.error("There was an error making the GET request!", error);
+      });
+  };
+
+  useEffect(()=>{
+    console.log({storeList})
+  },[storeList])
+
   useEffect(() => {
+    const url = new URL(window.location.href);
+    const hotPlace = url.searchParams.get('hotPlace');
+    if ( hotPlace === 'true' ) {
+      const storedData = sessionStorage.getItem('popupStores');
+      setStoreList(JSON.parse(storedData!));
+    } else{
+      popupStoreAPI();
+    }
+
     if (navigator.geolocation) {
       // 위치 추적을 시작합니다.
       const watchId = navigator.geolocation.watchPosition(
@@ -270,6 +307,7 @@ const MapComponent: React.FC = () => {
                     borderRadius: "12px",
                   }}
                   onChangeHandler={(e: any) => {
+                    popupStoreAPI(e.value);
                     setSelectedLocation(e.value);
                   }}
                 />
@@ -291,18 +329,14 @@ const MapComponent: React.FC = () => {
         {isOpenMenu && (
           <StoreInformationList>
             {/*이 부분에 리스트 렌더링 (map) */}
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
-            <StoreCard />
+            {storeList &&
+              storeList.map((store: PopupStoreDataType, index: number) => (
+                <StoreCard
+                  key={index}
+                  store={store}
+                />
+              ))}
+
             {/*Store Card 더미 데이터 리스트 렌더링 */}
           </StoreInformationList>
         )}
