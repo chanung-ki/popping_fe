@@ -74,7 +74,7 @@ const StoreInformation: React.FC<{
         {store.description}
       </PopupstoreEvent>
       <PopupstoreDate>
-        ~ {formatDate(store.endDate)} 까지
+        ~ {formatDate(store.date.end)} 까지
       </PopupstoreDate>
     </PopupStore>
 

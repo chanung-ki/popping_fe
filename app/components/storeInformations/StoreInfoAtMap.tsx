@@ -59,7 +59,7 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
         <p className={"slider-store-address"}>
           {store.location.address} {store.location.placeName}
         </p>
-        <p className={"slider-store-address"}>{formatDate(store.startDate)} ~ {formatDate(store.endDate)}</p>
+        <p className={"slider-store-address"}>{formatDate(store.date.start)} ~ {formatDate(store.date.end)}</p>
       </PopupStoreDescContainer>
       <ButtonContainer>
         {userData.isPopper ? (
