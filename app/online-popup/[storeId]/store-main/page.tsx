@@ -1,8 +1,5 @@
 "use client";
 import styled from "styled-components";
-import FOLLOW from "@/public/icons/store_follow.svg";
-import GO_BACK from "@/public/icons/gt_white.svg";
-import FOLLOWED from "@/public/icons/store_follow_active.svg";
 import Link from "next/link";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { COLORS } from "@/public/styles/colors";
@@ -15,8 +12,6 @@ import {
 } from "@/public/utils/function";
 import {
   IconBookmark,
-  IconCart,
-  IconChevronLeft,
   IconFollow,
 } from "@/app/components/icons";
 import { BrandType, ProductType } from "@/public/utils/types";
@@ -88,7 +83,6 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
         `/api/popup/brand/store/main/${storeId}`
       );
       if (response.status === 200) {
-        console.log(response.data);
         setBrandData(response.data.brand);
         setProductData(response.data.product);
         setIsFollowed(response.data.brand.isSaved);
@@ -123,7 +117,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
   return (
     <DefaultLayout top={0} right={0} bottom={0} left={0}>
       <div style={{ position: "absolute", top: 16, left: 20 }}>
-        <Back url={"store-openning"} color={undefined} />
+        <Back url={"store-opening"} color={undefined} />
       </div>
 
       <Container ref={containerRef}>
@@ -206,13 +200,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
   );
 };
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  width: 100%;
-  background-color: ${COLORS.primaryColor};
-`;
+
 
 const StoreMainPageContainer = styled.div`
   height: 100%;
@@ -220,6 +208,14 @@ const StoreMainPageContainer = styled.div`
 
   padding: 0 20px;
   padding-bottom: 80px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100%;
+  background-color: ${COLORS.primaryColor};
 `;
 
 const StoreThumbnailContainer = styled.img`

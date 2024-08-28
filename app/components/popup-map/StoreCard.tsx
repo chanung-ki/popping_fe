@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { IconHeart } from "../icons";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -67,6 +68,13 @@ const StoreCard: React.FC<StoreCardProps> = ({
     </StoreCardContainer>
   );
 };
+
+const PopupStoreThumbnailImage = styled.img`
+  width: 100%; 
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+`;
 
 const StoreCardContainer = styled.div`
   display: flex;

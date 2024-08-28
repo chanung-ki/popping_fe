@@ -15,7 +15,7 @@ const Stores: React.FC<storesType> = ({ values }) => {
     <Container>
       <div>
         <span>관심 오프라인 팝업이 없습니다.</span>
-        <span>팝업지도 <Link href={`/online-popup/POPPING/store-openning`}>이동하기</Link></span>
+        <span>팝업지도 <Link href={`/popup-map`}>이동하기</Link></span>
       </div>
     </Container>
   )
@@ -36,7 +36,7 @@ const Stores: React.FC<storesType> = ({ values }) => {
 
             <StoreDesc>
               <p>{value.title}</p>
-              <p>{value.event[0]}</p>
+              <p>{value.description[0]}</p>
             </StoreDesc>
           </Store>
         );

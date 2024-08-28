@@ -65,7 +65,7 @@ export interface PopupStoreDataType {
   startDate: string;
   endDate: string;
   openTime: string[];
-  event: string[];
+  description: string[];
   image: any;
   isSaved: boolean;
 }
@@ -123,8 +123,6 @@ export interface BrandType {
   id: number;
   logo: string;
   name: string;
-  proceeding: number;
-  isAble: boolean;
   conditions: {};
   saved: number;
   isSaved: boolean;
@@ -214,4 +212,3 @@ export type brandManageTypes = {
   thumbnail: string;
   description: string;
 };
-

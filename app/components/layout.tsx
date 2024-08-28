@@ -7,17 +7,18 @@ type LayoutTypes = {
   right: number;
   bottom: number;
   left: number;
+  backgroundColor?: string;
   children: React.ReactNode;
 };
 
-type ContainerPaddingTypes = {
+type ContainerTypes = {
   top: number;
   right: number;
   bottom: number;
   left: number;
 };
 
-const Layout = styled.div`
+const Layout = styled.div<{ backgroundColor?: string }>`
   position: relative;
 
   min-width: ${MobileMinWidth}px;
@@ -25,7 +26,7 @@ const Layout = styled.div`
   width: 100%;
   min-height: 100dvh;
 
-  background-color: ${COLORS.primaryColor};
+  background-color: ${(props) => props.backgroundColor ?? COLORS.primaryColor};
 
   border: 0;
 
@@ -42,7 +43,7 @@ const Layout = styled.div`
   }
 `;
 
-const Container = styled.div<ContainerPaddingTypes>`
+const Container = styled.div<ContainerTypes>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -54,8 +55,6 @@ const Container = styled.div<ContainerPaddingTypes>`
 
   padding: ${(props) => props.top}px ${(props) => props.right}px
     ${(props) => props.bottom}px ${(props) => props.left}px;
-
-  background: ${COLORS.primaryColor};
 
   overflow-x: hidden;
 `;
@@ -69,10 +68,11 @@ export const DefaultLayout = ({
   right,
   bottom,
   left,
+  backgroundColor,
   children,
 }: LayoutTypes) => {
   return (
-    <Layout>
+    <Layout backgroundColor={backgroundColor}>
       <Container top={top} right={right} bottom={bottom} left={left}>
         <>{children}</>
       </Container>
