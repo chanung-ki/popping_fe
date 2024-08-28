@@ -336,8 +336,6 @@ const MapComponent: React.FC = () => {
     } catch (e) {}
   };
 
-
-
   // 카페 마커를 카페 마커 리스트에 추가
   const addEachCafeMarker = (
     id: string,
@@ -402,23 +400,25 @@ const MapComponent: React.FC = () => {
     }
   };
 
-    // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
-    const openInfoWindow = (marker: naver.maps.Marker) => {
-      const storeInfo: Store | undefined = DUMMY_LIST.find((store) => {
-        return store.title === marker.getTitle();
+  // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
+  const openInfoWindow = (marker: naver.maps.Marker) => {
+    const storeInfo: Store | undefined = DUMMY_LIST.find((store) => {
+      return store.title === marker.getTitle();
+    });
+    const newInfoWindow: naver.maps.InfoWindow =
+      new window.naver.maps.InfoWindow({
+        backgroundColor: "transparent",
+        borderWidth: 0,
+        maxWidth: 175,
+        anchorSize: new window.naver.maps.Size(14, 12),
       });
-  
-      const newInfoWindow: naver.maps.InfoWindow =
-        new window.naver.maps.InfoWindow({
-          backgroundColor: "transparent",
-          borderWidth: 0,
-          maxWidth: 175,
-          anchorSize: new window.naver.maps.Size(12, 14),
-        });
-  
-      //img src에는 더미 데이터가 삽입되어 있습니다. 실데이터로 변경하여 주시기 바랍니다.
-      if (storeInfo) {
-        newInfoWindow.setContent(`<div style = "width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
+
+    console.log(newInfoWindow.getPosition());
+
+    //img src에는 더미 데이터가 삽입되어 있습니다. 실데이터로 변경하여 주시기 바랍니다.
+
+    if (storeInfo) {
+      newInfoWindow.setContent(`<div style = "width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
         <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; ">
           <div style= "width: 72px; height: 72px; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden;"
           >
@@ -454,12 +454,12 @@ const MapComponent: React.FC = () => {
           </div>
         </div>
       </div>`);
-      } else {
-        alert("스토어 정보 취득에 실패하였습니다.");
-      }
-  
-      return newInfoWindow;
-    };
+    } else {
+      alert("스토어 정보 취득에 실패하였습니다.");
+    }
+
+    return newInfoWindow;
+  };
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -492,6 +492,17 @@ const MapComponent: React.FC = () => {
       removeMarker("food");
     }
   }, [selectedCategory]);
+
+  // 재희형이 말한 기능 구현 보류중...
+  // useEffect(() => {
+  //   if (clickedStore && isOpenMenu && isViewDesc) {
+  //     const clickedStoreMarker: naver.maps.Marker | undefined =
+  //       storeMarkerList.find(
+  //         (marker) => marker.getTitle() === clickedStore.title
+  //       );
+  //     clickedStoreMarker && openInfoWindow(clickedStoreMarker);
+  //   }
+  // }, [isOpenMenu, clickedStore, isViewDesc]);
 
   useEffect(() => {
     if (navigator.geolocation) {
