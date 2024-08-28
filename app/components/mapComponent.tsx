@@ -14,6 +14,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
 import StoreCardList from "./popup-map/StoreCardList";
+
+interface FoodAndCafe {
+  title: string;
+  bestMenu: string[];
+  gradePoint: number;
+  loadAddr: string;
+  numberAddr: string;
+  telNumber: string;
+  option: "food" | "cafe";
+  charTag: string[];
+  tags: string[];
+  geoData: {
+    type: string;
+    coordinates: number[];
+  };
+}
+
 declare global {
   interface Window {
     naver: any;
@@ -77,12 +94,22 @@ const MapComponent: React.FC = () => {
   const [isViewDesc, setIsViewDesc] = useState<boolean>(false);
   // 선택된 카페 or 맛집
   const [selectedCategory, setSelectedCategory] = useState<string>();
+  // 스토어 마커 리스트
+  const [storeMarkerList, setStoreMarkerList] = useState<naver.maps.Marker[]>(
+    []
+  );
+  // 카페 마커 리스트
+  const [cafeMarkerList, setCafeMarkerList] = useState<naver.maps.Marker[]>([]);
+  // 푸드 마커 리스트
+  const [foodMarkerList, setFoodMarkerList] = useState<naver.maps.Marker[]>([]);
 
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
 
-  // 마커 디자인
+  const createMarkerList: naver.maps.Marker[] = [];
+
+  // 마커 디자인 (store)
   const MARKER = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="41" viewBox="0 0 28 41" fill="none">
   <g clip-path="url(#clip0_821_46)">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.0037 0C6.27056 0 0 6.32055 0 14.1154C0 23.188 14.0037 40.3276 14.0037 40.3276C14.0037 40.3276 28.0075 23.188 28.0075 14.1154C28 6.32055 21.7369 0 14.0037 0ZM14.0037 19.1507C11.2435 19.1507 9.0008 16.8977 9.0008 14.1078C9.0008 11.318 11.236 9.06501 14.0037 9.06501C16.7715 9.06501 19.0067 11.318 19.0067 14.1078C19.0067 16.8977 16.7715 19.1507 14.0037 19.1507Z" fill="#FA8D0E"/>
@@ -91,6 +118,20 @@ const MapComponent: React.FC = () => {
   </g>
   <defs>
     <clipPath id="clip0_821_46">
+      <rect width="28" height="40.32" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>`;
+
+  // 마커 디자인 (food and cafe)
+  const MARKER_FOOD_CAFE = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="41" viewBox="0 0 28 41" fill="none">
+  <g clip-path="url(#clip0_1111_2)">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.0037 0C6.27056 0 0 6.32055 0 14.1154C0 23.188 14.0037 40.3276 14.0037 40.3276C14.0037 40.3276 28.0075 23.188 28.0075 14.1154C28 6.32055 21.7369 0 14.0037 0ZM14.0037 19.1507C11.2435 19.1507 9.0008 16.8977 9.0008 14.1078C9.0008 11.318 11.236 9.06501 14.0037 9.06501C16.7715 9.06501 19.0067 11.318 19.0067 14.1078C19.0067 16.8977 16.7715 19.1507 14.0037 19.1507Z" fill="#F43529"/>
+    <path d="M19.9574 10.7912C19.5334 12.1558 19.7684 13.6397 20.5933 14.8065C21.6146 16.2506 20.5966 18.2479 18.8281 18.2709C17.3992 18.2895 16.0605 18.9715 15.206 20.1167C14.148 21.5341 11.9339 21.1837 11.3659 19.5086C10.9071 18.1555 9.84463 17.093 8.49149 16.6341C6.81648 16.0657 6.46567 13.852 7.88341 12.794C9.02829 11.9394 9.71061 10.6003 9.72917 9.1718C9.75182 7.40321 11.7491 6.38564 13.1935 7.40655C14.3603 8.23145 15.8441 8.46644 17.2088 8.04249C18.8979 7.51755 20.483 9.10275 19.9581 10.7919L19.9574 10.7912Z" fill="white"/>
+    <path d="M17.0739 9.54188L15.5266 9.95655C14.7946 10.1526 14.5496 11.0677 15.0852 11.6038L16.2179 12.7364C16.7536 13.2721 17.6687 13.0271 17.865 12.295L18.2797 10.7477C18.4757 10.0156 17.806 9.34586 17.0739 9.54188Z" fill="#F43529"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_1111_2">
       <rect width="28" height="40.32" fill="white"/>
     </clipPath>
   </defs>
@@ -167,6 +208,190 @@ const MapComponent: React.FC = () => {
     },
   ];
 
+  const DUMMY_FOOD_CAFE_LIST: FoodAndCafe[] = [
+    {
+      title: "성수 명당",
+      bestMenu: ["술집", " 요리주점"],
+      gradePoint: 4,
+      loadAddr: "서울특별시 성동구 연무장19길 10",
+      numberAddr: "서울특별시 성동구 성수동2가 275-71",
+      telNumber: "0507-1493-3227",
+      option: "food",
+      charTag: ["깔끔한", "예약", "저녁식사", "반려동물동반", "예약가능"],
+      tags: ["술모임", "데이트"],
+      geoData: {
+        type: "Point",
+        coordinates: [127.0625821, 37.5411099],
+      },
+    },
+    {
+      title: "테니",
+      bestMenu: ["커피", " 베이커리카페"],
+      gradePoint: 4,
+      loadAddr: "서울특별시 성동구 뚝섬로17가길 55",
+      numberAddr: "서울특별시 성동구 성수동2가 271-7",
+      telNumber: "0507-1341-3094",
+      option: "cafe",
+      charTag: [
+        "깔끔한",
+        "유럽",
+        "아침식사",
+        "점심식사",
+        "저녁식사",
+        "테라스",
+        "야외테라스",
+        "주차",
+        "배달",
+      ],
+      tags: ["데이트", "식사모임"],
+      geoData: {
+        type: "Point",
+        coordinates: [127.0594637, 37.5411948],
+      },
+    },
+    {
+      title: "프롤라",
+      bestMenu: ["커피", " 카페"],
+      gradePoint: 4,
+      loadAddr: "서울특별시 성동구 연무장17길 5",
+      numberAddr: "서울특별시 성동구 성수동2가 272-35",
+      telNumber: "0507-1354-9616",
+      option: "cafe",
+      charTag: ["이국적/이색적", "예쁜", "점심식사", "테이크아웃", "배달"],
+      tags: ["혼카페", "차모임"],
+      geoData: {
+        type: "Point",
+        coordinates: [127.061905, 37.5428909],
+      },
+    },
+  ];
+
+  // 스토어 마커 추가
+  const addStoreMarkers = () => {
+    DUMMY_LIST.forEach((store) => {
+      const dom_id = store.id;
+      const title = store.title;
+      const lat = store.location.geoData.coordinates[0];
+      const lng = store.location.geoData.coordinates[1];
+      addEachStoreMarker(dom_id, title, lat, lng);
+    });
+  };
+
+  // 카페 마커 추가
+  const addCafeMarkers = (list: FoodAndCafe[]) => {
+    list.map((place) => {
+      if (place.option === selectedCategory) {
+        const dom_id = place.title;
+        const title = place.title;
+        const lat = place.geoData.coordinates[0];
+        const lng = place.geoData.coordinates[1];
+        addEachCafeMarker(dom_id, title, lat, lng);
+      }
+    });
+  };
+
+  //푸드 마커 추가
+  const addFoodMarkers = (list: FoodAndCafe[]) => {
+    list.map((place) => {
+      if (place.option === selectedCategory) {
+        const dom_id = place.title;
+        const title = place.title;
+        const lat = place.geoData.coordinates[0];
+        const lng = place.geoData.coordinates[1];
+        addEachFoodMarker(dom_id, title, lat, lng);
+      }
+    });
+  };
+
+  // 스토어 마커를 스토어 마커 리스트에 추가
+  const addEachStoreMarker = (
+    id: string,
+    name: string,
+    lat: number,
+    lng: number
+  ) => {
+    try {
+      let newMarker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(lng, lat),
+        map: mapRef.current,
+        title: name,
+        icon: {
+          content: MARKER,
+          anchor: new window.naver.maps.Point(5, 5),
+        },
+      });
+
+      newMarker.setTitle(name);
+      //스토어 마커 리스트에 추가
+      setStoreMarkerList([...storeMarkerList, newMarker]);
+      // 마커에 이벤트 핸들러 (인포 윈도우)
+    } catch (e) {}
+  };
+
+  // 카페 마커를 카페 마커 리스트에 추가
+  const addEachCafeMarker = (
+    id: string,
+    name: string,
+    lat: number,
+    lng: number
+  ) => {
+    try {
+      let newMarker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(lng, lat),
+        map: mapRef.current,
+        title: name,
+        icon: {
+          content: MARKER_FOOD_CAFE,
+          anchor: new window.naver.maps.Point(5, 5),
+        },
+      });
+
+      newMarker.setTitle(name);
+      //스토어 마커 리스트에 추가
+      setCafeMarkerList([...cafeMarkerList, newMarker]);
+      // 마커에 이벤트 핸들러 (인포 윈도우)
+    } catch (e) {}
+  };
+
+  //푸드 마커를 푸드 마커 리스트에 추가
+  const addEachFoodMarker = (
+    id: string,
+    name: string,
+    lat: number,
+    lng: number
+  ) => {
+    try {
+      let newMarker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(lng, lat),
+        map: mapRef.current,
+        title: name,
+        icon: {
+          content: MARKER_FOOD_CAFE,
+          anchor: new window.naver.maps.Point(5, 5),
+        },
+      });
+
+      newMarker.setTitle(name);
+      //스토어 마커 리스트에 추가
+      setFoodMarkerList([...foodMarkerList, newMarker]);
+      // 마커에 이벤트 핸들러 (인포 윈도우)
+    } catch (e) {}
+  };
+
+  const removeMarker = (type: string) => {
+    if (type === "cafe") {
+      foodMarkerList.forEach((marker) => {
+        marker.setMap(null);
+      });
+      setFoodMarkerList([]);
+    } else if (type === "food") {
+      cafeMarkerList.forEach((marker) => {
+        marker.setMap(null);
+      });
+      setCafeMarkerList([]);
+    }
+  };
+
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (!selectedLocation) {
@@ -181,13 +406,23 @@ const MapComponent: React.FC = () => {
 
   const changeMarker = (markerType: string) => {
     setSelectedCategory(markerType);
-
-    if (markerType === "coffee") {
-      //카페 마커
-    } else if (markerType === "food") {
-      //맛집 마커
-    }
   };
+
+  useEffect(() => {
+    if (selectedCategory === "cafe") {
+      const markerToCafe = DUMMY_FOOD_CAFE_LIST.filter((item) => {
+        item.option === "cafe";
+      });
+      addCafeMarkers(markerToCafe);
+      removeMarker("cafe");
+    } else if (selectedCategory === "food") {
+      const markerToFood = DUMMY_FOOD_CAFE_LIST.filter((item) => {
+        item.option === "food";
+      });
+      addFoodMarkers(markerToFood);
+      removeMarker("food");
+    }
+  }, [selectedCategory]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -221,42 +456,6 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     if (userLocation && window.naver) {
-      const createMarkerList: naver.maps.Marker[] = [];
-
-      const addMarkers = () => {
-        DUMMY_LIST.forEach((store) => {
-          const dom_id = store.id;
-          const title = store.title;
-          const lat = store.location.geoData.coordinates[0];
-          const lng = store.location.geoData.coordinates[1];
-          addEachMarker(dom_id, title, lat, lng);
-        });
-      };
-
-      const addEachMarker = (
-        id: string,
-        name: string,
-        lat: number,
-        lng: number
-      ) => {
-        try {
-          let newMarker = new window.naver.maps.Marker({
-            position: new window.naver.maps.LatLng(lng, lat),
-            map: mapRef.current,
-            title: name,
-            icon: {
-              content: MARKER,
-              anchor: new window.naver.maps.Point(5, 5),
-            },
-          });
-
-          newMarker.setTitle(name);
-          //마커 리스트에 추가
-          createMarkerList.push(newMarker);
-          // 마커에 이벤트 핸들러 (인포 윈도우)
-        } catch (e) {}
-      };
-
       if (!mapRef.current) {
         const mapOptions = {
           center: new window.naver.maps.LatLng(
@@ -292,18 +491,22 @@ const MapComponent: React.FC = () => {
       }
 
       if (!markerRef.current) {
-        // markerRef.current = new window.naver.maps.Marker({
-        //   position: new window.naver.maps.LatLng(
-        //     userLocation.lat,
-        //     userLocation.lng
-        //   ),
-        //   map: mapRef.current,
-        //   icon: {
-        //     content: MARKER,
-        //     anchor: new window.naver.maps.Point(5, 5), // 마커의 중심점을 설정
-        //   },
-        // });
-        addMarkers();
+        // 이하 사용자 위치 마커 (마커 디자인 바꿀지?)
+        markerRef.current = new window.naver.maps.Marker({
+          position: new window.naver.maps.LatLng(
+            userLocation.lat,
+            userLocation.lng
+          ),
+          map: mapRef.current,
+          icon: {
+            content: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <circle cx="10" cy="10" r="10" fill="#27B1FF"/>
+  <circle cx="10" cy="10" r="5" fill="white"/>
+</svg>`,
+            anchor: new window.naver.maps.Point(5, 5),
+          },
+        });
+        addStoreMarkers();
       } else {
         // 위치가 업데이트될 때마다 마커 위치를 업데이트합니다.
         markerRef.current.setPosition(
@@ -439,8 +642,8 @@ const MapComponent: React.FC = () => {
           <ul>
             <li
               id="coffeeMenu"
-              className={selectedCategory === "coffee" ? "menu_selected" : ""}
-              onClick={() => changeMarker("coffee")}
+              className={selectedCategory === "cafe" ? "menu_selected" : ""}
+              onClick={() => changeMarker("cafe")}
             >
               <span className="ico_comm ico_coffee"></span>
               카페
