@@ -106,8 +106,7 @@ const MapComponent: React.FC = () => {
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
-
-  const createMarkerList: naver.maps.Marker[] = [];
+  const infowindowRef = useRef<any>(null);
 
   // 마커 디자인 (store)
   const MARKER = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="41" viewBox="0 0 28 41" fill="none">
@@ -325,8 +324,19 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setStoreMarkerList([...storeMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
+      newMarker.addListener("click", () => {
+        const newInfoWindow: naver.maps.InfoWindow = openInfoWindow(newMarker);
+
+        if (newInfoWindow.getMap()) {
+          newInfoWindow.close();
+        } else if (mapRef.current !== null) {
+          newInfoWindow.open(mapRef.current, newMarker);
+        }
+      });
     } catch (e) {}
   };
+
+
 
   // 카페 마커를 카페 마커 리스트에 추가
   const addEachCafeMarker = (
@@ -391,6 +401,65 @@ const MapComponent: React.FC = () => {
       setCafeMarkerList([]);
     }
   };
+
+    // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
+    const openInfoWindow = (marker: naver.maps.Marker) => {
+      const storeInfo: Store | undefined = DUMMY_LIST.find((store) => {
+        return store.title === marker.getTitle();
+      });
+  
+      const newInfoWindow: naver.maps.InfoWindow =
+        new window.naver.maps.InfoWindow({
+          backgroundColor: "transparent",
+          borderWidth: 0,
+          maxWidth: 175,
+          anchorSize: new window.naver.maps.Size(12, 14),
+        });
+  
+      //img src에는 더미 데이터가 삽입되어 있습니다. 실데이터로 변경하여 주시기 바랍니다.
+      if (storeInfo) {
+        newInfoWindow.setContent(`<div style = "width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; ">
+          <div style= "width: 72px; height: 72px; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden;"
+          >
+            <img
+                src=${"/images/popping-orange.png"}
+                style="width: 100%; height: 100%; object-fit: cover;"
+              />              
+          </div>
+          <div
+            style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600;
+              line-height: normal;
+            "
+          >
+            ${marker.getTitle()}
+          </div>
+    
+          <div
+            style="
+              width: 112px;
+              text-align: center;
+              font-family: Pretendard;
+              font-size: 10px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+            "
+          >
+            ${storeInfo.description[0]}
+          </div>
+        </div>
+      </div>`);
+      } else {
+        alert("스토어 정보 취득에 실패하였습니다.");
+      }
+  
+      return newInfoWindow;
+    };
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -512,6 +581,19 @@ const MapComponent: React.FC = () => {
         markerRef.current.setPosition(
           new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)
         );
+      }
+
+      if (!infowindowRef.current) {
+        // 인포윈도우 생성
+        infowindowRef.current = new window.naver.maps.InfoWindow({
+          content: `<div style="padding: 10px; background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); font-size: 14px; font-weight: 500; color: #333333;">사용자 위치</div>`,
+          backgroundColor: "transparent",
+          borderColor: "transparent",
+          borderWidth: 0,
+          anchorSize: new window.naver.maps.Size(0, 0),
+        });
+        // 인포윈도우를 마커에 연결
+        infowindowRef.current.open(mapRef.current, markerRef.current);
       }
     }
   }, [userLocation]);
