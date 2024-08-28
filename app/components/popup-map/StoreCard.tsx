@@ -13,6 +13,7 @@ interface StoreCardProps {
   setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  isPopper: boolean;
 }
 
 //TODO : Props interface 정의 필요
@@ -22,6 +23,7 @@ const StoreCard: React.FC<StoreCardProps> = ({
   setClickedStore,
   isViewDesc,
   setIsViewDesc,
+  isPopper,
 }: StoreCardProps) => {
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -50,13 +52,15 @@ const StoreCard: React.FC<StoreCardProps> = ({
           height={166}
           alt={"앨랠래"}
         />
-        <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
-          <IconHeart
-            color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
-            width={16}
-            height={15}
-          />
-        </div>
+        {isPopper || (
+          <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
+            <IconHeart
+              color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
+              width={16}
+              height={15}
+            />
+          </div>
+        )}
       </StoreThumbnail>
       <div className={"store-name"}>{store.title}</div>
       <div className={"store-desc"}>{store.description[0]}</div>

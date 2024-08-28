@@ -13,6 +13,7 @@ import StoreDescription from "./popup-map/StoreDescription";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
+import StoreCardList from "./popup-map/StoreCardList";
 declare global {
   interface Window {
     naver: any;
@@ -409,16 +410,15 @@ const MapComponent: React.FC = () => {
         {isOpenMenu && !isViewDesc && !clickedStore ? (
           <StoreInformationList>
             {/* Store Card 더미 데이터 리스트 렌더링 */}
-            {DUMMY_LIST.map((store: Store) => (
-              <StoreCard
-                key={store.id}
-                store={store}
-                isViewDesc={isViewDesc}
-                setIsViewDesc={setIsViewDesc}
-                clickedStore={clickedStore}
-                setClickedStore={setClickedStore}
-              />
-            ))}
+            <StoreCardList
+              storeList={DUMMY_LIST}
+              // isPopper={userData.isPopper}
+              isPopper={false}
+              isViewDesc={isViewDesc}
+              setIsViewDesc={setIsViewDesc}
+              clickedStore={clickedStore}
+              setClickedStore={setClickedStore}
+            />
           </StoreInformationList>
         ) : (
           isOpenMenu &&
@@ -429,6 +429,7 @@ const MapComponent: React.FC = () => {
               isViewDesc={isViewDesc}
               setIsViewDesc={setIsViewDesc}
               setClickedStore={setClickedStore}
+              // isPopper={userData.isPopper}
               isPopper={true}
             />
           )
