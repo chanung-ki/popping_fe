@@ -1,7 +1,6 @@
 'use client'
 
 import styled from "styled-components";
-import Back from "../components/back";
 import { DefaultLayout } from "../components/layout";
 import BrandComponent from "../components/brandComponent";
 import axiosInstance from "@/public/network/axios";
@@ -38,7 +37,7 @@ const OnlinePopupPage: React.FC = () => {
   const [originalData, setOriginalData] = useState<BrandType[]>([]);
   const [brandsData, setBrandsData] = useState<BrandType[]>([]);
   const [selectFilter, setSelectFilter] = useState<number>(0);
-  const [selectActionFilter, setSelectActionFilter] = useState<number>(0);
+  const [selectActionFilter, setSelectActionFilter] = useState<number>(1);
 
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [actionModalShow, setActionModalShow] = useState<boolean>(false);
@@ -50,10 +49,14 @@ const OnlinePopupPage: React.FC = () => {
   }, [router]);
 
   useEffect(() => {
-    if (originalData.length > 0) {
+    if (originalData && originalData.length > 0) {
       FilterClick();
     }
   }, [selectFilter, selectActionFilter]);
+
+  useEffect(() => {
+    FilterClick();
+  }, [originalData])
 
 
   const BrandsDataGet = async () => {
@@ -61,7 +64,8 @@ const OnlinePopupPage: React.FC = () => {
       const response = await axiosInstance.get(`/api/popup/brand/data`);
       if (response.status === 200) {
         setBrandsData(response.data);
-        setOriginalData(response.data)
+        setOriginalData(response.data);
+        setSelectActionFilter(1);
       }
     } catch (error: any) {
       if (error.response.status === 401) {
@@ -77,8 +81,6 @@ const OnlinePopupPage: React.FC = () => {
     let filteredData = [...originalData];
     const now = dayjs();
 
-    // 날짜 포맷 변환 함수
-    console.log(parseDate(filteredData[0].contractEnd).format())
     // 상태에 따른 필터링
     switch (selectActionFilter) {
       case 1: // 진행중
@@ -132,10 +134,8 @@ const OnlinePopupPage: React.FC = () => {
     setModalShow(false);
     setActionModalShow(false);
     setSelectFilter(0);
-    setSelectActionFilter(0);
-
+    setSelectActionFilter(1);
   }
-
 
   const handleFilterSelect = (filterValue: number) => {
     setSelectFilter(filterValue);
@@ -174,7 +174,7 @@ const OnlinePopupPage: React.FC = () => {
                 <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
               </SelectUnderlineTriangleContainer>
             </Filter>
-            {(selectActionFilter !== 0 || selectFilter !== 0) &&
+            {(selectActionFilter !== 1 || selectFilter !== 0) &&
               <Filter onClick={toggleReset}>
                 <IconTrash color={COLORS.secondaryColor} width={12} height={undefined} />
               </Filter>
@@ -288,10 +288,12 @@ const NoData = styled.span`
 `
 
 const Filter = styled.div`
+  min-width: 55px;
   display: flex;
   flex-direction: row;
   gap: 8px;
   align-items: center;
+  justify-content: space-between;
 
   & > span {
     font-size: 14px;

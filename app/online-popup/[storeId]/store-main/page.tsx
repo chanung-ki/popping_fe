@@ -123,7 +123,7 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
   return (
     <DefaultLayout top={0} right={0} bottom={0} left={0}>
       <div style={{ position: "absolute", top: 16, left: 20 }}>
-        <Back url={"store-openning"} color={undefined} />
+        <Back url={"store-opening"} color={undefined} />
       </div>
 
       <Container ref={containerRef}>
