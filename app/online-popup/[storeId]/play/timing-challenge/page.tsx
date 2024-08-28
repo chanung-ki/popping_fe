@@ -1,12 +1,11 @@
 "use client";
 import styled from "styled-components";
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { COLORS } from "@/public/styles/colors";
 import { DefaultLayout } from "@/app/components/layout";
 import Back from "@/app/components/back";
 import { useRouter } from "next/navigation";
 import { ButtonLarge } from "@/app/components/buttons";
-import TimePlayModal from "@/app/components/play/timePlayModal";
 import { MobileMinWidth } from "@/public/styles/size";
 import { MemberBottomButtonContainer } from "@/app/components/member/components";
 
@@ -16,26 +15,29 @@ const TimeMatchingPage: React.FC<{ params: { storeId: string } }> = ({
   const router = useRouter();
   const hasAlerted = useRef<boolean>(false);
   const { storeId } = params;
-  const [parentWidth, setParentWidth] = useState<number>(0);
 
   const [time, setTime] = useState<number>(0);
+  const [goal, setGoal] = useState<number>(10.45);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isFinish, setIsFinish] = useState<boolean>(false);
   const redirectPath = `/online-popup/${storeId}/store-opening`;
 
-  /*
   useEffect(() => {
-    if (
-      localStorage.getItem("isPlayTimeGame") === "true" &&
-      !hasAlerted.current
-    ) {
-      alert("이미 해당 게임에 참여하셨습니다.");
-      hasAlerted.current = true;
-      router.push(redirectPath);
-    }
+    const rawStorageValue = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step3`)
+
+      if (rawStorageValue !== null) {
+        const parsedValue = JSON.parse(rawStorageValue)
+        if (
+          parsedValue.status &&
+          !hasAlerted.current
+        ) {
+          alert("이미 해당 게임에 참여하셨습니다.");
+          hasAlerted.current = true;
+          router.push(redirectPath);
+        }
+      } 
   }, [router]);
-  */
 
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined;
@@ -59,9 +61,11 @@ const TimeMatchingPage: React.FC<{ params: { storeId: string } }> = ({
 
   const handleStop = () => {
     setIsRunning(false);
-    localStorage.setItem("isPlayTimeGame", JSON.stringify(true));
-    // 성공 조건을 설정
-    if (time === 10) {
+
+    const value = JSON.stringify({ status: true, view: false });
+    localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step3`, value);
+
+    if (time === goal) {
       setIsSuccess(true);
     } else {
       setIsSuccess(false);
@@ -78,14 +82,14 @@ const TimeMatchingPage: React.FC<{ params: { storeId: string } }> = ({
       backgroundColor={COLORS.secondaryColor}
     >
       <BackContainer>
-        <Back url={"store-opening"} color={COLORS.primaryColor} />
+        <Back url={redirectPath} color={COLORS.primaryColor} />
       </BackContainer>
       <Container>
         <PlayContainer>
           <PlayHeaderContainer>
             <PlayTitleText>타이밍을 잡아라!</PlayTitleText>
             {!isFinish && (
-              <PlayDescText>{6.9}초의 타이밍을 잡아보세요!</PlayDescText>
+              <PlayDescText>{goal}초의 타이밍을 잡아보세요!</PlayDescText>
             )}
           </PlayHeaderContainer>
           {!isFinish && (
@@ -98,9 +102,9 @@ const TimeMatchingPage: React.FC<{ params: { storeId: string } }> = ({
                   <div
                     onClick={() => {
                       if (isRunning) {
-                        handleStop;
+                        handleStop();
                       } else {
-                        handleStart;
+                        handleStart();
                       }
                     }}
                   />
@@ -111,17 +115,29 @@ const TimeMatchingPage: React.FC<{ params: { storeId: string } }> = ({
           {isFinish && (
             <>
               <MiddleFinishText>
-                {String(6.91).padStart(5, "0")}초로
-                <br />
-                아쉽게도 못 잡았어요...
+                {isSuccess ? (
+                  <>
+                    축하드립니다!
+                    <br />
+                    정확히 {String(time).padStart(5, "0")}초에 멈췄어요 :)
+                    <br />
+                  </>
+                ) : (
+                  <>
+                    {String(time).padStart(5, "0")}초로
+                    <br />
+                    아쉽게도 못 잡았어요...
+                  </>
+                )}
               </MiddleFinishText>
-
               <MemberBottomButtonContainer>
                 <ButtonLarge
                   text="나가기"
                   buttonColor={COLORS.mainColor}
                   textColor={COLORS.primaryColor}
-                  onClick={() => {}}
+                  onClick={() => {
+                    router.push(redirectPath);
+                  }}
                 />
               </MemberBottomButtonContainer>
             </>
