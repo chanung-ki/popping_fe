@@ -6,12 +6,13 @@ import { IconHeart } from "../icons";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Store } from "@/public/utils/types";
+import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
+import axiosInstance from "@/public/network/axios";
 
 interface StoreCardProps {
-  store: Store;
-  clickedStore: Store | null;
-  setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
+  store: PopupStoreSimpleData;
+  clickedStore: PopupStoreSimpleData | null;
+  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
   isPopper: boolean;
@@ -29,14 +30,27 @@ const StoreCard: React.FC<StoreCardProps> = ({
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
+  const popupStoreAPI = async (popupId:string) => {
+
+    await axiosInstance
+      .get(`/api/maps/popup/${popupId}`)
+      .then((response: any) => {
+        setClickedStore(response.data.popupData);
+      })
+      .catch((error: any) => {
+        console.error("There was an error making the GET request!", error);
+      });
+  };
+
+
   // 스토어 클릭시
-  const onClickHandler = () => {
-    setClickedStore(store);
+  const onClickHandler = (popupId:string) => {
+    popupStoreAPI(popupId)
     setIsViewDesc(!isViewDesc);
   };
 
   return (
-    <StoreCardContainer onClick={onClickHandler}>
+    <StoreCardContainer onClick={()=>onClickHandler(store.id)}>
       <StoreThumbnail>
         {/*실제 데이터 이미지*/}
         {/* <Image
@@ -48,7 +62,7 @@ const StoreCard: React.FC<StoreCardProps> = ({
 
         {/*더미 데이터 이미지*/}
         <Image
-          src={"/images/popping-orange.png"}
+          src={`data:image/jpeg;base64,${store.image}`}
           width={166}
           height={166}
           alt={"앨랠래"}

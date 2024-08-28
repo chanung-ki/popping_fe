@@ -4,13 +4,14 @@ import { IconChevronLeft, IconHeart } from "../icons";
 import { COLORS } from "@/public/styles/colors";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Store } from "@/public/utils/types";
+import { PopupStoreDataType } from "@/public/utils/types";
 import { ButtonLarge, ButtonSmall } from "../buttons";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/public/utils/function";
 
 interface StoreDescriptionProps {
-  store: Store;
-  setClickedStore: React.Dispatch<React.SetStateAction<Store | null>>;
+  store: PopupStoreDataType;
+  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
   isPopper: boolean;
@@ -31,10 +32,6 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
     setClickedStore(null);
   };
 
-  useEffect(() => {
-    console.log(store);
-  }, [store]);
-
   return (
     <StoreDescContainer>
       <StoreDescThumbnail>
@@ -42,7 +39,9 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
         {/*실제 데이터용 이미지 */}
         {/* <Image src={`data:image/jpeg;base64,${store.image}`} fill alt={store.title} /> */}
         {/*더미 데이터용 이미지 */}
-        <Image src={"/images/popping-banner.png"} fill alt={"썸네일"} />
+
+        {/* 정슴민은 보아라 store.image리스트이다!! 여러장의 이미지를 보여줘야 한다!!!! */}
+        <Image src={`data:image/jpeg;base64,${store.image[0]}`} fill alt={"썸네일"} />
         <div className={"back-to-list"} onClick={onClickBackToList}>
           <IconChevronLeft width={9} height={16} color={COLORS.whiteColor} />
         </div>
@@ -71,20 +70,24 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
             )}
           </div>
         </div>
-        <div className={"store-desc"}>{store.description[1]}</div>
+        {store.description.map((desc: string, index: number) => (
+          <div key={index} className={"store-desc"}>
+            {desc}
+          </div>
+        ))}
 
         {isPopper && (
           <div className={"store-visitors"}>
-            오늘 하루 <span>{store.viewCount}</span>명이 방문했습니다.
+            총 <span>{store.viewCount}</span>명이 방문했습니다.
           </div>
         )}
 
         <div className={"store-info"}>
           <div className={"store-address"}>
-            {store.location.address} {store.location.placeName}
+            {store.location.address} / {store.location.placeName}
           </div>
           {/*response body에 날짜 정보 없음 */}
-          <div className={"store-date"}>2024.07.24 ~ 2024.08.15</div>
+          <div className={"store-date"}>{formatDate(store.date.start)} ~ {formatDate(store.date.end)}</div>
         </div>
       </DescContainer>
       {isPopper ? (

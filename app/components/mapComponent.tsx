@@ -6,8 +6,8 @@ import { Loading } from "./loading";
 import { IconChevronLeft, IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
 import StoreCard from "./popup-map/StoreCard";
-
-import { Store } from "@/public/utils/types";
+import axiosInstance from "@/public/network/axios";
+import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
 import Image from "next/image";
 import { formatDate } from "@/public/utils/function";
 import StoreDescription from "./popup-map/StoreDescription";
@@ -79,7 +79,7 @@ const MapComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 팝업 스토어 목록
-  const [storeList, setStoreList] = useState<PopupStoreDataType[]>([]);
+  const [storeList, setStoreList] = useState<PopupStoreSimpleData[]>([]);
   // 검색 영역 활성화
   const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
   // 선택된 지역
@@ -87,7 +87,7 @@ const MapComponent: React.FC = () => {
   // 하단 메뉴 오픈 여부
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   // 하단 메뉴 리스트 스토어 클릭 여부
-  const [clickedStore, setClickedStore] = useState<Store | null>(null);
+  const [clickedStore, setClickedStore] = useState<PopupStoreDataType | null>(null);
   // 스토어 좋아요 여부
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
   // 스토어 상세보기 여부
@@ -135,77 +135,6 @@ const MapComponent: React.FC = () => {
     </clipPath>
   </defs>
 </svg>`;
-
-  // 더미데이터
-  const DUMMY_LIST: Store[] = [
-    {
-      id: "store123",
-      title: "일릭서 스토어",
-      location: {
-        address: "서울시 강남구",
-        placeName: "일릭서",
-        geoData: {
-          type: "Point",
-          coordinates: [127.055983543396, 37.54457732085582],
-        },
-      },
-      description: [
-        "일어나라 노예들이여 이 텍스트는 두줄까지만 가능",
-        "일어나라 노예들이여 이 텍스트는 두줄까지만 가능",
-      ],
-      isSaved: false,
-      image: "/images/popping-orange.png",
-      viewCount: 1,
-    },
-    {
-      id: "store124",
-      title: "김태은 전립선 클리닉",
-      location: {
-        address: "서울시 도봉구",
-        placeName: "전립선",
-        geoData: {
-          type: "Point",
-          coordinates: [127.02761650085449, 37.49796319921411],
-        },
-      },
-      description: ["김태은 전립선 절제술", "김태은 전립선 절제술"],
-      isSaved: false,
-      image: "/images/popping-orange.png",
-      viewCount: 333,
-    },
-    {
-      id: "store125",
-      title: "GS THE FRESH 관악점",
-      location: {
-        address: "서울시 관악구",
-        placeName: "GS THE FRESH 관악점",
-        geoData: {
-          type: "Point",
-          coordinates: [127.10013270378113, 37.5132661890097],
-        },
-      },
-      description: ["우리동네 지에스", "우리동네 지에스"],
-      isSaved: false,
-      image: "/images/popping-orange.png",
-      viewCount: 1,
-    },
-    {
-      id: "store126",
-      title: "GS THE FRESH 관악점",
-      location: {
-        address: "서울시 관악구",
-        placeName: "GS THE FRESH 관악점",
-        geoData: {
-          type: "Point",
-          coordinates: [126.96480184793472, 37.52988484762269],
-        },
-      },
-      description: ["우리동네 지에스", "우리동네 지에스"],
-      isSaved: false,
-      image: "/images/popping-orange.png",
-      viewCount: 1,
-    },
-  ];
 
   const DUMMY_FOOD_CAFE_LIST: FoodAndCafe[] = [
     {
@@ -267,7 +196,7 @@ const MapComponent: React.FC = () => {
 
   // 스토어 마커 추가
   const addStoreMarkers = () => {
-    DUMMY_LIST.forEach((store) => {
+    storeList.forEach((store) => {
       const dom_id = store.id;
       const title = store.title;
       const lat = store.location.geoData.coordinates[0];
@@ -402,7 +331,7 @@ const MapComponent: React.FC = () => {
 
   // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
   const openInfoWindow = (marker: naver.maps.Marker) => {
-    const storeInfo: Store | undefined = DUMMY_LIST.find((store) => {
+    const storeInfo: PopupStoreSimpleData | undefined = storeList.find((store) => {
       return store.title === marker.getTitle();
     });
     const newInfoWindow: naver.maps.InfoWindow =
@@ -412,8 +341,6 @@ const MapComponent: React.FC = () => {
         maxWidth: 175,
         anchorSize: new window.naver.maps.Size(14, 12),
       });
-
-    console.log(newInfoWindow.getPosition());
 
     //img src에는 더미 데이터가 삽입되어 있습니다. 실데이터로 변경하여 주시기 바랍니다.
 
@@ -493,6 +420,10 @@ const MapComponent: React.FC = () => {
     }
   }, [selectedCategory]);
 
+  useEffect(()=>{
+    addStoreMarkers();
+  },[storeList])
+
   // 재희형이 말한 기능 구현 보류중...
   // useEffect(() => {
   //   if (clickedStore && isOpenMenu && isViewDesc) {
@@ -524,10 +455,6 @@ const MapComponent: React.FC = () => {
       });
   };
 
-  useEffect(()=>{
-    console.log({storeList})
-  },[storeList])
-
   useEffect(() => {
     const url = new URL(window.location.href);
     const hotPlace = url.searchParams.get('hotPlace');
@@ -535,6 +462,7 @@ const MapComponent: React.FC = () => {
       const storedData = sessionStorage.getItem('popupStores');
       setStoreList(JSON.parse(storedData!));
     } else{
+      sessionStorage.removeItem('popupStores')
       popupStoreAPI();
     }
 
@@ -797,7 +725,7 @@ const MapComponent: React.FC = () => {
           <StoreInformationList>
             {/* Store Card 더미 데이터 리스트 렌더링 */}
             <StoreCardList
-              storeList={DUMMY_LIST}
+              storeList={storeList}
               // isPopper={userData.isPopper}
               isPopper={true}
               isViewDesc={isViewDesc}
