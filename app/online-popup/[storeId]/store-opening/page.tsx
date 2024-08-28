@@ -1,5 +1,5 @@
 "use client";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import axiosInstance from "@/public/network/axios";
@@ -44,25 +44,26 @@ interface StampStep {
 const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   params,
 }) => {
+  const router = useRouter();
   const { storeId } = params;
+
   const joyride2StatusKey = `joyride2_status_${storeId}_openning`;
   const joyrideStatusKey = `joyride_status_${storeId}_openning`;
-  const router = useRouter();
+
+
   const brandRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const stampRef = useRef<HTMLDivElement>(null);
-  const enterRef = useRef<HTMLAnchorElement>(null);
+  const enterRef = useRef<HTMLDivElement>(null);
+  const captionRef = useRef<HTMLDivElement>(null);
 
   const [openingData, setOpeningData] = useState<BrandType>();
-
 
   const [joyrideRun, setJoyrideRun] = useState<boolean>(false);
   const [joyrideRun2, setJoyrideRun2] = useState<boolean>(false);
 
-
   const [steps, setSteps] = useState<Step[]>([]);
   const [steps2, setSteps2] = useState<Step[]>([]);
-
 
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isAnimatingComp, setIsAnimatingComp] = useState<boolean>(false);
@@ -70,15 +71,17 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
 
   const [stampState, setStampState] = useState<StampState>({
-    step1: { status: false, url: '', name: '팝업스토어 입장' },
+    step1: { status: false, url: '', name: '입장확인' },
     step2: { status: false, url: '', name: '소개' },
     step3: { status: false, url: 'play/timing-challenge', name: '타이밍을 잡아라!' },
     step4: { status: false, url: 'play/ox-quiz', name: 'OX 퀴즈' },
-    step5: { status: false, url: '', name: '인스타그램 방문' },
+    step5: { status: false, url: 'https://www.instagram.com/popping.app?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==', name: '인스타그램 방문' },
   });
   const [stampModalName, setStampModalName] = useState<string>();
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [infoModal, setInfoModal] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState(5);
 
 
   const updateParentWidth = () => {
@@ -106,6 +109,10 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   useEffect(() => {
     BrandDataGetAPI();
     const storedStatus = localStorage.getItem(joyrideStatusKey);
+    const check = localStorage.getItem('POPPING_Stamp_step1');
+    if (check) {
+      setIsAnimatingComp(true)
+    }
     if (storedStatus === "finished" || storedStatus === "skipped") {
       setJoyrideRun(false);
     } else {
@@ -131,94 +138,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
       const storedStatus = localStorage.getItem(joyride2StatusKey);
       if (storedStatus === "finished" || storedStatus === "skipped") {
         setJoyrideRun2(false);
-        if (!localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step1`)) {
-          showStampModal(stampState.step1.name);
-          setStampState((prevState) => ({
-            ...prevState,
-            step1: {
-              ...prevState.step1,
-              status: true,
-            },
-          }));
-          const value = JSON.stringify({ status: true, view: true });
-          localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step1`, value);
-        } else {
-          setStampState((prevState) => ({
-            ...prevState,
-            step1: {
-              ...prevState.step1,
-              status: true,
-            },
-          }));
-        }
-        const LocalStep2 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step2`)
-        const LocalStep3 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step3`)
-        const LocalStep4 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step4`)
-        const LocalStep5 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step5`)
-
-        let parsedValue = LocalStep2 ? JSON.parse(LocalStep2) : {};
-        if (parsedValue.status) {
-          if (!parsedValue.view) {
-            showStampModal(stampState.step2.name);
-          }
-          setStampState((prevState) => ({
-            ...prevState,
-            step2: {
-              ...prevState.step2,
-              status: true,
-            },
-          }));
-          const value = JSON.stringify({ status: true, view: true });
-          localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step2`, value);
-        }
-
-        parsedValue = LocalStep3 ? JSON.parse(LocalStep3) : {};
-        if (parsedValue.status) {
-          if (!parsedValue.view) {
-            showStampModal(stampState.step3.name);
-          }
-          setStampState((prevState) => ({
-            ...prevState,
-            step3: {
-              ...prevState.step3,
-              status: true,
-            },
-          }));
-          const value = JSON.stringify({ status: true, view: true });
-          localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step3`, value);
-        }
-
-        parsedValue = LocalStep4 ? JSON.parse(LocalStep4) : {};
-        if (parsedValue.status) {
-          if (!parsedValue.view) {
-            showStampModal(stampState.step4.name);
-          }
-          setStampState((prevState) => ({
-            ...prevState,
-            step4: {
-              ...prevState.step4,
-              status: true,
-            },
-          }));
-          const value = JSON.stringify({ status: true, view: true });
-          localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step4`, value);
-        }
-
-        parsedValue = LocalStep5 ? JSON.parse(LocalStep5) : {};
-        if (parsedValue.status) {
-          if (!parsedValue.view) {
-            showStampModal(stampState.step5.name);
-          }
-          setStampState((prevState) => ({
-            ...prevState,
-            step5: {
-              ...prevState.step5,
-              status: true,
-            },
-          }));
-          const value = JSON.stringify({ status: true, view: true });
-          localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step5`, value);
-        }
+        localStorageCheck();
       } else {
         setJoyrideRun2(true);
       }
@@ -228,96 +148,100 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   useEffect(() => {
     if (!joyrideRun2 && isAnimatingComp) {
       // Chained timeout operations
-      if (!localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step1`)) {
-        showStampModal(stampState.step1.name);
-        setStampState((prevState) => ({
-          ...prevState,
-          step1: {
-            ...prevState.step1,
-            status: true,
-          },
-        }));
-        const value = JSON.stringify({ status: true, view: true });
-        localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step1`, value);
-      } else {
-        setStampState((prevState) => ({
-          ...prevState,
-          step1: {
-            ...prevState.step1,
-            status: true,
-          },
-        }));
-      }
-      const LocalStep2 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step2`)
-      const LocalStep3 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step3`)
-      const LocalStep4 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step4`)
-      const LocalStep5 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step5`)
-
-      let parsedValue = LocalStep2 ? JSON.parse(LocalStep2) : {};
-      if (parsedValue.status) {
-        if (!parsedValue.view) {
-          showStampModal(stampState.step2.name);
-        }
-        setStampState((prevState) => ({
-          ...prevState,
-          step2: {
-            ...prevState.step2,
-            status: true,
-          },
-        }));
-        const value = JSON.stringify({ status: true, view: true });
-        localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step2`, value);
-      }
-
-      parsedValue = LocalStep3 ? JSON.parse(LocalStep3) : {};
-      if (parsedValue.status) {
-        if (!parsedValue.view) {
-          showStampModal(stampState.step3.name);
-        }
-        setStampState((prevState) => ({
-          ...prevState,
-          step3: {
-            ...prevState.step3,
-            status: true,
-          },
-        }));
-        const value = JSON.stringify({ status: true, view: true });
-        localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step3`, value);
-      }
-
-      parsedValue = LocalStep4 ? JSON.parse(LocalStep4) : {};
-      if (parsedValue.status) {
-        if (!parsedValue.view) {
-          showStampModal(stampState.step4.name);
-        }
-        setStampState((prevState) => ({
-          ...prevState,
-          step4: {
-            ...prevState.step4,
-            status: true,
-          },
-        }));
-        const value = JSON.stringify({ status: true, view: true });
-        localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step4`, value);
-      }
-
-      parsedValue = LocalStep5 ? JSON.parse(LocalStep5) : {};
-      if (parsedValue.status) {
-        if (!parsedValue.view) {
-          showStampModal(stampState.step5.name);
-        }
-        setStampState((prevState) => ({
-          ...prevState,
-          step5: {
-            ...prevState.step5,
-            status: true,
-          },
-        }));
-        const value = JSON.stringify({ status: true, view: true });
-        localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step5`, value);
-      }
+      localStorageCheck();
     }
   }, [joyrideRun2]);
+
+  const localStorageCheck = () => {
+    if (!localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step1`)) {
+      showStampModal(stampState.step1.name);
+      setStampState((prevState) => ({
+        ...prevState,
+        step1: {
+          ...prevState.step1,
+          status: true,
+        },
+      }));
+      const value = JSON.stringify({ status: true, view: true });
+      localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step1`, value);
+    } else {
+      setStampState((prevState) => ({
+        ...prevState,
+        step1: {
+          ...prevState.step1,
+          status: true,
+        },
+      }));
+    }
+    const LocalStep2 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step2`)
+    const LocalStep3 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step3`)
+    const LocalStep4 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step4`)
+    const LocalStep5 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step5`)
+
+    let parsedValue = LocalStep2 ? JSON.parse(LocalStep2) : {};
+    if (parsedValue.status) {
+      if (!parsedValue.view) {
+        showStampModal(stampState.step2.name);
+      }
+      setStampState((prevState) => ({
+        ...prevState,
+        step2: {
+          ...prevState.step2,
+          status: true,
+        },
+      }));
+      const value = JSON.stringify({ status: true, view: true });
+      localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step2`, value);
+    }
+
+    parsedValue = LocalStep3 ? JSON.parse(LocalStep3) : {};
+    if (parsedValue.status) {
+      if (!parsedValue.view) {
+        showStampModal(stampState.step3.name);
+      }
+      setStampState((prevState) => ({
+        ...prevState,
+        step3: {
+          ...prevState.step3,
+          status: true,
+        },
+      }));
+      const value = JSON.stringify({ status: true, view: true });
+      localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step3`, value);
+    }
+
+    parsedValue = LocalStep4 ? JSON.parse(LocalStep4) : {};
+    if (parsedValue.status) {
+      if (!parsedValue.view) {
+        showStampModal(stampState.step4.name);
+      }
+      setStampState((prevState) => ({
+        ...prevState,
+        step4: {
+          ...prevState.step4,
+          status: true,
+        },
+      }));
+      const value = JSON.stringify({ status: true, view: true });
+      localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step4`, value);
+    }
+
+    parsedValue = LocalStep5 ? JSON.parse(LocalStep5) : {};
+    if (parsedValue.status) {
+      if (!parsedValue.view) {
+        showStampModal(stampState.step5.name);
+      }
+      setStampState((prevState) => ({
+        ...prevState,
+        step5: {
+          ...prevState.step5,
+          status: true,
+        },
+      }));
+      const value = JSON.stringify({ status: true, view: true });
+      localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step5`, value);
+    }
+  }
 
   const storeFollowHandler = () => {
     if (openingData) {
@@ -374,7 +298,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   }, [brandRef.current]);
 
   useEffect(() => {
-    if (stampRef.current && enterRef.current) {
+    if (stampRef.current && enterRef.current && captionRef.current) {
       setSteps2([
         {
           target: 'body',
@@ -410,6 +334,17 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           placement: 'top',
         },
         {
+          target: captionRef.current,
+          content: (
+            <TourContainer>
+              <h3>안녕하세요!</h3>
+              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+            </TourContainer>
+          ),
+          title: `${storeId.toUpperCase()} STORE`,
+          placement: 'top',
+        },
+        {
           target: 'body',
           content: (
             <TourContainer>
@@ -422,7 +357,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
         },
       ]);
     }
-  }, [stampRef.current, enterRef.current]);
+  }, [stampRef.current, enterRef.current, captionRef.current]);
 
 
 
@@ -470,6 +405,28 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
     }
   };
 
+  const EnterOnClick = (url: string, index: number) => {
+    if (index === 4) {
+      window.open(url, '_blank')
+      const value = JSON.stringify({ status: true, view: false });
+      localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step5`, value);
+      localStorageCheck();
+    }
+
+    if (index === 1) {
+      setInfoModal(true);
+    }
+  }
+
+
+  useEffect(() => {
+    if (infoModal && countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [infoModal, countdown]);
+
+
   if (!openingData) return <Loading />;
   return (
     <DefaultLayout top={0} left={0} right={0} bottom={0} >
@@ -510,17 +467,24 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
                 </StoreSave>
               </StoreInfoContainer>
 
-
-              <StoreStampContainer ref={stampRef}>
+              <StoreStampContainer>
                 <Title>입장 스탬프</Title>
-                <Stemps>
+                <Stamps ref={stampRef}>
                   {Object.entries(stampState).map(([key, value], index) => (
                     <Stamp key={key} status={value.status}>
                       {!value.status && index === 1 && (
-                        <EnterButton href={value.url} ref={enterRef}>
+                        <EnterDiv onClick={() => EnterOnClick(value.url, index)} ref={enterRef}>
+                          참가하기
+                        </EnterDiv>)}
+                      {!value.status && index === 2 && (
+                        <EnterButton href={value.url}>
                           참가하기
                         </EnterButton>)}
-                      {!value.status && index !== 1 && (<EnterButton href={value.url} >
+                      {!value.status && index === 4 && (
+                        <EnterDiv onClick={() => EnterOnClick(value.url, index)}>
+                          참가하기
+                        </EnterDiv>)}
+                      {!value.status && index !== 1 && index !== 2 && index !== 4 && (<EnterButton href={value.url} >
                         참가하기
                       </EnterButton>)}
                       <Image
@@ -529,25 +493,27 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
                         width={84}
                         height={84}
                       />
-                      <StampTitle>{value.name}</StampTitle>
+                      <StampTitle>{index + 1}. {value.name}</StampTitle>
                     </Stamp>
                   ))}
-                </Stemps>
+                </Stamps>
               </StoreStampContainer>
 
-              <StoreStampContainer>
+              <StoreStampContainer ref={captionRef}>
                 <Title>유의사항 안내</Title>
                 <Caption>
-                  Lorem ipsum dolor sit amet consectetur. Leo enim ut eros
-                  euismod id nisl enim. Et mauris scelerisque phasellus egestas
-                  nibh velit. Orci vestibulum nisl est risus at tellus ipsum est.
+                  * OX 퀴즈 Tip! <br /><br />
+                  [2. 소개] 부분을 잘 읽어주세요 ! <br />(매인 색상의 글씨를 주목하세요!)<br /><br />
+                  유의사항이 없어요 ! 재미있게 즐겨주세요 !
                 </Caption>
               </StoreStampContainer>
               {Object.values(stampState).every(step => step.status === true) ? (
                 // 모든 step들의 status가 true일 때 표시할 내용
-                <div>All steps are completed!</div>
+                <BottomButton
+                  status={true}
+                  onClick={() => router.push('store-main')}>입장하기</BottomButton>
               ) : (
-                <DisabledBottomButton>입장하기</DisabledBottomButton>
+                <BottomButton status={false}>입장하기</BottomButton>
               )}
 
             </StoreMainPageContainer>
@@ -586,6 +552,49 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           <ConfirmButton onClick={() => setShowModal(false)}>확인</ConfirmButton>
         </StampModal>
       )}
+
+      {infoModal && (
+        <StampModal>
+          <InfoModalContainer>
+            <InfoModalContent>
+              <StoreName>{storeId.toUpperCase()}</StoreName>
+              <StoreDesc>
+                안녕하세요 😊 <br />
+                <span>팝업은 현재 진행중! 내 손에서 펼쳐지는 팝업스토어</span> 팝핑입니다.
+                <br /><br />
+                저희 팝핑은 팝업스토어처럼 팝팝 튀는 매력의 <span>5명팀인 Developop</span>입니다.
+                <br /><br />
+                해당 서비스에선 총 두 분류의 유저로 나뉘어져서 각 유저별로 각기 다른 기능들을 체험해보실 수 있습니다.
+                <br /><br />
+                - POPPLE 🙋🏻‍♂️🙋🏻‍♀️ <span>(POPUP + PEOPLE)</span>
+                <br />
+                <br />
+                일반 유저입니다. 체험가능한 주요한 기능으로는 팝업지도(오프라인 팝업스토어, 주변 맛집&카페 정보), 온라인 팝업스토어입니다.
+                <br /><br />
+                - POPPER 🏭 <span>(POPUP + -ER)</span>
+                <br />
+                <br />
+                브랜드 유저입니다. 체험가능한 주요한 기능으로는 팝업지도(오프라인 팝업스토어, 주변 맛집&카페 정보), 주변 상권정보, 온라인 팝업스토어 관리 입니다.
+                <br /><br />
+              </StoreDesc>
+            </InfoModalContent>
+            <InfoModalBottom>
+              <InfoCloseButton
+                onClick={() => {
+                  setInfoModal(false);
+                  const value = JSON.stringify({ status: true, view: false });
+                  localStorage.setItem(`${storeId.toUpperCase()}_Stamp_step2`, value);
+                  localStorageCheck();
+                }}>
+                확인
+              </InfoCloseButton>
+            </InfoModalBottom>
+          </InfoModalContainer>
+        </StampModal>
+      )}
+
+
+
 
     </DefaultLayout>
   );
@@ -734,9 +743,17 @@ const StoreSave = styled.span`
 `;
 
 const StoreDesc = styled.p`
+  text-align: left;
   font-size: 14px;
   font-weight: 500;
   line-height: 120%;
+
+  word-break: keep-all;
+
+  & span {
+    font-weight: 600;
+    color: ${COLORS.mainColor};
+  }
 `;
 
 const Title = styled.span`
@@ -753,7 +770,7 @@ const StoreStampContainer = styled.div`
   flex-direction: column;
 `;
 
-const Stemps = styled.div`
+const Stamps = styled.div`
   width: 100%;
 
   display: flex;
@@ -774,7 +791,7 @@ const Stemps = styled.div`
 `
 
 const Stamp = styled.div<{ status: boolean }>`
-  width: 30%;
+  width: 32%;
   display: flex;
   flex-direction: column;
 
@@ -823,10 +840,41 @@ const EnterButton = styled(Link)`
   }
 `;
 
+const EnterDiv = styled.div`
+  cursor: pointer;
+  position: absolute; /* 변경: absolute 위치 조정 */
+  top: -34px; /* 조정: 이미지 위에 8px 위에 위치하도록 함 */
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 4px;
+
+  color: ${COLORS.primaryColor};
+  background-color: ${COLORS.mainColor};
+  padding: 4px 12px;
+
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+
+  z-index: 2;
+  word-break: keep-all;
+
+  &:after {
+    content: "";
+    position: absolute;
+    border-top: 6px solid ${COLORS.mainColor};
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 0px solid transparent;
+    bottom: -6px; /* 조정: 꼬리 부분이 본체에 붙도록 함 */
+    left: 50%; /* 조정: 꼬리 부분이 중앙에 위치하도록 함 */
+    transform: translateX(-50%); /* 조정: 꼬리 부분이 정확히 중앙에 위치하도록 함 */
+  }
+`;
 
 const StampTitle = styled.p`
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 600;
 `
@@ -836,9 +884,11 @@ const Caption = styled.span`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+
+  margin-bottom: 20px;
 `
 
-const DisabledBottomButton = styled.div`
+const BottomButton = styled.div<{ status: boolean }>`
   width: calc(100% - 40px);
 
   display: flex;
@@ -852,7 +902,7 @@ const DisabledBottomButton = styled.div`
   transform: translate(-50%, 100%); /* 시작 위치를 아래로 설정 */
   z-index: 4;
 
-  background-color: ${COLORS.greyColor};
+  background-color: ${(props) => props.status ? COLORS.mainColor : COLORS.greyColor};
   padding: 16px 0;
   border-radius: 8px;
 
@@ -871,11 +921,6 @@ const DisabledBottomButton = styled.div`
     }
   }
 `;
-
-
-
-
-
 
 const stampAnimation = keyframes`
   0% {
@@ -911,7 +956,18 @@ const StampModal = styled.div`
   z-index: 10;
 `;
 
-// Styled component for the stamp image
+const ModalContainer = styled.div`
+  width: 300px;
+  height: 100%;
+  max-height: 500px;
+
+  border-radius: 16px;
+
+  padding: 0 20px;
+
+  background-color: ${COLORS.primaryColor};
+`
+
 const StampImage = styled(Image)`
   animation: ${stampAnimation} 0.5s ease-in-out;
 `;
@@ -934,5 +990,50 @@ const ConfirmButton = styled.button`
   border: none;
   border-radius: 8px;
 `;
+
+const CloseButton = styled.button`
+  cursor: pointer;
+  border: none;
+
+  padding: 12px 32px;
+
+  border-radius: 8px;
+
+  background-color: ${COLORS.mainColor};
+  color: ${COLORS.primaryColor};
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+`
+const InfoModalContainer = styled(ModalContainer)`
+  padding: 20px;
+  max-width: 400px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const InfoModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+`
+
+const InfoModalBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const InfoCloseButton = styled(CloseButton)`
+  margin-top: 20px;
+  width: 100%;
+`;
+
+
 
 export default OnlinePopUpOpenningPage;

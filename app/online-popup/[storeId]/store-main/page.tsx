@@ -60,7 +60,17 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
   }, [containerRef.current]);
 
   useEffect(() => {
-    StoreDataGet();
+    const LocalStep1 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step1`)
+    const LocalStep2 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step2`)
+    const LocalStep3 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step3`)
+    const LocalStep4 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step4`)
+    const LocalStep5 = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step5`)
+    if (!LocalStep1 || !LocalStep2 || !LocalStep3 || !LocalStep4 || !LocalStep5) {
+      alert('접근할 수 없습니다. \n스탬프를 모두 모아주세요 !')
+      router.push(`/online-popup/${storeId}/store-opening`)
+    } else {
+      StoreDataGet();
+    }
   }, []);
 
   const storeFollowHandler = () => {
@@ -188,7 +198,6 @@ const StoreMainPage: React.FC<{ params: { storeId: string } }> = ({
                     />
                   </ProductBookmark>
                 </ProductThumbnail>
-
                 <ProductTitle>{item.name}</ProductTitle>
                 <ProductPrice>{KRWLocaleString(item.price)} KRW</ProductPrice>
               </Product>
