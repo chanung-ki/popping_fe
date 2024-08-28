@@ -16,31 +16,36 @@ const tempQuestion = [
   {
     question:
       "팝핑의 인스타 주소는 @popping.apple 이다.",
-    explanation: "팝핑의 인스타 주소는 @popping.app 입니다.",
+    explanation: 
+      "팝핑의 인스타 주소는 @popping.app 입니다.",
     answer: false,
   },
   {
     question:
       "팝핑의 슬로건은\n'팝업은 현재 진행중! 내 손에서 펼쳐지는 팝업스토어' 이다.",
-    explanation: "팝핑의 슬로건은\n'팝업은 현재 진행중! 내 손에서 펼쳐지는 팝업스토어'가 맞습니다.",
+    explanation: 
+      "팝핑의 슬로건은\n'팝업은 현재 진행중! 내 손에서 펼쳐지는 팝업스토어'가 맞습니다.",
     answer: true,
   },
   {
     question:
       "'팝플'은 popup + people의 합성어이며,\n팝업을 이용하려고 가입하는 사용자이다.",
-    explanation: "'팝플'은 popup + people의 합성어이며,\n팝업을 이용하려고 가입하는 사용자가 맞습니다.",
+    explanation: 
+      "'팝플'은 popup + people의 합성어이며,\n팝업을 이용하려고 가입하는 사용자가 맞습니다.",
     answer: true,
   },
   {
     question:
       "'팝퍼'은 popup + -er의 합성어이며,\n오프라인 팝업스토어만 운영하는 관리자이다.",
-    explanation: "'팝퍼'은 popup + -er의 합성어이며,\n오프라인 및 온라인 팝업스토어를 운영하려는 관리자입니다.",
+    explanation: 
+      "'팝퍼'은 popup + -er의 합성어이며,\n오프라인 및 온라인 팝업스토어를 운영하려는 관리자입니다.",
     answer: false,
   },
   {
     question:
       "팝핑은 총 5인으로 이루어진\nDevelopop 팀의 사이드 프로젝트이다.",
-    explanation: "팝핑은 총 5인으로 이루어진\nDevelopop 팀의 사이드 프로젝트가 맞습니다.",
+    explanation: 
+      "팝핑은 총 5인으로 이루어진\nDevelopop 팀의 사이드 프로젝트가 맞습니다.",
     answer: true,
   },
 ];
