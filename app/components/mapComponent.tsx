@@ -135,6 +135,22 @@ const MapComponent: React.FC = () => {
       image: "/images/popping-orange.png",
       viewCount: 1,
     },
+    {
+      id: "store126",
+      title: "GS THE FRESH 관악점",
+      location: {
+        address: "서울시 관악구",
+        placeName: "GS THE FRESH 관악점",
+        geoData: {
+          type: "Point",
+          coordinates: [127.024612, 37.5326],
+        },
+      },
+      description: ["우리동네 지에스", "우리동네 지에스"],
+      isSaved: false,
+      image: "/images/popping-orange.png",
+      viewCount: 1,
+    },
   ];
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -413,7 +429,7 @@ const MapComponent: React.FC = () => {
             <StoreCardList
               storeList={DUMMY_LIST}
               // isPopper={userData.isPopper}
-              isPopper={false}
+              isPopper={true}
               isViewDesc={isViewDesc}
               setIsViewDesc={setIsViewDesc}
               clickedStore={clickedStore}
