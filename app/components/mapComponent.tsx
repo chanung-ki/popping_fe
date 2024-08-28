@@ -68,6 +68,8 @@ const MapComponent: React.FC = () => {
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
   // 스토어 상세보기 여부
   const [isViewDesc, setIsViewDesc] = useState<boolean>(false);
+  // 선택된 카페 or 맛집
+  const [selectedCategory, setSelectedCategory] = useState<string>();
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -127,6 +129,16 @@ const MapComponent: React.FC = () => {
       viewCount: 1,
     },
   ];
+
+  const changeMarker = (markerType: string) => {
+    setSelectedCategory(markerType);
+
+    if (markerType === "coffee") {
+      //카페 마커
+    } else if (markerType === "food") {
+      //맛집 마커
+    }
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -343,6 +355,26 @@ const MapComponent: React.FC = () => {
             </SearchContainer>
           </>
         )}
+        <CategoryBox isSearchOpen={isActiveSearch}>
+          <ul>
+            <li
+              id="coffeeMenu"
+              className={selectedCategory === "coffee" ? "menu_selected" : ""}
+              onClick={() => changeMarker("coffee")}
+            >
+              <span className="ico_comm ico_coffee"></span>
+              카페
+            </li>
+            <li
+              id="foodMenu"
+              className={selectedCategory === "food" ? "menu_selected" : ""}
+              onClick={() => changeMarker("food")}
+            >
+              <span className="ico_comm ico_store"></span>
+              맛집
+            </li>
+          </ul>
+        </CategoryBox>
       </MapContainer>
       <SlideBottomMenu $isOpen={isOpenMenu}>
         <ToggleButton
@@ -571,6 +603,65 @@ const StoreInformationList = styled.div`
   width: 100%;
   overflow-y: auto;
   width: 100%;
+`;
+
+const CategoryBox = styled.div<{ isSearchOpen: boolean }>`
+  position: absolute;
+  overflow: hidden;
+  top: ${({ isSearchOpen }) => (isSearchOpen ? "150px" : "70px")};
+  left: 20px;
+  width: 100px;
+  height: 50px;
+  z-index: 10;
+  border: 1px solid black;
+  font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+  font-size: 12px;
+  text-align: center;
+  background-color: #fff;
+
+  * {
+    margin: 0;
+    padding: 0;
+    color: #000;
+  }
+
+  .menu_selected {
+    background: #ff5f4a;
+    color: #fff;
+    border-left: 1px solid #915b2f;
+    border-right: 1px solid #915b2f;
+    margin: 0 -1px;
+  }
+
+  li {
+    list-style: none;
+    float: left;
+    width: 50px;
+    height: 45px;
+    padding-top: 5px;
+    cursor: pointer;
+  }
+
+  .ico_comm {
+    display: block;
+    margin: 0 auto 2px;
+    width: 22px;
+    height: 26px;
+    background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png")
+      no-repeat;
+  }
+
+  .ico_coffee {
+    background-position: -10px 0;
+  }
+
+  .ico_store {
+    background-position: -10px -36px;
+  }
+
+  .ico_carpark {
+    background-position: -10px -72px;
+  }
 `;
 
 export default MapComponent;
