@@ -76,7 +76,7 @@ const MyPage: React.FC = () => {
       cleanUserData();
       alert("로그아웃이 완료되었습니다.");
       hasAlerted.current = true;
-      router.push("/");
+      window.location.href = "/";
     }
   };
 
