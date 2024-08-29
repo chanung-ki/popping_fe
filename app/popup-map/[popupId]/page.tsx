@@ -9,11 +9,14 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Follow, formatDate, FormatFollowers } from "@/public/utils/function";
+
 import {
   IconFollow,
   IconLocation,
   IconAderessPin,
+    IconViews
 } from "@/app/components/icons";
+
 import axiosInstance from "@/public/network/axios";
 import { PopupStoreDataType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
@@ -48,6 +51,22 @@ const OfflinePopupStoreDetailPage: React.FC<{
 
   useEffect(() => {
     PopupDetailData();
+
+    const viewPopupList = sessionStorage.getItem('popupViewList')
+
+    if (viewPopupList) {
+      const parsedViewPopupList = JSON.parse(viewPopupList);
+  
+      if (Array.isArray(parsedViewPopupList) && parsedViewPopupList.includes(popupId)) {
+
+      } else {
+        viewCountAPI(parsedViewPopupList); 
+      }
+    } else {
+      viewCountAPI([]); 
+    }
+  }, [router]);
+
     const popupId = sessionStorage.getItem("popupId");
 
     if (popupId) {
@@ -75,9 +94,20 @@ const OfflinePopupStoreDetailPage: React.FC<{
     };
   }, [parentDiv.current]);
 
-  useEffect(() => {
-    // console.log(popupData);
-  }, [popupData]);
+
+  const viewCountAPI = async (parsedViewPopupList:string[]) => {
+    try {
+      const response = await axiosInstance.get(`/api/maps/view-count/${popupId}`);
+  
+      if (response.status === 200) {
+        parsedViewPopupList.push(popupId);  // 배열에 popupId 추가
+        sessionStorage.setItem('popupViewList', JSON.stringify(parsedViewPopupList));  // 배열을 문자열로 변환하여 저장
+      }
+  
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const PopupDetailData = async () => {
     try {
@@ -178,6 +208,9 @@ const OfflinePopupStoreDetailPage: React.FC<{
           <PopupHeader>
             <HeaderLeft>
               <PopupTitle>
+
+                <h3>{popupData.title}</h3>
+
                 <h3>
                   {isAble
                     ? "(진행중)"
@@ -186,14 +219,23 @@ const OfflinePopupStoreDetailPage: React.FC<{
                     : "(진행 예정)"}{" "}
                   {popupData.title}
                 </h3>
+
               </PopupTitle>
               <PopupDate>
+                <BrandStateBadge
+                  style={{
+                    color: isAble ? COLORS.primaryColor : COLORS.secondaryColor,
+                    backgroundColor: isAble ? COLORS.mainColor : COLORS.lightGreyColor,
+                  }}>
+                  {isAble ? '진행중' : now.isBefore(contractStart) ? '진행 예정' : '종료'}
+                </BrandStateBadge>
                 <span>
                   {formatDate(popupData.date.start)} ~{" "}
                   {formatDate(popupData.date.end)}
                 </span>
               </PopupDate>
             </HeaderLeft>
+            <div style={{display: 'flex', gap: 16, alignItems:'center'}}>
             <PopupBookmark
               onClick={(event) => {
                 event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
@@ -207,6 +249,15 @@ const OfflinePopupStoreDetailPage: React.FC<{
               />
               <span>{FormatFollowers(popupData.saveCount)}</span>
             </PopupBookmark>
+            <PopupBookmark>
+              <IconViews
+                color={COLORS.greyColor}
+                width={undefined}
+                height={27}
+              />
+              <span>{FormatFollowers(popupData.viewCount)}</span>
+            </PopupBookmark>
+            </div>
           </PopupHeader>
           <PopupLocation
             onClick={() => {
@@ -283,6 +334,15 @@ const OfflinePopupStoreDetailPage: React.FC<{
     </DefaultLayout>
   );
 };
+
+const BrandStateBadge = styled.span`
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+`;
 
 // Swiper 컨테이너에 대한 스타일링을 추가합니다.
 const SwiperContainer = styled.div`
