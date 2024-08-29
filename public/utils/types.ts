@@ -95,14 +95,16 @@ export interface PopupStoreSimpleData {
 export interface PlaceDataType {
   title: string;
   bestMenu: string[];
-  gradePoint: number;
+  // gradePoint: number;
   loadAddr: string;
-  numberAddr: string;
-  telNumber: string;
+  // numberAddr: string;
+  // telNumber: string;
   option: string;
-  charTag: string[];
-  tags: string[];
+  // charTag: string[];
+  // tags: string[];
   geoData: GeoDataType;
+  image: any;
+  distance:number;
 }
 
 // //Store
