@@ -27,7 +27,7 @@ const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(({ title, sto
               >
                 <ProductThumbnail>
                   <ProductThumbnailImage
-                    src={`data:image/jpeg;base64,${item.image}`}
+                    src={`data:image/webp;base64,${item.image}`}
                   />
                 </ProductThumbnail>
                 <ProductTitle>

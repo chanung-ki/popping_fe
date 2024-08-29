@@ -40,6 +40,14 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
 
   useEffect(() => {
     PopupDetailData();
+    const popupId = sessionStorage.getItem('popupId')
+
+    if (popupId) {
+
+    }else{
+
+    }
+
   }, [router]);
 
   useEffect(() => {
@@ -138,20 +146,9 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
           <PopupHeader>
             <HeaderLeft>
               <PopupTitle>
-                <PopupLocation onClick={() => {
-                  if (locationRef.current) {
-                    locationRef.current.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}>
-                  <IconLocation color={COLORS.greyColor} width={undefined} height={16} />
-                  {popupData.location.address}
-                </PopupLocation>
-                <h3>{popupData.title}</h3>
+                <h3>{isAble ? '(진행중)' : now.isBefore(contractStart) ? '(종료)' : '(진행 예정)'} {popupData.title}</h3>
               </PopupTitle>
               <PopupDate>
-                <span>
-                  {isAble ? '진행중' : now.isBefore(contractStart) ? '종료' : '진행 예정'}
-                </span>
                 <span>
                   {formatDate(popupData.date.start)} ~ {formatDate(popupData.date.end)}
                 </span>
@@ -171,7 +168,14 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
               <span>{FormatFollowers(popupData.saveCount)}</span>
             </PopupBookmark>
           </PopupHeader>
-
+          <PopupLocation onClick={() => {
+            if (locationRef.current) {
+                locationRef.current.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}>
+            {/* <IconLocation color={COLORS.greyColor} width={undefined} height={16} /> */}
+            {popupData.location.address}
+          </PopupLocation>
           <PopupTagContainer>
             {popupData.tag.map((tagName: string, index: number) => (
               <PopupTag key={`tag-${index}`}>{tagName}</PopupTag>
@@ -179,7 +183,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
           </PopupTagContainer>
         </PopupInfo>
         <PopupContent>
-          <PopupContentTitle>설명 | DESCRIPTION</PopupContentTitle>
+          <PopupContentTitle>설명</PopupContentTitle>
           <PopupDescription>
             {popupData.description.map((text: string, index: number) => (
               text === '\n' ? <br key={index} /> : (
@@ -192,9 +196,8 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
 
 
         <PopupContent>
-          <PopupContentTitle ref={locationRef}>위치 | LOCATION</PopupContentTitle>
+          <PopupContentTitle ref={locationRef}>위치</PopupContentTitle>
           <PopupLocation>
-            <IconLocation color={COLORS.greyColor} width={undefined} height={16} />
             {popupData.location.address},{popupData.location.placeName}
           </PopupLocation>
           <NaverMap
@@ -206,11 +209,10 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         </PopupContent>
 
         {/* #TODO  */}
-        {/* 
+        
         <PopupContent>
-          <PopupContentTitle ref={locationRef}>100M이내 맛집 & 카페 | Restaurant & CAFE</PopupContentTitle>
+          <PopupContentTitle ref={locationRef}>100M이내 맛집 & 카페</PopupContentTitle>
           <PopupLocation>
-            <IconLocation color={COLORS.greyColor} width={undefined} height={16} />
             {popupData.location.address},{popupData.location.placeName}
           </PopupLocation>
           <NaverMap
@@ -218,7 +220,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             longitude={popupData.location.geoData.coordinates[0]}
             title={popupData.title}
           />
-        </PopupContent> */}
+        </PopupContent>
       </PopupContainer>
     </DefaultLayout>
   );
@@ -305,15 +307,17 @@ const PopupLocation = styled.div`
 
 const PopupTitle = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   gap: 8px;
+  margin-bottom: 5px;
 
   & > h3 {
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     word-break: break-all;
   }
+
 `;
 
 const PopupDate = styled.span`
@@ -324,7 +328,7 @@ const PopupDate = styled.span`
 
   & > span {
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 500;
   }
 `;
 
@@ -400,12 +404,12 @@ const PopupDescription = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: ${COLORS.lightGreyColor};
-  padding: 20px 12px;
-  border-radius: 8px;
+  /* background-color: ${COLORS.lightGreyColor}; */
+  padding: 0;
+  /* border-radius: 8px; */
 
   & span {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 120%;
   }
 `
