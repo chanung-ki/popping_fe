@@ -12,7 +12,7 @@ import { CallBackProps, STATUS, Step } from 'react-joyride';
 import { Loading } from "@/app/components/loading";
 import CustomJoyride from "@/app/components/tour/CustomJoyride";
 import { TourContainer } from "@/app/components/tour/TourStyle";
-import { IconFollow } from "@/app/components/icons";
+import { IconFollow, IconStamp } from "@/app/components/icons";
 import { Follow, FormatFollowers } from "@/public/utils/function";
 import Image from "next/image";
 
@@ -256,8 +256,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
     }
   };
 
-  const brandRef = useCallback((node: HTMLDivElement)=>{
-    if(node !== null){
+  const brandRef = useCallback((node: HTMLDivElement) => {
+    if (node !== null) {
       setSteps([
         {
           target: 'body',
@@ -294,7 +294,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
         },
       ]);
     }
- },[]);
+  }, []);
 
   // useEffect(() => {
   //   alert("첫번쨰 effect");
@@ -343,8 +343,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
   useEffect(() => {
     if (stampRef.current && enterRef.current && captionRef.current) {
-
-      alert("두번쨰 step set");
 
       setSteps2([
         {
@@ -534,12 +532,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
                       {!value.status && index !== 1 && index !== 2 && index !== 4 && (<EnterButton href={value.url} >
                         참가하기
                       </EnterButton>)}
-                      <Image
-                        src={`/images/참여완료_POPPING.svg`}
-                        alt="test"
-                        width={84}
-                        height={84}
-                      />
+                      <IconStamp color={COLORS.mainColor} width={84} height={84} />
                       <StampTitle>{index + 1}. {value.name}</StampTitle>
                     </Stamp>
                   ))}
@@ -588,13 +581,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
       {showModal && (
         <StampModal>
-          <StampImage
-            id="stamp-image"
-            src="/images/참여완료_POPPING.svg"
-            alt="참여완료 스탬프"
-            width={150}  // Adjust size as needed
-            height={150} // Adjust size as needed
-          />
+          <IconStamp color={COLORS.mainColor} width={150} height={150} />
           <StampDescription>{stampModalName} 스탬프 획득!</StampDescription>
           <ConfirmButton onClick={() => setShowModal(false)}>확인</ConfirmButton>
         </StampModal>
