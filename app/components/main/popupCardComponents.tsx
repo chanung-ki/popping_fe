@@ -5,41 +5,46 @@ import {
   MainSortedData
 } from "@/public/utils/types";
 import Link from "next/link";
+import React from "react";
+
+interface PopupCardProps {
+  title: string;
+  storeData: MainSortedData[];
+}
 
 //TODO : Props interface 정의 필요
-const PopupCard: React.FC<{
-    title : string
-    storeData : MainSortedData[];
-}> = ({ title, storeData }) => {
+const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(({ title, storeData }, ref) => {
   return (
-    <Section>
-        <p>{title}</p>
+    <>
+      <span ref={ref}>{title}</span>
+      <Section>
         <ContentsContainer>
-            {storeData.length > 0 ? (
-                storeData.map((item: MainSortedData, index: number) => (
-                    <Stuff
-                        key={index}
-                        href={`online-popup`}
-                    >
-                        <ProductThumbnail>
-                            <ProductThumbnailImage
-                            src={`data:image/jpeg;base64,${item.image}`}
-                            />
-                        </ProductThumbnail>
-                        <ProductTitle>
-                            {item.title}
-                        </ProductTitle>
-                    </Stuff>
-                ))
-            ) : (
-                <StoreContainer>
-                    <NoneDataText>데이터가 없습니다</NoneDataText>
-                </StoreContainer>
-            )}
+          {storeData.length > 0 ? (
+            storeData.map((item: MainSortedData, index: number) => (
+              <Stuff
+                key={index}
+                href={`online-popup`}
+              >
+                <ProductThumbnail>
+                  <ProductThumbnailImage
+                    src={`data:image/jpeg;base64,${item.image}`}
+                  />
+                </ProductThumbnail>
+                <ProductTitle>
+                  {item.title}
+                </ProductTitle>
+              </Stuff>
+            ))
+          ) : (
+            <StoreContainer>
+              <NoneDataText>데이터가 없습니다</NoneDataText>
+            </StoreContainer>
+          )}
         </ContentsContainer>
-    </Section>
+      </Section>
+    </>
   );
-};
+});
 
 const Stuff = styled(Link)`
   cursor: pointer;
@@ -81,16 +86,6 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  
-
-  p:first-child {
-    color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-  }
 `;
 
 const ContentsContainer = styled.div`
@@ -99,12 +94,13 @@ const ContentsContainer = styled.div`
   gap: 16px;
 
   flex-wrap: nowrap;
-  /* overflow-x: scroll; */
   grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개의 열 */
   
   div:last-child {
     margin-right: 16px;
   }
+
+  margin-right: 20px;
 `;
 
 const StoreContainer = styled.div`

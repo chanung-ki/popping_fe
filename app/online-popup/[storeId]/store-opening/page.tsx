@@ -47,8 +47,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   const router = useRouter();
   const { storeId } = params;
 
-  const joyride2StatusKey = `joyride2_status_${storeId}_openning`;
   const joyrideStatusKey = `joyride_status_${storeId}_openning`;
+  const joyride2StatusKey = `joyride2_status_${storeId}_openning`;
 
 
   const brandRef = useRef<HTMLDivElement>(null);
@@ -129,7 +129,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           setIsAnimatingComp(true);
         }, 1000);
       }, 1500);
-      return () => clearTimeout(timer);
     }
   }, [joyrideRun]);
 

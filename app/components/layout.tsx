@@ -57,6 +57,7 @@ const Container = styled.div<ContainerTypes>`
     ${(props) => props.bottom}px ${(props) => props.left}px;
 
   overflow-x: hidden;
+  overflow-y: hidden;
 `;
 
 const SpacerContainer = styled.div`

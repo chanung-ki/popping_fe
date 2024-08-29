@@ -228,6 +228,7 @@ const OnlinePopupProductPage: React.FC<{
         <Back url={undefined} />
         <ProductThumbnailImg src={productData.thumbnail} />
       </Top>
+
       <ProductContainer>
         <ProductInfo>
           <ProductHeader>
@@ -452,6 +453,8 @@ const ProductBookmark = styled.div`
 `;
 
 const ProductInfo = styled.div`
+  width: 100%;
+
   display: flex;
   flex-direction: column;
 
@@ -459,6 +462,7 @@ const ProductInfo = styled.div`
 `;
 
 const ProductHeader = styled.div`
+  width: calc(100% -20px);
   display: flex;
   flex-direction: row;
 
