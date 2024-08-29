@@ -11,7 +11,9 @@ import { formatDate } from "@/public/utils/function";
 
 interface StoreDescriptionProps {
   store: PopupStoreDataType;
-  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
+  setClickedStore: React.Dispatch<
+    React.SetStateAction<PopupStoreDataType | null>
+  >;
   isViewDesc: boolean;
   setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
   isPopper: boolean;
@@ -41,7 +43,11 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
         {/*더미 데이터용 이미지 */}
 
         {/* 정슴민은 보아라 store.image리스트이다!! 여러장의 이미지를 보여줘야 한다!!!! */}
-        <Image src={`data:image/webp;base64,${store.image[0]}`} fill alt={"썸네일"} />
+        <Image
+          src={`data:image/webp;base64,${store.image[0]}`}
+          fill
+          alt={"썸네일"}
+        />
         <div className={"back-to-list"} onClick={onClickBackToList}>
           <IconChevronLeft width={9} height={16} color={COLORS.whiteColor} />
         </div>
@@ -87,7 +93,9 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
             {store.location.address} / {store.location.placeName}
           </div>
           {/*response body에 날짜 정보 없음 */}
-          <div className={"store-date"}>{formatDate(store.date.start)} ~ {formatDate(store.date.end)}</div>
+          <div className={"store-date"}>
+            {formatDate(store.date.start)} ~ {formatDate(store.date.end)}
+          </div>
         </div>
       </DescContainer>
       {isPopper ? (
@@ -162,7 +170,7 @@ const GradientOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 50px;
-  background: linear-gradient(to bottom, rgba(103, 102, 102, 0.5), transparent);
+  background: linear-gradient(to bottom, rgba(103, 102, 102, 0.8), transparent);
   z-index: 4; /* 그라데이션이 이미지 위에 오도록 z-index 설정 */
 `;
 
