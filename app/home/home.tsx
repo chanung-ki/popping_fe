@@ -66,6 +66,7 @@ const HomePage: React.FC = () => {
 
       if (response.status === 200) {
         sessionStorage.setItem('popupStores', JSON.stringify(response.data.popupStores));
+        sessionStorage.setItem('subwayCoor', JSON.stringify(coor));
         router.push("/popup-map?hotPlace=true");
       }
     } catch {
