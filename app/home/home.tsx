@@ -100,7 +100,7 @@ const HomePage: React.FC = () => {
         sessionStorage.setItem("subwayCoor", JSON.stringify(coor));
         router.push("/popup-map?hotPlace=true");
       }
-    } catch {}
+    } catch { }
   };
 
   const popupCardListAPI = async () => {
@@ -111,7 +111,7 @@ const HomePage: React.FC = () => {
         setSortPopularity(response.data.sortPopularity);
         setSortDate(response.data.sortDate);
       }
-    } catch {}
+    } catch { }
   };
 
   useEffect(() => {
@@ -232,11 +232,11 @@ const HomePage: React.FC = () => {
       ]);
     }
   }, [
-    iconRef.current,
-    bannerRef.current,
-    hotPlaceRef.current,
-    famousPopupRef.current,
-    newPopupRef.current,
+    iconRef,
+    bannerRef,
+    hotPlaceRef,
+    famousPopupRef,
+    newPopupRef,
   ]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
