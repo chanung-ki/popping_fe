@@ -8,4 +8,7 @@ export const TourContainer = styled.div`
   justify-content: center;
 
   margin-top: 20px;
+
+  font-size: 13px;
+  line-height: normal;
 `

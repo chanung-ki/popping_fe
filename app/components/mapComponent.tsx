@@ -262,7 +262,7 @@ const MapComponent: React.FC = () => {
           newInfoWindow.open(mapRef.current, newMarker);
         }
       });
-    } catch (e) {}
+    } catch (e) { }
   };
 
   // 카페 마커를 카페 마커 리스트에 추가
@@ -287,7 +287,7 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setCafeMarkerList([...cafeMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) {}
+    } catch (e) { }
   };
 
   //푸드 마커를 푸드 마커 리스트에 추가
@@ -312,7 +312,7 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setFoodMarkerList([...foodMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const removeMarker = (type: string) => {
@@ -420,9 +420,9 @@ const MapComponent: React.FC = () => {
     }
   }, [selectedCategory]);
 
-  useEffect(()=>{
+  useEffect(() => {
     addStoreMarkers();
-  },[storeList])
+  }, [storeList])
 
   // 재희형이 말한 기능 구현 보류중...
   // useEffect(() => {
@@ -435,7 +435,7 @@ const MapComponent: React.FC = () => {
   //   }
   // }, [isOpenMenu, clickedStore, isViewDesc]);
 
-  const popupStoreAPI = async (selectedLocation: string|null=null) => {
+  const popupStoreAPI = async (selectedLocation: string | null = null) => {
     var APIurl = "";
 
     if (selectedLocation) {
@@ -458,10 +458,10 @@ const MapComponent: React.FC = () => {
   useEffect(() => {
     const url = new URL(window.location.href);
     const hotPlace = url.searchParams.get('hotPlace');
-    if ( hotPlace === 'true' ) {
+    if (hotPlace === 'true') {
       const storedData = sessionStorage.getItem('popupStores');
       setStoreList(JSON.parse(storedData!));
-    } else{
+    } else {
       sessionStorage.removeItem('popupStores')
       popupStoreAPI();
     }
@@ -520,7 +520,7 @@ const MapComponent: React.FC = () => {
           const center = mapRef.current.getCenter();
           const distance = Math.sqrt(
             Math.pow(center.lat() - userLocation.lat, 2) +
-              Math.pow(center.lng() - userLocation.lng, 2)
+            Math.pow(center.lng() - userLocation.lng, 2)
           );
           if (distance > 0.001) {
             // 사용자가 위치에서 벗어났다고 판단할 거리

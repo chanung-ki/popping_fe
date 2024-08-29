@@ -15,14 +15,12 @@ import DummyBanner1 from "@/public/images/dummy/dummy_banner1.jpg";
 import DummyBanner2 from "@/public/images/dummy/dummy_banner2.jpg";
 import DummyBanner3 from "@/public/images/dummy/dummy_banner3.jpg";
 
-import DummyPlace1 from "@/public/images/dummy/dummy_place1.png";
-import DummyPlace2 from "@/public/images/dummy/dummy_place2.png";
-import DummyPlace3 from "@/public/images/dummy/dummy_place3.png";
-import DummyPlace4 from "@/public/images/dummy/dummy_place4.png";
-
 import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 import { BottomBox, DefaultLayout } from "../components/layout";
 import Router from "@/node_modules/next/router";
+import CustomJoyride from "../components/tour/CustomJoyride";
+import { CallBackProps, STATUS, Step } from "react-joyride";
+import { TourContainer } from "../components/tour/TourStyle";
 
 const subway: SubwayMap = {
   성수역: [127.055983543396, 37.54457732085582],
@@ -35,55 +33,63 @@ const subway: SubwayMap = {
   삼성역: [127.06318259239197, 37.50887477317293],
 };
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   const router = useRouter();
   const parentDiv = useRef<HTMLDivElement>(null);
-  const [parentWidth, setParentWidth] = useState<number>(0);
-  const [sortPopularity, setSortPopularity] = useState<MainSortedData[] >([]);
-  const [sortDate, setSortDate] = useState<MainSortedData[] >([]);
+  const iconRef = useRef<HTMLDivElement>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const hotPlaceRef = useRef<HTMLDivElement>(null);
+  const famousPopupRef = useRef<HTMLDivElement>(null);
+  const newPopupRef = useRef<HTMLDivElement>(null);
 
+  const joyrideStatusKey = `joyride_status_home`;
+
+  const [parentWidth, setParentWidth] = useState<number>(0);
+  const [sortPopularity, setSortPopularity] = useState<MainSortedData[]>([]);
+  const [sortDate, setSortDate] = useState<MainSortedData[]>([]);
+  const [joyrideRun, setJoyrideRun] = useState<boolean>(false);
+  const [steps, setSteps] = useState<Step[]>([]);
 
   const updateParentWidth = () => {
     if (parentDiv.current) {
       setParentWidth((parentDiv.current.offsetWidth / 4) * 3);
     }
+
   };
 
   const handlePlaceClick = async (value: string) => {
-    
+
     const geoData = subway[`${value}`]
 
     try {
       const response = await axiosInstance.get(`/api/maps/surround-popup?geoX=${geoData[0]}&geoY=${geoData[1]}&sorted=distance&meter=1000`);
 
-      if (response.status === 200 ){
+      if (response.status === 200) {
         sessionStorage.setItem('popupStores', JSON.stringify(response.data.popupStores));
         router.push("/popup-map?hotPlace=true");
       }
-    }catch{
-
+    } catch {
     }
-
   };
 
   const popupCardListAPI = async () => {
-    
+
     try {
       const response = await axiosInstance.get(`/api/maps/main-popups`);
 
-      if (response.status === 200 ){
+      if (response.status === 200) {
         setSortPopularity(response.data.sortPopularity)
         setSortDate(response.data.sortDate)
       }
-    }catch{
+    } catch {
 
     }
 
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     popupCardListAPI()
-  },[])
+  }, [])
 
   useEffect(() => {
     updateParentWidth();
@@ -93,17 +99,118 @@ const HomePage = () => {
     };
   }, [parentDiv]);
 
+  useEffect(() => {
+    const key = localStorage.getItem(joyrideStatusKey);
+    if (key === "finished" || key === "skipped") {
+      setJoyrideRun(false);
+    } else {
+      setJoyrideRun(true);
+    }
+
+  }, [router])
+
+
+  useEffect(() => {
+    if (iconRef.current &&
+      bannerRef.current &&
+      hotPlaceRef.current &&
+      famousPopupRef.current &&
+      newPopupRef.current) {
+      setSteps([
+        {
+          target: 'body',
+          content: (
+            <TourContainer>
+              <h3>안녕하세요! 🍿</h3>
+              <p>여러분들의 팝핑 여정에 도움을 드릴 <strong>팝콘</strong>입니다!</p>
+              <p>제 가이드는 언제든지 <strong>마이페이지</strong>에서 다시 설정할 수 있어요!</p>
+            </TourContainer>
+          ),
+          title: '안녕하세요 !',
+          placement: 'center',
+        },
+        {
+          target: iconRef.current,
+          content: (
+            <TourContainer>
+              <h3>저희 팝핑의 로고입니다.</h3>
+              <p>어디서든, 보이면 <strong>눌러주세요!</strong></p>
+              <p>다시 돌아올 수 있을거랍니다!</p>
+            </TourContainer>
+          ),
+          title: '메인',
+          placement: 'bottom',
+        },
+        {
+          target: bannerRef.current,
+          content: (
+            <TourContainer>
+              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
+              <p>많은 정보들을 얻을 수 있을거에요!</p>
+            </TourContainer>
+          ),
+          title: '메인',
+          placement: 'bottom',
+        },
+        {
+          target: hotPlaceRef.current,
+          content: (
+            <TourContainer>
+              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
+              <p>많은 정보들을 얻을 수 있을거에요!</p>
+            </TourContainer>
+          ),
+          title: '메인',
+          placement: 'bottom',
+        },
+        {
+          target: famousPopupRef.current,
+          content: (
+            <TourContainer>
+              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
+              <p>많은 정보들을 얻을 수 있을거에요!</p>
+            </TourContainer>
+          ),
+          title: '메인',
+          placement: 'top',
+        },
+        {
+          target: newPopupRef.current,
+          content: (
+            <TourContainer>
+              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
+              <p>많은 정보들을 얻을 수 있을거에요!</p>
+            </TourContainer>
+          ),
+          title: '메인',
+          placement: 'top',
+        },
+      ]);
+    }
+  }, [iconRef.current, bannerRef.current, hotPlaceRef.current, famousPopupRef.current, newPopupRef.current,]);
+
+
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+      setJoyrideRun(false);
+      localStorage.setItem(joyrideStatusKey, status);
+    }
+  };
+
   return (
     <DefaultLayout top={0} right={0} bottom={0} left={0}>
+      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
       <TopNavigation>
-        <TopNavLogoContainer>
+        <TopNavLogoContainer ref={iconRef}>
           <LogoLettersMain width={undefined} height={24} />
         </TopNavLogoContainer>
       </TopNavigation>
 
       <Container ref={parentDiv}>
         {/* 배너 */}
-        <SwiperContainer>
+        <SwiperContainer ref={bannerRef}>
           <Swiper
             direction="horizontal"
             slidesPerView={1}
@@ -134,12 +241,12 @@ const HomePage = () => {
         </SwiperContainer>
 
         <Sections>
+          <span ref={hotPlaceRef}>HOT PLACE</span>
           <Section>
-            <p>HOT PLACE</p>
             <ContentsContainer>
-              <Place image={DummyPlace1.src} onClick={() => handlePlaceClick('성수역')}/>
-              <Place image={DummyPlace2.src} onClick={() => handlePlaceClick('강남역')}/>
-              <Place image={DummyPlace3.src} onClick={() => handlePlaceClick('잠실역')}/>
+              <Place image={'/images/subway/성수.svg'} onClick={() => handlePlaceClick('성수역')} />
+              <Place image={'/images/subway/잠실.svg'} onClick={() => handlePlaceClick('강남역')} />
+              <Place image={'/images/subway/강남.svg'} onClick={() => handlePlaceClick('잠실역')} />
               {/* <Place image={DummyPlace4.src} onClick={() => handlePlaceClick('value')}/> */}
             </ContentsContainer>
           </Section>
@@ -147,12 +254,13 @@ const HomePage = () => {
           <PopupCard
             title="인기 팝업스토어"
             storeData={sortPopularity}
+            ref={famousPopupRef}
           />
           <PopupCard
             title="새로운 팝업스토어"
             storeData={sortDate}
+            ref={newPopupRef}
           />
-          
         </Sections>
       </Container>
       <BottomBox />
@@ -199,17 +307,14 @@ const SlideBannerContainer = styled.div<{ height: number; image: string }>`
 const Sections = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
   gap: 36px;
 
   margin: 36px 0 0 20px;
-`;
 
-const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  p:first-child {
+  span {
     color: ${COLORS.secondaryColor};
     font-family: "Pretendard";
     font-size: 18px;
@@ -217,6 +322,12 @@ const Section = styled.div`
     font-weight: 600;
     line-height: normal;
   }
+`;
+
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 const ContentsContainer = styled.div`
