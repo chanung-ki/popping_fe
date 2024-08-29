@@ -58,6 +58,7 @@ const MyPage: React.FC = () => {
     dispatch(initUser());
     removeCookie("csrftoken");
     removeCookie("sessionid");
+    sessionStorage.clear();
   };
 
   // api

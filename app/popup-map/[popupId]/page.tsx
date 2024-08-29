@@ -8,13 +8,12 @@ import styled from "styled-components";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Follow, formatDate, FormatFollowers, KRWLocaleString } from "@/public/utils/function";
-import { IconBookmark, IconFollow, IconLocation, IconMarker } from "@/app/components/icons";
+import { Follow, formatDate, FormatFollowers } from "@/public/utils/function";
+import { IconFollow, IconLocation } from "@/app/components/icons";
 import axiosInstance from "@/public/network/axios";
 import { PopupStoreDataType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/app/components/loading";
-import Link from "next/link";
 import dayjs from "dayjs";
 import NaverMap from "@/app/components/popup-map/NaverMap";
 

@@ -47,6 +47,7 @@ const BenefitPage: React.FC = () => {
     dispatch(initUser());
     removeCookie("csrftoken");
     removeCookie("sessionid");
+    sessionStorage.clear();
   };
 
   useEffect(() => {

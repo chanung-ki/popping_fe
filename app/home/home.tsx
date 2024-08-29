@@ -146,8 +146,9 @@ const HomePage: React.FC = () => {
           target: bannerRef.current,
           content: (
             <TourContainer>
-              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
-              <p>많은 정보들을 얻을 수 있을거에요!</p>
+              <p>상단 배너를 통해</p>
+              <p>현재 진행중인 <strong>이벤트</strong>, <strong>공지사항</strong> 등</p>
+              <p>다양한 정보를 한눈에 확인해보세요.</p>
             </TourContainer>
           ),
           title: '메인',
@@ -157,8 +158,8 @@ const HomePage: React.FC = () => {
           target: hotPlaceRef.current,
           content: (
             <TourContainer>
-              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
-              <p>많은 정보들을 얻을 수 있을거에요!</p>
+              <p>현재 팝업으로 가장 🔥<strong>핫한</strong>🔥 지역에서 진행하는 </p>
+              <p>팝업들을 한눈에 확인해보세요!</p>
             </TourContainer>
           ),
           title: '메인',
@@ -168,23 +169,23 @@ const HomePage: React.FC = () => {
           target: famousPopupRef.current,
           content: (
             <TourContainer>
-              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
-              <p>많은 정보들을 얻을 수 있을거에요!</p>
+              <p>어디를 가야할지 모르시겠다구요? 🤨</p>
+              <p>그럴때는 <strong>인기 팝업스토어</strong>를 참고해보세요!</p>
             </TourContainer>
           ),
           title: '메인',
-          placement: 'top',
+          placement: 'bottom',
         },
         {
           target: newPopupRef.current,
           content: (
             <TourContainer>
-              <h3><strong>이벤트</strong>, <strong>공지사항</strong>, <strong>인기있는 팝업스토어</strong> 등</h3>
-              <p>많은 정보들을 얻을 수 있을거에요!</p>
+              <p>누구보다 빠르게 나는 남들과는 다르게! </p>
+              <p><strong>새로운 팝업</strong> 소식을 빠르게 확인해보세요.</p>
             </TourContainer>
           ),
           title: '메인',
-          placement: 'top',
+          placement: 'bottom',
         },
       ]);
     }

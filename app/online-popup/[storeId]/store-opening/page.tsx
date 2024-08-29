@@ -1,7 +1,7 @@
 "use client";
 import styled, { css, keyframes } from "styled-components";
 import { COLORS } from "@/public/styles/colors";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import axiosInstance from "@/public/network/axios";
 import { DefaultLayout } from "@/app/components/layout";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { CallBackProps, STATUS, Step } from 'react-joyride';
 import { Loading } from "@/app/components/loading";
 import CustomJoyride from "@/app/components/tour/CustomJoyride";
 import { TourContainer } from "@/app/components/tour/TourStyle";
-import { IconFollow } from "@/app/components/icons";
+import { IconFollow, IconStamp } from "@/app/components/icons";
 import { Follow, FormatFollowers } from "@/public/utils/function";
 import Image from "next/image";
 
@@ -51,7 +51,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   const joyride2StatusKey = `joyride2_status_${storeId}_openning`;
 
 
-  const brandRef = useRef<HTMLDivElement>(null);
+  // const brandRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const stampRef = useRef<HTMLDivElement>(null);
   const enterRef = useRef<HTMLDivElement>(null);
@@ -92,7 +92,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
       }
     }
   };
-
 
   useLayoutEffect(() => {
     if (containerRef.current) {
@@ -257,8 +256,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
     }
   };
 
-  useEffect(() => {
-    if (brandRef.current) {
+  const brandRef = useCallback((node: HTMLDivElement) => {
+    if (node !== null) {
       setSteps([
         {
           target: 'body',
@@ -272,7 +271,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           placement: 'center',
         },
         {
-          target: brandRef.current,
+          target: node,
           content: (
             <TourContainer>
               <h3>안녕하세요!</h3>
@@ -295,10 +294,56 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
         },
       ]);
     }
-  }, [brandRef.current]);
+  }, []);
+
+  // useEffect(() => {
+  //   alert("첫번쨰 effect");
+  //   alert(brandRef.current);
+  //   if (brandRef.current) {
+
+  //     alert("첫번쨰 step set");
+
+  //     setSteps([
+  //       {
+  //         target: 'body',
+  //         content: (
+  //           <TourContainer>
+  //             <h3>안녕하세요!</h3>
+  //             <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+  //           </TourContainer>
+  //         ),
+  //         title: '온라인 팝업스토어',
+  //         placement: 'center',
+  //       },
+  //       {
+  //         target: brandRef.current,
+  //         content: (
+  //           <TourContainer>
+  //             <h3>안녕하세요!</h3>
+  //             <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+  //           </TourContainer>
+  //         ),
+  //         title: `${storeId.toUpperCase()} STORE`,
+  //         placement: 'top',
+  //       },
+  //       {
+  //         target: 'body',
+  //         content: (
+  //           <TourContainer>
+  //             <h3>안녕하세요!</h3>
+  //             <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+  //           </TourContainer>
+  //         ),
+  //         title: `${storeId.toUpperCase()} STORE`,
+  //         placement: 'center',
+  //       },
+  //     ]);
+  //   }
+  // }, [brandRef.current]);
 
   useEffect(() => {
     if (stampRef.current && enterRef.current && captionRef.current) {
+
       setSteps2([
         {
           target: 'body',
@@ -487,12 +532,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
                       {!value.status && index !== 1 && index !== 2 && index !== 4 && (<EnterButton href={value.url} >
                         참가하기
                       </EnterButton>)}
-                      <Image
-                        src={`/images/참여완료_POPPING.svg`}
-                        alt="test"
-                        width={84}
-                        height={84}
-                      />
+                      <IconStamp color={COLORS.mainColor} width={84} height={84} />
                       <StampTitle>{index + 1}. {value.name}</StampTitle>
                     </Stamp>
                   ))}
@@ -541,13 +581,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
       {showModal && (
         <StampModal>
-          <StampImage
-            id="stamp-image"
-            src="/images/참여완료_POPPING.svg"
-            alt="참여완료 스탬프"
-            width={150}  // Adjust size as needed
-            height={150} // Adjust size as needed
-          />
+          <IconStamp color={COLORS.mainColor} width={150} height={150} />
           <StampDescription>{stampModalName} 스탬프 획득!</StampDescription>
           <ConfirmButton onClick={() => setShowModal(false)}>확인</ConfirmButton>
         </StampModal>
@@ -592,10 +626,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           </InfoModalContainer>
         </StampModal>
       )}
-
-
-
-
     </DefaultLayout>
   );
 }

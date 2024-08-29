@@ -1,6 +1,9 @@
 import { COLORS } from '@/public/styles/colors';
 import React from 'react';
-import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
+import { CallBackProps, Step } from 'react-joyride';
+import dynamic from 'next/dynamic';
+const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
+
 
 interface FloaterStyles {
   floater?: React.CSSProperties;
