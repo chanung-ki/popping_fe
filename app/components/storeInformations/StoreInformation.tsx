@@ -19,9 +19,9 @@ interface StoreInformationProps {
 
 //TODO : Props 변동해야할 필요 있음.
 const StoreInformation: React.FC<{
-  store : PopupStoreDataType;
+  store: PopupStoreDataType;
   setCheckPopupList: React.Dispatch<SetStateAction<boolean>>;
-  setSelectedStore: React.Dispatch<SetStateAction<PopupStoreDataType| undefined>>;
+  setSelectedStore: React.Dispatch<SetStateAction<PopupStoreDataType | undefined>>;
 }> = ({ store, setCheckPopupList, setSelectedStore }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
   const onClickHandler = () => {
@@ -43,7 +43,7 @@ const StoreInformation: React.FC<{
     <PopupStore
       key={store.id}
       onClick={onClickHandler}
-      // href={`product/${item.id}`}
+    // href={`product/${item.id}`}
     >
       <PopupStoreThumbnail>
         <PopupStoreThumbnailImage
@@ -54,16 +54,16 @@ const StoreInformation: React.FC<{
           // handleBookmarkClick(item.id);
         }} >
           {/*접속한 user가 popper일 경우 스토어 찜 버튼 렌더링하지 않음. */}
-        {userData.isPopper || (
-          <div className={"heart-icon"}>
-            <IconHeart
-              width={16}
-              height={16}
-              color={COLORS.mainColor}
+          {userData.isPopper || (
+            <div className={"heart-icon"}>
+              <IconHeart
+                width={16}
+                height={16}
+                color={COLORS.mainColor}
               //색 처리 해야됨.
-            />
-          </div>
-        )}
+              />
+            </div>
+          )}
         </PopupstoreBookmark>
       </PopupStoreThumbnail>
 
@@ -74,7 +74,7 @@ const StoreInformation: React.FC<{
         {store.description}
       </PopupstoreEvent>
       <PopupstoreDate>
-        ~ {formatDate(store.endDate)} 까지
+        ~ {formatDate(store.date.end)} 까지
       </PopupstoreDate>
     </PopupStore>
 

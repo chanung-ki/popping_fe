@@ -15,9 +15,7 @@ import DummyBanner1 from "@/public/images/dummy/dummy_banner1.jpg";
 import DummyBanner2 from "@/public/images/dummy/dummy_banner2.jpg";
 import DummyBanner3 from "@/public/images/dummy/dummy_banner3.jpg";
 
-import DummyStore from "@/public/images/dummy/dummy_store.jpg";
 import { BottomBox, DefaultLayout } from "../components/layout";
-import Router from "@/node_modules/next/router";
 import CustomJoyride from "../components/tour/CustomJoyride";
 import { CallBackProps, STATUS, Step } from "react-joyride";
 import { TourContainer } from "../components/tour/TourStyle";
@@ -42,11 +40,12 @@ const HomePage: React.FC = () => {
   const famousPopupRef = useRef<HTMLDivElement>(null);
   const newPopupRef = useRef<HTMLDivElement>(null);
 
-  const joyrideStatusKey = `joyride_status_home`;
 
   const [parentWidth, setParentWidth] = useState<number>(0);
   const [sortPopularity, setSortPopularity] = useState<MainSortedData[]>([]);
   const [sortDate, setSortDate] = useState<MainSortedData[]>([]);
+
+  const joyrideStatusKey = `joyride_status_home`;
   const [joyrideRun, setJoyrideRun] = useState<boolean>(false);
   const [steps, setSteps] = useState<Step[]>([]);
 

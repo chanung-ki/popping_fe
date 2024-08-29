@@ -24,7 +24,7 @@ const Stores: React.FC<storesType> = ({ values }) => {
       {values.map((value: PopupStoreDataType, index: number) => {
         return (
           <Store key={index}>
-            <StoreImage image={value.image}>
+            <StoreImage image={value.image[0]}>
               <IsLiked>
                 <IconHeart
                   color={value.isSaved ? COLORS.mainColor : COLORS.greyColor}
