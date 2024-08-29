@@ -9,7 +9,11 @@ import { ProfileImage } from "../components/main/componenets";
 import { ButtonSmall } from "../components/buttons";
 import { useRouter } from "next/navigation";
 import { myPagePoppleTypes } from "@/public/utils/types";
+import { useEffect, useRef, useState } from "react";
 
+import CustomJoyride from "@/app/components/tour/CustomJoyride";
+import { CallBackProps, STATUS, Step } from "react-joyride";
+import { TourContainer } from "@/app/components/tour/TourStyle";
 
 type MyPagePoppleProps = {
   nickname: string;
@@ -35,9 +39,121 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
   const isGradeKey = (key: string): key is keyof typeof gradeColors => {
     return key in gradeColors;
   };
+
+  // CustomJoyride 관련
+  const [joyrideRun, setJoyrideRun] = useState<boolean>(false);
+  const [steps, setSteps] = useState<Step[]>([]);
+  const joyrideStatusKey = `joyride_status_mypage_popple`;
+
+  const profileRef = useRef<HTMLDivElement>(null);
+  const gradeBoxRef = useRef<HTMLDivElement>(null);
+  const followPointBoxRef = useRef<HTMLDivElement>(null);
+  const recentPopupRef = useRef<HTMLDivElement>(null);
+  const changeAccountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (
+      profileRef.current &&
+      gradeBoxRef.current &&
+      followPointBoxRef.current &&
+      recentPopupRef.current &&
+      changeAccountRef.current
+    ) {
+      setSteps([
+        {
+          target: 'body',
+          content: (
+            <TourContainer>
+              <p>회원가입을 완료하신것을 축하드립니다!</p>
+              <p><strong>마이페이지</strong>에는 다양한 기능이 있습니다</p>
+            </TourContainer>
+          ),
+          title: '마이페이지',
+          placement: 'center',
+        },
+        {
+          target: profileRef.current,
+          content: (
+            <TourContainer>
+              <p><strong>프로필 설정</strong>을 통해 팝플님의 프로필을 수정 할 수 있습니다.</p>
+              <br/>
+              <p>추가로 <strong>소셜 회원가입</strong>을 이용해주신 팝플님의</p>
+              <p>닉네임, 이름 정보는 난수로 지급되니 꼭 변경해주세요!</p>
+              <br/>
+            </TourContainer>
+          ),
+          title: '마이페이지',
+          placement: 'bottom',
+        },
+        {
+          target: gradeBoxRef.current,
+          content: (
+            <TourContainer>
+              <p>해당 영역을 통해 팝플님의 <strong>등급</strong> 정보를</p>
+              <p>모니터링 하실 수 있습니다.</p>
+            </TourContainer>
+          ),
+          title: '마이페이지',
+          placement: 'bottom',
+        },
+        {
+          target: followPointBoxRef.current,
+          content: (
+            <TourContainer>
+              <p>해당 영역을 통해 팝플님이 <strong>팔로잉</strong> 하고있는 브랜드와</p>
+              <p><strong>콘포인트 내역</strong>을 확인 하실 수 있습니다.</p>
+            </TourContainer>
+          ),
+          title: '마이페이지',
+          placement: 'bottom',
+        },
+        {
+          target: recentPopupRef.current,
+          content: (
+            <TourContainer>
+              <p>방금 보신 팝업을 잊으셨다구요? 🫨 걱정 마세요!</p>
+              <p>저희 팝핑이 전부 기억해 드립니다.</p>
+            </TourContainer>
+          ),
+          title: '마이페이지',
+          placement: 'bottom',
+        },
+        {
+          target: changeAccountRef.current,
+          content: (
+            <TourContainer>
+              <p><strong>팝퍼</strong> 기능을 체험 해보고 싶으시다면</p>
+              <p>해당 버튼을 통해 <strong>팝퍼</strong>로 계정을 전환해보세요!</p>
+              <p>언제든지 다시 <strong>팝플</strong>로 돌아오실 수 있습니다. 🍿</p>
+            </TourContainer>
+          ),
+          title: '마이페이지',
+          placement: 'bottom',
+        },
+      ]);
+    }
+  }, [profileRef.current, gradeBoxRef.current, followPointBoxRef.current, recentPopupRef.current, changeAccountRef.current]);
   
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+      setJoyrideRun(false);
+      localStorage.setItem(joyrideStatusKey, status);
+    }
+  };
+
+  useEffect(()=>{
+    const key = localStorage.getItem(joyrideStatusKey);
+    if (key === "finished" || key === "skipped") {
+      setJoyrideRun(false);
+    } else {
+      setJoyrideRun(true);
+    }
+  },[router])
+
   return (
     <>
+      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -50,20 +166,20 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
         <MyInfo>
           <MyProfile>
             <MyProfileContainer>
-              <ProfileContainer>
+              <ProfileContainer ref={profileRef}>
                 <ProfileImage image={profileImage} width={60} height={60} />
                 <ProfileNickname>{nickname}님</ProfileNickname>
                 <Spacer />
-                <ButtonSmall
-                  text={"프로필 설정"}
-                  buttonColor={COLORS.mainColor}
-                  textColor={COLORS.whiteColor}
-                  onClick={() => {
-                    router.push("/setting-profile");
-                  }}
-                />
+                  <ButtonSmall
+                    text={"프로필 설정"}
+                    buttonColor={COLORS.mainColor}
+                    textColor={COLORS.whiteColor}
+                    onClick={() => {
+                      router.push("/setting-profile");
+                    }}
+                  />
               </ProfileContainer>
-              <GradeContainer>
+              <GradeContainer ref={gradeBoxRef}>
                 <CurrentGradeContainer>
                   <p>현재 등급</p>
                   <GradeText
@@ -134,9 +250,9 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
             </MyProfileContainer>
           </MyProfile>
 
-          <MyActivities>
+          <MyActivities ref={followPointBoxRef}>
             <MyActivitiesContainer>
-              <Activity>
+              <Activity onClick={()=>{router.push("/?page=likes");}}>
                 <p>{myPageData.followingNum}</p>
                 <p>{"팔로잉"}</p>
               </Activity>
@@ -148,7 +264,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
           </MyActivities>
         </MyInfo>
 
-        <Section>
+        <Section ref={recentPopupRef}>
           <p>최근 본 팝업스토어</p>
           <ContentsContainer>
             <StoreContainer>
@@ -170,7 +286,7 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
           <div onClick={signOutApi}>
             <p>로그아웃</p>
           </div>
-          <div className="main-color-text" onClick={accountChangeApi}>
+          <div className="main-color-text" onClick={accountChangeApi} ref={changeAccountRef}>
             <p>팝퍼로 계정 전환</p>
           </div>
         </MenuContainer>
