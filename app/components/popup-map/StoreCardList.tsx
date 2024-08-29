@@ -78,7 +78,6 @@ const CardListHeader = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-
   gap: 12px;
 `;
 
