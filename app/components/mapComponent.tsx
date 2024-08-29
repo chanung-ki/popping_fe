@@ -339,42 +339,26 @@ const MapComponent: React.FC = () => {
     //img src에는 더미 데이터가 삽입되어 있습니다. 실데이터로 변경하여 주시기 바랍니다.
 
     if (storeInfo) {
-      newInfoWindow.setContent(`<div style = "width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; ">
-          <div style= "width: 72px; height: 72px; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden;"
+      newInfoWindow.setContent(`
+        <div style="width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
+          <div 
+            style="display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;" 
+            onclick="window.location.href='/popup-map/${storeInfo.id}';"
           >
-            <img
-                src=${"/images/popping-orange.png"}
+            <div style="width: 72px; height: 72px; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden;">
+              <img
+                src=${`data:image/webp;base64,${storeInfo.image}`}
                 style="width: 100%; height: 100%; object-fit: cover;"
               />              
-          </div>
-          <div
-            style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600;
-              line-height: normal;
-            "
-          >
-            ${marker.getTitle()}
-          </div>
-    
-          <div
-            style="
-              width: 112px;
-              text-align: center;
-              font-family: Pretendard;
-              font-size: 10px;
-              font-style: normal;
-              font-weight: 500;
-              line-height: normal
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              overflow: hidden;
-            "
-          >
-            ${storeInfo.description[0]}
+            </div>
+            <div
+              style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600; line-height: normal;"
+            >
+              ${marker.getTitle()}
+            </div>
           </div>
         </div>
-      </div>`);
+      `);
     } else {
       alert("스토어 정보 취득에 실패하였습니다.");
     }
