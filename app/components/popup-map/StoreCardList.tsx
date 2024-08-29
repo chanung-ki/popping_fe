@@ -5,19 +5,19 @@ import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
 interface StoreCardListProps {
   storeList: PopupStoreSimpleData[];
   isPopper: boolean;
-  isViewDesc: boolean;
-  setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
-  clickedStore: PopupStoreSimpleData | null;
-  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
+  // isViewDesc: boolean;
+  // setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  // clickedStore: PopupStoreSimpleData | null;
+  // setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
 }
 
 const StoreCardList: React.FC<StoreCardListProps> = ({
   storeList,
   isPopper,
-  isViewDesc,
-  setIsViewDesc,
-  clickedStore,
-  setClickedStore,
+  // isViewDesc,
+  // setIsViewDesc,
+  // clickedStore,
+  // setClickedStore,
 }) => {
   // TODO : popper 여부에 따른 storeList 이원화 필요?
 
@@ -32,10 +32,10 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
                 key={store.id}
                 store={store}
                 isPopper={isPopper}
-                isViewDesc={isViewDesc}
-                setIsViewDesc={setIsViewDesc}
-                clickedStore={clickedStore}
-                setClickedStore={setClickedStore}
+                // isViewDesc={isViewDesc}
+                // setIsViewDesc={setIsViewDesc}
+                // clickedStore={clickedStore}
+                // setClickedStore={setClickedStore}
               />
             ))}
           </StoreCardListContainer>
