@@ -8,7 +8,7 @@ import { TopNavigation } from "../navigation/topnavigation";
 import { LogoLettersMain } from "../components/logo";
 import axiosInstance from "@/public/network/axios";
 import { useRouter } from "next/navigation";
-import { SubwayMap, MainSortedData } from "@/public/utils/types";
+import { MainSortedData, SubwayMapItem } from "@/public/utils/types";
 import PopupCard from "../components/main/popupCardComponents";
 
 import DummyBanner1 from "@/public/images/dummy/dummy_banner1.jpg";
@@ -20,16 +20,19 @@ import CustomJoyride from "../components/tour/CustomJoyride";
 import { CallBackProps, STATUS, Step } from "react-joyride";
 import { TourContainer } from "../components/tour/TourStyle";
 
-const subway: SubwayMap = {
-  성수역: [127.055983543396, 37.54457732085582],
-  강남역: [127.02761650085449, 37.49796319921411],
-  잠실역: [127.10013270378113, 37.5132661890097],
-  용산역: [126.96480184793472, 37.52988484762269],
-  여의도역: [126.92406177520752, 37.52163980072133],
-  홍대입구역: [126.925950050354, 37.55811021038101],
-  압구정역: [127.02849626541138, 37.52633678124275],
-  삼성역: [127.06318259239197, 37.50887477317293],
-};
+
+
+const subway: SubwayMapItem[] = [
+  { name: '성수역', coor: [127.055983543396, 37.54457732085582], image: '/images/subway/성수.svg' },
+  { name: '강남역', coor: [127.02761650085449, 37.49796319921411], image: '/images/subway/강남.svg' },
+  { name: '잠실역', coor: [127.10013270378113, 37.5132661890097], image: '/images/subway/잠실.svg' },
+  { name: '용산역', coor: [126.96480184793472, 37.52988484762269], image: '/images/subway/용산.svg' },
+  { name: '여의도역', coor: [126.92406177520752, 37.52163980072133], image: '/images/subway/여의도.svg' },
+  { name: '홍대입구역', coor: [126.925950050354, 37.55811021038101], image: '/images/subway/홍대입구.svg' },
+  { name: '압구정역', coor: [127.02849626541138, 37.52633678124275], image: '/images/subway/압구정.svg' },
+  { name: '삼성역', coor: [127.06318259239197, 37.50887477317293], image: '/images/subway/삼성.svg' },
+];
+
 
 const HomePage: React.FC = () => {
   const router = useRouter();
@@ -56,12 +59,10 @@ const HomePage: React.FC = () => {
 
   };
 
-  const handlePlaceClick = async (value: string) => {
-
-    const geoData = subway[`${value}`]
+  const handlePlaceClick = async (coor: number[]) => {
 
     try {
-      const response = await axiosInstance.get(`/api/maps/surround-popup?geoX=${geoData[0]}&geoY=${geoData[1]}&sorted=distance&meter=1000`);
+      const response = await axiosInstance.get(`/api/maps/surround-popup?geoX=${coor[0]}&geoY=${coor[1]}&sorted=distance&meter=1000`);
 
       if (response.status === 200) {
         sessionStorage.setItem('popupStores', JSON.stringify(response.data.popupStores));
@@ -222,6 +223,9 @@ const HomePage: React.FC = () => {
               <SlideBannerContainer
                 height={parentWidth}
                 image={DummyBanner2.src}
+                onClick={() => {
+                  router.push(`/online-popup/POPPING/store-opening`)
+                }}
               />
             </SwiperSlide>
             <SwiperSlide>
@@ -243,9 +247,9 @@ const HomePage: React.FC = () => {
           <span ref={hotPlaceRef}>HOT PLACE</span>
           <Section>
             <ContentsContainer>
-              <Place image={'/images/subway/성수.svg'} onClick={() => handlePlaceClick('성수역')} />
-              <Place image={'/images/subway/잠실.svg'} onClick={() => handlePlaceClick('강남역')} />
-              <Place image={'/images/subway/강남.svg'} onClick={() => handlePlaceClick('잠실역')} />
+              {subway.map((data: SubwayMapItem, index: number) => (
+                <Place key={'hp-{index}'} image={data.image} onClick={() => handlePlaceClick(data.coor)} />
+              ))}
               {/* <Place image={DummyPlace4.src} onClick={() => handlePlaceClick('value')}/> */}
             </ContentsContainer>
           </Section>
@@ -324,6 +328,7 @@ const Sections = styled.div`
 `;
 
 const Section = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -333,10 +338,17 @@ const ContentsContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
-
   flex-wrap: nowrap;
-  /* overflow-x: scroll; */
+  overflow-x: scroll;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  
   div:last-child {
     margin-right: 16px;
   }
@@ -354,50 +366,6 @@ const Place = styled.div<{ image: string | null }>`
   background-size: cover;
 
   cursor: pointer;
-`;
-
-const StoreContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const StoreImage = styled.div<{ image: string | null }>`
-  flex: 0 0 auto;
-
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
-  background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
-  background-position: center;
-  background-size: cover;
-
-  cursor: pointer;
-`;
-
-const StoreDesc = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-
-  p:first-child {
-    color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
-
-  p:last-child {
-    color: ${COLORS.greyColor};
-    font-family: "Pretendard";
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
 `;
 
 export default HomePage;

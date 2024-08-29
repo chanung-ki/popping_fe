@@ -32,10 +32,10 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
                 key={store.id}
                 store={store}
                 isPopper={isPopper}
-                // isViewDesc={isViewDesc}
-                // setIsViewDesc={setIsViewDesc}
-                // clickedStore={clickedStore}
-                // setClickedStore={setClickedStore}
+              // isViewDesc={isViewDesc}
+              // setIsViewDesc={setIsViewDesc}
+              // clickedStore={clickedStore}
+              // setClickedStore={setClickedStore}
               />
             ))}
           </StoreCardListContainer>
@@ -67,10 +67,10 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
             key={store.id}
             store={store}
             isPopper={isPopper}
-            isViewDesc={isViewDesc}
-            setIsViewDesc={setIsViewDesc}
-            clickedStore={clickedStore}
-            setClickedStore={setClickedStore}
+          // isViewDesc={isViewDesc}
+          // setIsViewDesc={setIsViewDesc}
+          // clickedStore={clickedStore}
+          // setClickedStore={setClickedStore}
           />
         ))}
       </StoreCardListContainer>
