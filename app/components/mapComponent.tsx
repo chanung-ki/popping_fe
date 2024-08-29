@@ -84,7 +84,7 @@ const MapComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 팝업 스토어 목록
-  const [storeList, setStoreList] = useState<PopupStoreSimpleData[]>([]);
+  const [storeList, setStoreList] = useState<PopupStoreDataType[]>([]);
   // 검색 영역 활성화
   const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
   // 선택된 지역

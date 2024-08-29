@@ -404,7 +404,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
         },
       ]);
     }
-  }, [stampRef.current, enterRef.current, captionRef.current]);
+  }, [stampRef, enterRef, captionRef, storeId]);
 
 
 
