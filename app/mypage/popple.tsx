@@ -151,6 +151,20 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
     }
   },[router])
 
+  const handleResetJoyride = () => {
+    const userConfirmed = window.confirm("'팝핑 길라잡이 다시보기'를 재표시 하시겠습니까?"); 
+
+    if (userConfirmed) {
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.includes('joyride')) {
+          localStorage.removeItem(key);
+        }
+      });
+      window.location.reload();
+    }
+  };
+
   return (
     <>
       <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
@@ -285,6 +299,9 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
           <p>1:1 문의 내역</p> */}
           <div onClick={signOutApi}>
             <p>로그아웃</p>
+          </div>
+          <div onClick={handleResetJoyride}>
+            <p>팝핑 길라잡이 다시보기</p>
           </div>
           <div className="main-color-text" onClick={accountChangeApi} ref={changeAccountRef}>
             <p>팝퍼로 계정 전환</p>
