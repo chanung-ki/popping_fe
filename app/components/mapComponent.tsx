@@ -76,6 +76,10 @@ const MapComponent: React.FC = () => {
     lat: number;
     lng: number;
   }>();
+  const [subwayLocation, setSubwayLocation] = useState<{
+    lat: number;
+    lng: number;
+  }>();
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -453,15 +457,26 @@ const MapComponent: React.FC = () => {
       setStoreList(JSON.parse(storedData!));
     } else {
       sessionStorage.removeItem('popupStores')
+      sessionStorage.removeItem('subwayCoor')
       popupStoreAPI();
     }
 
     if (navigator.geolocation) {
+
+      const subwayCoor = sessionStorage.getItem('subwayCoor');
+
+      if (subwayCoor) {
+        const coords = JSON.parse(subwayCoor)
+        setSubwayLocation({'lat':coords[1],'lng':coords[0]})
+      }
+      
       // 위치 추적을 시작합니다.
       const watchId = navigator.geolocation.watchPosition(
         (position) => {
+          
           const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
+          const lng = position.coords.longitude
+            
           setUserLocation({ lat, lng });
           setIsLoading(false); // 위치를 성공적으로 가져오면 로딩 상태 해제
         },
@@ -567,10 +582,17 @@ const MapComponent: React.FC = () => {
         : "calc(100% - 100px)";
       mapRef.current.getElement().style.height = mapHeight;
 
-      const newCenter = new window.naver.maps.LatLng(
-        userLocation.lat,
-        userLocation.lng
-      );
+      if (subwayLocation) {
+        var newCenter = new window.naver.maps.LatLng(
+          subwayLocation.lat,
+          subwayLocation.lng
+        );
+      }else{
+        var newCenter = new window.naver.maps.LatLng(
+          userLocation.lat,
+          userLocation.lng
+        );
+      }
 
       // 지도 높이 변경 후 중심 조정
       window.naver.maps.Event.trigger(mapRef.current, "resize");
