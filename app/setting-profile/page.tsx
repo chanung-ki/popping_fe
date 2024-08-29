@@ -27,6 +27,7 @@ import {
   changeIsMale,
   changeProfileImage,
 } from "../redux/reducers/poppingUser";
+import { Loading } from "../components/loading";
 
 const SettingProfilePage: React.FC = () => {
   const { isLogin, isPopper, nickname, name, isMale, profileImage } =
@@ -68,12 +69,14 @@ const SettingProfilePage: React.FC = () => {
   const [isGenderFocused, setIsGenderFocused] = useState<boolean>(false);
   const [showSelectGender, setShowSelectGender] = useState<boolean>(false);
   const [isChangeValueGender, setIsChangeValueGender] =
-    useState<boolean>(false);
-
+  useState<boolean>(false);
+  
   const hasAlerted = useRef<boolean>(false);
-
+  
   const router = useRouter();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  
 
   useEffect(() => {
     setValueNickname(nickname);
@@ -108,6 +111,7 @@ const SettingProfilePage: React.FC = () => {
       };
     }
     try {
+      setIsLoading(true);
       const response = await axiosInstance.patch("/api/user/", requestBody);
       if (response.status === 200) {
         dispatch(changeNickname(valueNickname));
@@ -122,10 +126,12 @@ const SettingProfilePage: React.FC = () => {
           );
         }
         alert("프로필 설정이 적용되었습니다.");
+        setIsLoading(false);
         router.push("/?page=mypage");
       }
     } catch (error) {
       alert("오류가 발생했습니다. 다시 시도해주세요.");
+      setIsLoading(false);
     }
   };
 
@@ -137,9 +143,9 @@ const SettingProfilePage: React.FC = () => {
       return;
     }
 
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    const maxSize = 3 * 1024 * 1024; 
     if (file.size > maxSize) {
-      alert("파일이 너무 큽니다. 5MB 이하의 파일을 선택해주세요.");
+      alert("파일이 너무 큽니다. 3MB 이하의 파일을 선택해주세요.");
       return;
     }
 
@@ -257,6 +263,7 @@ const SettingProfilePage: React.FC = () => {
 
   return (
     <DefaultLayout top={0} right={20} bottom={0} left={20}>
+      {isLoading && <Loading/>}
       <TopNavigation>
         <TopNavCenterContainer>
           <TopNavTitle>프로필 설정</TopNavTitle>
