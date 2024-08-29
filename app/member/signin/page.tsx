@@ -17,9 +17,10 @@ import LogoKakao from "@/public/images/social/logo_kakao.png";
 import LogoGoogle from "@/public/images/social/logo_google.png";
 import axiosInstance from "@/public/network/axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/app/redux/reducers/poppingUser";
+import { initUser, setUser } from "@/app/redux/reducers/poppingUser";
 import { user } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
+import { removeCookie } from "@/public/network/cookie";
 
 const SignInPage: React.FC = () => {
   const router = useRouter();
@@ -50,6 +51,12 @@ const SignInPage: React.FC = () => {
     }
   }, [router]);
 
+  const cleanUserData = () => {
+    dispatch(initUser());
+    removeCookie("csrftoken");
+    removeCookie("sessionid");
+  };
+
   const handleClickLogin = async () => {
     setIsLoading(true);
     try {
@@ -59,7 +66,9 @@ const SignInPage: React.FC = () => {
       });
 
       if (response.status === 200) {
+        console.log(response.data.user);
         const userData: user = response.data.user;
+        console.log("set 완료");
         dispatch(setUser(userData));
         setIsLoading(false);
         if (redirectPath) {
@@ -76,6 +85,7 @@ const SignInPage: React.FC = () => {
       }
     } catch (error) {
       alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+      cleanUserData();
       setIsLoading(false);
     }
   };
