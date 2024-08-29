@@ -117,7 +117,7 @@ const TopNavCenterContainer = styled.div`
 const TopNavTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;

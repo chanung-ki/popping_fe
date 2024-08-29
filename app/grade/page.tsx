@@ -101,7 +101,7 @@ const TopNavCenterContainer = styled.div`
 const TopNavTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -139,7 +139,7 @@ const YourGradeContainer = styled.div`
 
 const YourGradeText = styled.p<{ color: string }>`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -189,7 +189,7 @@ const NextGradeContainer = styled.div`
 
 const NextGradeText = styled.span`
   color: ${(props) => props.color};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -198,7 +198,7 @@ const NextGradeText = styled.span`
 
 const NextGradeDesc = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -207,7 +207,7 @@ const NextGradeDesc = styled.p`
 
 const GradeInfoTitle = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -227,7 +227,7 @@ const GradeBox = styled.div<{ color: string }>`
 
   p {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -245,7 +245,7 @@ const GradeBox = styled.div<{ color: string }>`
 
     p {
       color: ${COLORS.secondaryColor};
-      font-family: "Pretendard";
+
       font-size: 14px;
       font-style: normal;
       font-weight: 500;

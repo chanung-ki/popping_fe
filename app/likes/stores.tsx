@@ -4,21 +4,22 @@ import { IconHeart } from "../components/icons";
 import { PopupStoreDataType, PopupStoreSimpleData } from "@/public/utils/types";
 import Link from "next/link";
 
-
 type storesType = {
   values: PopupStoreDataType[];
 };
 
 const Stores: React.FC<storesType> = ({ values }) => {
-
-  if (values.length == 0) return (
-    <Container>
-      <div>
-        <span>관심 오프라인 팝업이 없습니다.</span>
-        <span>팝업지도 <Link href={`/popup-map`}>이동하기</Link></span>
-      </div>
-    </Container>
-  )
+  if (values.length == 0)
+    return (
+      <Container>
+        <div>
+          <span>관심 오프라인 팝업이 없습니다.</span>
+          <span>
+            팝업지도 <Link href={`/popup-map`}>이동하기</Link>
+          </span>
+        </div>
+      </Container>
+    );
   return (
     <Grid>
       {values.map((value: PopupStoreSimpleData, index: number) => {
@@ -49,7 +50,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-
   & > div {
     position: absolute;
     top: 50%;
@@ -57,17 +57,16 @@ const Container = styled.div`
     flex-direction: column;
     gap: 8px;
 
-    align-items:center;
+    align-items: center;
   }
   & > div span {
-      color: ${COLORS.greyColor};
+    color: ${COLORS.greyColor};
   }
 
   & > div span a {
-    color: ${COLORS.mainColor}
+    color: ${COLORS.mainColor};
   }
-`
-
+`;
 
 const Grid = styled.div`
   display: grid;
@@ -116,7 +115,7 @@ const StoreDesc = styled.div`
 
   p:first-child {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -125,7 +124,7 @@ const StoreDesc = styled.div`
 
   p:last-child {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 12px;
     font-style: normal;
     font-weight: 500;

@@ -1,5 +1,10 @@
 import axiosInstance from "@/public/network/axios";
-import { CartOption, CartType, OptionType, SizeType } from "@/public/utils/types";
+import {
+  CartOption,
+  CartType,
+  OptionType,
+  SizeType,
+} from "@/public/utils/types";
 import styled, { keyframes } from "styled-components";
 import { COLORS } from "@/public/styles/colors";
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -50,14 +55,24 @@ const fadeOut = keyframes`
   }
 `;
 
-const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data, onOptionChange }) => {
+const BottomModal: React.FC<BottomModalProps> = ({
+  isVisible,
+  toggleModal,
+  data,
+  onOptionChange,
+}) => {
   const router = useRouter();
-  const [selectedOptions, setSelectedOptions] = useState<CartOption>(data.option);
+  const [selectedOptions, setSelectedOptions] = useState<CartOption>(
+    data.option
+  );
   const [isChange, setIsChange] = useState<boolean>(false);
   const wasVisible = useRef(isVisible);
 
-  const handleOptionChange = (optionName: keyof CartOption, selectedOption: CartOption[keyof CartOption]) => {
-    setSelectedOptions(prevOptions => ({
+  const handleOptionChange = (
+    optionName: keyof CartOption,
+    selectedOption: CartOption[keyof CartOption]
+  ) => {
+    setSelectedOptions((prevOptions) => ({
       ...prevOptions,
       [optionName]: selectedOption,
     }));
@@ -65,7 +80,7 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
   };
 
   const AmountToggle = (increment: boolean) => {
-    setSelectedOptions(prevOptions => ({
+    setSelectedOptions((prevOptions) => ({
       ...prevOptions,
       amount: increment ? prevOptions.amount + 1 : prevOptions.amount - 1,
     }));
@@ -75,8 +90,9 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
-      const number = value === '' ? 0 : Math.min(Math.max(parseInt(value, 10), 1), 99);
-      setSelectedOptions(prevOptions => ({
+      const number =
+        value === "" ? 0 : Math.min(Math.max(parseInt(value, 10), 1), 99);
+      setSelectedOptions((prevOptions) => ({
         ...prevOptions,
         amount: number,
       }));
@@ -84,27 +100,32 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
     }
   };
 
-  const CartUpdateApi = useCallback(async (option: CartOption) => {
-    try {
-      const response = await axiosInstance.patch(`/api/popup/cart/data`, {
-        option: option,
-        id: data.id,
-      });
+  const CartUpdateApi = useCallback(
+    async (option: CartOption) => {
+      try {
+        const response = await axiosInstance.patch(`/api/popup/cart/data`, {
+          option: option,
+          id: data.id,
+        });
 
-      if (response.status === 202) {
-        setTimeout(() => { }, 2000);
+        if (response.status === 202) {
+          setTimeout(() => {}, 2000);
+        }
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          alert("로그인 후 이용가능합니다.");
+          router.push(
+            `/member/signin?redirect=${encodeURIComponent(
+              window.location.href
+            )}`
+          );
+        } else {
+          console.log(`${error.response}`);
+        }
       }
-    } catch (error: any) {
-      if (error.response.status === 401) {
-        alert("로그인 후 이용가능합니다.");
-        router.push(
-          `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
-        );
-      } else {
-        console.log(`${error.response}`);
-      }
-    }
-  }, [data.id, router]);
+    },
+    [data.id, router]
+  );
 
   useEffect(() => {
     if (wasVisible.current && !isVisible && isChange) {
@@ -121,45 +142,75 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
         <ModalHeader>
           <Title>변경</Title>
           <ModalClose onClick={toggleModal}>
-            <IconX color={COLORS.secondaryColor} width={undefined} height={16} />
+            <IconX
+              color={COLORS.secondaryColor}
+              width={undefined}
+              height={16}
+            />
           </ModalClose>
         </ModalHeader>
         <ModalContent>
           <ProductOptionContainer>
-            {data.product.option.map((optionData: OptionType, index: number) => (
-              <ProductOption key={index}>
-                <ProductOptionTitle>
-                  <span>{optionData.name.toUpperCase()}</span>
-                  {optionData.name.toLowerCase() === "size" && (
-                    <SizeGuide href={`/online-popup/POPPING/product/${data.product.id}#sizeGuide`}>사이즈 가이드 ⓘ</SizeGuide>
-                  )}
-                </ProductOptionTitle>
-                <ProductRadioContent>
-                  {optionData.option.map((option: SizeType, optionIndex: number) => (
-                    <RadioLabel
-                      key={optionIndex}
-                      isChecked={selectedOptions[optionData.name as keyof CartOption] === option.name}
-                    >
-                      <RadioButton
-                        type="radio"
-                        name={optionData.name}
-                        value={option.name}
-                        checked={selectedOptions[optionData.name as keyof CartOption] === option.name}
-                        onChange={() => handleOptionChange(optionData.name as keyof CartOption, option.name)}
-                      />
-                      <span>{option.name}</span>
-                    </RadioLabel>
-                  ))}
-                </ProductRadioContent>
-              </ProductOption>
-            ))}
+            {data.product.option.map(
+              (optionData: OptionType, index: number) => (
+                <ProductOption key={index}>
+                  <ProductOptionTitle>
+                    <span>{optionData.name.toUpperCase()}</span>
+                    {optionData.name.toLowerCase() === "size" && (
+                      <SizeGuide
+                        href={`/online-popup/POPPING/product/${data.product.id}#sizeGuide`}
+                      >
+                        사이즈 가이드 ⓘ
+                      </SizeGuide>
+                    )}
+                  </ProductOptionTitle>
+                  <ProductRadioContent>
+                    {optionData.option.map(
+                      (option: SizeType, optionIndex: number) => (
+                        <RadioLabel
+                          key={optionIndex}
+                          isChecked={
+                            selectedOptions[
+                              optionData.name as keyof CartOption
+                            ] === option.name
+                          }
+                        >
+                          <RadioButton
+                            type="radio"
+                            name={optionData.name}
+                            value={option.name}
+                            checked={
+                              selectedOptions[
+                                optionData.name as keyof CartOption
+                              ] === option.name
+                            }
+                            onChange={() =>
+                              handleOptionChange(
+                                optionData.name as keyof CartOption,
+                                option.name
+                              )
+                            }
+                          />
+                          <span>{option.name}</span>
+                        </RadioLabel>
+                      )
+                    )}
+                  </ProductRadioContent>
+                </ProductOption>
+              )
+            )}
             <ProductOptionContent>
-              <ProductOptionTitle>
-                AMOUNT
-              </ProductOptionTitle>
+              <ProductOptionTitle>AMOUNT</ProductOptionTitle>
               <AmountContainer>
-                <AmountIcon onClick={() => AmountToggle(false)} disabled={selectedOptions.amount <= 1}>
-                  <IconMinus color={COLORS.secondaryColor} width={10} height={10} />
+                <AmountIcon
+                  onClick={() => AmountToggle(false)}
+                  disabled={selectedOptions.amount <= 1}
+                >
+                  <IconMinus
+                    color={COLORS.secondaryColor}
+                    width={10}
+                    height={10}
+                  />
                 </AmountIcon>
                 <AmountInput
                   type="text"
@@ -167,8 +218,15 @@ const BottomModal: React.FC<BottomModalProps> = ({ isVisible, toggleModal, data,
                   onChange={handleAmountChange}
                   maxLength={2}
                 />
-                <AmountIcon onClick={() => AmountToggle(true)} disabled={selectedOptions.amount >= 99}>
-                  <IconPlus color={COLORS.secondaryColor} width={10} height={10} />
+                <AmountIcon
+                  onClick={() => AmountToggle(true)}
+                  disabled={selectedOptions.amount >= 99}
+                >
+                  <IconPlus
+                    color={COLORS.secondaryColor}
+                    width={10}
+                    height={10}
+                  />
                 </AmountIcon>
               </AmountContainer>
             </ProductOptionContent>
@@ -189,9 +247,9 @@ const ModalOverlay = styled.div<{ isVisible: boolean }>`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
-  opacity: ${props => (props.isVisible ? '1' : '0')};
-  visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
-  animation: ${props => (props.isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
+  opacity: ${(props) => (props.isVisible ? "1" : "0")};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  animation: ${(props) => (props.isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
 `;
 
@@ -204,8 +262,9 @@ const OptionModal = styled.div<{ isVisible: boolean }>`
   background-color: white;
   border-radius: 16px 16px 0 0;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-  transform: translateY(${props => (props.isVisible ? '0%' : '100%')});
-  animation: ${props => (props.isVisible ? slideIn : slideOut)} 0.3s ease-in-out;
+  transform: translateY(${(props) => (props.isVisible ? "0%" : "100%")});
+  animation: ${(props) => (props.isVisible ? slideIn : slideOut)} 0.3s
+    ease-in-out;
   z-index: 2;
 `;
 
@@ -220,7 +279,7 @@ const ModalHeader = styled.div`
 
 const Title = styled.h3`
   font-size: 22px;
-  font-family: "Pretendard";
+
   font-weight: 600;
 `;
 
@@ -273,10 +332,9 @@ const ProductRadioContent = styled.div`
   scrollbar-width: none;
 `;
 
-
 const SizeGuide = styled.a`
   font-size: 10px;
-  font-family: "Pretendard";
+
   font-weight: 500;
   color: ${COLORS.greyColor};
   height: 12px;
@@ -292,7 +350,7 @@ const ProductOptionContent = styled.div`
   padding-right: 20px;
 `;
 
-const RadioButton = styled.input.attrs({ type: 'radio' })`
+const RadioButton = styled.input.attrs({ type: "radio" })`
   display: none;
 `;
 
@@ -301,7 +359,8 @@ const RadioLabel = styled.label<{ isChecked: boolean }>`
   cursor: pointer;
   text-align: center;
   border-radius: 16px;
-  border: 1px solid ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
+  border: 1px solid
+    ${(props) => (props.isChecked ? COLORS.mainColor : COLORS.greyColor)};
   padding: 8px 20px;
   box-sizing: border-box;
 
@@ -368,6 +427,5 @@ const AmountInput = styled.input`
     border-color: ${COLORS.mainColor};
   }
 `;
-
 
 export default BottomModal;

@@ -143,7 +143,7 @@ const MenuContainer = styled.div`
   p {
     color: ${COLORS.secondaryColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 8px;
     font-style: normal;
     font-weight: 600;

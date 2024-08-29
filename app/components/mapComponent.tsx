@@ -92,7 +92,9 @@ const MapComponent: React.FC = () => {
   // 하단 메뉴 오픈 여부
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   // 하단 메뉴 리스트 스토어 클릭 여부
-  // const [clickedStore, setClickedStore] = useState<PopupStoreDataType | null>(null);
+  const [clickedStore, setClickedStore] = useState<PopupStoreDataType | null>(
+    null
+  );
   // 스토어 좋아요 여부
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
   // 스토어 상세보기 여부
@@ -107,7 +109,6 @@ const MapComponent: React.FC = () => {
   const [cafeMarkerList, setCafeMarkerList] = useState<naver.maps.Marker[]>([]);
   // 푸드 마커 리스트
   const [foodMarkerList, setFoodMarkerList] = useState<naver.maps.Marker[]>([]);
-
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -127,7 +128,6 @@ const MapComponent: React.FC = () => {
     </clipPath>
   </defs>
 </svg>`;
-
 
   const DUMMY_FOOD_CAFE_LIST: FoodAndCafe[] = [
     {
@@ -351,12 +351,31 @@ const MapComponent: React.FC = () => {
                 src=${`data:image/webp;base64,${storeInfo.image}`}
                 style="width: 100%; height: 100%; object-fit: cover;"
               />              
-            </div>
-            <div
-              style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600; line-height: normal;"
-            >
-              ${marker.getTitle()}
-            </div>
+          </div>
+          <div
+            style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600;
+              line-height: normal;
+            "
+          >
+            ${marker.getTitle()}
+          </div>
+    
+          <div
+            style="
+              width: 112px;
+              text-align: center;
+              font-family: Pretendard;
+              font-size: 10px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+            "
+          >
+            ${storeInfo.description[0]}
           </div>
         </div>
       `);
@@ -547,9 +566,7 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     if (mapRef.current && userLocation) {
-      const mapHeight = isOpenMenu
-        ? "calc(100% - 568px)"
-        : "calc(100%)";
+      const mapHeight = isOpenMenu ? "calc(100% - 568px)" : "calc(100%)";
       mapRef.current.getElement().style.height = mapHeight;
 
       if (subwayLocation) {
@@ -638,7 +655,7 @@ const MapComponent: React.FC = () => {
                     backgroundColor: COLORS.whiteColor,
                     border: false,
                     borderRadius: "12px",
-                    fontSize: '12px',
+                    fontSize: "12px",
                     fontWeight: 500,
                   }}
                   onChangeHandler={(e: any) => {
@@ -657,8 +674,6 @@ const MapComponent: React.FC = () => {
         )}
       </MapContainer>
 
-
-
       {/* TODO slide button menu (디자인의 변경 할 예정) */}
       <SlideBottomMenu $isOpen={isOpenMenu}>
         <ToggleButton
@@ -668,13 +683,9 @@ const MapComponent: React.FC = () => {
         />
         {isOpenMenu && !isViewDesc && (
           <StoreInformationList>
-            <StoreCardList
-              storeList={storeList}
-              isPopper={userData.isPopper}
-            />
+            <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
           </StoreInformationList>
         )}
-
       </SlideBottomMenu>
     </DefaultLayout>
   );
@@ -716,9 +727,7 @@ const ControlContainer = styled.div`
   justify-content: space-between;
 
   padding: 0 20px;
-
-
-`
+`;
 
 const SearchControlContainer = styled.div`
   display: flex;
@@ -751,7 +760,6 @@ const TransparentButton = styled.button`
   cursor: pointer;
 `;
 
-
 const SearchContainer = styled.div`
   position: fixed;
   width: 100%;
@@ -782,7 +790,7 @@ const SearchContentsContainer = styled.div`
     outline: none;
     padding: 8px 16px;
     border-radius: 16px;
-    
+
     &::placeholder {
       font-size: 12px;
       font-weight: 500;
@@ -821,8 +829,8 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   background-color: ${COLORS.whiteColor};
 
   transition: height 0.3s ease, transform 0.3s ease;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, 
-              rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 `;
 
 const ToggleButton = styled.button`
@@ -838,7 +846,7 @@ const ToggleButton = styled.button`
   border: none;
   border-radius: 2px;
   background-color: ${COLORS.greyColor};
-  
+
   cursor: pointer;
   outline: none;
 `;

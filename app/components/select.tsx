@@ -21,7 +21,7 @@ const SelectUnderlineDiv = styled.div<SelectDivType>`
   padding: 2px 0;
 
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -91,7 +91,7 @@ const SelectRoundDiv = styled.div<SelectDivType>`
   padding: 16px 12px;
 
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -210,7 +210,7 @@ const BottomSectionTitleContainer = styled.div`
 const BottomSectionTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -236,7 +236,7 @@ const BottomSectionOptionsContainer = styled.div`
 
 const BottomSectionOption = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 500;

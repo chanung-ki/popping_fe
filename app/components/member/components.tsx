@@ -16,7 +16,7 @@ const TitleContainer = styled.div`
 
 const Title = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 24px;
   font-style: normal;
   font-weight: 700;

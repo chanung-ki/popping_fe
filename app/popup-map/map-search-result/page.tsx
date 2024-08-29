@@ -63,7 +63,7 @@ const ResultHeader = styled.div`
 
   & > p {
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 16px;
     font-style: normal;
     font-weight: 600;

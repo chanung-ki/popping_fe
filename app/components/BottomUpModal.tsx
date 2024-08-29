@@ -13,8 +13,13 @@ interface BottomModalProps {
   heightRate: number;
 }
 
-
-const BottomUpModal: React.FC<BottomModalProps> = ({ title, isVisible, toggleModal, children, heightRate }) => {
+const BottomUpModal: React.FC<BottomModalProps> = ({
+  title,
+  isVisible,
+  toggleModal,
+  children,
+  heightRate,
+}) => {
   const wasVisible = useRef(isVisible);
 
   useEffect(() => {
@@ -28,12 +33,14 @@ const BottomUpModal: React.FC<BottomModalProps> = ({ title, isVisible, toggleMod
         <ModalHeader>
           <Title>{title}</Title>
           <ModalClose onClick={toggleModal}>
-            <IconX color={COLORS.secondaryColor} width={undefined} height={16} />
+            <IconX
+              color={COLORS.secondaryColor}
+              width={undefined}
+              height={16}
+            />
           </ModalClose>
         </ModalHeader>
-        <ModalContent>
-          {children}
-        </ModalContent>
+        <ModalContent>{children}</ModalContent>
       </OptionModal>
     </Container>
   );
@@ -49,13 +56,13 @@ const ModalOverlay = styled.div<{ isVisible: boolean }>`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 3;
-  opacity: ${props => (props.isVisible ? '1' : '0')};
-  visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
-  animation: ${props => (props.isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
+  opacity: ${(props) => (props.isVisible ? "1" : "0")};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  animation: ${(props) => (props.isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
 `;
 
-const OptionModal = styled.div<{ isVisible: boolean, heightRate: number }>`
+const OptionModal = styled.div<{ isVisible: boolean; heightRate: number }>`
   position: fixed;
   bottom: 0;
   left: 0;
@@ -63,11 +70,12 @@ const OptionModal = styled.div<{ isVisible: boolean, heightRate: number }>`
   height: ${(props) => props.heightRate}%;
   background-color: white;
   border-radius: 16px 16px 0 0;
-  opacity: ${props => (props.isVisible ? '1' : '0')};
-  visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.isVisible ? "1" : "0")};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-  transform: translateY(${props => (props.isVisible ? '0%' : '100%')});
-  animation: ${props => (props.isVisible ? slideIn : slideOut)} 0.3s ease-in-out;
+  transform: translateY(${(props) => (props.isVisible ? "0%" : "100%")});
+  animation: ${(props) => (props.isVisible ? slideIn : slideOut)} 0.3s
+    ease-in-out;
   z-index: 4;
   overflow-y: scroll;
   padding-bottom: 80px;
@@ -87,12 +95,11 @@ const ModalHeader = styled.div`
   background-color: ${COLORS.primaryColor};
   margin-top: 20px;
   padding-bottom: 20px;
-
 `;
 
 const Title = styled.h3`
   font-size: 22px;
-  font-family: "Pretendard";
+
   font-weight: 600;
 `;
 

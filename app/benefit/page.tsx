@@ -143,8 +143,8 @@ const BenefitPage: React.FC = () => {
                             benefitData.gradeInfo.nextGradeInfo.nextGrade
                           )
                             ? gradeColors[
-                            benefitData.gradeInfo.nextGradeInfo.nextGrade
-                            ]
+                                benefitData.gradeInfo.nextGradeInfo.nextGrade
+                              ]
                             : gradeColors["WHITE POP"]
                         }
                       >
@@ -206,7 +206,7 @@ const TopNavCenterContainer = styled.div`
 const TopNavTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -252,7 +252,7 @@ const MyProfileContainer = styled.div`
 
 const ProfileNickname = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -296,7 +296,7 @@ const NextGradeContainer = styled.div`
 
 const NextGradeText = styled.span`
   color: ${(props) => props.color};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -305,7 +305,7 @@ const NextGradeText = styled.span`
 
 const NextGradeDesc = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -317,7 +317,7 @@ const NextGradeInfo = styled.p`
   margin-left: 4px;
 
   color: ${COLORS.greyColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -339,7 +339,7 @@ const Container = styled.div`
 
 const HistoryTitle = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -382,7 +382,7 @@ const TableDataContainer = styled.div`
 
 const TableNormalText = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -391,7 +391,7 @@ const TableNormalText = styled.p`
 
 const TableStrongText = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;

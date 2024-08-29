@@ -9,13 +9,17 @@ import { SetStateAction } from "react";
 import { PopupStoreDataType } from "@/public/utils/types";
 
 interface StoreInfoAtMapProps {
-  store: PopupStoreDataType
+  store: PopupStoreDataType;
   setStore: React.Dispatch<SetStateAction<boolean>>;
-  isExpanded: boolean
+  isExpanded: boolean;
 }
 
 //TODO : Props 구체화 필요함.
-const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpanded }) => {
+const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({
+  setStore,
+  store,
+  isExpanded,
+}) => {
   // const StoreInfoAtMap: React.FC<{store: PopupStoreDataType, setStore: React.Dispatch<SetStateAction<null>>}> = ({ store, setStore }) => {
   const userData: user = useSelector((state: any) => state.poppingUser.user);
 
@@ -51,15 +55,15 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
 
         <div className={"slider-store-desc"}>
           {store.description.map((item: string, index: number) => (
-            <p key={index}>
-              {item}
-            </p>
+            <p key={index}>{item}</p>
           ))}
         </div>
         <p className={"slider-store-address"}>
           {store.location.address} {store.location.placeName}
         </p>
-        <p className={"slider-store-address"}>{formatDate(store.date.start)} ~ {formatDate(store.date.end)}</p>
+        <p className={"slider-store-address"}>
+          {formatDate(store.date.start)} ~ {formatDate(store.date.end)}
+        </p>
       </PopupStoreDescContainer>
       <ButtonContainer>
         {userData.isPopper ? (
@@ -105,7 +109,6 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
 };
 
 const PopupStoreInfoContainer = styled.div<{ $isExpanded: Boolean }>`
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,7 +116,6 @@ const PopupStoreInfoContainer = styled.div<{ $isExpanded: Boolean }>`
   padding: 16px 0px;
   width: 100%;
   height: ${({ $isExpanded }) => ($isExpanded ? "100%" : "92px")};
-
 `;
 
 //TODO : 추후 이미지로 삽입
@@ -160,7 +162,6 @@ const PopupStoreDescContainer = styled.div`
     margin-left: 30px;
 
     & > p {
-      font-family: "Pretendard";
       font-size: 12px;
       font-style: normal;
       font-weight: 500;
@@ -169,7 +170,6 @@ const PopupStoreDescContainer = styled.div`
   }
 
   .slider-store-name {
-    font-family: "Pretendard";
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
@@ -183,7 +183,7 @@ const PopupStoreDescContainer = styled.div`
 
   .slider-store-desc {
     padding-right: 70px;
-    font-family: "Pretendard";
+
     font-size: 14px;
     font-style: normal;
     font-weight: 500;

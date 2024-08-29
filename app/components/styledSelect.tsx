@@ -33,74 +33,76 @@ interface SelectOptionProps {
 }
 
 // Create custom styles function for react-select
-const customStyles = (styles: CustomStyles): StylesConfig<OptionType, false> => ({
+const customStyles = (
+  styles: CustomStyles
+): StylesConfig<OptionType, false> => ({
   control: (base) => ({
     ...base,
-    minWidth: styles.minWidth || '90px', // Default min width
-    width: 'auto', // Set width to auto
-    minHeight: styles.height || 'auto', // Set min-height to auto or specified value
-    height: styles.height || 'auto', // Set height to auto or specified value
+    minWidth: styles.minWidth || "90px", // Default min width
+    width: "auto", // Set width to auto
+    minHeight: styles.height || "auto", // Set min-height to auto or specified value
+    height: styles.height || "auto", // Set height to auto or specified value
     backgroundColor: styles.backgroundColor,
-    borderRadius: styles.borderRadius || '16px',
-    border: styles.border ? '1px solid #ccc' : 'none',
-    boxShadow: styles.shadow ? '0 1px 3px rgba(0,0,0,0.2)' : 'none',
-    fontSize: styles.fontSize || '12px',
+    borderRadius: styles.borderRadius || "16px",
+    border: styles.border ? "1px solid #ccc" : "none",
+    boxShadow: styles.shadow ? "0 1px 3px rgba(0,0,0,0.2)" : "none",
+    fontSize: styles.fontSize || "12px",
     fontWeight: styles.fontWeight || 400,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   }),
   option: (base) => ({
     ...base,
-    fontSize: styles.fontSize || '12px',
+    fontSize: styles.fontSize || "12px",
     fontWeight: styles.fontWeight || 400,
   }),
   singleValue: (base) => ({
     ...base,
-    fontSize: styles.fontSize || '12px',
+    fontSize: styles.fontSize || "12px",
     fontWeight: styles.fontWeight || 400,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   }),
   valueContainer: (base) => ({
     ...base,
-    padding: '0 2px',
+    padding: "0 2px",
   }),
   input: (base) => ({
     ...base,
-    margin: '0',
-    padding: '0',
-    width: 'auto', // Allows the width to adjust to the content
-    display: 'none', // Hide the input cursor
+    margin: "0",
+    padding: "0",
+    width: "auto", // Allows the width to adjust to the content
+    display: "none", // Hide the input cursor
   }),
   indicatorsContainer: (base) => ({
     ...base,
-    display: 'flex',
-    alignItems: 'center',
-    paddingRight: '0px',
+    display: "flex",
+    alignItems: "center",
+    paddingRight: "0px",
   }),
   dropdownIndicator: (base) => ({
     ...base,
-    padding: '0',
-    marginLeft: styles.iconMargin || '0px', // Adjust the space between the icon and the text
+    padding: "0",
+    marginLeft: styles.iconMargin || "0px", // Adjust the space between the icon and the text
     svg: {
-      width: styles.iconSize || '12px',  // Set the width of the icon
-      height: styles.iconSize || '12px', // Set the height of the icon
+      width: styles.iconSize || "12px", // Set the width of the icon
+      height: styles.iconSize || "12px", // Set the height of the icon
     },
   }),
   indicatorSeparator: () => ({
-    display: 'none',
+    display: "none",
   }),
   menu: (base) => ({
     ...base,
-    maxHeight: styles.menuMaxHeight || '200px', // Set max height for the menu
-    overflowY: 'auto', // Enable vertical scrolling if content exceeds max height
+    maxHeight: styles.menuMaxHeight || "200px", // Set max height for the menu
+    overflowY: "auto", // Enable vertical scrolling if content exceeds max height
   }),
   menuList: (base) => ({
     ...base,
-    maxHeight: '200px', // Set max height for the menu list
+    maxHeight: "200px", // Set max height for the menu list
   }),
 });
 
 // Styled Select component using styled-components
-const SelectStyled = styled(Select) <SelectProps<OptionType, false>>``;
+const SelectStyled = styled(Select)<SelectProps<OptionType, false>>``;
 
 const StyledSelect: React.FC<SelectOptionProps> = ({
   options,

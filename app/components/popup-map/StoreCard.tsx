@@ -42,10 +42,9 @@ const StoreCard: React.FC<StoreCardProps> = ({
   //     });
   // };
 
-
   // 스토어 클릭시
   const onClickHandler = (popupId: string) => {
-    router.push(`/popup-map/${popupId}`)
+    router.push(`/popup-map/${popupId}`);
     // popupStoreAPI(popupId)
     // setIsViewDesc(!isViewDesc);
   };
@@ -84,7 +83,6 @@ const StoreCard: React.FC<StoreCardProps> = ({
   );
 };
 
-
 const StoreCardContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -95,7 +93,6 @@ const StoreCardContainer = styled.div`
   cursor: pointer;
 
   .store-name {
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -104,7 +101,7 @@ const StoreCardContainer = styled.div`
 
   .store-desc {
     width: 100%;
-    font-family: Pretendard;
+
     font-size: 10px;
     font-style: normal;
     font-weight: 300;

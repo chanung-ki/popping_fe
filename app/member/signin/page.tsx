@@ -110,12 +110,7 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <DefaultLayout
-      top={16}
-      right={20}
-      bottom={32}
-      left={20}
-    >
+    <DefaultLayout top={16} right={20} bottom={32} left={20}>
       {isLoading && <Loading />}
       <Container>
         <div onClick={Back}>
@@ -137,8 +132,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -156,8 +151,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
         </MemberAccountForm>
@@ -225,7 +220,7 @@ const SignupContainer = styled.div`
 const SignUpTextNormal = styled.span`
   color: ${COLORS.greyColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -237,7 +232,7 @@ const SignUpTextNormal = styled.span`
 const SignUpTextHighlight = styled.span`
   color: ${COLORS.mainColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 14px;
   font-style: normal;
   font-weight: 500;

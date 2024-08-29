@@ -24,19 +24,18 @@ const TimeMatchingPage: React.FC<{ params: { storeId: string } }> = ({
   const redirectPath = `/online-popup/${storeId}/store-opening`;
 
   useEffect(() => {
-    const rawStorageValue = localStorage.getItem(`${storeId.toUpperCase()}_Stamp_step3`)
+    const rawStorageValue = localStorage.getItem(
+      `${storeId.toUpperCase()}_Stamp_step3`
+    );
 
-      if (rawStorageValue !== null) {
-        const parsedValue = JSON.parse(rawStorageValue)
-        if (
-          parsedValue.status &&
-          !hasAlerted.current
-        ) {
-          alert("이미 해당 게임에 참여하셨습니다.");
-          hasAlerted.current = true;
-          router.push(redirectPath);
-        }
-      } 
+    if (rawStorageValue !== null) {
+      const parsedValue = JSON.parse(rawStorageValue);
+      if (parsedValue.status && !hasAlerted.current) {
+        alert("이미 해당 게임에 참여하셨습니다.");
+        hasAlerted.current = true;
+        router.push(redirectPath);
+      }
+    }
   }, [router]);
 
   useEffect(() => {
@@ -176,7 +175,7 @@ const PlayHeaderContainer = styled.div`
 const PlayTitleText = styled.p`
   color: ${COLORS.primaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 32px;
   font-style: normal;
   font-weight: 600;
@@ -186,7 +185,7 @@ const PlayTitleText = styled.p`
 const PlayDescText = styled.p`
   color: ${COLORS.primaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -216,7 +215,7 @@ const TimeText = styled.p`
 
   color: ${COLORS.primaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 72px;
   font-style: normal;
   font-weight: 300;
@@ -271,7 +270,7 @@ const MiddleFinishText = styled.p`
 
   color: ${COLORS.primaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 32px;
   font-style: normal;
   font-weight: 600;

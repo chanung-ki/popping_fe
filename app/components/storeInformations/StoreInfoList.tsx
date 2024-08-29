@@ -105,7 +105,6 @@ const ListContainer = styled.div`
 `;
 
 const ListTheme = styled.div`
-  font-family: "Pretendard";
   font-size: 24px;
   font-style: normal;
   font-weight: 700;

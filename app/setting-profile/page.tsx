@@ -315,7 +315,7 @@ const SettingProfilePage: React.FC = () => {
             status={statusNickname}
             bottomText={bottomTextNickname}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueNickname(text);
               setIsValidNickname(RegexpNickname.test(text));
@@ -339,7 +339,7 @@ const SettingProfilePage: React.FC = () => {
                 status={statusName}
                 bottomText={bottomTextName}
                 bottomTextClickable={false}
-                bottomTextOnClick={() => { }}
+                bottomTextOnClick={() => {}}
                 onChange={(text: string) => {
                   setValueName(text.replace(RegexpInputHangul, ""));
                   setIsValidName(RegexpHangul.test(text) && text.length > 1);
@@ -413,7 +413,7 @@ const TopNavCenterContainer = styled.div`
 const TopNavTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
