@@ -108,8 +108,8 @@ export function FormatTelHyphen(tel: string) {
 // 날짜를 YYYY.MM.DD 형식으로 포맷하는 함수
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  const year = date.getFullYear().toString().substring(2);
-  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear().toString();
+  const month = String(date.getMonth() + 1);
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}.${month}.${day}`;
 };
