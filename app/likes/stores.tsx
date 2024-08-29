@@ -1,7 +1,7 @@
 import { COLORS } from "@/public/styles/colors";
 import { styled } from "styled-components";
 import { IconHeart } from "../components/icons";
-import { PopupStoreDataType } from "@/public/utils/types";
+import { PopupStoreDataType, PopupStoreSimpleData } from "@/public/utils/types";
 import Link from "next/link";
 
 
@@ -21,10 +21,10 @@ const Stores: React.FC<storesType> = ({ values }) => {
   )
   return (
     <Grid>
-      {values.map((value: PopupStoreDataType, index: number) => {
+      {values.map((value: PopupStoreSimpleData, index: number) => {
         return (
-          <Store key={index}>
-            <StoreImage image={value.image[0]}>
+          <Store key={index} href={`/popup-map/${value.id}`}>
+            <StoreImage image={`data:image/webp;base64,${value.image}`}>
               <IsLiked>
                 <IconHeart
                   color={value.isSaved ? COLORS.mainColor : COLORS.greyColor}
@@ -36,7 +36,6 @@ const Stores: React.FC<storesType> = ({ values }) => {
 
             <StoreDesc>
               <p>{value.title}</p>
-              <p>{value.description[0]}</p>
             </StoreDesc>
           </Store>
         );
@@ -72,12 +71,12 @@ const Container = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 한 줄에 3개의 열 */
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개의 열 */
   column-gap: 20px;
   row-gap: 20px;
 `;
 
-const Store = styled.div`
+const Store = styled(Link)`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -85,16 +84,24 @@ const Store = styled.div`
   cursor: pointer;
 `;
 
-const StoreImage = styled.div<{ image: string | null }>`
-  position: relative;
+const StoreImage = styled.div<{ image: string }>`
+position: relative;
   width: 100%; /* 그리드 셀의 너비에 맞춤 */
-  padding-bottom: 100%;
   border-radius: 8px;
-  background: ${(props) =>
+  overflow: hidden; /* 내용이 컨테이너를 넘지 않도록 숨김 */
+  aspect-ratio: 1 / 1; /* 비율을 1:1로 설정 (정사각형) */
+
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 75%; /* 비율을 4:3으로 설정 */
+  }
+
+  background-image: ${(props) =>
     props.image ? `url(${props.image})` : COLORS.secondaryColor};
-  object-position: center;
-  object-fit: cover;
-`;
+  background-position: center;
+  background-size: cover;
+  object-fit: cover; /* 이미지가 컨테이너를 채우도록 조절 */`;
 
 const IsLiked = styled.div`
   position: absolute;

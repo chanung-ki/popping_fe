@@ -23,7 +23,7 @@ const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(({ title, sto
             storeData.map((item: MainSortedData, index: number) => (
               <Stuff
                 key={index}
-                href={`online-popup`}
+                href={`/popup-map/${item.id}`}
               >
                 <ProductThumbnail>
                   <ProductThumbnailImage

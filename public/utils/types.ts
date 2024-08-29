@@ -63,6 +63,7 @@ export interface PopupStoreDataType {
   brandName: string;
   title: string;
   location: LocationDataType;
+  tag: string[];
   date: {
     start: string;
     end: string;
@@ -78,6 +79,7 @@ export interface PopupStoreDataType {
   homepage: string;
   sns: string[];
   viewCount: number;
+  saveCount: number;
 }
 
 export interface PopupStoreSimpleData {
