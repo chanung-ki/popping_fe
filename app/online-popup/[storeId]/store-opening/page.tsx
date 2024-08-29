@@ -264,7 +264,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           content: (
             <TourContainer>
               <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <p><strong>{storeId.toUpperCase()} STORE</strong> 팝업스토어에 오신걸</p>
+              <p>🎉 환영합니다! 🎉</p>
             </TourContainer>
           ),
           title: '온라인 팝업스토어',
@@ -274,8 +275,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           target: node,
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3>지금 입장한 <strong>팝업스토어의 설명 부분</strong>이에요.</h3>
+              <p>브랜드의 로고, 팝업스토어 이름, 설명 등 정보들을 얻을 수 있답니다!</p>
             </TourContainer>
           ),
           title: `${storeId.toUpperCase()} STORE`,
@@ -285,8 +286,10 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           target: 'body',
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3>그렇다면, 팝업스토어로 한번 들어가 볼까요 ?</h3>
+              <p>이동에 <strong>2초</strong>정도 소요됩니다! </p>
+              <p>🏃🏃🏃</p>
+
             </TourContainer>
           ),
           title: `${storeId.toUpperCase()} STORE`,
@@ -343,36 +346,34 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
   useEffect(() => {
     if (stampRef.current && enterRef.current && captionRef.current) {
-
       setSteps2([
         {
           target: 'body',
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3>안녕하세요, 또 뵙네요!</h3>
+              <p>이 페이지는 팝업스토어를 더욱 재미있게 즐기기 위한 </p>
+              <p><strong>스탬프 투어</strong>입니다.</p>
             </TourContainer>
           ),
-          title: '온라인 팝업스토어',
+          title: `${storeId.toUpperCase()} STORE`,
           placement: 'center',
         },
         {
           target: stampRef.current,
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3>여러분들이 팝업스토어에서 모아야할 스탬프들이에요!</h3>
             </TourContainer>
           ),
-          title: `${storeId.toUpperCase()} STORE`,
+          title: '팝업스토어 스탬프',
           placement: 'top',
         },
         {
           target: enterRef.current,
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3><strong>참가해보세요!</strong></h3>
             </TourContainer>
           ),
           title: `${storeId.toUpperCase()} STORE`,
@@ -382,8 +383,8 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           target: captionRef.current,
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3>유의사항도 꼭 확인해주세요!</h3>
+              <p>스탬프 투어에 큰 <strong>힌트</strong>가 들어있을 수도 있어요 !</p>
             </TourContainer>
           ),
           title: `${storeId.toUpperCase()} STORE`,
@@ -393,8 +394,9 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           target: 'body',
           content: (
             <TourContainer>
-              <h3>안녕하세요!</h3>
-              <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
+              <h3>일단 스탬프 하나는 저 팝콘이 찍어드릴게요!</h3>
+              <p><strong>얍!</strong></p>
+              💪💪💪 🍿
             </TourContainer>
           ),
           title: `${storeId.toUpperCase()} STORE`,
@@ -532,20 +534,23 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
                       {!value.status && index !== 1 && index !== 2 && index !== 4 && (<EnterButton href={value.url} >
                         참가하기
                       </EnterButton>)}
-                      <IconStamp color={COLORS.mainColor} width={84} height={84} />
+                      <div style={{ opacity: value.status ? 1 : .5 }}>
+                        <IconStamp color={COLORS.mainColor} width={84} height={84} />
+                      </div>
                       <StampTitle>{index + 1}. {value.name}</StampTitle>
                     </Stamp>
                   ))}
                 </Stamps>
               </StoreStampContainer>
 
-              <StoreStampContainer ref={captionRef}>
-                <Title>유의사항 안내</Title>
+              <StoreStampContainer>
+                <Title ref={captionRef}>유의사항 안내</Title>
                 <Caption>
                   * OX 퀴즈 Tip! <br /><br />
                   [2. 소개] 부분을 잘 읽어주세요 ! <br />(매인 색상의 글씨를 주목하세요!)<br /><br />
                   유의사항이 없어요 ! 재미있게 즐겨주세요 !
                 </Caption>
+                <div style={{ height: 100 }}></div>
               </StoreStampContainer>
               {Object.values(stampState).every(step => step.status === true) ? (
                 // 모든 step들의 status가 true일 때 표시할 내용
@@ -555,7 +560,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
               ) : (
                 <BottomButton status={false}>입장하기</BottomButton>
               )}
-
             </StoreMainPageContainer>
           </Container>
         </>
@@ -581,7 +585,9 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
       {showModal && (
         <StampModal>
-          <IconStamp color={COLORS.mainColor} width={150} height={150} />
+          <StampImage>
+            <IconStamp color={COLORS.mainColor} width={150} height={150} />
+          </StampImage>
           <StampDescription>{stampModalName} 스탬프 획득!</StampDescription>
           <ConfirmButton onClick={() => setShowModal(false)}>확인</ConfirmButton>
         </StampModal>
@@ -638,6 +644,7 @@ const ContentContainer = styled.div`
   &.fade-out {
     animation: ${fadeOut} 1s forwards;
   }
+
 `;
 
 const OpeningImage = styled.img`
@@ -731,9 +738,7 @@ const StoreThumbnailContainer = styled.img`
 const StoreMainPageContainer = styled.div`
   height: 100%;
   width: calc(100% - 40px);
-
   padding: 0 20px;
-  padding-bottom: 80px;
 `;
 
 const StoreInfoContainer = styled.div`
@@ -914,8 +919,6 @@ const Caption = styled.span`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-
-  margin-bottom: 20px;
 `
 
 const BottomButton = styled.div<{ status: boolean }>`
@@ -998,7 +1001,7 @@ const ModalContainer = styled.div`
   background-color: ${COLORS.primaryColor};
 `
 
-const StampImage = styled(Image)`
+const StampImage = styled.div`
   animation: ${stampAnimation} 0.5s ease-in-out;
 `;
 
