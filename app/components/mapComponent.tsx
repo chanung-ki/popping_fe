@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
 import StoreCardList from "./popup-map/StoreCardList";
 import Back from "./back";
+import { DefaultLayout, Spacer } from "./layout";
 
 interface FoodAndCafe {
   title: string;
@@ -108,13 +109,11 @@ const MapComponent: React.FC = () => {
   // 푸드 마커 리스트
   const [foodMarkerList, setFoodMarkerList] = useState<naver.maps.Marker[]>([]);
 
+
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const infowindowRef = useRef<any>(null);
-
-  // 마커 디자인 (store)
-
 
   // 마커 디자인 (food and cafe)
   const MARKER_FOOD_CAFE = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="41" viewBox="0 0 28 41" fill="none">
@@ -129,6 +128,7 @@ const MapComponent: React.FC = () => {
     </clipPath>
   </defs>
 </svg>`;
+
 
   const DUMMY_FOOD_CAFE_LIST: FoodAndCafe[] = [
     {
@@ -451,16 +451,16 @@ const MapComponent: React.FC = () => {
 
       if (subwayCoor) {
         const coords = JSON.parse(subwayCoor)
-        setSubwayLocation({'lat':coords[1],'lng':coords[0]})
+        setSubwayLocation({ 'lat': coords[1], 'lng': coords[0] })
       }
-      
+
       // 위치 추적을 시작합니다.
       const watchId = navigator.geolocation.watchPosition(
         (position) => {
-          
+
           const lat = position.coords.latitude;
           const lng = position.coords.longitude
-            
+
           setUserLocation({ lat, lng });
           setIsLoading(false); // 위치를 성공적으로 가져오면 로딩 상태 해제
         },
@@ -543,19 +543,6 @@ const MapComponent: React.FC = () => {
           new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)
         );
       }
-
-      if (!infowindowRef.current) {
-        // 인포윈도우 생성
-        infowindowRef.current = new window.naver.maps.InfoWindow({
-          content: `<div style="padding: 10px; background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); font-size: 14px; font-weight: 500; color: #333333;">사용자 위치</div>`,
-          backgroundColor: "transparent",
-          borderColor: "transparent",
-          borderWidth: 0,
-          anchorSize: new window.naver.maps.Size(0, 0),
-        });
-        // 인포윈도우를 마커에 연결
-        infowindowRef.current.open(mapRef.current, markerRef.current);
-      }
     }
   }, [userLocation]);
 
@@ -563,7 +550,7 @@ const MapComponent: React.FC = () => {
     if (mapRef.current && userLocation) {
       const mapHeight = isOpenMenu
         ? "calc(100% - 568px)"
-        : "calc(100% - 100px)";
+        : "calc(100%)";
       mapRef.current.getElement().style.height = mapHeight;
 
       if (subwayLocation) {
@@ -571,7 +558,7 @@ const MapComponent: React.FC = () => {
           subwayLocation.lat,
           subwayLocation.lng
         );
-      }else{
+      } else {
         var newCenter = new window.naver.maps.LatLng(
           userLocation.lat,
           userLocation.lng
@@ -603,14 +590,9 @@ const MapComponent: React.FC = () => {
   };
 
   return (
-    <Container>
+    <DefaultLayout top={0} right={0} left={0} bottom={0}>
       <MapContainer>
-        <StyledNaverMap
-          id="map"
-          style={{
-            width: "100%",
-          }}
-        />
+        <StyledNaverMap id="map" style={{ width: "100%" }} />
         {!isLoading && (
           <LocationResetBtn onClick={handleLocationButtonClick}>
             <IconUser
@@ -624,58 +606,47 @@ const MapComponent: React.FC = () => {
           <Loading />
         ) : !isActiveSearch ? (
           <>
-            <SearchControlContainer>
-              <CircleButton>
-                <Back/>
-              </CircleButton>
-
-              <CircleButton onClick={activeSearchHandler}>
+            <ControlContainer>
+              <div>
+                <Back />
+              </div>
+              <div onClick={activeSearchHandler}>
                 <IconSearch
                   width={16}
                   height={16}
                   color={COLORS.secondaryColor}
                 />
-              </CircleButton>
-            </SearchControlContainer>
+              </div>
+            </ControlContainer>
           </>
         ) : (
           <>
             <SearchContainer>
               <SearchControlContainer>
-                <TransparentButton>
-                  <IconChevronLeft
-                    width={16}
-                    height={16}
-                    color={COLORS.secondaryColor}
-                  />
-                </TransparentButton>
-
+                <Back />
                 <p>검색</p>
-
                 <TransparentButton onClick={activeSearchHandler}>
                   <IconX width={16} height={16} color={COLORS.secondaryColor} />
                 </TransparentButton>
               </SearchControlContainer>
+
               <SearchContentsContainer>
                 <StyledSelect
                   options={DUMMY_SEOUL_OPTIONS}
                   placeholder={"지역선택"}
                   styles={{
-                    width: "78px",
-                    height: "22px",
                     color: COLORS.secondaryColor,
                     backgroundColor: COLORS.whiteColor,
                     border: false,
                     borderRadius: "12px",
+                    fontSize: '12px',
+                    fontWeight: 500,
                   }}
                   onChangeHandler={(e: any) => {
                     popupStoreAPI(e.value);
                     setSelectedLocation(e.value);
                   }}
                 />
-                <SelectedLocationBanner>
-                  {selectedLocation ? selectedLocation : "지역 선택"}
-                </SelectedLocationBanner>
                 <input
                   type="text"
                   placeholder="검색어를 입력하세요."
@@ -685,87 +656,29 @@ const MapComponent: React.FC = () => {
             </SearchContainer>
           </>
         )}
-        {/* <CategoryBox isSearchOpen={isActiveSearch}>
-          <ul>
-            <li
-              id="coffeeMenu"
-              className={selectedCategory === "cafe" ? "menu_selected" : ""}
-              onClick={() => changeMarker("cafe")}
-            >
-              <span className="ico_comm ico_coffee"></span>
-              카페
-            </li>
-            <li
-              id="foodMenu"
-              className={selectedCategory === "food" ? "menu_selected" : ""}
-              onClick={() => changeMarker("food")}
-            >
-              <span className="ico_comm ico_store"></span>
-              맛집
-            </li>
-          </ul>
-        </CategoryBox> */}
       </MapContainer>
+
+
+
+      {/* TODO slide button menu (디자인의 변경 할 예정) */}
       <SlideBottomMenu $isOpen={isOpenMenu}>
         <ToggleButton
           onClick={() => {
             setIsOpenMenu(!isOpenMenu);
           }}
         />
-
         {isOpenMenu && !isViewDesc && (
           <StoreInformationList>
-            {/* Store Card 더미 데이터 리스트 렌더링 */}
             <StoreCardList
               storeList={storeList}
-              // isPopper={userData.isPopper}
-              isPopper={true}
-              // isViewDesc={isViewDesc}
-              // setIsViewDesc={setIsViewDesc}
-              // clickedStore={clickedStore}
-              // setClickedStore={setClickedStore}
+              isPopper={userData.isPopper}
             />
           </StoreInformationList>
         )}
-         {/* {isOpenMenu && !isViewDesc && !clickedStore ? (
-          <StoreInformationList>
-            <StoreCardList
-              storeList={storeList}
-              // isPopper={userData.isPopper}
-              isPopper={true}
-              isViewDesc={isViewDesc}
-              setIsViewDesc={setIsViewDesc}
-              clickedStore={clickedStore}
-              setClickedStore={setClickedStore}
-            />
-          </StoreInformationList>
-        ) : (
-          isOpenMenu &&
-          clickedStore &&
-          isViewDesc && (
-            <StoreDescription
-              store={clickedStore}
-              isViewDesc={isViewDesc}
-              setIsViewDesc={setIsViewDesc}
-              setClickedStore={setClickedStore}
-              // isPopper={userData.isPopper}
-              isPopper={true}
-            />
-          )
-        )} */}
       </SlideBottomMenu>
-    </Container>
+    </DefaultLayout>
   );
 };
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
 const MapContainer = styled.div`
   width: 100%;
@@ -779,7 +692,7 @@ const LocationResetBtn = styled.button`
   background-color: transparent;
   position: fixed;
   z-index: 1;
-  bottom: 60px;
+  bottom: 80px;
   right: 20px;
   padding: 0;
   transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -787,31 +700,36 @@ const LocationResetBtn = styled.button`
 
 const StyledNaverMap = styled.div`
   position: absolute;
-
   top: 0;
   left: 0;
-
   width: 100%;
-  height: 100%;
 `;
 
-const SearchControlContainer = styled.div`
+const ControlContainer = styled.div`
+  width: calc(100% - 40px);
   position: absolute;
-  z-index: 1;
   top: 16px;
   left: 0;
 
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+
+`
+
+const SearchControlContainer = styled.div`
+  display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 12px 20px;
   width: calc(100% - 40px);
-  height: 32px;
+  margin-top: 16px;
 
   & > p {
     text-align: center;
-    font-family: "Pretendard";
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -833,58 +751,41 @@ const TransparentButton = styled.button`
   cursor: pointer;
 `;
 
-const CircleButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 28px;
-  height: 28px;
-
-  border: 1px solid ${COLORS.greyColor};
-  border-radius: 50%;
-  background-color: ${COLORS.whiteColor};
-
-  cursor: pointer;
-`;
 
 const SearchContainer = styled.div`
-  position: absolute;
+  position: fixed;
+  width: 100%;
   z-index: 1;
-  top: 0px;
+  top: 0;
   left: 0;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+
   gap: 12px;
-
-  padding: 28px 20px;
-  width: calc(100% - 40px);
-
   background-color: ${COLORS.whiteColor};
-  font-family: "Pretendard";
+  padding-bottom: 12px;
 `;
 
 const SearchContentsContainer = styled.div`
+  width: calc(100% - 40px);
+
   display: flex;
   align-items: center;
   gap: 8px;
 
-  margin-top: 44px;
-  padding: 4px 8px;
-  width: calc(100% - 28px);
-  border-radius: 16px;
-  background-color: ${COLORS.lightGreyColor};
-
   & > input {
     border: none;
     background-color: ${COLORS.lightGreyColor};
-    width: 60%;
-
+    width: 100%;
+    outline: none;
+    padding: 8px 16px;
+    border-radius: 16px;
+    
     &::placeholder {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 500;
       color: ${COLORS.greyColor};
     }
   }
@@ -903,8 +804,8 @@ const SelectedLocationBanner = styled.div`
 `;
 
 const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
-  position: absolute;
-  z-index: 3;
+  position: fixed;
+  z-index: 101;
   bottom: 0;
   left: 0;
 
@@ -914,12 +815,14 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   justify-content: flex-start;
 
   width: 100%;
-  height: ${(props) => (props.$isOpen ? "568px" : "100px")};
+  height: ${(props) => (props.$isOpen ? "70%" : "40px")};
 
   border-radius: 16px 16px 0px 0px;
   background-color: ${COLORS.whiteColor};
 
   transition: height 0.3s ease, transform 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, 
+              rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 `;
 
 const ToggleButton = styled.button`
@@ -935,7 +838,9 @@ const ToggleButton = styled.button`
   border: none;
   border-radius: 2px;
   background-color: ${COLORS.greyColor};
+  
   cursor: pointer;
+  outline: none;
 `;
 
 const StoreInformationList = styled.div`
@@ -944,7 +849,7 @@ const StoreInformationList = styled.div`
   justify-content: center;
   flex-flow: row wrap;
   gap: 28px;
-  margin: 40px 0px;
+  margin-top: 40px;
   width: 100%;
   overflow-y: auto;
   width: 100%;

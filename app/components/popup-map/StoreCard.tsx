@@ -44,14 +44,14 @@ const StoreCard: React.FC<StoreCardProps> = ({
 
 
   // 스토어 클릭시
-  const onClickHandler = (popupId:string) => {
+  const onClickHandler = (popupId: string) => {
     router.push(`/popup-map/${popupId}`)
     // popupStoreAPI(popupId)
     // setIsViewDesc(!isViewDesc);
   };
 
   return (
-    <StoreCardContainer onClick={()=>onClickHandler(store.id)}>
+    <StoreCardContainer onClick={() => onClickHandler(store.id)}>
       <StoreThumbnail>
         {/*실제 데이터 이미지*/}
         {/* <Image
@@ -64,9 +64,8 @@ const StoreCard: React.FC<StoreCardProps> = ({
         {/*더미 데이터 이미지*/}
         <Image
           src={`data:image/webp;base64,${store.image}`}
-          width={166}
-          height={166}
           alt={"앨랠래"}
+          fill
         />
         {isPopper || (
           <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
@@ -84,12 +83,6 @@ const StoreCard: React.FC<StoreCardProps> = ({
   );
 };
 
-const PopupStoreThumbnailImage = styled.img`
-  width: 100%; 
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 8px;
-`;
 
 const StoreCardContainer = styled.div`
   display: flex;

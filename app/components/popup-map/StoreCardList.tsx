@@ -1,23 +1,17 @@
 import styled from "styled-components";
 import StoreCard from "./StoreCard";
 import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
+import { IconRoundTriangle } from "../icons";
+import { COLORS } from "@/public/styles/colors";
 
 interface StoreCardListProps {
   storeList: PopupStoreSimpleData[];
   isPopper: boolean;
-  // isViewDesc: boolean;
-  // setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
-  // clickedStore: PopupStoreSimpleData | null;
-  // setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
 }
 
 const StoreCardList: React.FC<StoreCardListProps> = ({
   storeList,
   isPopper,
-  // isViewDesc,
-  // setIsViewDesc,
-  // clickedStore,
-  // setClickedStore,
 }) => {
   // TODO : popper 여부에 따른 storeList 이원화 필요?
 
@@ -32,45 +26,45 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
                 key={store.id}
                 store={store}
                 isPopper={isPopper}
-              // isViewDesc={isViewDesc}
-              // setIsViewDesc={setIsViewDesc}
-              // clickedStore={clickedStore}
-              // setClickedStore={setClickedStore}
               />
             ))}
           </StoreCardListContainer>
         </ThemeContainer>
-
-        {/* <ThemeContainer>
-          <div className={"theme-title"}>기타</div>
-          <StoreCardListContainer>
-            {storeList.map((store: PopupStoreSimpleData) => (
-              <StoreCard
-                key={store.id}
-                store={store}
-                isPopper={isPopper}
-                isViewDesc={isViewDesc}
-                setIsViewDesc={setIsViewDesc}
-                clickedStore={clickedStore}
-                setClickedStore={setClickedStore}
-              />
-            ))}
-          </StoreCardListContainer>
-        </ThemeContainer> */}
       </ThemeListContainer>
     </Container>
   ) : (
     <Container>
+      <CardListHeader>
+        <FilterContainer>
+          <Filter>
+            <span>
+              A 정렬
+            </span>
+            <SelectUnderlineTriangleContainer>
+              <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
+            </SelectUnderlineTriangleContainer>
+          </Filter>
+
+          <Filter>
+            <span>
+              A 정렬
+            </span>
+            <SelectUnderlineTriangleContainer>
+              <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
+            </SelectUnderlineTriangleContainer>
+          </Filter>
+
+        </FilterContainer>
+        <Caption>
+          총 {storeList.length}개의 팝업스토어가 있습니다.
+        </Caption>
+      </CardListHeader>
       <StoreCardListContainer>
         {storeList.map((store: PopupStoreSimpleData) => (
           <StoreCard
             key={store.id}
             store={store}
             isPopper={isPopper}
-          // isViewDesc={isViewDesc}
-          // setIsViewDesc={setIsViewDesc}
-          // clickedStore={clickedStore}
-          // setClickedStore={setClickedStore}
           />
         ))}
       </StoreCardListContainer>
@@ -79,20 +73,71 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
 };
 
 const Container = styled.div`
+  width: calc(100% - 40px) ; 
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+  flex-direction: column;
+  padding: 0 20px;
+  gap: 16px;
 `;
 
-const StoreCardListContainer = styled.div`
+const CardListHeader = styled.div`
   display: flex;
-  flex-flow: row wrap;
-  gap: 28px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  
+  gap: 12px;
 
-  margin-left: 22px;
-  width: 100%;
-  overflow-y: auto;
+`
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  gap: 8px;
+`
+
+const Filter = styled.div`
+  cursor: pointer;
+  min-width: 55px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+
+  & > span {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+  }
+`;
+
+const SelectUnderlineTriangleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  transform: rotate(-180deg);
+`;
+
+
+const Caption = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+`
+
+const StoreCardListContainer = styled.div`
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-wrap: wrap;
+
+  align-items: flex-start;
+  justify-content: space-between;
 `;
 
 const ThemeListContainer = styled.div`
