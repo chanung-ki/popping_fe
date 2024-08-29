@@ -49,7 +49,7 @@ const CustomJoyride: React.FC<CustomJoyrideProps> = ({
   },
 }) => {
   const defaultFloaterProps: FloaterProps = {
-    disableAnimation: true,
+    disableAnimation: false,
     styles: {
       floater: {
         position: 'fixed',

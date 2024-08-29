@@ -56,8 +56,8 @@ const Container = styled.div<ContainerTypes>`
   padding: ${(props) => props.top}px ${(props) => props.right}px
     ${(props) => props.bottom}px ${(props) => props.left}px;
 
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-x: auto;
+  overflow-x: auto;
 `;
 
 const SpacerContainer = styled.div`
