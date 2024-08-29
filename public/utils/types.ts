@@ -235,21 +235,15 @@ export type brandManageTypes = {
   description: string;
 };
 
-export type SubwayMap = {
-  [key: string]: number[]; // 인덱스 시그니처 추가
-  성수역: number[];
-  강남역: number[];
-  잠실역: number[];
-  용산역: number[];
-  여의도역: number[];
-  홍대입구역: number[];
-  압구정역: number[];
-  삼성역: number[];
-};
-
 export type MainSortedData = {
   id: string;
   title: string;
   location: LocationDataType;
   image: any;
 };
+
+export interface SubwayMapItem {
+  name: string;
+  coor: [number, number];
+  image: string; // 이미지 URL
+}

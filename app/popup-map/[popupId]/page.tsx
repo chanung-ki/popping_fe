@@ -203,8 +203,11 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             longitude={popupData.location.geoData.coordinates[0]}
             title={popupData.title}
           />
+
         </PopupContent>
 
+        {/* #TODO  */}
+        {/* 
         <PopupContent>
           <PopupContentTitle ref={locationRef}>100M이내 맛집 & 카페 | Restaurant & CAFE</PopupContentTitle>
           <PopupLocation>
@@ -216,7 +219,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             longitude={popupData.location.geoData.coordinates[0]}
             title={popupData.title}
           />
-        </PopupContent>
+        </PopupContent> */}
       </PopupContainer>
     </DefaultLayout>
   );
