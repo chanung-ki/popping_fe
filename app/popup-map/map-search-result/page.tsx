@@ -6,8 +6,8 @@ import { COLORS } from "@/public/styles/colors";
 import { IconChevronLeft } from "@/app/components/icons";
 import axiosInstance from "@/public/network/axios";
 import React, { useEffect, useState } from "react";
-import { PopupStoreSimpleData, user } from "@/public/utils/types";
-import StoreCardList from "@/app/components/popup-map/StoreCardList"; 
+import { PopupStoreDataType, PopupStoreSimpleData, user } from "@/public/utils/types";
+import StoreCardList from "@/app/components/popup-map/StoreCardList";
 import { useSelector } from "react-redux";
 import { Loading } from "@/app/components/loading";
 
@@ -16,7 +16,7 @@ const MapSearchResultPage: React.FC = () => {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [storeList, setStoreList] = useState<PopupStoreSimpleData[]>([]);
+  const [storeList, setStoreList] = useState<PopupStoreDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const searchParam = params.get('search');
@@ -27,7 +27,7 @@ const MapSearchResultPage: React.FC = () => {
     if (locationParam) {
       var district = locationParam.split(" ")[1];
       var APIurl = `/api/maps/off-popups?district=${district}&search=${searchParam}`;
-    }else{
+    } else {
       var APIurl = `/api/maps/off-popups?search=${searchParam}`;
     }
 
@@ -45,13 +45,13 @@ const MapSearchResultPage: React.FC = () => {
 
   useEffect(() => {
     popupStoreAPI();
-  },[router])
+  }, [router])
 
   return (
     <DefaultLayout top={0} bottom={0} left={0} right={0}>
       {isLoading ? (
         <Loading />
-      ):(
+      ) : (
         <Container>
           <ResultHeader>
             <ResultHeaderContents>
@@ -70,7 +70,7 @@ const MapSearchResultPage: React.FC = () => {
                 <p>
                   {locationParam}의 &quot;{searchParam}&quot; 검색 결과
                 </p>
-              ):(
+              ) : (
                 <p>
                   {searchParam}&quot; 검색 결과
                 </p>
