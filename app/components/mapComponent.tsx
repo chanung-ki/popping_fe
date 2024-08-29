@@ -631,10 +631,10 @@ const MapComponent: React.FC = () => {
         ) : !isActiveSearch ? (
           <>
             <ControlContainer>
-              <div>
+              <div style={{ marginLeft: 20 }}>
                 <Back />
               </div>
-              <div onClick={activeSearchHandler}>
+              <div onClick={activeSearchHandler} style={{ marginRight: 20 }}>
                 <IconSearch
                   width={16}
                   height={16}
@@ -709,7 +709,7 @@ const LocationResetBtn = styled.div`
   cursor: pointer;
   border: none;
   background-color: transparent;
-  position: fixed;
+  position: absolute;
   z-index: 1;
   bottom: 80px;
   right: 20px;
@@ -725,10 +725,12 @@ const StyledNaverMap = styled.div`
 `;
 
 const ControlContainer = styled.div`
-  width: calc(100% - 40px);
+  width: 100%;
+  max-width: 600px;
   position: fixed;
   top: 16px;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   display: flex;
   flex-direction: row;
@@ -812,7 +814,8 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   z-index: 101;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   display: flex;
   flex-direction: column;
@@ -820,6 +823,7 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   justify-content: flex-start;
 
   width: 100%;
+  max-width: 600px;
   height: ${(props) => (props.$isOpen ? "70dvh" : "40px")};
 
   border-radius: 16px 16px 0px 0px;
