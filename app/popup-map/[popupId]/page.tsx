@@ -14,7 +14,7 @@ import {
   IconFollow,
   IconLocation,
   IconAderessPin,
-    IconViews
+  IconViews
 } from "@/app/components/icons";
 
 import axiosInstance from "@/public/network/axios";
@@ -56,23 +56,18 @@ const OfflinePopupStoreDetailPage: React.FC<{
 
     if (viewPopupList) {
       const parsedViewPopupList = JSON.parse(viewPopupList);
-  
+
       if (Array.isArray(parsedViewPopupList) && parsedViewPopupList.includes(popupId)) {
 
       } else {
-        viewCountAPI(parsedViewPopupList); 
+        viewCountAPI(parsedViewPopupList);
       }
     } else {
-      viewCountAPI([]); 
+      viewCountAPI([]);
     }
   }, [router]);
 
-    const popupId = sessionStorage.getItem("popupId");
 
-    if (popupId) {
-    } else {
-    }
-  }, [router]);
 
   useEffect(() => {
     if (popupData) {
@@ -95,15 +90,15 @@ const OfflinePopupStoreDetailPage: React.FC<{
   }, [parentDiv.current]);
 
 
-  const viewCountAPI = async (parsedViewPopupList:string[]) => {
+  const viewCountAPI = async (parsedViewPopupList: string[]) => {
     try {
       const response = await axiosInstance.get(`/api/maps/view-count/${popupId}`);
-  
+
       if (response.status === 200) {
         parsedViewPopupList.push(popupId);  // 배열에 popupId 추가
         sessionStorage.setItem('popupViewList', JSON.stringify(parsedViewPopupList));  // 배열을 문자열로 변환하여 저장
       }
-  
+
     } catch (error) {
       console.error(error);
     }
@@ -215,8 +210,8 @@ const OfflinePopupStoreDetailPage: React.FC<{
                   {isAble
                     ? "(진행중)"
                     : now.isBefore(contractStart)
-                    ? "(종료)"
-                    : "(진행 예정)"}{" "}
+                      ? "(종료)"
+                      : "(진행 예정)"}{" "}
                   {popupData.title}
                 </h3>
 
@@ -235,28 +230,28 @@ const OfflinePopupStoreDetailPage: React.FC<{
                 </span>
               </PopupDate>
             </HeaderLeft>
-            <div style={{display: 'flex', gap: 16, alignItems:'center'}}>
-            <PopupBookmark
-              onClick={(event) => {
-                event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
-                handleBookmarkClick(popupId);
-              }}
-            >
-              <IconFollow
-                color={saved ? COLORS.mainColor : COLORS.greyColor}
-                width={20}
-                height={27}
-              />
-              <span>{FormatFollowers(popupData.saveCount)}</span>
-            </PopupBookmark>
-            <PopupBookmark>
-              <IconViews
-                color={COLORS.greyColor}
-                width={undefined}
-                height={27}
-              />
-              <span>{FormatFollowers(popupData.viewCount)}</span>
-            </PopupBookmark>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <PopupBookmark
+                onClick={(event) => {
+                  event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
+                  handleBookmarkClick(popupId);
+                }}
+              >
+                <IconFollow
+                  color={saved ? COLORS.mainColor : COLORS.greyColor}
+                  width={20}
+                  height={27}
+                />
+                <span>{FormatFollowers(popupData.saveCount)}</span>
+              </PopupBookmark>
+              <PopupBookmark>
+                <IconViews
+                  color={COLORS.greyColor}
+                  width={undefined}
+                  height={27}
+                />
+                <span>{FormatFollowers(popupData.viewCount)}</span>
+              </PopupBookmark>
             </div>
           </PopupHeader>
           <PopupLocation
