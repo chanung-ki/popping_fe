@@ -10,7 +10,6 @@ import axiosInstance from "@/public/network/axios";
 import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
 import Image from "next/image";
 import { formatDate, MARKER } from "@/public/utils/function";
-import StoreDescription from "./popup-map/StoreDescription";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
@@ -256,7 +255,7 @@ const MapComponent: React.FC = () => {
           newInfoWindow.open(mapRef.current, newMarker);
         }
       });
-    } catch (e) { }
+    } catch (e) {}
   };
 
   // 카페 마커를 카페 마커 리스트에 추가
@@ -281,7 +280,7 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setCafeMarkerList([...cafeMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) { }
+    } catch (e) {}
   };
 
   //푸드 마커를 푸드 마커 리스트에 추가
@@ -306,7 +305,7 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setFoodMarkerList([...foodMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) { }
+    } catch (e) {}
   };
 
   const removeMarker = (type: string) => {
@@ -325,9 +324,11 @@ const MapComponent: React.FC = () => {
 
   // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
   const openInfoWindow = (marker: naver.maps.Marker) => {
-    const storeInfo: PopupStoreSimpleData | undefined = storeList.find((store) => {
-      return store.title === marker.getTitle();
-    });
+    const storeInfo: PopupStoreSimpleData | undefined = storeList.find(
+      (store) => {
+        return store.title === marker.getTitle();
+      }
+    );
     const newInfoWindow: naver.maps.InfoWindow =
       new window.naver.maps.InfoWindow({
         backgroundColor: "transparent",
@@ -400,7 +401,7 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     addStoreMarkers();
-  }, [storeList])
+  }, [storeList]);
 
   // 재희형이 말한 기능 구현 보류중...
   // useEffect(() => {
@@ -417,7 +418,7 @@ const MapComponent: React.FC = () => {
     var APIurl = "";
 
     if (selectedLocation) {
-      const district = selectedLocation.split(' ')[1]
+      const district = selectedLocation.split(" ")[1];
       APIurl = `/api/maps/off-popups?district=${district}`;
     } else {
       APIurl = `/api/maps/off-popups`;
@@ -435,31 +436,29 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const hotPlace = url.searchParams.get('hotPlace');
-    if (hotPlace === 'true') {
-      const storedData = sessionStorage.getItem('popupStores');
+    const hotPlace = url.searchParams.get("hotPlace");
+    if (hotPlace === "true") {
+      const storedData = sessionStorage.getItem("popupStores");
       setStoreList(JSON.parse(storedData!));
     } else {
-      sessionStorage.removeItem('popupStores')
-      sessionStorage.removeItem('subwayCoor')
+      sessionStorage.removeItem("popupStores");
+      sessionStorage.removeItem("subwayCoor");
       popupStoreAPI();
     }
 
     if (navigator.geolocation) {
-
-      const subwayCoor = sessionStorage.getItem('subwayCoor');
+      const subwayCoor = sessionStorage.getItem("subwayCoor");
 
       if (subwayCoor) {
-        const coords = JSON.parse(subwayCoor)
-        setSubwayLocation({ 'lat': coords[1], 'lng': coords[0] })
+        const coords = JSON.parse(subwayCoor);
+        setSubwayLocation({ lat: coords[1], lng: coords[0] });
       }
 
       // 위치 추적을 시작합니다.
       const watchId = navigator.geolocation.watchPosition(
         (position) => {
-
           const lat = position.coords.latitude;
-          const lng = position.coords.longitude
+          const lng = position.coords.longitude;
 
           setUserLocation({ lat, lng });
           setIsLoading(false); // 위치를 성공적으로 가져오면 로딩 상태 해제
@@ -509,7 +508,7 @@ const MapComponent: React.FC = () => {
           const center = mapRef.current.getCenter();
           const distance = Math.sqrt(
             Math.pow(center.lat() - userLocation.lat, 2) +
-            Math.pow(center.lng() - userLocation.lng, 2)
+              Math.pow(center.lng() - userLocation.lng, 2)
           );
           if (distance > 0.001) {
             // 사용자가 위치에서 벗어났다고 판단할 거리
@@ -675,6 +674,7 @@ const MapComponent: React.FC = () => {
             />
           </StoreInformationList>
         )}
+
       </SlideBottomMenu>
     </DefaultLayout>
   );

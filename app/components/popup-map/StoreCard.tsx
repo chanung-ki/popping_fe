@@ -63,6 +63,7 @@ const StoreCard: React.FC<StoreCardProps> = ({
 
         {/*더미 데이터 이미지*/}
         <Image
+          loading="lazy"
           src={`data:image/webp;base64,${store.image}`}
           alt={"앨랠래"}
           fill
