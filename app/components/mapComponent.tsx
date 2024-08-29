@@ -466,7 +466,7 @@ const MapComponent: React.FC = () => {
         },
         (error) => {
           console.error("Error getting location:", error);
-          setIsLoading(false); // 위치를 가져오지 못하더라도 로딩 상태 해제
+          setIsLoading(false); // 위치를 가져오지 못하더라
         },
         {
           enableHighAccuracy: true,

@@ -129,6 +129,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
           setIsAnimatingComp(true);
         }, 1000);
       }, 1500);
+      return () => clearTimeout(timer);
     }
   }, [joyrideRun]);
 
