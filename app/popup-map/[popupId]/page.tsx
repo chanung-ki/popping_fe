@@ -63,6 +63,10 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
 
   }
 
+  const locationClickHandler = () => {
+
+  }
+
   if (!popupData) return <Loading />
   return (
     <DefaultLayout top={0} left={0} right={0} bottom={0}>
@@ -80,24 +84,14 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
           navigation
           pagination={{ clickable: true }}
         >
-          <SwiperSlide>
-            <SlideBannerContainer
-              height={parentWidth}
-              image={'/images/popping-cup.png'}
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <SlideBannerContainer
-              height={parentWidth}
-              image={'/images/popping-tshirt.png'}
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <SlideBannerContainer
-              height={parentWidth}
-              image={'/images/popping-phone.png'}
-            />
-          </SwiperSlide>
+          {popupData.image.map((image: string, index: number) => (
+            <SwiperSlide key={`popup-image-${index}`}>
+              <SlideBannerContainer
+                height={parentWidth}
+                image={`data:image/webp;base64,${image}`}
+              />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </SwiperContainer>
 
@@ -107,10 +101,11 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             <HeaderLeft>
 
               <PopupTitle>
-                <PopupLocation>
-                  <IconLocation color={COLORS.greyColor} width={undefined} height={16} />수원시 영통구
+                <PopupLocation onClick={locationClickHandler}>
+                  <IconLocation color={COLORS.greyColor} width={undefined} height={16} />
+                  {popupData.location.address}
                 </PopupLocation>
-                <h3>{popupData.brandName}</h3>
+                <h3>{popupData.title}</h3>
               </PopupTitle>
               <PopupDate>
                 {KRWLocaleString(1)} KRW
@@ -150,10 +145,11 @@ const SlideBannerContainer = styled.div<{ height: number; image: string }>`
   width: 100%;
   height: ${(props) => props.height}px;
   background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
+    props.image
+      ? `url(${props.image})`
+      : COLORS.greyColor};
   background-position: center;
   background-size: cover;
-
   cursor: grab;
 `;
 
@@ -204,11 +200,15 @@ const HeaderLeft = styled.div`
 `;
 
 const PopupLocation = styled.h5`
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 4px;
 
   color: ${COLORS.greyColor};
+
+  font-size: 12px;
+  font-weight: 500;
 `
 
 const PopupTitle = styled.div`
@@ -219,7 +219,7 @@ const PopupTitle = styled.div`
   gap: 8px;
 
   & > h3 {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 500;
     word-break: break-all;
   }

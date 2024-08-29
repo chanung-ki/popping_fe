@@ -60,23 +60,23 @@ export interface LocationDataType {
 
 export interface PopupStoreDataType {
   id: string;
-  brandName:string;
+  brandName: string;
   title: string;
   location: LocationDataType;
-  date:{
-    start:string;
-    end:string;
-  }
+  date: {
+    start: string;
+    end: string;
+  };
   openTime: {
-    day:string;
-    startTime:string;
-    endTime:string;
-  }
+    day: string;
+    startTime: string;
+    endTime: string;
+  };
   description: string[];
   isSaved: boolean;
-  image: any;
-  homepage:string;
-  sns:string[];
+  image: string[];
+  homepage: string;
+  sns: string[];
   viewCount: number;
 }
 
@@ -243,15 +243,11 @@ export type SubwayMap = {
   홍대입구역: number[];
   압구정역: number[];
   삼성역: number[];
-}
+};
 
 export type MainSortedData = {
-  id:string;
-  title:string;
-  location:LocationDataType;
+  id: string;
+  title: string;
+  location: LocationDataType;
   image: any;
-}
-
-
-
-
+};

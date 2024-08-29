@@ -12,7 +12,7 @@ interface PopupCardProps {
   storeData: MainSortedData[];
 }
 
-//TODO : Props interface 정의 필요
+// TODO: Props interface 정의 필요
 const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(({ title, storeData }, ref) => {
   return (
     <>
@@ -46,13 +46,14 @@ const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(({ title, sto
   );
 });
 
+PopupCard.displayName = "PopupCard";
+
 const Stuff = styled(Link)`
   cursor: pointer;
   position: relative;
 
   flex: 0 0 calc(50% - 12px);
   margin-bottom: 20px;
-  
 
   @media (min-width: 768px) {
     flex: 0 0 calc(33.333% - 12px); 
@@ -139,11 +140,6 @@ const PopupStoreThumbnailImage = styled.img`
     background-size: cover;
 
     cursor: pointer;
-
-  /* width: 100%; 
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 8px; */
 `;
 
 const StoreDesc = styled.div`
@@ -171,6 +167,3 @@ const StoreDesc = styled.div`
 `;
 
 export default PopupCard;
-
-
-
