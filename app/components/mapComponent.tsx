@@ -15,6 +15,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { user } from "@/public/utils/types";
 import StoreCardList from "./popup-map/StoreCardList";
+import Back from "./back";
 
 interface FoodAndCafe {
   title: string;
@@ -87,7 +88,7 @@ const MapComponent: React.FC = () => {
   // 하단 메뉴 오픈 여부
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   // 하단 메뉴 리스트 스토어 클릭 여부
-  const [clickedStore, setClickedStore] = useState<PopupStoreDataType | null>(null);
+  // const [clickedStore, setClickedStore] = useState<PopupStoreDataType | null>(null);
   // 스토어 좋아요 여부
   const [isLikedStore, setIsLikedStore] = useState<boolean>(false);
   // 스토어 상세보기 여부
@@ -619,11 +620,7 @@ const MapComponent: React.FC = () => {
           <>
             <SearchControlContainer>
               <CircleButton>
-                <IconChevronLeft
-                  width={16}
-                  height={16}
-                  color={COLORS.secondaryColor}
-                />
+                <Back/>
               </CircleButton>
 
               <CircleButton onClick={activeSearchHandler}>
@@ -682,7 +679,7 @@ const MapComponent: React.FC = () => {
             </SearchContainer>
           </>
         )}
-        <CategoryBox isSearchOpen={isActiveSearch}>
+        {/* <CategoryBox isSearchOpen={isActiveSearch}>
           <ul>
             <li
               id="coffeeMenu"
@@ -701,7 +698,7 @@ const MapComponent: React.FC = () => {
               맛집
             </li>
           </ul>
-        </CategoryBox>
+        </CategoryBox> */}
       </MapContainer>
       <SlideBottomMenu $isOpen={isOpenMenu}>
         <ToggleButton
@@ -710,9 +707,22 @@ const MapComponent: React.FC = () => {
           }}
         />
 
-        {isOpenMenu && !isViewDesc && !clickedStore ? (
+        {isOpenMenu && !isViewDesc && (
           <StoreInformationList>
             {/* Store Card 더미 데이터 리스트 렌더링 */}
+            <StoreCardList
+              storeList={storeList}
+              // isPopper={userData.isPopper}
+              isPopper={true}
+              // isViewDesc={isViewDesc}
+              // setIsViewDesc={setIsViewDesc}
+              // clickedStore={clickedStore}
+              // setClickedStore={setClickedStore}
+            />
+          </StoreInformationList>
+        )}
+         {/* {isOpenMenu && !isViewDesc && !clickedStore ? (
+          <StoreInformationList>
             <StoreCardList
               storeList={storeList}
               // isPopper={userData.isPopper}
@@ -736,7 +746,7 @@ const MapComponent: React.FC = () => {
               isPopper={true}
             />
           )
-        )}
+        )} */}
       </SlideBottomMenu>
     </Container>
   );

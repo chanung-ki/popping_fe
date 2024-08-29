@@ -11,42 +11,43 @@ import axiosInstance from "@/public/network/axios";
 
 interface StoreCardProps {
   store: PopupStoreSimpleData;
-  clickedStore: PopupStoreSimpleData | null;
-  setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
-  isViewDesc: boolean;
-  setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  // clickedStore: PopupStoreSimpleData | null;
+  // setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
+  // isViewDesc: boolean;
+  // setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
   isPopper: boolean;
 }
 
 //TODO : Props interface 정의 필요
 const StoreCard: React.FC<StoreCardProps> = ({
   store,
-  clickedStore,
-  setClickedStore,
-  isViewDesc,
-  setIsViewDesc,
+  // clickedStore,
+  // setClickedStore,
+  // isViewDesc,
+  // setIsViewDesc,
   isPopper,
 }: StoreCardProps) => {
   const router = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
-  const popupStoreAPI = async (popupId:string) => {
+  // const popupStoreAPI = async (popupId:string) => {
 
-    await axiosInstance
-      .get(`/api/maps/popup/${popupId}`)
-      .then((response: any) => {
-        setClickedStore(response.data.popupData);
-      })
-      .catch((error: any) => {
-        console.error("There was an error making the GET request!", error);
-      });
-  };
+  //   await axiosInstance
+  //     .get(`/api/maps/popup/${popupId}`)
+  //     .then((response: any) => {
+  //       setClickedStore(response.data.popupData);
+  //     })
+  //     .catch((error: any) => {
+  //       console.error("There was an error making the GET request!", error);
+  //     });
+  // };
 
 
   // 스토어 클릭시
   const onClickHandler = (popupId:string) => {
-    popupStoreAPI(popupId)
-    setIsViewDesc(!isViewDesc);
+    router.push(`/popup-map/${popupId}`)
+    // popupStoreAPI(popupId)
+    // setIsViewDesc(!isViewDesc);
   };
 
   return (
