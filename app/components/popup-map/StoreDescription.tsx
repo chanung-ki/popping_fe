@@ -41,7 +41,7 @@ const StoreDescription: React.FC<StoreDescriptionProps> = ({
         {/*더미 데이터용 이미지 */}
 
         {/* 정슴민은 보아라 store.image리스트이다!! 여러장의 이미지를 보여줘야 한다!!!! */}
-        <Image src={`data:image/jpeg;base64,${store.image[0]}`} fill alt={"썸네일"} />
+        <Image src={`data:image/webp;base64,${store.image[0]}`} fill alt={"썸네일"} />
         <div className={"back-to-list"} onClick={onClickBackToList}>
           <IconChevronLeft width={9} height={16} color={COLORS.whiteColor} />
         </div>

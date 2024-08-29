@@ -38,7 +38,7 @@ const StoreInfoAtMap: React.FC<StoreInfoAtMapProps> = ({ setStore, store, isExpa
         <div className={"back-button"} onClick={backButtonClickhandler}>
           <IconChevronLeft width={9} height={16} color={COLORS.primaryColor} />
         </div>
-        <img src={`data:image/jpeg;base64,${store.image}`} />
+        <img src={`data:image/webp;base64,${store.image}`} />
       </PopupStoreImage>
       <PopupStoreDescContainer>
         <div className={"slider-desc-header"}>
