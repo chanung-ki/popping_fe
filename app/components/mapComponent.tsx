@@ -647,9 +647,11 @@ const MapComponent: React.FC = () => {
           <>
             <SearchContainer>
               <SearchControlContainer>
-                <Back />
+                <div style={{ marginLeft: 20 }}>
+                  <Back />
+                </div>
                 <p>검색</p>
-                <TransparentButton onClick={activeSearchHandler}>
+                <TransparentButton onClick={activeSearchHandler} style={{ marginRight: 20 }}>
                   <IconX width={16} height={16} color={COLORS.secondaryColor} />
                 </TransparentButton>
               </SearchControlContainer>
@@ -744,8 +746,9 @@ const SearchControlContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: 600px;
+  width: 100%;
 
-  width: calc(100% - 40px);
   margin-top: 16px;
 
   & > p {
@@ -773,10 +776,12 @@ const TransparentButton = styled.button`
 
 const SearchContainer = styled.div`
   position: fixed;
+  max-width: 600px;
   width: 100%;
   z-index: 1;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   display: flex;
   flex-direction: column;
