@@ -12,6 +12,10 @@ import { ButtonLarge } from "@/app/components/buttons";
 import { brandManageTypes } from "@/public/utils/types";
 import { Tooltip } from "react-tooltip";
 
+import CustomJoyride from "@/app/components/tour/CustomJoyride";
+import { CallBackProps, STATUS, Step } from "react-joyride";
+import { TourContainer } from "@/app/components/tour/TourStyle";
+
 const OnlinePopUpOpenningPage: React.FC = () => {
   const router = useRouter();
   const hasAlerted = useRef<boolean>(false);
@@ -42,11 +46,124 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     description: "",
   });
 
+  // CustomJoyride 관련
+  const [joyrideRun, setJoyrideRun] = useState<boolean>(false);
+  const [steps, setSteps] = useState<Step[]>([]);
+  const joyrideStatusKey = `joyride_status_brand_manage`;
+
+  const logoRef = useRef<HTMLDivElement>(null);
+  const thumbnailRef = useRef<HTMLDivElement>(null);
+  const brandNameRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (
+      logoRef.current &&
+      thumbnailRef.current &&
+      brandNameRef.current &&
+      descriptionRef.current
+    ) {
+      setSteps([
+        {
+          target: "body",
+          content: (
+            <TourContainer>
+              <p>
+                <strong>브랜드 관리</strong>페이지에 오신것을 환영합니다.
+              </p>
+              <p>
+                팝퍼님의 <strong>브랜드</strong>정보를 입력해주세요!
+              </p>
+            </TourContainer>
+          ),
+          title: "브랜드 관리",
+          placement: "center",
+        },
+        {
+          target: logoRef.current,
+          content: (
+            <TourContainer>
+              <p>
+                해당 영역을 클릭해서 <strong>로고</strong> 이미지를
+                선택해주세요.
+              </p>
+            </TourContainer>
+          ),
+          title: "브랜드 관리",
+          placement: "bottom",
+        },
+        {
+          target: thumbnailRef.current,
+          content: (
+            <TourContainer>
+              <p>
+                해당 영역을 클릭해서 <strong>썸네일</strong> 이미지를
+                선택해주세요.
+              </p>
+            </TourContainer>
+          ),
+          title: "브랜드 관리",
+          placement: "bottom",
+        },
+        {
+          target: brandNameRef.current,
+          content: (
+            <TourContainer>
+              <p>
+                <strong>브랜드 네임은</strong> 팝퍼님의 닉네임으로 자동으로
+                설정됩니다.
+              </p>
+              <p>변경을 원하실 경우</p>
+              <p>
+                <strong>프로필 설정</strong>을 통해 변경해주세요.
+              </p>
+            </TourContainer>
+          ),
+          title: "브랜드 관리",
+          placement: "bottom",
+        },
+        {
+          target: descriptionRef.current,
+          content: (
+            <TourContainer>
+              <p>
+                브랜드 소개, 슬로건 등 간단한 <strong>브랜드 설명</strong>을
+                입력해주세요.
+              </p>
+            </TourContainer>
+          ),
+          title: "브랜드 관리",
+          placement: "bottom",
+        },
+      ]);
+    }
+  }, [
+    logoRef.current,
+    thumbnailRef.current,
+    brandNameRef.current,
+    descriptionRef.current,
+  ]);
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+      setJoyrideRun(false);
+      localStorage.setItem(joyrideStatusKey, status);
+    }
+  };
+
   useEffect(() => {
     if (!isLogin || !isPopper) {
       alert("해당 페이지에 접근권한이 없습니다.");
     }
     getBrandApi();
+
+    const key = localStorage.getItem(joyrideStatusKey);
+    if (key === "finished" || key === "skipped") {
+      setJoyrideRun(false);
+    } else {
+      setJoyrideRun(true);
+    }
   }, [router]);
 
   // api
@@ -56,12 +173,10 @@ const OnlinePopUpOpenningPage: React.FC = () => {
       const response = await axiosInstance.get(`/api/popup/brand`);
       if (response.status === 200) {
         setIsExist(response.data.isExist);
-        if (!response.data.isExist && !hasAlerted.current) {
-          alert(
-            "등록된 브랜드 정보가 없습니다. 브랜드 정보를 등록해주세요.\n(브랜드네임은 팝퍼의 닉네임이 사용됩니다.)"
-          );
-          hasAlerted.current = true;
-        }
+        // if (!response.data.isExist && !hasAlerted.current) {
+        //   alert("등록된 브랜드 정보가 없습니다. 브랜드 정보를 등록해주세요.\n(브랜드네임은 팝퍼의 닉네임이 사용됩니다.)");
+        //   hasAlerted.current = true;
+        // }
         if (response.data.isExist) {
           const logo = response.data.brandData.logo;
           const thumbnail = response.data.brandData.thumbnail;
@@ -186,6 +301,11 @@ const OnlinePopUpOpenningPage: React.FC = () => {
 
   return (
     <DefaultLayout top={16} right={20} bottom={32} left={20}>
+      <CustomJoyride
+        steps={steps}
+        runStatus={joyrideRun}
+        callback={handleJoyrideCallback}
+      />
       {isLoading && <Loading />}
       <PointerBox
         onClick={() => {
@@ -219,7 +339,9 @@ const OnlinePopUpOpenningPage: React.FC = () => {
                 }
               }}
             >
-              <BrandIcon src={logoBlobUrl} alt="Brand Icon" />
+              <div ref={logoRef}>
+                <BrandIcon src={logoBlobUrl} alt="Brand Icon" />
+              </div>
               <input
                 id="logoImage"
                 type="file"
@@ -233,11 +355,12 @@ const OnlinePopUpOpenningPage: React.FC = () => {
             <BrandName
               data-tooltip-id="tooltip"
               data-tooltip-content="브랜드네임은 프로필 설정에서 변경할 수 있습니다."
+              ref={brandNameRef}
             >
               {nickname}
             </BrandName>
             <TooltipCustom id="tooltip" place="bottom" />
-            <BrandDesc>
+            <BrandDesc ref={descriptionRef}>
               <BrandDescriptionTextArea
                 placeholder="브랜드 소개를 입력해주세요."
                 value={valueDescription}
