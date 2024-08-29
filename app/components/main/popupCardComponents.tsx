@@ -15,7 +15,7 @@ const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(
   ({ title, storeData }, ref) => {
     return (
       <>
-        <span ref={ref}>{title}</span>
+        <div ref={ref} style={{ zIndex: 5 }}>{title}</div>
         <Section>
           <ContentsContainer>
             {storeData.length > 0 ? (
@@ -30,9 +30,19 @@ const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(
                 </Stuff>
               ))
             ) : (
-              <StoreContainer>
-                <NoneDataText>데이터가 없습니다</NoneDataText>
-              </StoreContainer>
+              <>
+                <SkeletonDiv />
+                <SkeletonDiv />
+                <SkeletonDiv />
+
+                <SkeletonDiv />
+                <SkeletonDiv />
+                <SkeletonDiv />
+
+                <SkeletonDiv />
+                <SkeletonDiv />
+                <SkeletonDiv />
+              </>
             )}
           </ContentsContainer>
         </Section>
@@ -54,6 +64,37 @@ const Stuff = styled(Link)`
     flex: 0 0 calc(33.333% - 12px);
   }
 `;
+
+export const SkeletonDiv = styled.div`
+  aspect-ratio: 1 / 1;
+  background-color: ${COLORS.greyColor};
+  margin-bottom: 20px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+
+  /* 애니메이션 효과 */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.2) 75%);
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+`;
+
 
 const ProductThumbnail = styled.div`
   position: relative;
@@ -79,6 +120,7 @@ const ProductTitle = styled.h3`
 `;
 
 const Section = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -92,73 +134,7 @@ const ContentsContainer = styled.div`
   flex-wrap: nowrap;
   grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개의 열 */
 
-  div:last-child {
-    margin-right: 16px;
-  }
-
   margin-right: 20px;
-`;
-
-const StoreContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const NoneDataText = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const StoreImage = styled.div<{ image: string | null }>`
-  flex: 0 0 auto;
-
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
-  background: ${(props) =>
-    props.image ? `url(${props.image})` : COLORS.greyColor};
-  background-position: center;
-  background-size: cover;
-
-  cursor: pointer;
-`;
-
-const PopupStoreThumbnailImage = styled.img`
-  flex: 0 0 auto;
-
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
-  background-position: center;
-  background-size: cover;
-
-  cursor: pointer;
-`;
-
-const StoreDesc = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-
-  p:first-child {
-    color: ${COLORS.secondaryColor};
-
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
-
-  p:last-child {
-    color: ${COLORS.greyColor};
-
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
 `;
 
 export default PopupCard;

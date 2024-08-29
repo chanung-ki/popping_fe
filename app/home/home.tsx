@@ -296,7 +296,7 @@ const HomePage: React.FC = () => {
         </SwiperContainer>
 
         <Sections>
-          <span ref={hotPlaceRef}>HOT PLACE</span>
+          <div ref={hotPlaceRef} style={{ zIndex: 5 }}>HOT PLACE</div>
           <Section>
             <ContentsContainer>
               {subway.map((data: SubwayMapItem, index: number) => (
@@ -336,6 +336,8 @@ const TopNavLogoContainer = styled.div`
   width: auto;
   height: 24px;
 
+  z-index: 5;
+
   cursor: pointer;
 `;
 
@@ -350,6 +352,8 @@ const Container = styled.div`
 
 const SwiperContainer = styled.div`
   width: 100%;
+  
+  z-index: 5;
 `;
 
 const SlideBannerContainer = styled.div<{ height: number; image: string }>`
@@ -360,6 +364,7 @@ const SlideBannerContainer = styled.div<{ height: number; image: string }>`
   background-position: center;
   background-size: cover;
 
+  z-index: 5;
   cursor: grab;
 `;
 

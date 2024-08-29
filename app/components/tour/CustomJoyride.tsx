@@ -60,7 +60,7 @@ const CustomJoyride: React.FC<CustomJoyrideProps> = ({
       spotlight: {
         transition: "none",
         backgroundColor: "rgba(0, 0, 0, 0.25)", // 기존 스타일 유지
-        zIndex: 30,
+        zIndex: 2,
       },
       overlay: { zIndex: 20 },
     },
