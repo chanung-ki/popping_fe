@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import Back from "@/app/components/back";
 import { DefaultLayout } from "@/app/components/layout";
@@ -9,14 +9,7 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Follow, formatDate, FormatFollowers } from "@/public/utils/function";
-
-import {
-  IconFollow,
-  IconLocation,
-  IconAderessPin,
-  IconViews
-} from "@/app/components/icons";
-
+import { IconFollow, IconLocation, IconAderessPin, IconViews } from "@/app/components/icons";
 import axiosInstance from "@/public/network/axios";
 import { PopupStoreDataType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
@@ -27,9 +20,7 @@ import Image from "next/image";
 import { PlaceDataType } from "@/public/utils/types";
 import SurroundRestaurantCard from "@/app/components/popup-map/SurroundRestaurantCard";
 
-const OfflinePopupStoreDetailPage: React.FC<{
-  params: { popupId: string };
-}> = ({ params }) => {
+const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = ({ params }) => {
   const router = useRouter();
   const { popupId } = params;
 
@@ -51,7 +42,6 @@ const OfflinePopupStoreDetailPage: React.FC<{
 
   useEffect(() => {
     PopupDetailData();
-
     const viewPopupList = sessionStorage.getItem('popupViewList')
 
     if (viewPopupList) {
@@ -66,7 +56,6 @@ const OfflinePopupStoreDetailPage: React.FC<{
       viewCountAPI([]);
     }
   }, [router]);
-
 
 
   useEffect(() => {
@@ -88,7 +77,6 @@ const OfflinePopupStoreDetailPage: React.FC<{
       window.removeEventListener("resize", updateParentWidth);
     };
   }, [parentDiv.current]);
-
 
   const viewCountAPI = async (parsedViewPopupList: string[]) => {
     try {
@@ -151,6 +139,7 @@ const OfflinePopupStoreDetailPage: React.FC<{
   }
   if (!popupData) return <Loading />;
 
+
   const handleBookmarkClick = async (id: string) => {
     setSaved(!saved);
     if (saved) {
@@ -158,6 +147,7 @@ const OfflinePopupStoreDetailPage: React.FC<{
         ...popupData,
         saveCount: popupData.saveCount - 1,
       });
+
     } else {
       setPopupData({
         ...popupData,
@@ -166,6 +156,8 @@ const OfflinePopupStoreDetailPage: React.FC<{
     }
     Follow("Popup", id, router);
   };
+
+
 
   const now = dayjs();
   const contractStart = dayjs(popupData.date.start);
@@ -176,7 +168,7 @@ const OfflinePopupStoreDetailPage: React.FC<{
   return (
     <DefaultLayout top={0} left={0} right={0} bottom={0}>
       <SwiperContainer>
-        <div style={{ position: "absolute", zIndex: 2, left: 20, top: 16 }}>
+        <div style={{ position: 'absolute', zIndex: 2, left: 20, top: 16 }}>
           <Back url={undefined} />
         </div>
         <Swiper
@@ -203,18 +195,7 @@ const OfflinePopupStoreDetailPage: React.FC<{
           <PopupHeader>
             <HeaderLeft>
               <PopupTitle>
-
                 <h3>{popupData.title}</h3>
-
-                <h3>
-                  {isAble
-                    ? "(진행중)"
-                    : now.isBefore(contractStart)
-                      ? "(종료)"
-                      : "(진행 예정)"}{" "}
-                  {popupData.title}
-                </h3>
-
               </PopupTitle>
               <PopupDate>
                 <BrandStateBadge
@@ -225,8 +206,7 @@ const OfflinePopupStoreDetailPage: React.FC<{
                   {isAble ? '진행중' : now.isBefore(contractStart) ? '진행 예정' : '종료'}
                 </BrandStateBadge>
                 <span>
-                  {formatDate(popupData.date.start)} ~{" "}
-                  {formatDate(popupData.date.end)}
+                  {formatDate(popupData.date.start)} ~ {formatDate(popupData.date.end)}
                 </span>
               </PopupDate>
             </HeaderLeft>
@@ -254,13 +234,11 @@ const OfflinePopupStoreDetailPage: React.FC<{
               </PopupBookmark>
             </div>
           </PopupHeader>
-          <PopupLocation
-            onClick={() => {
-              if (locationRef.current) {
-                locationRef.current.scrollIntoView({ behavior: "smooth" });
+          <PopupLocation onClick={() => {
+            if (locationRef.current) {
+                locationRef.current.scrollIntoView({ behavior: 'smooth' });
               }
-            }}
-          >
+            }}>
             {/* <IconLocation color={COLORS.greyColor} width={undefined} height={16} /> */}
             {popupData.location.address}
           </PopupLocation>
@@ -273,15 +251,15 @@ const OfflinePopupStoreDetailPage: React.FC<{
         <PopupContent>
           <PopupContentTitle>설명</PopupContentTitle>
           <PopupDescription>
-            {popupData.description.map((text: string, index: number) =>
-              text === "\n" ? (
-                <br key={index} />
-              ) : (
+            {popupData.description.map((text: string, index: number) => (
+              text === '\n' ? <br key={index} /> : (
                 <span key={`description-${index}`}>{text}</span>
               )
-            )}
+            ))}
           </PopupDescription>
         </PopupContent>
+
+
 
         <PopupContent>
           <PopupContentTitle ref={locationRef}>위치</PopupContentTitle>
@@ -293,10 +271,11 @@ const OfflinePopupStoreDetailPage: React.FC<{
             longitude={popupData.location.geoData.coordinates[0]}
             title={popupData.title}
           />
+
         </PopupContent>
 
         {/* #TODO  */}
-
+        
         <PopupContent>
           <TitleArea>
             <PopupContentTitle ref={locationRef}>
@@ -342,7 +321,7 @@ const BrandStateBadge = styled.span`
 // Swiper 컨테이너에 대한 스타일링을 추가합니다.
 const SwiperContainer = styled.div`
   width: 100%;
-  position: relative;
+  position:relative;
 `;
 
 const SlideBannerContainer = styled.div<{ height: number; image: string }>`
@@ -430,6 +409,7 @@ const PopupTitle = styled.div`
     font-weight: 600;
     word-break: break-all;
   }
+
 `;
 
 const PopupDate = styled.span`
@@ -457,6 +437,7 @@ const PopupBookmark = styled.div`
     font-weight: 600;
   }
 `;
+
 
 const PopupTagContainer = styled.div`
   display: flex;
@@ -487,7 +468,7 @@ const PopupTag = styled.div`
 `;
 
 const PopupContent = styled.div`
-  width: calc(100% - 20px);
+    width: calc(100% - 20px);
   display: flex;
   flex-direction: column;
 

@@ -3,19 +3,16 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IconUser } from "./icons";
 import { Loading } from "./loading";
-import { IconChevronLeft, IconSearch, IconX } from "./icons";
+import { IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
-import StoreCard from "./popup-map/StoreCard";
 import axiosInstance from "@/public/network/axios";
-import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
-import Image from "next/image";
-import { formatDate, MARKER } from "@/public/utils/function";
-import { useRouter, useSearchParams } from "next/navigation";
+import { PopupStoreSimpleData, user, PopupStoreDataType } from "@/public/utils/types";
+import { MARKER } from "@/public/utils/function";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { user } from "@/public/utils/types";
 import StoreCardList from "./popup-map/StoreCardList";
 import Back from "./back";
-import { DefaultLayout, Spacer } from "./layout";
+import { DefaultLayout } from "./layout";
 
 interface FoodAndCafe {
   title: string;
@@ -389,13 +386,16 @@ const MapComponent: React.FC = () => {
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (!selectedLocation) {
-        alert("검색할 지역을 선택해주세요.");
-      } else {
-        router.push(
-          `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
-        );
-      }
+      router.push(
+        `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
+      );
+      // if (!selectedLocation) {
+      //   alert("검색할 지역을 선택해주세요.");
+      // } else {
+      //   router.push(
+      //     `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
+      //   );
+      // }
     }
   };
 
@@ -611,6 +611,11 @@ const MapComponent: React.FC = () => {
   // 검색 활성화 핸들러
   const activeSearchHandler = () => {
     setIsActiveSearch(!isActiveSearch);
+    
+    // 검색창 닫을시 자치구 초기화
+    if (!isActiveSearch){
+      setSelectedLocation('')
+    }
   };
 
   return (

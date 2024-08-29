@@ -12,17 +12,24 @@ const SurroundRestaurantCard: React.FC<SurroundRestaurantCardProps> = ({
 }) => {
   const cardClickHandler = () => {
     //card click handler
+    const userConfirmed = window.confirm("해당 위치를 네이버 지도에서 검색하시겠습니까?");
+    if (userConfirmed) {
+      const naverMapUrl = `https://map.naver.com/v5/search/${restaurantData.title} ${restaurantData.loadAddr}`;
+      // const naverMapUrl = `https://map.naver.com/v5/search/${restaurantData.geoData.coordinates[1]},${restaurantData.geoData.coordinates[0]}`;
+      window.open(naverMapUrl, "_blank");
+    }
+
   };
 
   return (
     <RestaurantCard onClick={cardClickHandler}>
       <RestaurantInfo>
-        <div className={"restaurant-distance"}>100m</div>
+        <div className={"restaurant-distance"}>{restaurantData.distance}m</div>
         <div className={"restaurant-bottom"}>
           <div className={"restaurant-name"}>{restaurantData.title}</div>
           <div className={"restaurant-tags"}>
-            {restaurantData.tags.length > 0 &&
-              restaurantData.tags.map(
+            {restaurantData.bestMenu.length > 0 &&
+              restaurantData.bestMenu.map(
                 (tag: string, index: number) =>
                   //최대 태그 3개까지 제한
                   index < 3 && <span key={index}>#{tag}</span>
@@ -33,7 +40,7 @@ const SurroundRestaurantCard: React.FC<SurroundRestaurantCardProps> = ({
       <RestaurantOverlay />
       <RestaurantImage>
         <Image
-          src={"/images/popping-cup.png"}
+          src={`data:image/webp;base64,${restaurantData.image}`}
           alt={restaurantData.title}
           fill
         />

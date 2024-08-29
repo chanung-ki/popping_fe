@@ -433,6 +433,7 @@ export const IconStamp = ({ width, height }: SVGTypes) => {
 };
 
 
+
 export const IconViews = ({ color, width, height }: SVGTypes) => {
   return (
     <SVG width={width} height={height} viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
