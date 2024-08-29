@@ -100,7 +100,7 @@ const GlobalStyle = createGlobalStyle`
     border: 0;
     font-size: 100%;
     font: inherit;
-    font-family: "Pretendard";
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif !important;
     vertical-align: baseline;
     text-decoration: none;
     color: inherit;

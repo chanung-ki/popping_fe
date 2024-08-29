@@ -40,7 +40,7 @@ const AdressListPage: React.FC = () => {
         setAddressData(sortedData);
         setAddAble(data.length < 5);
       }
-    } catch (error: any) { }
+    } catch (error: any) {}
   };
 
   const AddressDelete = async (id: number, deleteAble: boolean) => {
@@ -60,7 +60,7 @@ const AdressListPage: React.FC = () => {
           setAddressData(updatedAddressData);
           setAddAble(true);
         }
-      } catch (error: any) { }
+      } catch (error: any) {}
     }
   };
 
@@ -85,7 +85,7 @@ const AdressListPage: React.FC = () => {
           );
           setAddressData(sortedData);
         }
-      } catch (error: any) { }
+      } catch (error: any) {}
     }
   };
 
@@ -211,7 +211,7 @@ const TopNavCenterContainer = styled.div`
 const TopNavTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -250,7 +250,7 @@ const AddressesContainer = styled.div`
 const AddressCount = styled.p`
   font-size: 16px;
   line-height: normal;
-  font-family: "Pretendard";
+
   font-weight: 600;
   color: ${COLORS.secondaryColor};
 `;
@@ -274,7 +274,7 @@ const DefaultBadge = styled.div`
     padding: 4px 12px;
 
     color: ${COLORS.whiteColor};
-    font-family: "Pretendard";
+
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
@@ -284,7 +284,7 @@ const DefaultBadge = styled.div`
 
 const AddressNickname = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -295,7 +295,7 @@ const AddressNickname = styled.p`
 
 const AddressText = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -310,7 +310,7 @@ const OptionsContainer = styled.div`
 
 const SetDefaultText = styled.p`
   color: ${COLORS.mainColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -321,7 +321,7 @@ const SetDefaultText = styled.p`
 
 const OptionText = styled.p`
   color: ${COLORS.greyColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;

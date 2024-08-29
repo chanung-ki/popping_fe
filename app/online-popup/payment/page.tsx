@@ -446,7 +446,6 @@ const DeliveryRequestTextArea = styled.textarea`
   font-size: 10px;
 
   &::placeholder {
-    font-family: "Pretendard";
     color: ${COLORS.secondaryColor};
     font-weight: 400;
   }
@@ -477,7 +476,6 @@ const PointInput = styled.input`
   padding: 8px;
   box-sizing: border-box;
   outline: none;
-  font-family: "Pretendard";
 
   &:focus {
     border: 1px solid ${COLORS.mainColor};

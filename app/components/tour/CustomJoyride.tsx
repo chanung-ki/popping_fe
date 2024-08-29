@@ -1,9 +1,8 @@
-import { COLORS } from '@/public/styles/colors';
-import React from 'react';
-import { CallBackProps, Step } from 'react-joyride';
-import dynamic from 'next/dynamic';
-const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
-
+import { COLORS } from "@/public/styles/colors";
+import React from "react";
+import { CallBackProps, Step } from "react-joyride";
+import dynamic from "next/dynamic";
+const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
 interface FloaterStyles {
   floater?: React.CSSProperties;
@@ -41,27 +40,33 @@ const CustomJoyride: React.FC<CustomJoyrideProps> = ({
   showSkipButton = true,
   showProgress = true,
   locale = {
-    back: '뒤로',
-    close: '닫기',
-    last: '마지막',
-    next: '다음',
-    skip: '건너뛰기',
+    back: "뒤로",
+    close: "닫기",
+    last: "마지막",
+    next: "다음",
+    skip: "건너뛰기",
   },
 }) => {
   const defaultFloaterProps: FloaterProps = {
     disableAnimation: false,
     styles: {
       floater: {
-        position: 'fixed',
-
+        position: "fixed",
+        zIndex: 10,
       },
       arrow: {
-        display: 'none',
+        display: "none",
       },
+      spotlight: {
+        transition: "none",
+        backgroundColor: "rgba(0, 0, 0, 0.25)", // 기존 스타일 유지
+        zIndex: 30,
+      },
+      overlay: { zIndex: 20 },
     },
   };
 
-  const customSteps = steps.map(step => ({
+  const customSteps = steps.map((step) => ({
     ...step,
     disableBeacon: true,
     floaterProps: {
@@ -82,41 +87,41 @@ const CustomJoyride: React.FC<CustomJoyrideProps> = ({
       styles={{
         options: {
           backgroundColor: COLORS.primaryColor,
-          overlayColor: 'rgba(22, 22, 22, 0.7)',
-          primaryColor: '#000', // 버튼의 기본 색상
+          overlayColor: "rgba(22, 22, 22, 0.7)",
+          primaryColor: COLORS.secondaryColor, // 버튼의 기본 색상
           textColor: COLORS.secondaryColor,
         },
         tooltip: {
-          padding: '12px',
-          borderRadius: '8px',
+          padding: "12px",
+          borderRadius: "8px",
         },
         tooltipContent: {
           padding: 0,
         },
         buttonNext: {
-          backgroundColor: 'none',
+          backgroundColor: "transparent",
           color: COLORS.mainColor,
           fontSize: 13,
           fontWeight: 500,
-          borderRadius: '5px',
-          padding: '5px 10px',
-          outline: 'none',
-          boxShadow: 'none',
+          borderRadius: "5px",
+          padding: "5px 10px",
+          outline: "none",
+          boxShadow: "none",
         },
         buttonBack: {
           fontSize: 13,
           fontWeight: 500,
           color: COLORS.secondaryColor,
           marginRight: 10,
-          outline: 'none',
-          boxShadow: 'none',
+          outline: "none",
+          boxShadow: "none",
         },
         buttonSkip: {
           fontSize: 13,
           fontWeight: 500,
-          color: COLORS.GradeRedPop,
-          outline: 'none',
-          boxShadow: 'none',
+          color: COLORS.statusNegativeColor,
+          outline: "none",
+          boxShadow: "none",
         },
       }}
     />

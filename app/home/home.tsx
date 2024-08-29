@@ -20,19 +20,48 @@ import CustomJoyride from "../components/tour/CustomJoyride";
 import { CallBackProps, STATUS, Step } from "react-joyride";
 import { TourContainer } from "../components/tour/TourStyle";
 
-
-
 const subway: SubwayMapItem[] = [
-  { name: '성수역', coor: [127.055983543396, 37.54457732085582], image: '/images/subway/성수.svg' },
-  { name: '강남역', coor: [127.02761650085449, 37.49796319921411], image: '/images/subway/강남.svg' },
-  { name: '잠실역', coor: [127.10013270378113, 37.5132661890097], image: '/images/subway/잠실.svg' },
-  { name: '용산역', coor: [126.96480184793472, 37.52988484762269], image: '/images/subway/용산.svg' },
-  { name: '여의도역', coor: [126.92406177520752, 37.52163980072133], image: '/images/subway/여의도.svg' },
-  { name: '홍대입구역', coor: [126.925950050354, 37.55811021038101], image: '/images/subway/홍대입구.svg' },
-  { name: '압구정역', coor: [127.02849626541138, 37.52633678124275], image: '/images/subway/압구정.svg' },
-  { name: '삼성역', coor: [127.06318259239197, 37.50887477317293], image: '/images/subway/삼성.svg' },
+  {
+    name: "성수역",
+    coor: [127.055983543396, 37.54457732085582],
+    image: "/images/subway/성수.svg",
+  },
+  {
+    name: "강남역",
+    coor: [127.02761650085449, 37.49796319921411],
+    image: "/images/subway/강남.svg",
+  },
+  {
+    name: "잠실역",
+    coor: [127.10013270378113, 37.5132661890097],
+    image: "/images/subway/잠실.svg",
+  },
+  {
+    name: "용산역",
+    coor: [126.96480184793472, 37.52988484762269],
+    image: "/images/subway/용산.svg",
+  },
+  {
+    name: "여의도역",
+    coor: [126.92406177520752, 37.52163980072133],
+    image: "/images/subway/여의도.svg",
+  },
+  {
+    name: "홍대입구역",
+    coor: [126.925950050354, 37.55811021038101],
+    image: "/images/subway/홍대입구.svg",
+  },
+  {
+    name: "압구정역",
+    coor: [127.02849626541138, 37.52633678124275],
+    image: "/images/subway/압구정.svg",
+  },
+  {
+    name: "삼성역",
+    coor: [127.06318259239197, 37.50887477317293],
+    image: "/images/subway/삼성.svg",
+  },
 ];
-
 
 const HomePage: React.FC = () => {
   const router = useRouter();
@@ -42,7 +71,6 @@ const HomePage: React.FC = () => {
   const hotPlaceRef = useRef<HTMLDivElement>(null);
   const famousPopupRef = useRef<HTMLDivElement>(null);
   const newPopupRef = useRef<HTMLDivElement>(null);
-
 
   const [parentWidth, setParentWidth] = useState<number>(0);
   const [sortPopularity, setSortPopularity] = useState<MainSortedData[]>([]);
@@ -56,41 +84,39 @@ const HomePage: React.FC = () => {
     if (parentDiv.current) {
       setParentWidth((parentDiv.current.offsetWidth / 4) * 3);
     }
-
   };
 
   const handlePlaceClick = async (coor: number[]) => {
-
     try {
-      const response = await axiosInstance.get(`/api/maps/surround-popup?geoX=${coor[0]}&geoY=${coor[1]}&sorted=distance&meter=1000`);
+      const response = await axiosInstance.get(
+        `/api/maps/surround-popup?geoX=${coor[0]}&geoY=${coor[1]}&sorted=distance&meter=1000`
+      );
 
       if (response.status === 200) {
-        sessionStorage.setItem('popupStores', JSON.stringify(response.data.popupStores));
-        sessionStorage.setItem('subwayCoor', JSON.stringify(coor));
+        sessionStorage.setItem(
+          "popupStores",
+          JSON.stringify(response.data.popupStores)
+        );
+        sessionStorage.setItem("subwayCoor", JSON.stringify(coor));
         router.push("/popup-map?hotPlace=true");
       }
-    } catch {
-    }
+    } catch {}
   };
 
   const popupCardListAPI = async () => {
-
     try {
       const response = await axiosInstance.get(`/api/maps/main-popups`);
 
       if (response.status === 200) {
-        setSortPopularity(response.data.sortPopularity)
-        setSortDate(response.data.sortDate)
+        setSortPopularity(response.data.sortPopularity);
+        setSortDate(response.data.sortDate);
       }
-    } catch {
-
-    }
-
+    } catch {}
   };
 
   useEffect(() => {
-    popupCardListAPI()
-  }, [])
+    popupCardListAPI();
+  }, []);
 
   useEffect(() => {
     updateParentWidth();
@@ -107,91 +133,111 @@ const HomePage: React.FC = () => {
     } else {
       setJoyrideRun(true);
     }
-
-  }, [router])
-
+  }, [router]);
 
   useEffect(() => {
-    if (iconRef.current &&
+    if (
+      iconRef.current &&
       bannerRef.current &&
       hotPlaceRef.current &&
       famousPopupRef.current &&
-      newPopupRef.current) {
+      newPopupRef.current
+    ) {
       setSteps([
         {
-          target: 'body',
+          target: "body",
           content: (
             <TourContainer>
               <h3>안녕하세요! 🍿</h3>
-              <p>여러분들의 팝핑 여정에 도움을 드릴 <strong>팝콘</strong>입니다!</p>
-              <p>제 가이드는 언제든지 <strong>마이페이지</strong>에서 다시 설정할 수 있어요!</p>
+              <p>
+                여러분들의 팝핑 여정에 도움을 드릴 <strong>팝콘</strong>입니다!
+              </p>
+              <p>
+                제 가이드는 언제든지 <strong>마이페이지</strong>에서 다시 설정할
+                수 있어요!
+              </p>
             </TourContainer>
           ),
-          title: '안녕하세요 !',
-          placement: 'center',
+          title: "안녕하세요 !",
+          placement: "center",
         },
         {
           target: iconRef.current,
           content: (
             <TourContainer>
               <h3>저희 팝핑의 로고입니다.</h3>
-              <p>어디서든, 보이면 <strong>눌러주세요!</strong></p>
+              <p>
+                어디서든, 보이면 <strong>눌러주세요!</strong>
+              </p>
               <p>다시 돌아올 수 있을거랍니다!</p>
             </TourContainer>
           ),
-          title: '메인',
-          placement: 'bottom',
+          title: "메인",
+          placement: "bottom",
         },
         {
           target: bannerRef.current,
           content: (
             <TourContainer>
               <p>상단 배너를 통해</p>
-              <p>현재 진행중인 <strong>이벤트</strong>, <strong>공지사항</strong> 등</p>
+              <p>
+                현재 진행중인 <strong>이벤트</strong>, <strong>공지사항</strong>{" "}
+                등
+              </p>
               <p>다양한 정보를 한눈에 확인해보세요.</p>
             </TourContainer>
           ),
-          title: '메인',
-          placement: 'bottom',
+          title: "메인",
+          placement: "bottom",
         },
         {
           target: hotPlaceRef.current,
           content: (
             <TourContainer>
-              <p>현재 팝업으로 가장 🔥<strong>핫한</strong>🔥 지역에서 진행하는 </p>
+              <p>
+                현재 팝업으로 가장 🔥<strong>핫한</strong>🔥 지역에서 진행하는{" "}
+              </p>
               <p>팝업들을 한눈에 확인해보세요!</p>
             </TourContainer>
           ),
-          title: '메인',
-          placement: 'bottom',
+          title: "메인",
+          placement: "bottom",
         },
         {
           target: famousPopupRef.current,
           content: (
             <TourContainer>
               <p>어디를 가야할지 모르시겠다구요? 🤨</p>
-              <p>그럴때는 <strong>인기 팝업스토어</strong>를 참고해보세요!</p>
+              <p>
+                그럴때는 <strong>인기 팝업스토어</strong>를 참고해보세요!
+              </p>
             </TourContainer>
           ),
-          title: '메인',
-          placement: 'bottom',
+          title: "메인",
+          placement: "bottom",
         },
         {
           target: newPopupRef.current,
           content: (
             <TourContainer>
               <p>누구보다 빠르게 나는 남들과는 다르게! </p>
-              <p><strong>새로운 팝업</strong> 소식을 빠르게 확인해보세요.</p>
+              <p>
+                <strong>새로운 팝업</strong> 소식을 빠르게 확인해보세요.
+              </p>
             </TourContainer>
           ),
-          title: '메인',
-          placement: 'bottom',
+          title: "메인",
+          placement: "bottom",
         },
       ]);
     }
-  }, [iconRef.current, bannerRef.current, hotPlaceRef.current, famousPopupRef.current, newPopupRef.current,]);
-
-
+  }, [
+    iconRef.current,
+    bannerRef.current,
+    hotPlaceRef.current,
+    famousPopupRef.current,
+    newPopupRef.current,
+  ]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;
@@ -203,7 +249,11 @@ const HomePage: React.FC = () => {
 
   return (
     <DefaultLayout top={0} right={0} bottom={0} left={0}>
-      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
+      <CustomJoyride
+        steps={steps}
+        runStatus={joyrideRun}
+        callback={handleJoyrideCallback}
+      />
       <TopNavigation>
         <TopNavLogoContainer ref={iconRef}>
           <LogoLettersMain width={undefined} height={24} />
@@ -226,7 +276,7 @@ const HomePage: React.FC = () => {
                 height={parentWidth}
                 image={DummyBanner2.src}
                 onClick={() => {
-                  router.push(`/online-popup/POPPING/store-opening`)
+                  router.push(`/online-popup/POPPING/store-opening`);
                 }}
               />
             </SwiperSlide>
@@ -250,7 +300,11 @@ const HomePage: React.FC = () => {
           <Section>
             <ContentsContainer>
               {subway.map((data: SubwayMapItem, index: number) => (
-                <Place key={'hp-{index}'} image={data.image} onClick={() => handlePlaceClick(data.coor)} />
+                <Place
+                  key={"hp-{index}"}
+                  image={data.image}
+                  onClick={() => handlePlaceClick(data.coor)}
+                />
               ))}
               {/* <Place image={DummyPlace4.src} onClick={() => handlePlaceClick('value')}/> */}
             </ContentsContainer>
@@ -321,7 +375,6 @@ const Sections = styled.div`
 
   span {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -350,7 +403,6 @@ const ContentsContainer = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  
   div:last-child {
     margin-right: 16px;
   }

@@ -10,14 +10,9 @@ import { useSelector } from "react-redux";
 import { Loading } from "@/app/components/loading";
 import { ButtonLarge } from "@/app/components/buttons";
 import { brandManageTypes } from "@/public/utils/types";
-import { Tooltip } from 'react-tooltip'
-
-import CustomJoyride from "@/app/components/tour/CustomJoyride";
-import { CallBackProps, STATUS, Step } from "react-joyride";
-import { TourContainer } from "@/app/components/tour/TourStyle";
+import { Tooltip } from "react-tooltip";
 
 const OnlinePopUpOpenningPage: React.FC = () => {
-
   const router = useRouter();
   const hasAlerted = useRef<boolean>(false);
 
@@ -27,13 +22,17 @@ const OnlinePopUpOpenningPage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExist, setIsExist] = useState<boolean>(false);
-  
-  const [logoBlobUrl, setLogoBlobUrl] = useState<string>("/images/brand/logo.png");
+
+  const [logoBlobUrl, setLogoBlobUrl] = useState<string>(
+    "/images/brand/logo.png"
+  );
   const [valueLogo, setValueLogo] = useState<string>("");
 
-  const [thumbnailBlobUrl, setThumbnailBlobUrl] = useState<string>("/images/brand/thumbnail.png");
+  const [thumbnailBlobUrl, setThumbnailBlobUrl] = useState<string>(
+    "/images/brand/thumbnail.png"
+  );
   const [valueThumbnail, setValueThumbnail] = useState<string>("");
-  
+
   const [valueDescription, setValueDescription] = useState<string>("");
 
   const [brandData, setBrandData] = useState<brandManageTypes>({
@@ -41,106 +40,14 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     logo: "",
     thumbnail: "",
     description: "",
-  })
-
-  // CustomJoyride 관련
-  const [joyrideRun, setJoyrideRun] = useState<boolean>(false);
-  const [steps, setSteps] = useState<Step[]>([]);
-  const joyrideStatusKey = `joyride_status_brand_manage`;
-
-  const logoRef = useRef<HTMLDivElement>(null);
-  const thumbnailRef = useRef<HTMLDivElement>(null);
-  const brandNameRef = useRef<HTMLDivElement>(null);
-  const descriptionRef = useRef<HTMLDivElement>(null);
-
+  });
 
   useEffect(() => {
-    if (
-      logoRef.current &&
-      thumbnailRef.current &&
-      brandNameRef.current &&
-      descriptionRef.current
-    ) {
-      setSteps([
-        {
-          target: 'body',
-          content: (
-            <TourContainer>
-              <p><strong>브랜드 관리</strong>페이지에 오신것을 환영합니다.</p>
-              <p>팝퍼님의 <strong>브랜드</strong>정보를 입력해주세요!</p>
-            </TourContainer>
-          ),
-          title: '브랜드 관리',
-          placement: 'center',
-        },
-        {
-          target: logoRef.current,
-          content: (
-            <TourContainer>
-              <p>해당 영역을 클릭해서 <strong>로고</strong> 이미지를 선택해주세요.</p>
-            </TourContainer>
-          ),
-          title: '브랜드 관리',
-          placement: 'bottom',
-        },
-        {
-          target: thumbnailRef.current,
-          content: (
-            <TourContainer>
-              <p>해당 영역을 클릭해서 <strong>썸네일</strong> 이미지를 선택해주세요.</p>
-            </TourContainer>
-          ),
-          title: '브랜드 관리',
-          placement: 'bottom',
-        },
-        {
-          target: brandNameRef.current,
-          content: (
-            <TourContainer>
-              <p><strong>브랜드 네임은</strong> 팝퍼님의 닉네임으로 자동으로 설정됩니다.</p>
-              <p>변경을 원하실 경우</p>
-              <p><strong>프로필 설정</strong>을 통해 변경해주세요.</p>
-            </TourContainer>
-          ),
-          title: '브랜드 관리',
-          placement: 'bottom',
-        },
-        {
-          target: descriptionRef.current,
-          content: (
-            <TourContainer>
-              <p>브랜드 소개, 슬로건 등 간단한 <strong>브랜드 설명</strong>을 입력해주세요.</p>
-            </TourContainer>
-          ),
-          title: '브랜드 관리',
-          placement: 'bottom',
-        },
-      ]);
-    }
-  }, [logoRef.current, thumbnailRef.current, brandNameRef.current, descriptionRef.current]);
-  
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      setJoyrideRun(false);
-      localStorage.setItem(joyrideStatusKey, status);
-    }
-  };
-
-  useEffect(()=>{
     if (!isLogin || !isPopper) {
       alert("해당 페이지에 접근권한이 없습니다.");
-    } 
-    getBrandApi();
-
-    const key = localStorage.getItem(joyrideStatusKey);
-    if (key === "finished" || key === "skipped") {
-      setJoyrideRun(false);
-    } else {
-      setJoyrideRun(true);
     }
-
-  },[router])
+    getBrandApi();
+  }, [router]);
 
   // api
   const getBrandApi = async () => {
@@ -149,10 +56,12 @@ const OnlinePopUpOpenningPage: React.FC = () => {
       const response = await axiosInstance.get(`/api/popup/brand`);
       if (response.status === 200) {
         setIsExist(response.data.isExist);
-        // if (!response.data.isExist && !hasAlerted.current) {
-        //   alert("등록된 브랜드 정보가 없습니다. 브랜드 정보를 등록해주세요.\n(브랜드네임은 팝퍼의 닉네임이 사용됩니다.)");
-        //   hasAlerted.current = true;
-        // } 
+        if (!response.data.isExist && !hasAlerted.current) {
+          alert(
+            "등록된 브랜드 정보가 없습니다. 브랜드 정보를 등록해주세요.\n(브랜드네임은 팝퍼의 닉네임이 사용됩니다.)"
+          );
+          hasAlerted.current = true;
+        }
         if (response.data.isExist) {
           const logo = response.data.brandData.logo;
           const thumbnail = response.data.brandData.thumbnail;
@@ -184,14 +93,11 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     if (valueLogo !== "" && valueThumbnail !== "" && valueDescription !== "") {
       setIsLoading(true);
       try {
-        const response = await axiosInstance.post(
-          `/api/popup/brand`,
-          {
-            logo: valueLogo,
-            thumbnail: valueThumbnail,
-            description: valueDescription
-          }
-        );
+        const response = await axiosInstance.post(`/api/popup/brand`, {
+          logo: valueLogo,
+          thumbnail: valueThumbnail,
+          description: valueDescription,
+        });
         if (response.status === 201) {
           alert("브랜드 정보가 성공적으로 등록되었습니다.");
           setIsLoading(true);
@@ -213,15 +119,12 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     if (brandData.id !== 0) {
       setIsLoading(true);
       try {
-        const response = await axiosInstance.patch(
-          `/api/popup/brand`,
-          {
-            brandId: brandData.id,
-            logo: valueLogo,
-            thumbnail: valueThumbnail,
-            description: valueDescription
-          }
-        );
+        const response = await axiosInstance.patch(`/api/popup/brand`, {
+          brandId: brandData.id,
+          logo: valueLogo,
+          thumbnail: valueThumbnail,
+          description: valueDescription,
+        });
         if (response.status === 200) {
           alert("브랜드 정보가 성공적으로 수정되었습니다.");
           setIsLoading(true);
@@ -247,7 +150,9 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     modifyBrandApi();
   };
 
-  const handleChangeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChangeDescription = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setValueDescription(event.target.value);
   };
 
@@ -265,7 +170,7 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     } else {
       setThumbnailBlobUrl(blobUrl);
     }
-    
+
     const reader = new FileReader();
     reader.onloadend = () => {
       if (typeof reader.result === "string") {
@@ -281,17 +186,16 @@ const OnlinePopUpOpenningPage: React.FC = () => {
 
   return (
     <DefaultLayout top={16} right={20} bottom={32} left={20}>
-      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <PointerBox
         onClick={() => {
-            const el = document.getElementById("thumbnailImage");
-            if (el) {
-                el?.click();
-            }
+          const el = document.getElementById("thumbnailImage");
+          if (el) {
+            el?.click();
+          }
         }}
       >
-        <OpeningImage src={thumbnailBlobUrl}/>
+        <OpeningImage src={thumbnailBlobUrl} />
         <input
           id="thumbnailImage"
           type="file"
@@ -301,43 +205,41 @@ const OnlinePopUpOpenningPage: React.FC = () => {
           style={{ display: "none" }}
           onChange={handleImageChange}
         />
-        <Overlay/>
-        <HiddenOverlay ref={thumbnailRef}/>
+        <Overlay />
+        <HiddenOverlay ref={thumbnailRef} />
       </PointerBox>
       <OpenningPageContainer>
         <OpenningPageContentsContainer>
           <BrandInfo>
             <PointerBox
-                onClick={() => {
-                    const el = document.getElementById("logoImage");
-                    if (el) {
-                        el?.click();
-                    }
-                }}
-            > 
-              <div ref={logoRef}>
-                <BrandIcon src={logoBlobUrl} alt="Brand Icon"/>
-              </div>
+              onClick={() => {
+                const el = document.getElementById("logoImage");
+                if (el) {
+                  el?.click();
+                }
+              }}
+            >
+              <BrandIcon src={logoBlobUrl} alt="Brand Icon" />
               <input
-                  id="logoImage"
-                  type="file"
-                  name="logo"
-                  key={Date.now()}
-                  accept="image/jpeg, image/png"
-                  style={{ display: "none" }}
-                  onChange={handleImageChange}
+                id="logoImage"
+                type="file"
+                name="logo"
+                key={Date.now()}
+                accept="image/jpeg, image/png"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
               />
             </PointerBox>
-            <BrandName data-tooltip-id="tooltip" data-tooltip-content="브랜드네임은 프로필 설정에서 변경할 수 있습니다." ref={brandNameRef}>
+            <BrandName
+              data-tooltip-id="tooltip"
+              data-tooltip-content="브랜드네임은 프로필 설정에서 변경할 수 있습니다."
+            >
               {nickname}
             </BrandName>
-            <TooltipCustom 
-              id="tooltip" 
-              place="bottom"
-            />
-            <BrandDesc ref={descriptionRef}>
-              <BrandDescriptionTextArea 
-                placeholder="브랜드 소개를 입력해주세요." 
+            <TooltipCustom id="tooltip" place="bottom" />
+            <BrandDesc>
+              <BrandDescriptionTextArea
+                placeholder="브랜드 소개를 입력해주세요."
                 value={valueDescription}
                 onChange={handleChangeDescription}
               />
@@ -347,7 +249,9 @@ const OnlinePopUpOpenningPage: React.FC = () => {
             <ButtonLarge
               text="브랜드 정보 수정"
               buttonColor={
-                valueLogo === brandData.logo && valueThumbnail === brandData.thumbnail && valueDescription === brandData.description
+                valueLogo === brandData.logo &&
+                valueThumbnail === brandData.thumbnail &&
+                valueDescription === brandData.description
                   ? COLORS.greyColor
                   : COLORS.mainColor
               }
@@ -358,7 +262,9 @@ const OnlinePopUpOpenningPage: React.FC = () => {
             <ButtonLarge
               text="브랜드 등록"
               buttonColor={
-                valueLogo !== "" && valueThumbnail !== "" && valueDescription !== ""
+                valueLogo !== "" &&
+                valueThumbnail !== "" &&
+                valueDescription !== ""
                   ? COLORS.mainColor
                   : COLORS.greyColor
               }
@@ -463,7 +369,7 @@ const BrandName = styled.h2`
   font-size: 32px;
   font-weight: 700;
   color: ${COLORS.primaryColor};
-  text-align: left;  // Align the text to the left
+  text-align: left; // Align the text to the left
 `;
 
 const TooltipCustom = styled(Tooltip)`
@@ -493,7 +399,7 @@ const Button = styled(Link)`
 `;
 
 const PointerBox = styled.div`
-    cursor: pointer;
+  cursor: pointer;
 `;
 
 const BrandDescriptionTextArea = styled.textarea`
@@ -506,13 +412,12 @@ const BrandDescriptionTextArea = styled.textarea`
 
   background-color: transparent;
   color: ${COLORS.primaryColor};
-  
+
   font-size: 16px;
   font-weight: 400;
   line-height: 160%;
 
   &::placeholder {
-    font-family: "Pretendard";
     color: ${COLORS.primaryColor};
     font-weight: 400;
   }

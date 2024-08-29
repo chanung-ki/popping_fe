@@ -61,51 +61,65 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
     ) {
       setSteps([
         {
-          target: 'body',
+          target: "body",
           content: (
             <TourContainer>
               <p>회원가입을 완료하신것을 축하드립니다!</p>
-              <p><strong>마이페이지</strong>에는 다양한 기능이 있습니다</p>
+              <p>
+                <strong>마이페이지</strong>에는 다양한 기능이 있습니다
+              </p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'center',
+          title: "마이페이지",
+          placement: "center",
         },
         {
           target: profileRef.current,
           content: (
             <TourContainer>
-              <p><strong>프로필 설정</strong>을 통해 팝플님의 프로필을 수정 할 수 있습니다.</p>
-              <br/>
-              <p>추가로 <strong>소셜 회원가입</strong>을 이용해주신 팝플님의</p>
+              <p>
+                <strong>프로필 설정</strong>을 통해 팝플님의 프로필을 수정 할 수
+                있습니다.
+              </p>
+              <br />
+              <p>
+                추가로 <strong>소셜 회원가입</strong>을 이용해주신 팝플님의
+              </p>
               <p>닉네임, 이름 정보는 난수로 지급되니 꼭 변경해주세요!</p>
-              <br/>
+              <br />
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: gradeBoxRef.current,
           content: (
             <TourContainer>
-              <p>해당 영역을 통해 팝플님의 <strong>등급</strong> 정보를</p>
+              <p>
+                해당 영역을 통해 팝플님의 <strong>등급</strong> 정보를
+              </p>
               <p>모니터링 하실 수 있습니다.</p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: followPointBoxRef.current,
           content: (
             <TourContainer>
-              <p>해당 영역을 통해 팝플님이 <strong>팔로잉</strong> 하고있는 브랜드와</p>
-              <p><strong>콘포인트 내역</strong>을 확인 하실 수 있습니다.</p>
+              <p>
+                해당 영역을 통해 팝플님이 <strong>팔로잉</strong> 하고있는
+                브랜드와
+              </p>
+              <p>
+                <strong>콘포인트 내역</strong>을 확인 하실 수 있습니다.
+              </p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: recentPopupRef.current,
@@ -115,25 +129,37 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
               <p>저희 팝핑이 전부 기억해 드립니다.</p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: changeAccountRef.current,
           content: (
             <TourContainer>
-              <p><strong>팝퍼</strong> 기능을 체험 해보고 싶으시다면</p>
-              <p>해당 버튼을 통해 <strong>팝퍼</strong>로 계정을 전환해보세요!</p>
-              <p>언제든지 다시 <strong>팝플</strong>로 돌아오실 수 있습니다. 🍿</p>
+              <p>
+                <strong>팝퍼</strong> 기능을 체험 해보고 싶으시다면
+              </p>
+              <p>
+                해당 버튼을 통해 <strong>팝퍼</strong>로 계정을 전환해보세요!
+              </p>
+              <p>
+                언제든지 다시 <strong>팝플</strong>로 돌아오실 수 있습니다. 🍿
+              </p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
       ]);
     }
-  }, [profileRef.current, gradeBoxRef.current, followPointBoxRef.current, recentPopupRef.current, changeAccountRef.current]);
-  
+  }, [
+    profileRef.current,
+    gradeBoxRef.current,
+    followPointBoxRef.current,
+    recentPopupRef.current,
+    changeAccountRef.current,
+  ]);
+
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
@@ -142,22 +168,24 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const key = localStorage.getItem(joyrideStatusKey);
     if (key === "finished" || key === "skipped") {
       setJoyrideRun(false);
     } else {
       setJoyrideRun(true);
     }
-  },[router])
+  }, [router]);
 
   const handleResetJoyride = () => {
-    const userConfirmed = window.confirm("'팝핑 길라잡이 다시보기'를 재표시 하시겠습니까?"); 
+    const userConfirmed = window.confirm(
+      "'팝핑 길라잡이 다시보기'를 재표시 하시겠습니까?"
+    );
 
     if (userConfirmed) {
       const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.includes('joyride')) {
+      keys.forEach((key) => {
+        if (key.includes("joyride")) {
           localStorage.removeItem(key);
         }
       });
@@ -167,7 +195,11 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
 
   return (
     <>
-      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
+      <CustomJoyride
+        steps={steps}
+        runStatus={joyrideRun}
+        callback={handleJoyrideCallback}
+      />
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -184,14 +216,14 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
                 <ProfileImage image={profileImage} width={60} height={60} />
                 <ProfileNickname>{nickname}님</ProfileNickname>
                 <Spacer />
-                  <ButtonSmall
-                    text={"프로필 설정"}
-                    buttonColor={COLORS.mainColor}
-                    textColor={COLORS.whiteColor}
-                    onClick={() => {
-                      router.push("/setting-profile");
-                    }}
-                  />
+                <ButtonSmall
+                  text={"프로필 설정"}
+                  buttonColor={COLORS.mainColor}
+                  textColor={COLORS.whiteColor}
+                  onClick={() => {
+                    router.push("/setting-profile");
+                  }}
+                />
               </ProfileContainer>
               <GradeContainer ref={gradeBoxRef}>
                 <CurrentGradeContainer>
@@ -201,8 +233,8 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
                       myPageData.gradeInfo.grade === "WHITE POP"
                         ? COLORS.secondaryColor
                         : isGradeKey(myPageData.gradeInfo.grade)
-                          ? gradeColors[myPageData.gradeInfo.grade]
-                          : gradeColors["WHITE POP"]
+                        ? gradeColors[myPageData.gradeInfo.grade]
+                        : gradeColors["WHITE POP"]
                     }
                     onClick={handleMoveBenefit}
                   >
@@ -251,8 +283,8 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
                       color={
                         isGradeKey(myPageData.gradeInfo.nextGradeInfo.nextGrade)
                           ? gradeColors[
-                          myPageData.gradeInfo.nextGradeInfo.nextGrade
-                          ]
+                              myPageData.gradeInfo.nextGradeInfo.nextGrade
+                            ]
                           : gradeColors["WHITE POP"]
                       }
                     >
@@ -266,7 +298,11 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
 
           <MyActivities ref={followPointBoxRef}>
             <MyActivitiesContainer>
-              <Activity onClick={()=>{router.push("/?page=likes");}}>
+              <Activity
+                onClick={() => {
+                  router.push("/?page=likes");
+                }}
+              >
                 <p>{myPageData.followingNum}</p>
                 <p>{"팔로잉"}</p>
               </Activity>
@@ -303,7 +339,11 @@ export const MyPagePopple: React.FC<MyPagePoppleProps> = ({
           <div onClick={handleResetJoyride}>
             <p>팝핑 길라잡이 다시보기</p>
           </div>
-          <div className="main-color-text" onClick={accountChangeApi} ref={changeAccountRef}>
+          <div
+            className="main-color-text"
+            onClick={accountChangeApi}
+            ref={changeAccountRef}
+          >
             <p>팝퍼로 계정 전환</p>
           </div>
         </MenuContainer>
@@ -383,7 +423,7 @@ const ProfileContainer = styled.div`
 
 const ProfileNickname = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -406,7 +446,7 @@ const CurrentGradeContainer = styled.div`
   p {
     color: ${COLORS.secondaryColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -416,7 +456,7 @@ const CurrentGradeContainer = styled.div`
 
 const GradeText = styled.span`
   color: ${(props) => props.color};
-  font-family: "Pretendard";
+
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -462,7 +502,7 @@ const NextGradeContainer = styled.div`
 
 const NextGradeText = styled.span`
   color: ${(props) => props.color};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -471,7 +511,7 @@ const NextGradeText = styled.span`
 
 const NextGradeDesc = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -503,7 +543,7 @@ const Activity = styled.div`
   p:first-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
@@ -513,7 +553,7 @@ const Activity = styled.div`
   p:last-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
@@ -530,7 +570,7 @@ const Section = styled.div`
 
   p:first-child {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -585,7 +625,7 @@ const StoreDesc = styled.div`
 
   p:first-child {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
@@ -602,7 +642,7 @@ const MenuContainer = styled.div`
 
   p {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
@@ -612,7 +652,6 @@ const MenuContainer = styled.div`
   }
 
   .main-color-text p {
-    color: ${COLORS.mainColor}; 
+    color: ${COLORS.mainColor};
   }
-
 `;

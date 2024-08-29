@@ -22,11 +22,7 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
           <div className={"theme-title"}>내 팝업 스토어</div>
           <StoreCardListContainer>
             {storeList.map((store: PopupStoreSimpleData) => (
-              <StoreCard
-                key={store.id}
-                store={store}
-                isPopper={isPopper}
-              />
+              <StoreCard key={store.id} store={store} isPopper={isPopper} />
             ))}
           </StoreCardListContainer>
         </ThemeContainer>
@@ -37,35 +33,32 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
       <CardListHeader>
         <FilterContainer>
           <Filter>
-            <span>
-              A 정렬
-            </span>
+            <span>A 정렬</span>
             <SelectUnderlineTriangleContainer>
-              <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
+              <IconRoundTriangle
+                color={COLORS.secondaryColor}
+                width={8}
+                height={undefined}
+              />
             </SelectUnderlineTriangleContainer>
           </Filter>
 
           <Filter>
-            <span>
-              A 정렬
-            </span>
+            <span>A 정렬</span>
             <SelectUnderlineTriangleContainer>
-              <IconRoundTriangle color={COLORS.secondaryColor} width={8} height={undefined} />
+              <IconRoundTriangle
+                color={COLORS.secondaryColor}
+                width={8}
+                height={undefined}
+              />
             </SelectUnderlineTriangleContainer>
           </Filter>
-
         </FilterContainer>
-        <Caption>
-          총 {storeList.length}개의 팝업스토어가 있습니다.
-        </Caption>
+        <Caption>총 {storeList.length}개의 팝업스토어가 있습니다.</Caption>
       </CardListHeader>
       <StoreCardListContainer>
         {storeList.map((store: PopupStoreSimpleData) => (
-          <StoreCard
-            key={store.id}
-            store={store}
-            isPopper={isPopper}
-          />
+          <StoreCard key={store.id} store={store} isPopper={isPopper} />
         ))}
       </StoreCardListContainer>
     </Container>
@@ -73,7 +66,7 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
 };
 
 const Container = styled.div`
-  width: calc(100% - 40px) ; 
+  width: calc(100% - 40px);
   display: flex;
   flex-direction: column;
   padding: 0 20px;
@@ -85,17 +78,16 @@ const CardListHeader = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  
-  gap: 12px;
 
-`
+  gap: 12px;
+`;
 
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;
 
   gap: 8px;
-`
+`;
 
 const Filter = styled.div`
   cursor: pointer;
@@ -119,12 +111,11 @@ const SelectUnderlineTriangleContainer = styled.div`
   transform: rotate(-180deg);
 `;
 
-
 const Caption = styled.span`
   font-size: 14px;
   font-weight: 500;
   line-height: normal;
-`
+`;
 
 const StoreCardListContainer = styled.div`
   object-fit: cover;
@@ -156,7 +147,6 @@ const ThemeContainer = styled.div`
   gap: 16px;
 
   .theme-title {
-    font-family: "Pretendard";
     font-size: 24px;
     font-style: normal;
     font-weight: 700;

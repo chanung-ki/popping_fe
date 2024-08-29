@@ -42,7 +42,7 @@ const SmallButton = styled.div<ButtonStyleTypes>`
 
     color: ${(props) => props.textColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 10px;
     font-style: normal;
     font-weight: 500;
@@ -97,7 +97,7 @@ const LargeButton = styled.div<ButtonStyleTypes>`
 
     color: ${(props) => props.textColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 16px;
     font-style: normal;
     font-weight: 600;

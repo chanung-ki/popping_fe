@@ -112,7 +112,7 @@ const AddressEditPage: React.FC = () => {
         setIsValidPhone(true);
         setIsLoading(false);
       }
-    } catch (error: any) { }
+    } catch (error: any) {}
   };
 
   const AddressDataPut = async (id: string | null) => {
@@ -206,12 +206,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueNickname(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -223,12 +223,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueName(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -240,7 +240,7 @@ const AddressEditPage: React.FC = () => {
             status={statusPhone}
             bottomText={bottomTextPhone}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValuePhone(text.replace(RegexpInputNumber, ""));
               setIsValidPhone(RegexpPhone.test(text));
@@ -263,10 +263,10 @@ const AddressEditPage: React.FC = () => {
               status={null}
               bottomText={""}
               bottomTextClickable={false}
-              bottomTextOnClick={() => { }}
-              onChange={(text: string) => { }}
-              onFocus={() => { }}
-              onBlur={() => { }}
+              bottomTextOnClick={() => {}}
+              onChange={(text: string) => {}}
+              onFocus={() => {}}
+              onBlur={() => {}}
               disabled={true}
             />
 
@@ -287,10 +287,10 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
-            onChange={(text: string) => { }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            bottomTextOnClick={() => {}}
+            onChange={(text: string) => {}}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={true}
           />
 
@@ -302,12 +302,12 @@ const AddressEditPage: React.FC = () => {
             status={null}
             bottomText={""}
             bottomTextClickable={false}
-            bottomTextOnClick={() => { }}
+            bottomTextOnClick={() => {}}
             onChange={(text: string) => {
               setValueAddressDetail(text);
             }}
-            onFocus={() => { }}
-            onBlur={() => { }}
+            onFocus={() => {}}
+            onBlur={() => {}}
             disabled={false}
           />
 
@@ -327,10 +327,10 @@ const AddressEditPage: React.FC = () => {
           text={"저장"}
           buttonColor={
             valueNickname !== "" &&
-              valueName !== "" &&
-              isValidPhone &&
-              valueAddress !== "" &&
-              valueZIPCode !== ""
+            valueName !== "" &&
+            isValidPhone &&
+            valueAddress !== "" &&
+            valueZIPCode !== ""
               ? COLORS.mainColor
               : COLORS.greyColor
           }
@@ -384,7 +384,7 @@ const TopNavCenterContainer = styled.div`
 const TopNavTitle = styled.p`
   color: ${COLORS.secondaryColor};
   text-align: center;
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -481,7 +481,7 @@ const FindAddressButton = styled.div`
 
     color: ${COLORS.whiteColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 16px;
     font-style: normal;
     font-weight: 500;

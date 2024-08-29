@@ -16,14 +16,18 @@ type followingType = {
 };
 
 const Following: React.FC<followingType> = ({ values }) => {
-  if (values.length == 0) return (
-    <Container>
-      <div>
-        <span>브랜드 팔로잉이 없습니다.</span>
-        <span>현재 진행중인 팝업스토어로 <Link href={`/online-popup`}>이동하기</Link></span>
-      </div>
-    </Container>
-  )
+  if (values.length == 0)
+    return (
+      <Container>
+        <div>
+          <span>브랜드 팔로잉이 없습니다.</span>
+          <span>
+            현재 진행중인 팝업스토어로{" "}
+            <Link href={`/online-popup`}>이동하기</Link>
+          </span>
+        </div>
+      </Container>
+    );
   return (
     <Grid>
       {values.map((value: BrandType, index: number) => {
@@ -52,7 +56,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-
   & > div {
     position: absolute;
     top: 50%;
@@ -60,17 +63,16 @@ const Container = styled.div`
     flex-direction: column;
     gap: 8px;
 
-    align-items:center;
+    align-items: center;
   }
   & > div span {
-      color: ${COLORS.greyColor};
+    color: ${COLORS.greyColor};
   }
 
   & > div span a {
-    color: ${COLORS.mainColor}
+    color: ${COLORS.mainColor};
   }
-`
-
+`;
 
 const Grid = styled.div`
   display: flex;
@@ -99,7 +101,7 @@ const BrandText = styled.span`
   bottom: 12px;
 
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

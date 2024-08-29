@@ -33,66 +33,82 @@ const SignUpPage: React.FC = () => {
   const popperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (poppleRef.current &&
-      popperRef.current) {
+    if (poppleRef.current && popperRef.current) {
       setSteps([
         {
-          target: 'body',
+          target: "body",
           content: (
             <TourContainer>
               <p>팝핑 회원가입을 하려 오셨군요!</p>
               <p>팝핑의 회원은 두 종류로 구분됩니다.</p>
-              <p>바로 <strong>팝플</strong>과 <strong>팝퍼</strong>로 구분되는데요.</p>
+              <p>
+                바로 <strong>팝플</strong>과 <strong>팝퍼</strong>로
+                구분되는데요.
+              </p>
             </TourContainer>
           ),
-          title: '회원가입',
-          placement: 'center',
+          title: "회원가입",
+          placement: "center",
         },
         {
           target: poppleRef.current,
           content: (
             <TourContainer>
-              <p><strong>팝플</strong>은 팝업스토어를 이용하고 참여하고자 하는</p>
+              <p>
+                <strong>팝플</strong>은 팝업스토어를 이용하고 참여하고자 하는
+              </p>
               <p>사람들이 가입해주시면 됩니다.</p>
             </TourContainer>
           ),
-          title: '회원가입',
-          placement: 'bottom',
+          title: "회원가입",
+          placement: "bottom",
         },
         {
           target: popperRef.current,
           content: (
             <TourContainer>
-              <p><strong>팝퍼</strong>는 팝업스토어를 직접 운영하고</p>
+              <p>
+                <strong>팝퍼</strong>는 팝업스토어를 직접 운영하고
+              </p>
               <p>관리를 하기 위한 사람들이 가입해주시면 됩니다.</p>
             </TourContainer>
           ),
-          title: '회원가입',
-          placement: 'bottom',
+          title: "회원가입",
+          placement: "bottom",
         },
         {
           target: popperRef.current,
           content: (
             <TourContainer>
-              <p>또한 <strong>팝퍼</strong>에 가입하기 위해서는</p>
-              <p><strong>사업자 자격으로 등록</strong>되어 있어야 하니 명심 해주세요!</p>
+              <p>
+                또한 <strong>팝퍼</strong>에 가입하기 위해서는
+              </p>
+              <p>
+                <strong>사업자 자격으로 등록</strong>되어 있어야 하니 명심
+                해주세요!
+              </p>
             </TourContainer>
           ),
-          title: '회원가입',
-          placement: 'bottom',
+          title: "회원가입",
+          placement: "bottom",
         },
         {
-          target: 'body',
+          target: "body",
           content: (
             <TourContainer>
-              <p>마지막으로 <strong>사이드임팩트 라운드 1</strong> 진행중에는</p>
-              <p><strong>팝플</strong>로 가입해도 팝퍼 기능을 체험 해보실 수 있습니다.</p>
-              <br/>
+              <p>
+                마지막으로 <strong>사이드임팩트 라운드 1</strong> 진행중에는
+              </p>
+              <p>
+                <strong>팝플</strong>로 가입해도 팝퍼 기능을 체험 해보실 수
+                있습니다.
+              </p>
+              <br />
               <p>이제 회원가입 진행 후 팝핑을 이용 해주세요! 🍿</p>
             </TourContainer>
           ),
-          title: '회원가입',
-          placement: 'center',
+          title: "회원가입",
+          placement: "center",
         },
       ]);
     }
@@ -106,14 +122,14 @@ const SignUpPage: React.FC = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const key = localStorage.getItem(joyrideStatusKey);
     if (key === "finished" || key === "skipped") {
       setJoyrideRun(false);
     } else {
       setJoyrideRun(true);
     }
-  },[router])
+  }, [router]);
 
   return (
     <DefaultLayout
@@ -122,7 +138,11 @@ const SignUpPage: React.FC = () => {
       bottom={MEMBER_PADDING_BOTTOM}
       left={MEMBER_PADDING_HORIZONTAL}
     >
-      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
+      <CustomJoyride
+        steps={steps}
+        runStatus={joyrideRun}
+        callback={handleJoyrideCallback}
+      />
       <Container>
         <div
           onClick={() => {
@@ -205,12 +225,11 @@ const RadioBoxContainer = styled.div`
 
   // 임시 css
   div:nth-of-type(2) {
-    opacity: 0.5
+    opacity: 0.5;
   }
 `;
 
 const RadioBox = styled.div<{ isSelect: boolean }>`
-
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -221,7 +240,7 @@ const RadioBox = styled.div<{ isSelect: boolean }>`
   text-align: center;
 
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -251,7 +270,6 @@ const RadioBox = styled.div<{ isSelect: boolean }>`
   p:last-child {
     font-size: 14px;
   }
-  
 `;
 
 export default SignUpPage;

@@ -39,7 +39,7 @@ const InputUnderlineInput = styled.input`
   padding: 2px 0;
 
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -64,7 +64,7 @@ const InputUnderlineInput = styled.input`
 
 const InputUnderlineStatus = styled.span<InputStatusTypes>`
   color: ${(props) => props.color};
-  font-family: "Pretendard";
+
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -137,7 +137,7 @@ const InputRoundInput = styled.input`
   padding: 16px 12px;
 
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -169,7 +169,7 @@ const InputRoundInput = styled.input`
 
 const InputRoundStatus = styled.span<InputStatusTypes>`
   color: ${(props) => props.color};
-  font-family: "Pretendard";
+
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

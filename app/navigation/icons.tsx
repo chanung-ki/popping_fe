@@ -145,7 +145,7 @@ const BubbleContainer = styled.div`
 
     color: ${COLORS.mainColor};
     text-align: center;
-    font-family: "Pretendard";
+    
     font-size: 11px;
     font-style: normal;
     font-weight: 600;

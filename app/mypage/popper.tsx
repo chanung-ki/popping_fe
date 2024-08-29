@@ -52,80 +52,114 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
     ) {
       setSteps([
         {
-          target: 'body',
+          target: "body",
           content: (
             <TourContainer>
-              <p><strong>팝퍼</strong> 기능 체험을 위해 계정을 전환하셨군요!</p>
-              <p><strong>팝퍼</strong>는 <strong>브랜드</strong>를 개설하고 스토어를 관리할 수 있습니다.</p>
+              <p>
+                <strong>팝퍼</strong> 기능 체험을 위해 계정을 전환하셨군요!
+              </p>
+              <p>
+                <strong>팝퍼</strong>는 <strong>브랜드</strong>를 개설하고
+                스토어를 관리할 수 있습니다.
+              </p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'center',
+          title: "마이페이지",
+          placement: "center",
         },
         {
           target: profileRef.current,
           content: (
             <TourContainer>
-              <p><strong>프로필 설정</strong>을 통해 <strong>브랜드 네임</strong>을 설정하실 수 있습니다.</p>
-              <p><strong>브랜드 네임</strong>은 동시에 팝퍼 계정의 닉네임으로 사용됩니다.</p>
-              <br/>
+              <p>
+                <strong>프로필 설정</strong>을 통해 <strong>브랜드 네임</strong>
+                을 설정하실 수 있습니다.
+              </p>
+              <p>
+                <strong>브랜드 네임</strong>은 동시에 팝퍼 계정의 닉네임으로
+                사용됩니다.
+              </p>
+              <br />
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: orderReviewBoxRef.current,
           content: (
             <TourContainer>
-              <p>해당 영역을 통해 팝플님의 <strong>주문 정보</strong>와 <strong>리뷰</strong>를</p>
+              <p>
+                해당 영역을 통해 팝플님의 <strong>주문 정보</strong>와{" "}
+                <strong>리뷰</strong>를
+              </p>
               <p>모니터링 하실 수 있습니다.</p>
-              <br/>
+              <br />
               <p>해당 기능은 현재 준비중에 있으니 조금만 기다려주세요! ⌛️</p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: brandManageRef.current,
           content: (
             <TourContainer>
-              <p><strong>브랜드 관리</strong>를 통해 팝퍼님의 브랜드를 꾸며주세요!</p>
-              <p>로고, 썸네일, 브랜드 소개 등 다양할 설정을 하실 수 있습니다.</p>
+              <p>
+                <strong>브랜드 관리</strong>를 통해 팝퍼님의 브랜드를
+                꾸며주세요!
+              </p>
+              <p>
+                로고, 썸네일, 브랜드 소개 등 다양할 설정을 하실 수 있습니다.
+              </p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: changeAccountRef.current,
           content: (
             <TourContainer>
-              <p><strong>팝퍼</strong> 기능을 충분히 체험하신 후</p>
-              <p>해당 버튼을 통해 다시 <strong>팝플</strong>로 계정을 전환할 수 있습니다.</p>
+              <p>
+                <strong>팝퍼</strong> 기능을 충분히 체험하신 후
+              </p>
+              <p>
+                해당 버튼을 통해 다시 <strong>팝플</strong>로 계정을 전환할 수
+                있습니다.
+              </p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
         {
           target: changeAccountRef.current,
           content: (
             <TourContainer>
               <p>🚨 잠깐</p>
-              <p><strong>팝플</strong>로 계정 전환시,</p>
-              <p>생성한 <strong>브랜드와 스토어정보</strong>는 모두 <strong>삭제</strong>되니</p>
+              <p>
+                <strong>팝플</strong>로 계정 전환시,
+              </p>
+              <p>
+                생성한 <strong>브랜드와 스토어정보</strong>는 모두{" "}
+                <strong>삭제</strong>되니
+              </p>
               <p>이 부분 명심한 후 계정을 다시 전환해주세요.</p>
             </TourContainer>
           ),
-          title: '마이페이지',
-          placement: 'bottom',
+          title: "마이페이지",
+          placement: "bottom",
         },
       ]);
     }
-  }, [profileRef.current, orderReviewBoxRef.current, brandManageRef.current, changeAccountRef.current]);
-  
+  }, [
+    profileRef.current,
+    orderReviewBoxRef.current,
+    brandManageRef.current,
+    changeAccountRef.current,
+  ]);
+
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
@@ -134,22 +168,24 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const key = localStorage.getItem(joyrideStatusKey);
     if (key === "finished" || key === "skipped") {
       setJoyrideRun(false);
     } else {
       setJoyrideRun(true);
     }
-  },[router])
+  }, [router]);
 
   const handleResetJoyride = () => {
-    const userConfirmed = window.confirm("'팝핑 길라잡이 다시보기'를 재표시 하시겠습니까?"); 
+    const userConfirmed = window.confirm(
+      "'팝핑 길라잡이 다시보기'를 재표시 하시겠습니까?"
+    );
 
     if (userConfirmed) {
       const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.includes('joyride')) {
+      keys.forEach((key) => {
+        if (key.includes("joyride")) {
           localStorage.removeItem(key);
         }
       });
@@ -159,7 +195,11 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
 
   return (
     <>
-      <CustomJoyride steps={steps} runStatus={joyrideRun} callback={handleJoyrideCallback} />
+      <CustomJoyride
+        steps={steps}
+        runStatus={joyrideRun}
+        callback={handleJoyrideCallback}
+      />
       <TopNavigation>
         <TopNavLogoContainer>
           <LogoLettersMain width={undefined} height={24} />
@@ -215,7 +255,11 @@ export const MyPagePopper: React.FC<MyPagePopperProps> = ({
           <div onClick={handleResetJoyride}>
             <p>팝핑 길라잡이 다시보기</p>
           </div>
-          <div className="main-color-text" onClick={accountChangeApi} ref={changeAccountRef}>
+          <div
+            className="main-color-text"
+            onClick={accountChangeApi}
+            ref={changeAccountRef}
+          >
             <p>팝플로 계정 전환</p>
           </div>
         </MenuContainer>
@@ -286,7 +330,7 @@ const MyProfileContainer = styled.div`
 
 const ProfileNickname = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -295,7 +339,7 @@ const ProfileNickname = styled.p`
 
 const ProfileBottomText = styled.p`
   color: ${COLORS.secondaryColor};
-  font-family: "Pretendard";
+
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -331,7 +375,7 @@ const Activity = styled.div`
   p:first-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
@@ -341,7 +385,7 @@ const Activity = styled.div`
   p:last-child {
     color: ${COLORS.secondaryColor};
     text-align: center;
-    font-family: "Pretendard";
+
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
@@ -358,7 +402,7 @@ const MenuContainer = styled.div`
 
   p {
     color: ${COLORS.secondaryColor};
-    font-family: "Pretendard";
+
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
@@ -368,7 +412,6 @@ const MenuContainer = styled.div`
   }
 
   .main-color-text p {
-    color: ${COLORS.mainColor}; 
+    color: ${COLORS.mainColor};
   }
-
 `;
