@@ -66,7 +66,6 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
 
   useEffect(() => {
     if (restaurantData.length > 0) {
-      console.log(restaurantData[0].title);
     }
   }, [restaurantData]);
 
@@ -236,9 +235,9 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
           </PopupHeader>
           <PopupLocation onClick={() => {
             if (locationRef.current) {
-                locationRef.current.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}>
+              locationRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}>
             {/* <IconLocation color={COLORS.greyColor} width={undefined} height={16} /> */}
             {popupData.location.address}
           </PopupLocation>
@@ -275,7 +274,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         </PopupContent>
 
         {/* #TODO  */}
-        
+
         <PopupContent>
           <TitleArea>
             <PopupContentTitle ref={locationRef}>
