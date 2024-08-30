@@ -519,7 +519,6 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     if (userLocation && window.naver) {
-      // Naver Map을 초기화
       if (!mapRef.current) {
         const mapOptions = {
           zoom: 15,
@@ -550,7 +549,6 @@ const MapComponent: React.FC = () => {
         });
       }
 
-      // Initial map centering only once
       if (!isMapCentered) {
         mapRef.current.setCenter(
           new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)

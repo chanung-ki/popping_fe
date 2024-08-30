@@ -1,6 +1,7 @@
 "use client";
 
 import Back from "@/app/components/back";
+import Home from "@/app/components/home";
 import { IconBookmark, IconMinus, IconPlus } from "@/app/components/icons";
 import { DefaultLayout } from "@/app/components/layout";
 import StoreDecisionButton from "@/app/components/online-popup/decisionButton";
@@ -137,7 +138,7 @@ const OnlinePopupProductPage: React.FC<{
         setIsCarted(true);
       }
     } catch (error: any) {
-      if (error.response.data === 401) {
+      if (error.response.status === 401) {
         alert("로그인 후 이용가능합니다.");
         router.push(
           `/member/signin?redirect=${encodeURIComponent(window.location.href)}`
@@ -225,7 +226,10 @@ const OnlinePopupProductPage: React.FC<{
   return (
     <DefaultLayout top={16} right={0} bottom={0} left={0}>
       <Top>
-        <Back url={undefined} />
+        <div style={{ width: 'calc(100% - 40px)', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Back url={undefined} />
+          <Home />
+        </div>
         <ProductThumbnailImg src={productData.thumbnail} />
       </Top>
 
@@ -363,7 +367,7 @@ const OnlinePopupProductPage: React.FC<{
           <StoreDecisionButton
             isVisible={allOptionsSelected && amount > 0}
             onClick={AddCart}
-            title={isCarted ? "장바구니 존재" : "장바구니 담기"}
+            title={isCarted ? "장바구니에 있어요!" : "장바구니 담기"}
             sort={"left"}
           />
           <StoreDecisionButton
