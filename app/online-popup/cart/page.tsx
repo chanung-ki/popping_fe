@@ -52,7 +52,7 @@ const MyCartPage: React.FC = () => {
       const response = await axiosInstance.get(`/api/popup/cart/data`);
 
       if (response.status === 200) {
-        setBrandName(response.data.brand);
+        setBrandName('POPPING');
         setCartData(response.data.cart);
         setCartLen(response.data.cart.length);
       }

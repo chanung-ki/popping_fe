@@ -82,6 +82,7 @@ const MapComponent: React.FC = () => {
 
 
   const [openInfoWindows, setOpenInfoWindows] = useState<naver.maps.InfoWindow[]>([]);
+  const [isMapCentered, setIsMapCentered] = useState<boolean>(false); // new state to track map centering
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -318,7 +319,7 @@ const MapComponent: React.FC = () => {
 
   // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
   const openInfoWindow = (marker: naver.maps.Marker) => {
-    const storeInfo: PopupStoreSimpleData | undefined = storeList.find(
+    const storeInfo: PopupStoreDataType | undefined = storeList.find(
       (store) => {
         return store.title === marker.getTitle();
       }
@@ -328,6 +329,8 @@ const MapComponent: React.FC = () => {
         backgroundColor: "transparent",
         borderWidth: 0,
         maxWidth: 175,
+        disableAnchor: true,
+        pixelOffset: new window.naver.maps.Point(10, -16),
         anchorSize: new window.naver.maps.Size(14, 12),
       });
 
@@ -335,22 +338,56 @@ const MapComponent: React.FC = () => {
 
     if (storeInfo) {
       newInfoWindow.setContent(`
-<div style="width: 150px; padding: 16px; border-radius: 12px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.3s, background-color 0.3s;" 
-    onclick="window.location.href='/popup-map/${storeInfo.id}';" 
-    onmouseover="this.style.transform = 'scale(1.05)'; this.style.backgroundColor = '#e9e9e9';" 
-    onmouseout="this.style.transform = 'scale(1)'; this.style.backgroundColor = '#f9f9f9';">
+    <div
+      style="
+        max-width: 175px;
+        width: 175px;
 
-    <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden;">
-        <img
-            src=${`data:image/webp;base64,${storeInfo.image}`}
-            style="width: 100%; height: 100%; object-fit: cover;"
-        />
+        padding: 16px 20px;
+        border-radius: 16px;
+        background-color: ${COLORS.primaryColor};
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        transition: transform 0.3s, background-color 0.3s;
+      "
+      onclick="window.location.href='/popup-map/${storeInfo.id}';"
+      onmouseover="this.style.transform = 'scale(1.05)'; this.style.backgroundColor = '#e9e9e9';"
+      onmouseout="this.style.transform = 'scale(1)'; this.style.backgroundColor = '#f9f9f9';"
+    >
+      <div
+        style="width: 72px; height: 72px; overflow: hidden; border-radius: 8px"
+      >
+        <img src=${`data:image/webp;base64,${storeInfo.image}`}
+        style="width:100%; height: 100%; object-fit: cover;" />
+      </div>
+
+      <div
+        style="
+          font-size: 14px;
+          font-weight: 600;
+          color: #333333;
+          text-align: center;
+        "
+      >
+      ${storeInfo.brandName}
+      </div>
+
+      <div
+        style="
+          font-size: 10px;
+          font-style: normal;
+          font-weight: 500;
+          color: #333333;
+          text-align: center;
+        "
+      >
+        ${storeInfo.title}
+      </div>
     </div>
-    
-    <div style="font-family: Pretendard, sans-serif; font-size: 14px; font-weight: 600; color: #333333; text-align: center;">
-        ${marker.getTitle()}
-    </div>
-</div>
+
       `);
       setOpenInfoWindows((prev) => [...prev, newInfoWindow]); // 추가된 부분
     } else {
@@ -482,6 +519,7 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     if (userLocation && window.naver) {
+      // Naver Map을 초기화
       if (!mapRef.current) {
         const mapOptions = {
           zoom: 15,
@@ -512,8 +550,16 @@ const MapComponent: React.FC = () => {
         });
       }
 
+      // Initial map centering only once
+      if (!isMapCentered) {
+        mapRef.current.setCenter(
+          new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)
+        );
+        setIsMapCentered(true); // Mark as centered
+      }
+
+      // 사용자 위치 마커를 생성하거나 업데이트
       if (!markerRef.current) {
-        // 이하 사용자 위치 마커 (마커 디자인 바꿀지?)
         markerRef.current = new window.naver.maps.Marker({
           position: new window.naver.maps.LatLng(
             userLocation.lat,
@@ -522,9 +568,9 @@ const MapComponent: React.FC = () => {
           map: mapRef.current,
           icon: {
             content: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-  <circle cx="10" cy="10" r="10" fill="#27B1FF"/>
-  <circle cx="10" cy="10" r="5" fill="white"/>
-</svg>`,
+                        <circle cx="10" cy="10" r="10" fill="#27B1FF"/>
+                        <circle cx="10" cy="10" r="5" fill="white"/>
+                      </svg>`,
             anchor: new window.naver.maps.Point(5, 5),
           },
         });
@@ -537,6 +583,8 @@ const MapComponent: React.FC = () => {
       }
     }
   }, [userLocation]);
+
+
 
   useEffect(() => {
     if (mapRef.current && locationResetRef.current && userLocation) {

@@ -50,7 +50,7 @@ const Payment: React.FC = () => {
         `/api/popup/order?oid=${searchParam.get("oid")}`
       );
       if (response.status === 200) {
-        setBrandName(response.data.brand);
+        setBrandName('POPPING');
         setPoint(response.data.point);
         setOrderData(response.data.order);
         setAddressData(response.data.address);
