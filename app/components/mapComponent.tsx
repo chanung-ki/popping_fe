@@ -359,7 +359,7 @@ const MapComponent: React.FC = () => {
       <div
         style="width: 72px; height: 72px; overflow: hidden; border-radius: 8px"
       >
-        <img src=${`data:image/webp;base64,${storeInfo.image[0]}`}
+        <img src=${`data:image/webp;base64,${storeInfo.image}`}
         style="width:100%; height: 100%; object-fit: cover;" />
       </div>
 

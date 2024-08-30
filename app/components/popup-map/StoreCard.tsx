@@ -25,7 +25,7 @@ const StoreCard: React.FC<StoreCardProps> = React.memo(({ store, isPopper }: Sto
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setImageSrc(`data:image/webp;base64,${store.image[0]}`);
+            setImageSrc(`data:image/webp;base64,${store.image}`);
             observer.unobserve(entry.target); // 이미 로드된 경우 관찰 중지
           }
         });
