@@ -5,7 +5,7 @@ import { IconRoundTriangle } from "../icons";
 import { COLORS } from "@/public/styles/colors";
 
 interface StoreCardListProps {
-  storeList: PopupStoreSimpleData[];
+  storeList: PopupStoreDataType[];
   isPopper: boolean;
 }
 
@@ -21,7 +21,7 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
         <ThemeContainer>
           <div className={"theme-title"}>내 팝업 스토어</div>
           <StoreCardListContainer>
-            {storeList.map((store: PopupStoreSimpleData) => (
+            {storeList.map((store: PopupStoreDataType) => (
               <StoreCard key={store.id} store={store} isPopper={isPopper} />
             ))}
           </StoreCardListContainer>
@@ -57,7 +57,7 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
         <Caption>총 {storeList.length}개의 팝업스토어가 있습니다.</Caption>
       </CardListHeader>
       <StoreCardListContainer>
-        {storeList.map((store: PopupStoreSimpleData) => (
+        {storeList.map((store: PopupStoreDataType) => (
           <StoreCard key={store.id} store={store} isPopper={isPopper} />
         ))}
       </StoreCardListContainer>
@@ -78,7 +78,6 @@ const CardListHeader = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-
   gap: 12px;
 `;
 

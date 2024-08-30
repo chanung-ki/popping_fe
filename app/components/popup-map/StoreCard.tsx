@@ -8,69 +8,60 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
 import axiosInstance from "@/public/network/axios";
+import { Follow } from "@/public/utils/function";
 
 interface StoreCardProps {
-  store: PopupStoreSimpleData;
-  // clickedStore: PopupStoreSimpleData | null;
-  // setClickedStore: React.Dispatch<React.SetStateAction<PopupStoreDataType | null>>;
-  // isViewDesc: boolean;
-  // setIsViewDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  store: PopupStoreDataType;
   isPopper: boolean;
 }
 
 //TODO : Props interface 정의 필요
 const StoreCard: React.FC<StoreCardProps> = ({
   store,
-  // clickedStore,
-  // setClickedStore,
-  // isViewDesc,
-  // setIsViewDesc,
   isPopper,
 }: StoreCardProps) => {
   const router = useRouter();
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [saved, setSaved] = useState<boolean>(store.isSaved);
+  const [popupData, setPopupData] = useState<PopupStoreDataType>(store);
 
-  // const popupStoreAPI = async (popupId:string) => {
 
-  //   await axiosInstance
-  //     .get(`/api/maps/popup/${popupId}`)
-  //     .then((response: any) => {
-  //       setClickedStore(response.data.popupData);
-  //     })
-  //     .catch((error: any) => {
-  //       console.error("There was an error making the GET request!", error);
-  //     });
-  // };
 
-  // 스토어 클릭시
   const onClickHandler = (popupId: string) => {
     router.push(`/popup-map/${popupId}`);
-    // popupStoreAPI(popupId)
-    // setIsViewDesc(!isViewDesc);
+  };
+
+  const handleBookmarkClick = async (id: string) => {
+    setSaved(!saved);
+    if (saved) {
+      setPopupData({
+        ...popupData,
+        saveCount: popupData.saveCount - 1,
+      });
+    } else {
+      setPopupData({
+        ...popupData,
+        saveCount: popupData.saveCount + 1,
+      });
+    }
+    Follow("Popup", id, router);
   };
 
   return (
     <StoreCardContainer onClick={() => onClickHandler(store.id)}>
       <StoreThumbnail>
-        {/*실제 데이터 이미지*/}
-        {/* <Image
-          src={`data:image/jpeg;base64,${store.image}`}
-          width={166}
-          height={166}
-          alt={store.description[0]}
-        /> */}
-
-        {/*더미 데이터 이미지*/}
         <Image
           loading="lazy"
           src={`data:image/webp;base64,${store.image}`}
-          alt={"앨랠래"}
+          alt={`thumbnail-${store.id}`}
           fill
         />
         {isPopper || (
-          <div className={"icon"} onClick={() => setIsLiked(!isLiked)}>
+          <div className={"icon"} onClick={(event) => {
+            event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
+            handleBookmarkClick(store.id);
+          }}>
             <IconHeart
-              color={isLiked ? COLORS.mainColor : COLORS.lightGreyColor}
+              color={saved ? COLORS.mainColor : COLORS.greyColor}
               width={16}
               height={15}
             />

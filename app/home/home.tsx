@@ -100,7 +100,7 @@ const HomePage: React.FC = () => {
         sessionStorage.setItem("subwayCoor", JSON.stringify(coor));
         router.push("/popup-map?hotPlace=true");
       }
-    } catch {}
+    } catch { }
   };
 
   const popupCardListAPI = async () => {
@@ -111,7 +111,7 @@ const HomePage: React.FC = () => {
         setSortPopularity(response.data.sortPopularity);
         setSortDate(response.data.sortDate);
       }
-    } catch {}
+    } catch { }
   };
 
   useEffect(() => {
@@ -232,11 +232,11 @@ const HomePage: React.FC = () => {
       ]);
     }
   }, [
-    iconRef.current,
-    bannerRef.current,
-    hotPlaceRef.current,
-    famousPopupRef.current,
-    newPopupRef.current,
+    iconRef,
+    bannerRef,
+    hotPlaceRef,
+    famousPopupRef,
+    newPopupRef,
   ]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
@@ -296,7 +296,7 @@ const HomePage: React.FC = () => {
         </SwiperContainer>
 
         <Sections>
-          <span ref={hotPlaceRef}>HOT PLACE</span>
+          <div ref={hotPlaceRef} style={{ zIndex: 5 }}>HOT PLACE</div>
           <Section>
             <ContentsContainer>
               {subway.map((data: SubwayMapItem, index: number) => (
@@ -336,6 +336,8 @@ const TopNavLogoContainer = styled.div`
   width: auto;
   height: 24px;
 
+  z-index: 5;
+
   cursor: pointer;
 `;
 
@@ -350,6 +352,8 @@ const Container = styled.div`
 
 const SwiperContainer = styled.div`
   width: 100%;
+  
+  z-index: 5;
 `;
 
 const SlideBannerContainer = styled.div<{ height: number; image: string }>`
@@ -360,6 +364,7 @@ const SlideBannerContainer = styled.div<{ height: number; image: string }>`
   background-position: center;
   background-size: cover;
 
+  z-index: 5;
   cursor: grab;
 `;
 

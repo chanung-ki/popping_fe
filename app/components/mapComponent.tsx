@@ -3,19 +3,16 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IconUser } from "./icons";
 import { Loading } from "./loading";
-import { IconChevronLeft, IconSearch, IconX } from "./icons";
+import { IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
-import StoreCard from "./popup-map/StoreCard";
 import axiosInstance from "@/public/network/axios";
-import { PopupStoreSimpleData, PopupStoreDataType } from "@/public/utils/types";
-import Image from "next/image";
-import { formatDate, MARKER } from "@/public/utils/function";
-import { useRouter, useSearchParams } from "next/navigation";
+import { PopupStoreSimpleData, user, PopupStoreDataType } from "@/public/utils/types";
+import { MARKER } from "@/public/utils/function";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { user } from "@/public/utils/types";
 import StoreCardList from "./popup-map/StoreCardList";
 import Back from "./back";
-import { DefaultLayout, Spacer } from "./layout";
+import { DefaultLayout } from "./layout";
 
 interface FoodAndCafe {
   title: string;
@@ -84,7 +81,7 @@ const MapComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 팝업 스토어 목록
-  const [storeList, setStoreList] = useState<PopupStoreSimpleData[]>([]);
+  const [storeList, setStoreList] = useState<PopupStoreDataType[]>([]);
   // 검색 영역 활성화
   const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
   // 선택된 지역
@@ -113,6 +110,7 @@ const MapComponent: React.FC = () => {
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
+  const locationResetRef = useRef<HTMLDivElement>(null);
   const infowindowRef = useRef<any>(null);
 
   // 마커 디자인 (food and cafe)
@@ -255,7 +253,7 @@ const MapComponent: React.FC = () => {
           newInfoWindow.open(mapRef.current, newMarker);
         }
       });
-    } catch (e) {}
+    } catch (e) { }
   };
 
   // 카페 마커를 카페 마커 리스트에 추가
@@ -280,7 +278,7 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setCafeMarkerList([...cafeMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) {}
+    } catch (e) { }
   };
 
   //푸드 마커를 푸드 마커 리스트에 추가
@@ -305,7 +303,7 @@ const MapComponent: React.FC = () => {
       //스토어 마커 리스트에 추가
       setFoodMarkerList([...foodMarkerList, newMarker]);
       // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const removeMarker = (type: string) => {
@@ -388,13 +386,16 @@ const MapComponent: React.FC = () => {
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (!selectedLocation) {
-        alert("검색할 지역을 선택해주세요.");
-      } else {
-        router.push(
-          `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
-        );
-      }
+      router.push(
+        `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
+      );
+      // if (!selectedLocation) {
+      //   alert("검색할 지역을 선택해주세요.");
+      // } else {
+      //   router.push(
+      //     `/popup-map/map-search-result?search=${e.currentTarget.value}&location=${selectedLocation}`
+      //   );
+      // }
     }
   };
 
@@ -527,7 +528,7 @@ const MapComponent: React.FC = () => {
           const center = mapRef.current.getCenter();
           const distance = Math.sqrt(
             Math.pow(center.lat() - userLocation.lat, 2) +
-              Math.pow(center.lng() - userLocation.lng, 2)
+            Math.pow(center.lng() - userLocation.lng, 2)
           );
           if (distance > 0.001) {
             // 사용자가 위치에서 벗어났다고 판단할 거리
@@ -565,9 +566,16 @@ const MapComponent: React.FC = () => {
   }, [userLocation]);
 
   useEffect(() => {
-    if (mapRef.current && userLocation) {
-      const mapHeight = isOpenMenu ? "calc(100% - 568px)" : "calc(100%)";
+    if (mapRef.current && locationResetRef.current && userLocation) {
+      const mapHeight = isOpenMenu
+        ? "calc(30dvh + 40px)"
+        : "calc(100dvh)";
+      const mapButtom = isOpenMenu
+        ? "calc(70% + 40px)"
+        : "80px";
       mapRef.current.getElement().style.height = mapHeight;
+      locationResetRef.current.style.setProperty('bottom', mapButtom);
+
 
       if (subwayLocation) {
         var newCenter = new window.naver.maps.LatLng(
@@ -585,7 +593,7 @@ const MapComponent: React.FC = () => {
       window.naver.maps.Event.trigger(mapRef.current, "resize");
       mapRef.current.setCenter(newCenter);
     }
-  }, [isOpenMenu, userLocation]);
+  }, [isOpenMenu, userLocation, locationResetRef]);
 
   const handleLocationButtonClick = () => {
     if (userLocation && mapRef.current) {
@@ -603,14 +611,19 @@ const MapComponent: React.FC = () => {
   // 검색 활성화 핸들러
   const activeSearchHandler = () => {
     setIsActiveSearch(!isActiveSearch);
+    
+    // 검색창 닫을시 자치구 초기화
+    if (!isActiveSearch){
+      setSelectedLocation('')
+    }
   };
 
   return (
     <DefaultLayout top={0} right={0} left={0} bottom={0}>
       <MapContainer>
-        <StyledNaverMap id="map" style={{ width: "100%" }} />
+        <StyledNaverMap id="map" style={{ width: "100%", height: '100dvh' }} />
         {!isLoading && (
-          <LocationResetBtn onClick={handleLocationButtonClick}>
+          <LocationResetBtn onClick={handleLocationButtonClick} ref={locationResetRef}>
             <IconUser
               color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor}
               width={undefined}
@@ -623,10 +636,10 @@ const MapComponent: React.FC = () => {
         ) : !isActiveSearch ? (
           <>
             <ControlContainer>
-              <div>
+              <div style={{ marginLeft: 20 }}>
                 <Back />
               </div>
-              <div onClick={activeSearchHandler}>
+              <div onClick={activeSearchHandler} style={{ marginRight: 20 }}>
                 <IconSearch
                   width={16}
                   height={16}
@@ -639,9 +652,11 @@ const MapComponent: React.FC = () => {
           <>
             <SearchContainer>
               <SearchControlContainer>
-                <Back />
+                <div style={{ marginLeft: 20 }}>
+                  <Back />
+                </div>
                 <p>검색</p>
-                <TransparentButton onClick={activeSearchHandler}>
+                <TransparentButton onClick={activeSearchHandler} style={{ marginRight: 20 }}>
                   <IconX width={16} height={16} color={COLORS.secondaryColor} />
                 </TransparentButton>
               </SearchControlContainer>
@@ -693,15 +708,15 @@ const MapComponent: React.FC = () => {
 
 const MapContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   position: relative;
 `;
 
-const LocationResetBtn = styled.button`
+const LocationResetBtn = styled.div`
   cursor: pointer;
   border: none;
   background-color: transparent;
-  position: fixed;
+  position: absolute;
   z-index: 1;
   bottom: 80px;
   right: 20px;
@@ -710,21 +725,24 @@ const LocationResetBtn = styled.button`
 `;
 
 const StyledNaverMap = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
 `;
 
 const ControlContainer = styled.div`
-  width: calc(100% - 40px);
-  position: absolute;
+  width: 100%;
+  max-width: 600px;
+  position: fixed;
   top: 16px;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 
   padding: 0 20px;
 `;
@@ -733,8 +751,9 @@ const SearchControlContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: 600px;
+  width: 100%;
 
-  width: calc(100% - 40px);
   margin-top: 16px;
 
   & > p {
@@ -762,10 +781,12 @@ const TransparentButton = styled.button`
 
 const SearchContainer = styled.div`
   position: fixed;
+  max-width: 600px;
   width: 100%;
   z-index: 1;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   display: flex;
   flex-direction: column;
@@ -799,23 +820,12 @@ const SearchContentsContainer = styled.div`
   }
 `;
 
-const SelectedLocationBanner = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 4px 12px;
-  border-radius: 12px;
-  background-color: ${COLORS.whiteColor};
-
-  font-size: 12px;
-`;
-
 const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   z-index: 101;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   display: flex;
   flex-direction: column;
@@ -823,7 +833,8 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   justify-content: flex-start;
 
   width: 100%;
-  height: ${(props) => (props.$isOpen ? "70%" : "40px")};
+  max-width: 600px;
+  height: ${(props) => (props.$isOpen ? "70dvh" : "40px")};
 
   border-radius: 16px 16px 0px 0px;
   background-color: ${COLORS.whiteColor};
@@ -858,68 +869,9 @@ const StoreInformationList = styled.div`
   flex-flow: row wrap;
   gap: 28px;
   margin-top: 40px;
-  width: 100%;
   overflow-y: auto;
   width: 100%;
-`;
-
-const CategoryBox = styled.div<{ isSearchOpen: boolean }>`
-  position: absolute;
-  overflow: hidden;
-  top: ${({ isSearchOpen }) => (isSearchOpen ? "150px" : "70px")};
-  left: 20px;
-  width: 100px;
-  height: 50px;
-  z-index: 10;
-  border: 1px solid black;
-  font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-  font-size: 12px;
-  text-align: center;
-  background-color: #fff;
-
-  * {
-    margin: 0;
-    padding: 0;
-    color: #000;
-  }
-
-  .menu_selected {
-    background: #ff5f4a;
-    color: #fff;
-    border-left: 1px solid #915b2f;
-    border-right: 1px solid #915b2f;
-    margin: 0 -1px;
-  }
-
-  li {
-    list-style: none;
-    float: left;
-    width: 50px;
-    height: 45px;
-    padding-top: 5px;
-    cursor: pointer;
-  }
-
-  .ico_comm {
-    display: block;
-    margin: 0 auto 2px;
-    width: 22px;
-    height: 26px;
-    background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png")
-      no-repeat;
-  }
-
-  .ico_coffee {
-    background-position: -10px 0;
-  }
-
-  .ico_store {
-    background-position: -10px -36px;
-  }
-
-  .ico_carpark {
-    background-position: -10px -72px;
-  }
+  padding-bottom: 40px;
 `;
 
 export default MapComponent;
