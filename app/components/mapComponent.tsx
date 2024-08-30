@@ -82,6 +82,7 @@ const MapComponent: React.FC = () => {
 
 
   const [openInfoWindows, setOpenInfoWindows] = useState<naver.maps.InfoWindow[]>([]);
+  const [isMapCentered, setIsMapCentered] = useState<boolean>(false); // new state to track map centering
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -549,6 +550,14 @@ const MapComponent: React.FC = () => {
         });
       }
 
+      // Initial map centering only once
+      if (!isMapCentered) {
+        mapRef.current.setCenter(
+          new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)
+        );
+        setIsMapCentered(true); // Mark as centered
+      }
+
       // 사용자 위치 마커를 생성하거나 업데이트
       if (!markerRef.current) {
         markerRef.current = new window.naver.maps.Marker({
@@ -574,6 +583,7 @@ const MapComponent: React.FC = () => {
       }
     }
   }, [userLocation]);
+
 
 
   useEffect(() => {
