@@ -134,11 +134,14 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
   useEffect(() => {
     if (isAnimatingComp) {
+      console.log('animation c')
       const storedStatus = localStorage.getItem(joyride2StatusKey);
       if (storedStatus === "finished" || storedStatus === "skipped") {
+        console.log('t')
         setJoyrideRun2(false);
         localStorageCheck();
       } else {
+        console.log('f')
         setJoyrideRun2(true);
       }
     }
@@ -299,51 +302,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
     }
   }, []);
 
-  // useEffect(() => {
-  //   alert("첫번쨰 effect");
-  //   alert(brandRef.current);
-  //   if (brandRef.current) {
-
-  //     alert("첫번쨰 step set");
-
-  //     setSteps([
-  //       {
-  //         target: 'body',
-  //         content: (
-  //           <TourContainer>
-  //             <h3>안녕하세요!</h3>
-  //             <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
-  //           </TourContainer>
-  //         ),
-  //         title: '온라인 팝업스토어',
-  //         placement: 'center',
-  //       },
-  //       {
-  //         target: brandRef.current,
-  //         content: (
-  //           <TourContainer>
-  //             <h3>안녕하세요!</h3>
-  //             <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
-  //           </TourContainer>
-  //         ),
-  //         title: `${storeId.toUpperCase()} STORE`,
-  //         placement: 'top',
-  //       },
-  //       {
-  //         target: 'body',
-  //         content: (
-  //           <TourContainer>
-  //             <h3>안녕하세요!</h3>
-  //             <p><strong>{storeId.toUpperCase()} STORE</strong> 입니다.</p>
-  //           </TourContainer>
-  //         ),
-  //         title: `${storeId.toUpperCase()} STORE`,
-  //         placement: 'center',
-  //       },
-  //     ]);
-  //   }
-  // }, [brandRef.current]);
-
   useEffect(() => {
     if (stampRef.current && enterRef.current && captionRef.current) {
       setSteps2([
@@ -404,7 +362,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
         },
       ]);
     }
-  }, [stampRef, enterRef, captionRef, storeId]);
+  }, [stampRef.current, enterRef.current, captionRef.current]);
 
 
 
@@ -416,7 +374,7 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
       if (stampElement) {
         stampElement.classList.add('stamp-animation');
       }
-    }, 100); // Delay to ensure the modal is visible
+    }, 100);
   };
 
 
@@ -477,7 +435,6 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
   if (!openingData) return <Loading />;
   return (
     <DefaultLayout top={0} left={0} right={0} bottom={0} >
-
       {isAnimatingComp ?
         <>
           <Container className={isAnimatingComp ? "fade-in" : ""} >
