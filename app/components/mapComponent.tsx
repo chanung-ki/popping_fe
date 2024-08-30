@@ -80,6 +80,9 @@ const MapComponent: React.FC = () => {
   // 푸드 마커 리스트
   const [foodMarkerList, setFoodMarkerList] = useState<naver.maps.Marker[]>([]);
 
+
+  const [openInfoWindows, setOpenInfoWindows] = useState<naver.maps.InfoWindow[]>([]);
+
   //지도 ref
   const mapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
@@ -195,7 +198,6 @@ const MapComponent: React.FC = () => {
     });
   };
 
-  // 스토어 마커를 스토어 마커 리스트에 추가
   const addEachStoreMarker = (
     id: string,
     name: string,
@@ -214,9 +216,9 @@ const MapComponent: React.FC = () => {
       });
 
       newMarker.setTitle(name);
-      //스토어 마커 리스트에 추가
       setStoreMarkerList([...storeMarkerList, newMarker]);
-      // 마커에 이벤트 핸들러 (인포 윈도우)
+
+      // Event listener to open the InfoWindow and pan/zoom the map
       newMarker.addListener("click", () => {
         const newInfoWindow: naver.maps.InfoWindow = openInfoWindow(newMarker);
 
@@ -225,9 +227,18 @@ const MapComponent: React.FC = () => {
         } else if (mapRef.current !== null) {
           newInfoWindow.open(mapRef.current, newMarker);
         }
+
+        // Pan and zoom the map to the clicked marker
+        const markerPosition = newMarker.getPosition();
+        mapRef.current.setCenter(markerPosition);
+        mapRef.current.panTo(markerPosition, { duration: 500 });
+        mapRef.current.setZoom(18);
       });
-    } catch (e) { }
+    } catch (e) {
+      console.error("Error adding marker:", e);
+    }
   };
+
 
   // 카페 마커를 카페 마커 리스트에 추가
   const addEachCafeMarker = (
@@ -248,12 +259,17 @@ const MapComponent: React.FC = () => {
       });
 
       newMarker.setTitle(name);
-      //스토어 마커 리스트에 추가
       setCafeMarkerList([...cafeMarkerList, newMarker]);
-      // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) { }
-  };
 
+      // Event listener to pan and zoom the map
+      newMarker.addListener("click", () => {
+        mapRef.current.panTo(newMarker.getPosition(), { duration: 500 });
+        mapRef.current.setZoom(16);
+      });
+    } catch (e) {
+      console.error("Error adding marker:", e);
+    }
+  };
   //푸드 마커를 푸드 마커 리스트에 추가
   const addEachFoodMarker = (
     id: string,
@@ -273,11 +289,18 @@ const MapComponent: React.FC = () => {
       });
 
       newMarker.setTitle(name);
-      //스토어 마커 리스트에 추가
       setFoodMarkerList([...foodMarkerList, newMarker]);
-      // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) { }
+
+      // Event listener to pan and zoom the map
+      newMarker.addListener("click", () => {
+        mapRef.current.panTo(newMarker.getPosition(), { duration: 500 });
+        mapRef.current.setZoom(16);
+      });
+    } catch (e) {
+      console.error("Error adding marker:", e);
+    }
   };
+
 
   const removeMarker = (type: string) => {
     if (type === "cafe") {
@@ -312,50 +335,31 @@ const MapComponent: React.FC = () => {
 
     if (storeInfo) {
       newInfoWindow.setContent(`
-        <div style="width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
-          <div 
-            style="display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;" 
-            onclick="window.location.href='/popup-map/${storeInfo.id}';"
-          >
-            <div style="width: 72px; height: 72px; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden;">
-              <img
-                src=${`data:image/webp;base64,${storeInfo.image}`}
-                style="width: 100%; height: 100%; object-fit: cover;"
-              />              
-          </div>
-          <div
-            style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600;
-              line-height: normal;
-            "
-          >
-            ${marker.getTitle()}
-          </div>
+<div style="width: 150px; padding: 16px; border-radius: 12px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.3s, background-color 0.3s;" 
+    onclick="window.location.href='/popup-map/${storeInfo.id}';" 
+    onmouseover="this.style.transform = 'scale(1.05)'; this.style.backgroundColor = '#e9e9e9';" 
+    onmouseout="this.style.transform = 'scale(1)'; this.style.backgroundColor = '#f9f9f9';">
+
+    <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden;">
+        <img
+            src=${`data:image/webp;base64,${storeInfo.image}`}
+            style="width: 100%; height: 100%; object-fit: cover;"
+        />
+    </div>
     
-          <div
-            style="
-              width: 112px;
-              text-align: center;
-              font-family: Pretendard;
-              font-size: 10px;
-              font-style: normal;
-              font-weight: 500;
-              line-height: normal
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              overflow: hidden;
-            "
-          >
-            ${storeInfo.description[0]}
-          </div>
-        </div>
+    <div style="font-family: Pretendard, sans-serif; font-size: 14px; font-weight: 600; color: #333333; text-align: center;">
+        ${marker.getTitle()}
+    </div>
+</div>
       `);
+      setOpenInfoWindows((prev) => [...prev, newInfoWindow]); // 추가된 부분
     } else {
       alert("스토어 정보 취득에 실패하였습니다.");
     }
 
     return newInfoWindow;
   };
+
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -480,10 +484,6 @@ const MapComponent: React.FC = () => {
     if (userLocation && window.naver) {
       if (!mapRef.current) {
         const mapOptions = {
-          center: new window.naver.maps.LatLng(
-            userLocation.lat,
-            userLocation.lng
-          ),
           zoom: 15,
           scaleControl: false,
           logoControl: false,
@@ -560,7 +560,6 @@ const MapComponent: React.FC = () => {
           userLocation.lng
         );
       }
-
       // 지도 높이 변경 후 중심 조정
       window.naver.maps.Event.trigger(mapRef.current, "resize");
       mapRef.current.setCenter(newCenter);
@@ -589,6 +588,21 @@ const MapComponent: React.FC = () => {
       setSelectedLocation('')
     }
   };
+
+
+  useEffect(() => {
+    if (mapRef.current && window.naver) {
+      // 맵의 빈 공간을 클릭했을 때, 모든 InfoWindow 닫기
+      window.naver.maps.Event.addListener(mapRef.current, "click", () => {
+        openInfoWindows.forEach(infoWindow => {
+          infoWindow.close();
+        });
+        setOpenInfoWindows([]); // 열린 InfoWindow 리스트 초기화
+      });
+    }
+  }, [openInfoWindows]);
+
+
 
   return (
     <DefaultLayout top={0} right={0} left={0} bottom={0}>
@@ -692,7 +706,7 @@ const LocationResetBtn = styled.div`
   bottom: 80px;
   right: 20px;
   padding: 0;
-  transition: background-color 1s ease-in-out, transform 1s ease-in-out;
+  transition: background-color .3s ease-in-out, transform .3s ease-in-out;
 `;
 
 const StyledNaverMap = styled.div`
@@ -700,7 +714,6 @@ const StyledNaverMap = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  
 `;
 
 const ControlContainer = styled.div`
