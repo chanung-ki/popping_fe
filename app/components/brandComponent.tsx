@@ -37,7 +37,6 @@ const BrandComponent: React.FC<BrandProps> = ({ data }) => {
   const isAble = now.isAfter(contractStart) && now.isBefore(contractEnd);
 
   const StoreClickHandler = (brandName: string, isAble: boolean) => {
-    console.log(brandName, isAble)
     if (isAble) {
       router.push(`online-popup/${brandName}/store-opening`);
     } else {

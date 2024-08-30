@@ -35,7 +35,6 @@ const LikesPage: React.FC = () => {
     const storedProduct = sessionStorage.getItem("products");
     const storedPopup = sessionStorage.getItem("popups");
     const followCheck = sessionStorage.getItem("followToggle") === "true";
-    console.log(followCheck);
     if (storedBrand && storedProduct && storedPopup && !followCheck) {
       setBrands(JSON.parse(storedBrand));
       setProducts(JSON.parse(storedProduct));

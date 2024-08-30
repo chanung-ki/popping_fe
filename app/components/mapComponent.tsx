@@ -7,7 +7,7 @@ import { IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
 import axiosInstance from "@/public/network/axios";
 import { PopupStoreSimpleData, user, PopupStoreDataType } from "@/public/utils/types";
-import { MARKER } from "@/public/utils/function";
+import { DUMMY_SEOUL_OPTIONS, MARKER } from "@/public/utils/function";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import StoreCardList from "./popup-map/StoreCardList";
@@ -41,33 +41,6 @@ const MapComponent: React.FC = () => {
 
   const userData: user = useSelector((state: any) => state.poppingUser.user);
   // 서울 25개구 더미 데이터
-  const DUMMY_SEOUL_OPTIONS = [
-    { value: "서울시 종로구", label: "서울시 종로구" },
-    { value: "서울시 중구", label: "서울시 중구" },
-    { value: "서울시 용산구", label: "서울시 용산구" },
-    { value: "서울시 성동구", label: "서울시 성동구" },
-    { value: "서울시 광진구", label: "서울시 광진구" },
-    { value: "서울시 동대문구", label: "서울시 동대문구" },
-    { value: "서울시 중랑구", label: "서울시 중랑구" },
-    { value: "서울시 성북구", label: "서울시 성북구" },
-    { value: "서울시 강북구", label: "서울시 강북구" },
-    { value: "서울시 도봉구", label: "서울시 도봉구" },
-    { value: "서울시 노원구", label: "서울시 노원구" },
-    { value: "서울시 은평구", label: "서울시 은평구" },
-    { value: "서울시 서대문구", label: "서울시 서대문구" },
-    { value: "서울시 마포구", label: "서울시 마포구" },
-    { value: "서울시 양천구", label: "서울시 양천구" },
-    { value: "서울시 강서구", label: "서울시 강서구" },
-    { value: "서울시 구로구", label: "서울시 구로구" },
-    { value: "서울시 금천구", label: "서울시 금천구" },
-    { value: "서울시 영등포구", label: "서울시 영등포구" },
-    { value: "서울시 동작구", label: "서울시 동작구" },
-    { value: "서울시 관악구", label: "서울시 관악구" },
-    { value: "서울시 서초구", label: "서울시 서초구" },
-    { value: "서울시 강남구", label: "서울시 강남구" },
-    { value: "서울시 송파구", label: "서울시 송파구" },
-    { value: "서울시 강동구", label: "서울시 강동구" },
-  ];
   //지도 관련 states
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -576,7 +549,6 @@ const MapComponent: React.FC = () => {
       mapRef.current.getElement().style.height = mapHeight;
       locationResetRef.current.style.setProperty('bottom', mapButtom);
 
-
       if (subwayLocation) {
         var newCenter = new window.naver.maps.LatLng(
           subwayLocation.lat,
@@ -611,18 +583,21 @@ const MapComponent: React.FC = () => {
   // 검색 활성화 핸들러
   const activeSearchHandler = () => {
     setIsActiveSearch(!isActiveSearch);
-    
+
     // 검색창 닫을시 자치구 초기화
-    if (!isActiveSearch){
+    if (!isActiveSearch) {
       setSelectedLocation('')
     }
   };
 
   return (
     <DefaultLayout top={0} right={0} left={0} bottom={0}>
-      <MapContainer>
-        <StyledNaverMap id="map" style={{ width: "100%", height: '100dvh' }} />
-        {!isLoading && (
+      {isLoading ? (
+        <Loading />
+      ) : (
+
+        <MapContainer>
+          <StyledNaverMap id="map" style={{ width: "100%", height: '100dvh' }} />
           <LocationResetBtn onClick={handleLocationButtonClick} ref={locationResetRef}>
             <IconUser
               color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor}
@@ -630,77 +605,72 @@ const MapComponent: React.FC = () => {
               height={35}
             />
           </LocationResetBtn>
-        )}
-        {isLoading ? (
-          <Loading />
-        ) : !isActiveSearch ? (
-          <>
-            <ControlContainer>
-              <div style={{ marginLeft: 20 }}>
-                <Back />
-              </div>
-              <div onClick={activeSearchHandler} style={{ marginRight: 20 }}>
-                <IconSearch
-                  width={16}
-                  height={16}
-                  color={COLORS.secondaryColor}
-                />
-              </div>
-            </ControlContainer>
-          </>
-        ) : (
-          <>
-            <SearchContainer>
-              <SearchControlContainer>
+          {!isActiveSearch ? (
+            <>
+              <ControlContainer>
                 <div style={{ marginLeft: 20 }}>
                   <Back />
                 </div>
-                <p>검색</p>
-                <TransparentButton onClick={activeSearchHandler} style={{ marginRight: 20 }}>
-                  <IconX width={16} height={16} color={COLORS.secondaryColor} />
-                </TransparentButton>
-              </SearchControlContainer>
+                <div onClick={activeSearchHandler} style={{ marginRight: 20 }}>
+                  <IconSearch
+                    width={16}
+                    height={16}
+                    color={COLORS.secondaryColor}
+                  />
+                </div>
+              </ControlContainer>
+            </>
+          ) : (
+            <>
+              <SearchContainer>
+                <SearchControlContainer>
+                  <div style={{ marginLeft: 20 }}>
+                    <Back />
+                  </div>
+                  <p>검색</p>
+                  <TransparentButton onClick={activeSearchHandler} style={{ marginRight: 20 }}>
+                    <IconX width={16} height={16} color={COLORS.secondaryColor} />
+                  </TransparentButton>
+                </SearchControlContainer>
 
-              <SearchContentsContainer>
-                <StyledSelect
-                  options={DUMMY_SEOUL_OPTIONS}
-                  placeholder={"지역선택"}
-                  styles={{
-                    color: COLORS.secondaryColor,
-                    backgroundColor: COLORS.whiteColor,
-                    border: false,
-                    borderRadius: "12px",
-                    fontSize: "12px",
-                    fontWeight: 500,
-                  }}
-                  onChangeHandler={(e: any) => {
-                    popupStoreAPI(e.value);
-                    setSelectedLocation(e.value);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="검색어를 입력하세요."
-                  onKeyDown={searchHandler}
-                />
-              </SearchContentsContainer>
-            </SearchContainer>
-          </>
-        )}
-      </MapContainer>
+                <SearchContentsContainer>
+                  <StyledSelect
+                    options={DUMMY_SEOUL_OPTIONS}
+                    placeholder={"지역선택"}
+                    styles={{
+                      color: COLORS.secondaryColor,
+                      backgroundColor: COLORS.whiteColor,
+                      border: false,
+                      borderRadius: "12px",
+                      fontSize: "12px",
+                      fontWeight: 500,
+                    }}
+                    onChangeHandler={(e: any) => {
+                      popupStoreAPI(e.value);
+                      setSelectedLocation(e.value);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="검색어를 입력하세요."
+                    onKeyDown={searchHandler}
+                  />
+                </SearchContentsContainer>
+              </SearchContainer>
+            </>
+          )}
+        </MapContainer>
+      )}
 
-      {/* TODO slide button menu (디자인의 변경 할 예정) */}
       <SlideBottomMenu $isOpen={isOpenMenu}>
         <ToggleButton
           onClick={() => {
             setIsOpenMenu(!isOpenMenu);
           }}
         />
-        {isOpenMenu && !isViewDesc && (
-          <StoreInformationList>
-            <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
-          </StoreInformationList>
-        )}
+        <StoreInformationList>
+          <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
+        </StoreInformationList>
       </SlideBottomMenu>
     </DefaultLayout>
   );
@@ -709,6 +679,7 @@ const MapComponent: React.FC = () => {
 const MapContainer = styled.div`
   width: 100%;
   height: 100dvh;
+  transition: background-color 1s ease-in-out, transform 1s ease-in-out;
   position: relative;
 `;
 
@@ -721,7 +692,7 @@ const LocationResetBtn = styled.div`
   bottom: 80px;
   right: 20px;
   padding: 0;
-  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: background-color 1s ease-in-out, transform 1s ease-in-out;
 `;
 
 const StyledNaverMap = styled.div`
@@ -729,6 +700,7 @@ const StyledNaverMap = styled.div`
   top: 0;
   left: 0;
   width: 100%;
+  
 `;
 
 const ControlContainer = styled.div`
@@ -839,7 +811,7 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   border-radius: 16px 16px 0px 0px;
   background-color: ${COLORS.whiteColor};
 
-  transition: height 0.3s ease, transform 0.3s ease;
+  transition: height 1s ease, transform 1s ease;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 `;

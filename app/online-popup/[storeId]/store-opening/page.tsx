@@ -134,14 +134,11 @@ const OnlinePopUpOpenningPage: React.FC<{ params: { storeId: string } }> = ({
 
   useEffect(() => {
     if (isAnimatingComp) {
-      console.log('animation c')
       const storedStatus = localStorage.getItem(joyride2StatusKey);
       if (storedStatus === "finished" || storedStatus === "skipped") {
-        console.log('t')
         setJoyrideRun2(false);
         localStorageCheck();
       } else {
-        console.log('f')
         setJoyrideRun2(true);
       }
     }

@@ -66,9 +66,7 @@ const SignInPage: React.FC = () => {
       });
 
       if (response.status === 200) {
-        console.log(response.data.user);
         const userData: user = response.data.user;
-        console.log("set 완료");
         dispatch(setUser(userData));
         setIsLoading(false);
         if (redirectPath) {
@@ -132,8 +130,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValueEmail(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
 
@@ -151,8 +149,8 @@ const SignInPage: React.FC = () => {
             onChange={(text: string) => {
               setValuePassword(text);
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => { }}
+            onBlur={() => { }}
             disabled={false}
           />
         </MemberAccountForm>

@@ -85,7 +85,6 @@ const Payment: React.FC = () => {
     try {
       const response = await axiosInstance.get(`/api/user/mypage`);
       if (response.status === 200) {
-        console.log(response.data);
       }
     } catch (error: any) {
       if (error.response.statue === 403) {
@@ -125,7 +124,6 @@ const Payment: React.FC = () => {
 
   const handleUsePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = Number(e.target.value.replace(/[^0-9]/g, ""));
-    console.log(inputValue);
     if (inputValue > point!) {
       inputValue = point!;
     }
