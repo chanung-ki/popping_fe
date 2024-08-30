@@ -103,7 +103,7 @@ const Container = styled.div`
 
   background: ${COLORS.primaryColor};
 
-  z-index: 2;
+  z-index: 6;
 
   -webkit-user-drag: none;
   -khtml-user-drag: none;

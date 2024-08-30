@@ -109,7 +109,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
         });
 
         if (response.status === 202) {
-          setTimeout(() => {}, 2000);
+          setTimeout(() => { }, 2000);
         }
       } catch (error: any) {
         if (error.response.status === 401) {
@@ -120,7 +120,6 @@ const BottomModal: React.FC<BottomModalProps> = ({
             )}`
           );
         } else {
-          console.log(`${error.response}`);
         }
       }
     },
@@ -171,7 +170,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
                           key={optionIndex}
                           isChecked={
                             selectedOptions[
-                              optionData.name as keyof CartOption
+                            optionData.name as keyof CartOption
                             ] === option.name
                           }
                         >
@@ -181,7 +180,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
                             value={option.name}
                             checked={
                               selectedOptions[
-                                optionData.name as keyof CartOption
+                              optionData.name as keyof CartOption
                               ] === option.name
                             }
                             onChange={() =>

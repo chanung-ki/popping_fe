@@ -7,7 +7,7 @@ import { IconSearch, IconX } from "./icons";
 import StyledSelect from "./styledSelect";
 import axiosInstance from "@/public/network/axios";
 import { PopupStoreSimpleData, user, PopupStoreDataType } from "@/public/utils/types";
-import { MARKER } from "@/public/utils/function";
+import { DUMMY_SEOUL_OPTIONS, MARKER } from "@/public/utils/function";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import StoreCardList from "./popup-map/StoreCardList";
@@ -41,33 +41,6 @@ const MapComponent: React.FC = () => {
 
   const userData: user = useSelector((state: any) => state.poppingUser.user);
   // 서울 25개구 더미 데이터
-  const DUMMY_SEOUL_OPTIONS = [
-    { value: "서울시 종로구", label: "서울시 종로구" },
-    { value: "서울시 중구", label: "서울시 중구" },
-    { value: "서울시 용산구", label: "서울시 용산구" },
-    { value: "서울시 성동구", label: "서울시 성동구" },
-    { value: "서울시 광진구", label: "서울시 광진구" },
-    { value: "서울시 동대문구", label: "서울시 동대문구" },
-    { value: "서울시 중랑구", label: "서울시 중랑구" },
-    { value: "서울시 성북구", label: "서울시 성북구" },
-    { value: "서울시 강북구", label: "서울시 강북구" },
-    { value: "서울시 도봉구", label: "서울시 도봉구" },
-    { value: "서울시 노원구", label: "서울시 노원구" },
-    { value: "서울시 은평구", label: "서울시 은평구" },
-    { value: "서울시 서대문구", label: "서울시 서대문구" },
-    { value: "서울시 마포구", label: "서울시 마포구" },
-    { value: "서울시 양천구", label: "서울시 양천구" },
-    { value: "서울시 강서구", label: "서울시 강서구" },
-    { value: "서울시 구로구", label: "서울시 구로구" },
-    { value: "서울시 금천구", label: "서울시 금천구" },
-    { value: "서울시 영등포구", label: "서울시 영등포구" },
-    { value: "서울시 동작구", label: "서울시 동작구" },
-    { value: "서울시 관악구", label: "서울시 관악구" },
-    { value: "서울시 서초구", label: "서울시 서초구" },
-    { value: "서울시 강남구", label: "서울시 강남구" },
-    { value: "서울시 송파구", label: "서울시 송파구" },
-    { value: "서울시 강동구", label: "서울시 강동구" },
-  ];
   //지도 관련 states
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -106,6 +79,9 @@ const MapComponent: React.FC = () => {
   const [cafeMarkerList, setCafeMarkerList] = useState<naver.maps.Marker[]>([]);
   // 푸드 마커 리스트
   const [foodMarkerList, setFoodMarkerList] = useState<naver.maps.Marker[]>([]);
+
+
+  const [openInfoWindows, setOpenInfoWindows] = useState<naver.maps.InfoWindow[]>([]);
 
   //지도 ref
   const mapRef = useRef<any>(null);
@@ -222,7 +198,6 @@ const MapComponent: React.FC = () => {
     });
   };
 
-  // 스토어 마커를 스토어 마커 리스트에 추가
   const addEachStoreMarker = (
     id: string,
     name: string,
@@ -241,9 +216,9 @@ const MapComponent: React.FC = () => {
       });
 
       newMarker.setTitle(name);
-      //스토어 마커 리스트에 추가
       setStoreMarkerList([...storeMarkerList, newMarker]);
-      // 마커에 이벤트 핸들러 (인포 윈도우)
+
+      // Event listener to open the InfoWindow and pan/zoom the map
       newMarker.addListener("click", () => {
         const newInfoWindow: naver.maps.InfoWindow = openInfoWindow(newMarker);
 
@@ -252,9 +227,18 @@ const MapComponent: React.FC = () => {
         } else if (mapRef.current !== null) {
           newInfoWindow.open(mapRef.current, newMarker);
         }
+
+        // Pan and zoom the map to the clicked marker
+        const markerPosition = newMarker.getPosition();
+        mapRef.current.setCenter(markerPosition);
+        mapRef.current.panTo(markerPosition, { duration: 500 });
+        mapRef.current.setZoom(18);
       });
-    } catch (e) { }
+    } catch (e) {
+      console.error("Error adding marker:", e);
+    }
   };
+
 
   // 카페 마커를 카페 마커 리스트에 추가
   const addEachCafeMarker = (
@@ -275,12 +259,17 @@ const MapComponent: React.FC = () => {
       });
 
       newMarker.setTitle(name);
-      //스토어 마커 리스트에 추가
       setCafeMarkerList([...cafeMarkerList, newMarker]);
-      // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) { }
-  };
 
+      // Event listener to pan and zoom the map
+      newMarker.addListener("click", () => {
+        mapRef.current.panTo(newMarker.getPosition(), { duration: 500 });
+        mapRef.current.setZoom(16);
+      });
+    } catch (e) {
+      console.error("Error adding marker:", e);
+    }
+  };
   //푸드 마커를 푸드 마커 리스트에 추가
   const addEachFoodMarker = (
     id: string,
@@ -300,11 +289,18 @@ const MapComponent: React.FC = () => {
       });
 
       newMarker.setTitle(name);
-      //스토어 마커 리스트에 추가
       setFoodMarkerList([...foodMarkerList, newMarker]);
-      // 마커에 이벤트 핸들러 (인포 윈도우)
-    } catch (e) { }
+
+      // Event listener to pan and zoom the map
+      newMarker.addListener("click", () => {
+        mapRef.current.panTo(newMarker.getPosition(), { duration: 500 });
+        mapRef.current.setZoom(16);
+      });
+    } catch (e) {
+      console.error("Error adding marker:", e);
+    }
   };
+
 
   const removeMarker = (type: string) => {
     if (type === "cafe") {
@@ -339,50 +335,31 @@ const MapComponent: React.FC = () => {
 
     if (storeInfo) {
       newInfoWindow.setContent(`
-        <div style="width: 175px; height: 161px; border-radius: 16px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
-          <div 
-            style="display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;" 
-            onclick="window.location.href='/popup-map/${storeInfo.id}';"
-          >
-            <div style="width: 72px; height: 72px; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden;">
-              <img
-                src=${`data:image/webp;base64,${storeInfo.image}`}
-                style="width: 100%; height: 100%; object-fit: cover;"
-              />              
-          </div>
-          <div
-            style="text-align: center; font-family: Pretendard; font-size: 14px; font-style: normal; font-weight: 600;
-              line-height: normal;
-            "
-          >
-            ${marker.getTitle()}
-          </div>
+<div style="width: 150px; padding: 16px; border-radius: 12px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.3s, background-color 0.3s;" 
+    onclick="window.location.href='/popup-map/${storeInfo.id}';" 
+    onmouseover="this.style.transform = 'scale(1.05)'; this.style.backgroundColor = '#e9e9e9';" 
+    onmouseout="this.style.transform = 'scale(1)'; this.style.backgroundColor = '#f9f9f9';">
+
+    <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden;">
+        <img
+            src=${`data:image/webp;base64,${storeInfo.image}`}
+            style="width: 100%; height: 100%; object-fit: cover;"
+        />
+    </div>
     
-          <div
-            style="
-              width: 112px;
-              text-align: center;
-              font-family: Pretendard;
-              font-size: 10px;
-              font-style: normal;
-              font-weight: 500;
-              line-height: normal
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              overflow: hidden;
-            "
-          >
-            ${storeInfo.description[0]}
-          </div>
-        </div>
+    <div style="font-family: Pretendard, sans-serif; font-size: 14px; font-weight: 600; color: #333333; text-align: center;">
+        ${marker.getTitle()}
+    </div>
+</div>
       `);
+      setOpenInfoWindows((prev) => [...prev, newInfoWindow]); // 추가된 부분
     } else {
       alert("스토어 정보 취득에 실패하였습니다.");
     }
 
     return newInfoWindow;
   };
+
 
   const searchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -507,10 +484,6 @@ const MapComponent: React.FC = () => {
     if (userLocation && window.naver) {
       if (!mapRef.current) {
         const mapOptions = {
-          center: new window.naver.maps.LatLng(
-            userLocation.lat,
-            userLocation.lng
-          ),
           zoom: 15,
           scaleControl: false,
           logoControl: false,
@@ -576,7 +549,6 @@ const MapComponent: React.FC = () => {
       mapRef.current.getElement().style.height = mapHeight;
       locationResetRef.current.style.setProperty('bottom', mapButtom);
 
-
       if (subwayLocation) {
         var newCenter = new window.naver.maps.LatLng(
           subwayLocation.lat,
@@ -588,7 +560,6 @@ const MapComponent: React.FC = () => {
           userLocation.lng
         );
       }
-
       // 지도 높이 변경 후 중심 조정
       window.naver.maps.Event.trigger(mapRef.current, "resize");
       mapRef.current.setCenter(newCenter);
@@ -611,18 +582,36 @@ const MapComponent: React.FC = () => {
   // 검색 활성화 핸들러
   const activeSearchHandler = () => {
     setIsActiveSearch(!isActiveSearch);
-    
+
     // 검색창 닫을시 자치구 초기화
-    if (!isActiveSearch){
+    if (!isActiveSearch) {
       setSelectedLocation('')
     }
   };
 
+
+  useEffect(() => {
+    if (mapRef.current && window.naver) {
+      // 맵의 빈 공간을 클릭했을 때, 모든 InfoWindow 닫기
+      window.naver.maps.Event.addListener(mapRef.current, "click", () => {
+        openInfoWindows.forEach(infoWindow => {
+          infoWindow.close();
+        });
+        setOpenInfoWindows([]); // 열린 InfoWindow 리스트 초기화
+      });
+    }
+  }, [openInfoWindows]);
+
+
+
   return (
     <DefaultLayout top={0} right={0} left={0} bottom={0}>
-      <MapContainer>
-        <StyledNaverMap id="map" style={{ width: "100%", height: '100dvh' }} />
-        {!isLoading && (
+      {isLoading ? (
+        <Loading />
+      ) : (
+
+        <MapContainer>
+          <StyledNaverMap id="map" style={{ width: "100%", height: '100dvh' }} />
           <LocationResetBtn onClick={handleLocationButtonClick} ref={locationResetRef}>
             <IconUser
               color={isButtonVisible ? COLORS.mainColor : COLORS.greyColor}
@@ -630,77 +619,72 @@ const MapComponent: React.FC = () => {
               height={35}
             />
           </LocationResetBtn>
-        )}
-        {isLoading ? (
-          <Loading />
-        ) : !isActiveSearch ? (
-          <>
-            <ControlContainer>
-              <div style={{ marginLeft: 20 }}>
-                <Back />
-              </div>
-              <div onClick={activeSearchHandler} style={{ marginRight: 20 }}>
-                <IconSearch
-                  width={16}
-                  height={16}
-                  color={COLORS.secondaryColor}
-                />
-              </div>
-            </ControlContainer>
-          </>
-        ) : (
-          <>
-            <SearchContainer>
-              <SearchControlContainer>
+          {!isActiveSearch ? (
+            <>
+              <ControlContainer>
                 <div style={{ marginLeft: 20 }}>
                   <Back />
                 </div>
-                <p>검색</p>
-                <TransparentButton onClick={activeSearchHandler} style={{ marginRight: 20 }}>
-                  <IconX width={16} height={16} color={COLORS.secondaryColor} />
-                </TransparentButton>
-              </SearchControlContainer>
+                <div onClick={activeSearchHandler} style={{ marginRight: 20 }}>
+                  <IconSearch
+                    width={16}
+                    height={16}
+                    color={COLORS.secondaryColor}
+                  />
+                </div>
+              </ControlContainer>
+            </>
+          ) : (
+            <>
+              <SearchContainer>
+                <SearchControlContainer>
+                  <div style={{ marginLeft: 20 }}>
+                    <Back />
+                  </div>
+                  <p>검색</p>
+                  <TransparentButton onClick={activeSearchHandler} style={{ marginRight: 20 }}>
+                    <IconX width={16} height={16} color={COLORS.secondaryColor} />
+                  </TransparentButton>
+                </SearchControlContainer>
 
-              <SearchContentsContainer>
-                <StyledSelect
-                  options={DUMMY_SEOUL_OPTIONS}
-                  placeholder={"지역선택"}
-                  styles={{
-                    color: COLORS.secondaryColor,
-                    backgroundColor: COLORS.whiteColor,
-                    border: false,
-                    borderRadius: "12px",
-                    fontSize: "12px",
-                    fontWeight: 500,
-                  }}
-                  onChangeHandler={(e: any) => {
-                    popupStoreAPI(e.value);
-                    setSelectedLocation(e.value);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="검색어를 입력하세요."
-                  onKeyDown={searchHandler}
-                />
-              </SearchContentsContainer>
-            </SearchContainer>
-          </>
-        )}
-      </MapContainer>
+                <SearchContentsContainer>
+                  <StyledSelect
+                    options={DUMMY_SEOUL_OPTIONS}
+                    placeholder={"지역선택"}
+                    styles={{
+                      color: COLORS.secondaryColor,
+                      backgroundColor: COLORS.whiteColor,
+                      border: false,
+                      borderRadius: "12px",
+                      fontSize: "12px",
+                      fontWeight: 500,
+                    }}
+                    onChangeHandler={(e: any) => {
+                      popupStoreAPI(e.value);
+                      setSelectedLocation(e.value);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="검색어를 입력하세요."
+                    onKeyDown={searchHandler}
+                  />
+                </SearchContentsContainer>
+              </SearchContainer>
+            </>
+          )}
+        </MapContainer>
+      )}
 
-      {/* TODO slide button menu (디자인의 변경 할 예정) */}
       <SlideBottomMenu $isOpen={isOpenMenu}>
         <ToggleButton
           onClick={() => {
             setIsOpenMenu(!isOpenMenu);
           }}
         />
-        {isOpenMenu && !isViewDesc && (
-          <StoreInformationList>
-            <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
-          </StoreInformationList>
-        )}
+        <StoreInformationList>
+          <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
+        </StoreInformationList>
       </SlideBottomMenu>
     </DefaultLayout>
   );
@@ -709,6 +693,7 @@ const MapComponent: React.FC = () => {
 const MapContainer = styled.div`
   width: 100%;
   height: 100dvh;
+  transition: background-color 1s ease-in-out, transform 1s ease-in-out;
   position: relative;
 `;
 
@@ -721,7 +706,7 @@ const LocationResetBtn = styled.div`
   bottom: 80px;
   right: 20px;
   padding: 0;
-  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: background-color .3s ease-in-out, transform .3s ease-in-out;
 `;
 
 const StyledNaverMap = styled.div`
@@ -839,7 +824,7 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   border-radius: 16px 16px 0px 0px;
   background-color: ${COLORS.whiteColor};
 
-  transition: height 0.3s ease, transform 0.3s ease;
+  transition: height 1s ease, transform 1s ease;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 `;
