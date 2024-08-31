@@ -25,6 +25,7 @@ import Image from "next/image";
 import { PlaceDataType } from "@/public/utils/types";
 import { Range, getTrackBackground } from "react-range";
 import SurroundRestaurantCard from "@/app/components/popup-map/SurroundRestaurantCard";
+import DistanceRange from "@/app/components/popup-map/DistanceRange";
 
 const OfflinePopupStoreDetailPage: React.FC<{
   params: { popupId: string };
@@ -304,26 +305,12 @@ const OfflinePopupStoreDetailPage: React.FC<{
             </PopupContentTitle>
             <RangeContainer>
               <div className={"range-text"}>1km</div>
-              <Range
-                label="Select your value"
+              <DistanceRange
+                distance={distance}
+                rangeMin={1000}
+                rangeMax={2000}
                 step={100}
-                min={1000}
-                max={2000}
-                values={distance}
-                onChange={(values) => setDistance(values)}
-                renderTrack={({ props, children }) => (
-                  <StyledRange
-                    {...props}
-                    min={1000}
-                    max={2000}
-                    distance={distance}
-                  >
-                    {children}
-                  </StyledRange>
-                )}
-                renderThumb={({ props }) => (
-                  <StyledThumb {...props} key={props.key} />
-                )}
+                onChange={(values: number[]) => setDistance(values)}
               />
               <div className={"range-text"}>2km</div>
             </RangeContainer>
@@ -589,31 +576,4 @@ const RangeContainer = styled.div`
   }
 `;
 
-const StyledRange = styled.div<{
-  distance: number[];
-  min: number;
-  max: number;
-}>`
-  position: relative;
-  height: 10px;
-  width: 200px;
-  border-radius: 4px;
-
-  background: ${(props) =>
-    getTrackBackground({
-      values: props.distance,
-      colors: [COLORS.mainColor, COLORS.greyColor],
-      min: props.min,
-      max: props.max,
-    })};
-  align-self: center;
-  cursor: default !important;
-`;
-
-const StyledThumb = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: ${COLORS.mainColor};
-  border-radius: 50%;
-`;
 export default OfflinePopupStoreDetailPage;
