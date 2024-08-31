@@ -730,9 +730,7 @@ const MapComponent: React.FC = () => {
             setIsOpenMenu(!isOpenMenu);
           }}
         />
-        <StoreInformationList>
-          <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
-        </StoreInformationList>
+        <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
       </SlideBottomMenu>
     </DefaultLayout>
   );
@@ -893,19 +891,6 @@ const ToggleButton = styled.button`
 
   cursor: pointer;
   outline: none;
-`;
-
-const StoreInformationList = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  flex-flow: row wrap;
-  gap: 28px;
-  margin-top: 60px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  width: 100%;
-  padding-bottom: 40px;
 `;
 
 export default MapComponent;

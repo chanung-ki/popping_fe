@@ -100,31 +100,29 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
 
   return isPopper ? (
     <Container>
-      <ThemeListContainer>
-        <ThemeContainer>
-          <div className={"theme-title"}>내 팝업 스토어</div>
-          <StoreCardListContainer>
-            {storeList ?
-              storeList.map((store: PopupStoreDataType) => (
-                <StoreCard key={store.id} store={store} isPopper={isPopper} />
-              )) :
-              <>
-                <SkeletonDiv />
-                <SkeletonDiv />
-                <SkeletonDiv />
+      <ThemeContainer>
+        <div className={"theme-title"}>내 팝업 스토어</div>
+        <StoreCardListContainer>
+          {storeList ?
+            storeList.map((store: PopupStoreDataType) => (
+              <StoreCard key={store.id} store={store} isPopper={isPopper} />
+            )) :
+            <>
+              <SkeletonDiv />
+              <SkeletonDiv />
+              <SkeletonDiv />
 
-                <SkeletonDiv />
-                <SkeletonDiv />
-                <SkeletonDiv />
+              <SkeletonDiv />
+              <SkeletonDiv />
+              <SkeletonDiv />
 
-                <SkeletonDiv />
-                <SkeletonDiv />
-                <SkeletonDiv />
-              </>
-            }
-          </StoreCardListContainer>
-        </ThemeContainer>
-      </ThemeListContainer>
+              <SkeletonDiv />
+              <SkeletonDiv />
+              <SkeletonDiv />
+            </>
+          }
+        </StoreCardListContainer>
+      </ThemeContainer>
     </Container>
   ) : (
     <Container>
@@ -225,8 +223,8 @@ const Container = styled.div`
   width: calc(100% - 24px);
   display: flex;
   flex-direction: column;
-  padding: 0 12px;
   gap: 16px;
+  margin-top: 60px;
 `;
 
 const CardListHeader = styled.div`
@@ -249,6 +247,8 @@ const SkeletonDiv = styled.div`
   @media (min-width: 768px) {
     flex: 0 0 calc(33.333% - 12px);
   }
+
+  margin-bottom: 20px;
 
   aspect-ratio: 1 / 1;
   background-color: ${COLORS.greyColor};
@@ -306,32 +306,19 @@ width: 100%;
   font-size: 14px;
   font-weight: 500;
   line-height: normal;
+
+  margin-bottom: 16px;
 `;
 
 const StoreCardListContainer = styled.div`
-  object-fit: cover;
-  aspect-ratio: 1 / 1;
   border-radius: 8px;
 
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
   flex-wrap: wrap;
 
-  gap: 20px 0; 
-
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-`;
-
-const ThemeListContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  gap: 28px;
-
-  /* margin-left: 22px; */
-  width: 100%;
-  overflow-y: auto;
 `;
 
 const ThemeContainer = styled.div`
