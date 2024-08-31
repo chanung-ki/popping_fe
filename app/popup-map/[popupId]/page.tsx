@@ -254,7 +254,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         <PopupContent>
           <PopupContentTitle>입장 가능 시간</PopupContentTitle>
           {popupData.openTime.map((day: OpenTimeData, index: number) => (
-            <PopupTime>
+            <PopupTime key={`time-${day}`}>
               {day.day} {day.startTime} ~ {day.endTime}
             </PopupTime>
           ))}
