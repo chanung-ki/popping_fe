@@ -319,6 +319,8 @@ const StoreCardListContainer = styled.div`
 
   align-items: center;
   justify-content: space-between;
+  
+  overflow-y: scroll;
 `;
 
 const ThemeContainer = styled.div`
