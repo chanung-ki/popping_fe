@@ -97,8 +97,8 @@ const StoreCard: React.FC<StoreCardProps> = React.memo(({ store, isPopper }: Sto
           </div>
         )}
       </StoreThumbnail>
+      <div className={"store-desc"}>{store.location.address}</div>
       <div className={"store-name"}>{store.title}</div>
-      <div className={"store-desc"}>{store.description[0]}</div>
     </StoreCardContainer>
   );
 });
@@ -108,12 +108,16 @@ StoreCard.displayName = "StoreCard";
 
 // 스타일 컴포넌트 정의
 const StoreCardContainer = styled.div`
+  flex: 0 0 calc(50% - 12px);  
+  
+  @media (min-width: 768px) {
+    flex: 0 0 calc(33.333% - 12px);
+  }
+
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 166px;
-  cursor: pointer;
-
+  
   .store-name {
     font-size: 16px;
     font-weight: 600;

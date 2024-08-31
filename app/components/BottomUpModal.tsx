@@ -67,7 +67,7 @@ const OptionModal = styled.div<{ isVisible: boolean; heightRate: number }>`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: ${(props) => props.heightRate}%;
+  height: ${(props) => props.heightRate}dvh;
   background-color: white;
   border-radius: 16px 16px 0 0;
   opacity: ${(props) => (props.isVisible ? "1" : "0")};
