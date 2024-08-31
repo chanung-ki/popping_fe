@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import NaverMap from "@/app/components/popup-map/NaverMap";
 import Image from "next/image";
 import { PlaceDataType } from "@/public/utils/types";
+import { Range } from "react-range";
 import SurroundRestaurantCard from "@/app/components/popup-map/SurroundRestaurantCard";
 
 const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = ({ params }) => {

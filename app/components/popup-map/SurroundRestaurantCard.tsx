@@ -13,7 +13,7 @@ const SurroundRestaurantCard: React.FC<SurroundRestaurantCardProps> = ({
   const cardClickHandler = () => {
     //card click handler
     const userConfirmed = window.confirm(
-      "해당 위치를 네이버 지도에서 검색하시겠습니까?"
+      "해당 장소를 네이버 지도로 여시겠습니까?"
     );
     if (userConfirmed) {
       const naverMapUrl = `https://map.naver.com/v5/search/${restaurantData.title} ${restaurantData.loadAddr}`;
@@ -38,7 +38,7 @@ const SurroundRestaurantCard: React.FC<SurroundRestaurantCardProps> = ({
         <RestaurantTags>
           {restaurantData.bestMenu.map(
             (menu, index) =>
-              index < 4 && (
+              index < 3 && (
                 <RestaurantTag>
                   <span>#</span> <span className={"menu-title"}>{menu}</span>
                 </RestaurantTag>
@@ -57,8 +57,6 @@ const RestaurantCard = styled.div`
   gap: 8px;
 
   width: 166px;
-
-  cursor: pointer;
 `;
 
 const RestaurantImage = styled.div`
@@ -68,15 +66,8 @@ const RestaurantImage = styled.div`
   height: 166px;
   border-radius: 8px;
   overflow: hidden;
-`;
 
-const RestaurantOverlay = styled.div`
-  position: absolute;
-  bottom: 0;
-  z-index: 5;
-  width: 100%;
-  height: 50px;
-  background: linear-gradient(to top, rgba(103, 102, 102, 0.5), transparent);
+  cursor: pointer;
 `;
 
 const Distance = styled.div`
@@ -113,6 +104,8 @@ const RestaurantInfo = styled.div`
     font-style: normal;
     line-height: normal;
     color: ${COLORS.secondaryColor};
+
+    cursor: pointer;
   }
 `;
 
