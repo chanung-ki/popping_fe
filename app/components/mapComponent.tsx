@@ -741,6 +741,8 @@ const MapContainer = styled.div`
   height: 100dvh;
   transition: background-color 1s ease-in-out, transform 1s ease-in-out;
   position: relative;
+
+  overflow-y: hidden;
 `;
 
 const LocationResetBtn = styled.div`
@@ -862,6 +864,8 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+
+  overflow-y: scroll;
 
   width: 100%;
   max-width: 600px;
