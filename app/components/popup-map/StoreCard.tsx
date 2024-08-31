@@ -71,8 +71,8 @@ const StoreCard: React.FC<StoreCardProps> = React.memo(({ store, isPopper }: Sto
           >
             <IconHeart
               color={saved ? COLORS.mainColor : COLORS.greyColor}
-              width={16}
-              height={15}
+              width={undefined}
+              height={18}
             />
           </StoreBookmark>
         )}
@@ -89,21 +89,18 @@ StoreCard.displayName = "StoreCard";
 // 스타일 컴포넌트 정의
 const StoreCardContainer = styled.div`
   cursor: pointer;
-  position: relative;
 
   flex: 0 0 calc(50% - 12px);
-  margin-bottom: 20px;
-  
-
   @media (min-width: 768px) {
     flex: 0 0 calc(33.333% - 12px); 
   };
-
+  margin-bottom: 20px;
+  
   .store-name {
     font-size: 16px;
     font-weight: 600;
   }
-
+  
   .store-desc {
     font-size: 10px;
     font-weight: 300;
@@ -111,6 +108,7 @@ const StoreCardContainer = styled.div`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    margin-bottom: 4px;
   }
 `;
 
