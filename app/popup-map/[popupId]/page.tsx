@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Back from "@/app/components/back";
 import { DefaultLayout } from "@/app/components/layout";
@@ -9,7 +9,12 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Follow, formatDate, FormatFollowers } from "@/public/utils/function";
-import { IconFollow, IconLocation, IconAderessPin, IconViews } from "@/app/components/icons";
+import {
+  IconFollow,
+  IconLocation,
+  IconAderessPin,
+  IconViews,
+} from "@/app/components/icons";
 import axiosInstance from "@/public/network/axios";
 import { PopupStoreDataType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
@@ -18,10 +23,12 @@ import dayjs from "dayjs";
 import NaverMap from "@/app/components/popup-map/NaverMap";
 import Image from "next/image";
 import { PlaceDataType } from "@/public/utils/types";
-import { Range } from "react-range";
+import { Range, getTrackBackground } from "react-range";
 import SurroundRestaurantCard from "@/app/components/popup-map/SurroundRestaurantCard";
 
-const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = ({ params }) => {
+const OfflinePopupStoreDetailPage: React.FC<{
+  params: { popupId: string };
+}> = ({ params }) => {
   const router = useRouter();
   const { popupId } = params;
 
@@ -33,7 +40,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
   const [loading, setLoading] = useState<boolean>(true);
   const [saved, setSaved] = useState<boolean>();
   const [restaurantData, setRestaurantDate] = useState<PlaceDataType[]>([]);
-  const [distance, setDistance] = useState<number>(1000);
+  const [distance, setDistance] = useState<number[]>([1000]);
 
   const updateParentWidth = () => {
     if (parentDiv.current) {
@@ -43,13 +50,15 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
 
   useEffect(() => {
     PopupDetailData();
-    const viewPopupList = sessionStorage.getItem('popupViewList')
+    const viewPopupList = sessionStorage.getItem("popupViewList");
 
     if (viewPopupList) {
       const parsedViewPopupList = JSON.parse(viewPopupList);
 
-      if (Array.isArray(parsedViewPopupList) && parsedViewPopupList.includes(popupId)) {
-
+      if (
+        Array.isArray(parsedViewPopupList) &&
+        parsedViewPopupList.includes(popupId)
+      ) {
       } else {
         viewCountAPI(parsedViewPopupList);
       }
@@ -58,12 +67,15 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
     }
   }, [router]);
 
-
   useEffect(() => {
     if (popupData) {
       SurroundPlaceData();
     }
-  }, [popupData]);
+  }, [popupData, distance]);
+
+  useEffect(() => {
+    popupData && SurroundPlaceData();
+  }, [distance[0]]);
 
   useEffect(() => {
     if (restaurantData.length > 0) {
@@ -80,17 +92,21 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
 
   const viewCountAPI = async (parsedViewPopupList: string[]) => {
     try {
-      const response = await axiosInstance.get(`/api/maps/view-count/${popupId}`);
+      const response = await axiosInstance.get(
+        `/api/maps/view-count/${popupId}`
+      );
 
       if (response.status === 200) {
-        parsedViewPopupList.push(popupId);  // 배열에 popupId 추가
-        sessionStorage.setItem('popupViewList', JSON.stringify(parsedViewPopupList));  // 배열을 문자열로 변환하여 저장
+        parsedViewPopupList.push(popupId); // 배열에 popupId 추가
+        sessionStorage.setItem(
+          "popupViewList",
+          JSON.stringify(parsedViewPopupList)
+        ); // 배열을 문자열로 변환하여 저장
       }
-
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const PopupDetailData = async () => {
     try {
@@ -113,7 +129,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
   const SurroundPlaceData = async () => {
     try {
       const response = await axiosInstance.get(
-        `/api/maps/surround-place?popupId=${popupId}&meter=${distance}`
+        `/api/maps/surround-place?popupId=${popupId}&meter=${distance[0]}`
       );
 
       if (response.status === 200) {
@@ -139,7 +155,6 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
   }
   if (!popupData) return <Loading />;
 
-
   const handleBookmarkClick = async (id: string) => {
     setSaved(!saved);
     if (saved) {
@@ -147,7 +162,6 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         ...popupData,
         saveCount: popupData.saveCount - 1,
       });
-
     } else {
       setPopupData({
         ...popupData,
@@ -156,8 +170,6 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
     }
     Follow("Popup", id, router);
   };
-
-
 
   const now = dayjs();
   const contractStart = dayjs(popupData.date.start);
@@ -168,7 +180,7 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
   return (
     <DefaultLayout top={0} left={0} right={0} bottom={0}>
       <SwiperContainer>
-        <div style={{ position: 'absolute', zIndex: 2, left: 20, top: 16 }}>
+        <div style={{ position: "absolute", zIndex: 2, left: 20, top: 16 }}>
           <Back url={undefined} />
         </div>
         <Swiper
@@ -201,16 +213,24 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
                 <BrandStateBadge
                   style={{
                     color: isAble ? COLORS.primaryColor : COLORS.secondaryColor,
-                    backgroundColor: isAble ? COLORS.mainColor : COLORS.lightGreyColor,
-                  }}>
-                  {isAble ? '진행중' : now.isBefore(contractStart) ? '진행 예정' : '종료'}
+                    backgroundColor: isAble
+                      ? COLORS.mainColor
+                      : COLORS.lightGreyColor,
+                  }}
+                >
+                  {isAble
+                    ? "진행중"
+                    : now.isBefore(contractStart)
+                    ? "진행 예정"
+                    : "종료"}
                 </BrandStateBadge>
                 <span>
-                  {formatDate(popupData.date.start)} ~ {formatDate(popupData.date.end)}
+                  {formatDate(popupData.date.start)} ~{" "}
+                  {formatDate(popupData.date.end)}
                 </span>
               </PopupDate>
             </HeaderLeft>
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
               <PopupBookmark
                 onClick={(event) => {
                   event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
@@ -234,11 +254,13 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
               </PopupBookmark>
             </div>
           </PopupHeader>
-          <PopupLocation onClick={() => {
-            if (locationRef.current) {
-              locationRef.current.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}>
+          <PopupLocation
+            onClick={() => {
+              if (locationRef.current) {
+                locationRef.current.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          >
             {/* <IconLocation color={COLORS.greyColor} width={undefined} height={16} /> */}
             {popupData.location.address}
           </PopupLocation>
@@ -251,15 +273,15 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         <PopupContent>
           <PopupContentTitle>설명</PopupContentTitle>
           <PopupDescription>
-            {popupData.description.map((text: string, index: number) => (
-              text === '\n' ? <br key={index} /> : (
+            {popupData.description.map((text: string, index: number) =>
+              text === "\n" ? (
+                <br key={index} />
+              ) : (
                 <span key={`description-${index}`}>{text}</span>
               )
-            ))}
+            )}
           </PopupDescription>
         </PopupContent>
-
-
 
         <PopupContent>
           <PopupContentTitle ref={locationRef}>위치</PopupContentTitle>
@@ -271,7 +293,6 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             longitude={popupData.location.geoData.coordinates[0]}
             title={popupData.title}
           />
-
         </PopupContent>
 
         {/* #TODO  */}
@@ -279,13 +300,33 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         <PopupContent>
           <TitleArea>
             <PopupContentTitle ref={locationRef}>
-              1km이내 맛집 & 카페
+              {(distance[0] / 1000).toFixed(1)}km이내 맛집 & 카페
             </PopupContentTitle>
-            {/* <div className={"input-container"}>
-              <p>0km</p>
-              <input type="range" />
-              <p>2km</p>
-            </div> */}
+            <RangeContainer>
+              <div className={"range-text"}>1km</div>
+              <Range
+                label="Select your value"
+                step={100}
+                min={1000}
+                max={2000}
+                values={distance}
+                onChange={(values) => setDistance(values)}
+                renderTrack={({ props, children }) => (
+                  <StyledRange
+                    {...props}
+                    min={1000}
+                    max={2000}
+                    distance={distance}
+                  >
+                    {children}
+                  </StyledRange>
+                )}
+                renderThumb={({ props }) => (
+                  <StyledThumb {...props} key={props.key} />
+                )}
+              />
+              <div className={"range-text"}>2km</div>
+            </RangeContainer>
           </TitleArea>
           <HorizontalList>
             {restaurantData.length > 0 && (
@@ -321,7 +362,7 @@ const BrandStateBadge = styled.span`
 // Swiper 컨테이너에 대한 스타일링을 추가합니다.
 const SwiperContainer = styled.div`
   width: 100%;
-  position:relative;
+  position: relative;
 `;
 
 const SlideBannerContainer = styled.div<{ height: number; image: string }>`
@@ -409,7 +450,6 @@ const PopupTitle = styled.div`
     font-weight: 600;
     word-break: break-all;
   }
-
 `;
 
 const PopupDate = styled.span`
@@ -437,7 +477,6 @@ const PopupBookmark = styled.div`
     font-weight: 600;
   }
 `;
-
 
 const PopupTagContainer = styled.div`
   display: flex;
@@ -468,7 +507,7 @@ const PopupTag = styled.div`
 `;
 
 const PopupContent = styled.div`
-    width: calc(100% - 20px);
+  width: calc(100% - 20px);
   display: flex;
   flex-direction: column;
 
@@ -535,4 +574,46 @@ const HorizontalList = styled.div`
   scrollbar-width: none;
 `;
 
+const RangeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 280px;
+
+  .range-text {
+    font-size: 14px;
+    font-weight: 700;
+    font-style: normal;
+    line-height: normal;
+  }
+`;
+
+const StyledRange = styled.div<{
+  distance: number[];
+  min: number;
+  max: number;
+}>`
+  position: relative;
+  height: 10px;
+  width: 200px;
+  border-radius: 4px;
+
+  background: ${(props) =>
+    getTrackBackground({
+      values: props.distance,
+      colors: [COLORS.mainColor, COLORS.greyColor],
+      min: props.min,
+      max: props.max,
+    })};
+  align-self: center;
+  cursor: default !important;
+`;
+
+const StyledThumb = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: ${COLORS.mainColor};
+  border-radius: 50%;
+`;
 export default OfflinePopupStoreDetailPage;

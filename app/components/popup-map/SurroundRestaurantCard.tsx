@@ -30,7 +30,7 @@ const SurroundRestaurantCard: React.FC<SurroundRestaurantCardProps> = ({
           alt={restaurantData.title}
           fill
         />
-        <Distance>{(restaurantData.distance / 1000).toFixed(2)} km</Distance>
+        <Distance>{(restaurantData.distance / 1000).toFixed(1)} km</Distance>
       </RestaurantImage>
 
       <RestaurantInfo>
