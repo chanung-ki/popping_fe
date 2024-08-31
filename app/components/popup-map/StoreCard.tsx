@@ -108,15 +108,13 @@ StoreCard.displayName = "StoreCard";
 
 // 스타일 컴포넌트 정의
 const StoreCardContainer = styled.div`
-  flex: 0 0 calc(50% - 12px);  
-  
-  @media (min-width: 768px) {
-    flex: 0 0 calc(33.333% - 12px);
-  }
-
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 0 0 calc(50% - 8px);  
+  @media (min-width: 768px) {
+    flex: 0 0 calc(33.333% - 8px);
+  }
   
   .store-name {
     font-size: 16px;
@@ -135,16 +133,17 @@ const StoreCardContainer = styled.div`
 
 const StoreThumbnail = styled.div`
   position: relative;
-  width: 166px;
-  height: 166px;
   border-radius: 8px;
   background-color: ${COLORS.greyColor};
   overflow: hidden;
+  width: 100%; 
+  aspect-ratio: 1 / 1;
+
 
   .icon {
     position: absolute;
-    top: 138px;
-    left: 138px;
+    bottom: 12px;
+    right: 12px;
     cursor: pointer;
   }
 `;

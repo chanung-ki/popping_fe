@@ -222,10 +222,10 @@ const StoreCardList: React.FC<StoreCardListProps> = ({
 };
 
 const Container = styled.div`
-  width: calc(100% - 40px);
+  width: calc(100% - 24px);
   display: flex;
   flex-direction: column;
-  padding: 0 20px;
+  padding: 0 12px;
   gap: 16px;
 `;
 

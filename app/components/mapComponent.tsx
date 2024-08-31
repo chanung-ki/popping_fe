@@ -903,6 +903,7 @@ const StoreInformationList = styled.div`
   gap: 28px;
   margin-top: 40px;
   overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
   padding-bottom: 40px;
 `;
