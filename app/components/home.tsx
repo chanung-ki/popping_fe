@@ -3,29 +3,26 @@ import { IconChevronLeft, IconHomes } from "./icons"
 import styled from "styled-components"
 import { useRouter } from "next/navigation";
 
-interface BackProps {
-  url?: string;
+interface HomeProps {
   color?: string;
 }
 
-const Back: React.FC<BackProps> = ({ url, color }) => {
+const Home: React.FC<HomeProps> = ({ color }) => {
   const router = useRouter();
   const targetColor = color || COLORS.secondaryColor;
 
   const handleClick = () => {
-    if (url) {
-      router.push(url);
-    } else {
-      router.back();
-    }
+    router.push(`/`);
   };
 
   return (
     <BackContainer onClick={handleClick}>
-      <IconChevronLeft
+
+      <IconHomes
         color={targetColor}
         width={undefined}
         height={16} />
+
     </BackContainer>
   )
 }
@@ -39,4 +36,4 @@ const BackContainer = styled.div`
   z-index: 1;
 `
 
-export default Back
+export default Home

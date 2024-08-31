@@ -1,5 +1,6 @@
 'use client'
 
+import "swiper/css";
 import Back from "@/app/components/back";
 import { DefaultLayout } from "@/app/components/layout";
 import { COLORS } from "@/public/styles/colors";
@@ -7,18 +8,17 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import { Follow, formatDate, FormatFollowers } from "@/public/utils/function";
 import { IconFollow, IconLocation, IconAderessPin, IconViews } from "@/app/components/icons";
 import axiosInstance from "@/public/network/axios";
-import { PopupStoreDataType } from "@/public/utils/types";
+import { OpenTimeData, PopupStoreDataType } from "@/public/utils/types";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/app/components/loading";
 import dayjs from "dayjs";
 import NaverMap from "@/app/components/popup-map/NaverMap";
-import Image from "next/image";
 import { PlaceDataType } from "@/public/utils/types";
 import SurroundRestaurantCard from "@/app/components/popup-map/SurroundRestaurantCard";
+import Page404 from "@/app/not-found";
 
 const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = ({ params }) => {
   const router = useRouter();
@@ -86,8 +86,10 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
         sessionStorage.setItem('popupViewList', JSON.stringify(parsedViewPopupList));  // 배열을 문자열로 변환하여 저장
       }
 
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        router.push('/error/404');  // Redirect to 404 page
+      }
     }
   }
 
@@ -247,6 +249,19 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             ))}
           </PopupTagContainer>
         </PopupInfo>
+
+
+        <PopupContent>
+          <PopupContentTitle>입장 가능 시간</PopupContentTitle>
+          {popupData.openTime.map((day: OpenTimeData, index: number) => (
+            <PopupTime>
+              {day.day} {day.startTime} ~ {day.endTime}
+            </PopupTime>
+          ))}
+        </PopupContent>
+
+
+
         <PopupContent>
           <PopupContentTitle>설명</PopupContentTitle>
           <PopupDescription>
@@ -258,8 +273,6 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
           </PopupDescription>
         </PopupContent>
 
-
-
         <PopupContent>
           <PopupContentTitle ref={locationRef}>위치</PopupContentTitle>
           <PopupLocation>
@@ -268,9 +281,9 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
           <NaverMap
             latitude={popupData.location.geoData.coordinates[1]}
             longitude={popupData.location.geoData.coordinates[0]}
+            location={popupData.location.address}
             title={popupData.title}
           />
-
         </PopupContent>
 
         {/* #TODO  */}
@@ -303,6 +316,31 @@ const OfflinePopupStoreDetailPage: React.FC<{ params: { popupId: string } }> = (
             )}
           </HorizontalList>
         </PopupContent>
+
+
+
+
+        {/* <PopupContent>
+          <PopupContentTitle>추가정보</PopupContentTitle>
+          <AdditionalInfoContainer>
+            <AdditionalInfo>
+              {popupData.homepage &&
+                <PopupLink>{popupData.homepage}</PopupLink>
+              }
+              {popupData.sns &&
+                <PopupLink>{popupData.sns}</PopupLink>
+              }
+            </AdditionalInfo>
+            <AdditionalInfo>
+              {popupData.homepage &&
+                <PopupLink>{popupData.homepage}</PopupLink>
+              }
+              {popupData.sns &&
+                <PopupLink>{popupData.sns}</PopupLink>
+              }
+            </AdditionalInfo>
+          </AdditionalInfoContainer>
+        </PopupContent> */}
       </PopupContainer>
     </DefaultLayout>
   );
@@ -488,18 +526,20 @@ const PopupContentTitle = styled.p`
   padding-right: 20px;
 `;
 
+const PopupTime = styled.span`
+  
+`
+
 const PopupDescription = styled.div`
   width: calc(100% - 24px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* background-color: ${COLORS.lightGreyColor}; */
   padding: 0;
-  /* border-radius: 8px; */
 
   & span {
     font-size: 14px;
-    line-height: 120%;
+    line-height: 140%;
   }
 `;
 
@@ -533,5 +573,29 @@ const HorizontalList = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
+
+const AdditionalInfoContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  gap: 20px;
+`
+
+
+const AdditionalInfo = styled.div`
+  
+`
+
+
+const PopupLink = styled.div`
+  width: calc(100% - 20px) ;
+  background-color: ${COLORS.lightGreyColor};
+
+  border-radius: 8px;
+  padding: 4px 16px;
+  
+  word-break: break-all;
+`
 
 export default OfflinePopupStoreDetailPage;
