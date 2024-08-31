@@ -12,124 +12,148 @@ const SurroundRestaurantCard: React.FC<SurroundRestaurantCardProps> = ({
 }) => {
   const cardClickHandler = () => {
     //card click handler
-    const userConfirmed = window.confirm("해당 위치를 네이버 지도에서 검색하시겠습니까?");
+    const userConfirmed = window.confirm(
+      "해당 장소를 네이버 지도로 여시겠습니까?"
+    );
     if (userConfirmed) {
       const naverMapUrl = `https://map.naver.com/v5/search/${restaurantData.title} ${restaurantData.loadAddr}`;
       // const naverMapUrl = `https://map.naver.com/v5/search/${restaurantData.geoData.coordinates[1]},${restaurantData.geoData.coordinates[0]}`;
       window.open(naverMapUrl, "_blank");
     }
-
   };
 
   return (
     <RestaurantCard onClick={cardClickHandler}>
-      <RestaurantInfo>
-        <div className={"restaurant-distance"}>{restaurantData.distance}m</div>
-        <div className={"restaurant-bottom"}>
-          <div className={"restaurant-name"}>{restaurantData.title}</div>
-          <div className={"restaurant-tags"}>
-            {restaurantData.bestMenu.length > 0 &&
-              restaurantData.bestMenu.map(
-                (tag: string, index: number) =>
-                  //최대 태그 3개까지 제한
-                  index < 3 && <span key={index}>#{tag}</span>
-              )}
-          </div>
-        </div>
-      </RestaurantInfo>
-      <RestaurantOverlay />
       <RestaurantImage>
         <Image
           src={`data:image/webp;base64,${restaurantData.image}`}
           alt={restaurantData.title}
           fill
         />
+        <Distance>{(restaurantData.distance / 1000).toFixed(1)} km</Distance>
       </RestaurantImage>
+
+      <RestaurantInfo>
+        <div className={"restaurant-title"}>{restaurantData.title}</div>
+        <RestaurantTags>
+          {restaurantData.bestMenu.map(
+            (menu, index) =>
+              index < 3 && (
+                <RestaurantTag>
+                  <span>#</span> <span className={"menu-title"}>{menu}</span>
+                </RestaurantTag>
+              )
+          )}
+        </RestaurantTags>
+      </RestaurantInfo>
     </RestaurantCard>
   );
 };
 
 const RestaurantCard = styled.div`
-  position: relative;
-  width: 166px;
-  height: 161px;
-  border-radius: 8px;
-  background-color: ${COLORS.lightGreyColor};
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   flex: 0 0 auto;
+  gap: 8px;
+
+  width: 166px;
+`;
+
+const RestaurantImage = styled.div`
+  position: relative;
+
+  width: 166px;
+  height: 166px;
+  border-radius: 8px;
+  overflow: hidden;
 
   cursor: pointer;
 `;
 
-const RestaurantImage = styled.div``;
-
-const RestaurantOverlay = styled.div`
+const Distance = styled.div`
   position: absolute;
-  bottom: 0;
-  z-index: 1;
-  width: 100%;
-  height: 50px;
-  background: linear-gradient(to top, rgba(103, 102, 102, 0.5), transparent);
+  top: 8px;
+  right: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 4px 8px;
+  background-color: ${COLORS.whiteColor};
+  border-radius: 8px;
+
+  color: ${COLORS.secondaryColor};
 `;
 
 const RestaurantInfo = styled.div`
-  position: relative;
-  z-index: 2;
-
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 8px;
 
-  width: calc(100% - 16px);
-  height: calc(100% - 16px);
-  padding: 8px;
+  width: 100%;
 
-  .restaurant-info-bottom {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
+  .restaurant-title {
     width: 100%;
-  }
-
-  .restaurant-distance {
-    display: flex;
-    justify-content: flex-end;
-
-    width: 100%;
-    font-size: 12px;
-    font-weight: 300;
-
-    color: ${COLORS.mainColor};
-  }
-
-  .restaurant-name {
-    font-size: 16px;
-    font-weight: 500;
-
-    padding-right: 8px;
 
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 
-    color: ${COLORS.mainColor};
+    font-size: 14px;
+    font-weight: 700;
+    font-style: normal;
+    line-height: normal;
+    color: ${COLORS.secondaryColor};
+
+    cursor: pointer;
   }
+`;
 
-  .restaurant-tags {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+const RestaurantTags = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-    padding-right: 8px;
+  width: 100%;
+  overflow: hidden;
+`;
 
-    font-size: 12px;
-    font-weight: 300;
+const RestaurantTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  gap: 2px;
+
+  max-width: 80px;
+  padding: 4px 8px;
+  border: 1px solid ${COLORS.greyColor};
+  border-radius: 16px;
+
+  background-color: ${COLORS.whiteColor};
+
+  font-size: 12px;
+  font-style: normal;
+  line-height: normal;
+
+  .menu-title {
+    width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    font-weight: 400;
+    color: ${COLORS.secondaryColor};
+  }
 
-    color: ${COLORS.whiteColor};
+  & > span {
+    color: ${COLORS.mainColor};
+    font-weight: 700;
   }
 `;
 
