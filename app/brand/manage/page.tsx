@@ -152,10 +152,10 @@ const OnlinePopUpOpenningPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     if (!isLogin || !isPopper) {
       alert("해당 페이지에 접근권한이 없습니다.");
-    }
+    } 
     getBrandApi();
 
     const key = localStorage.getItem(joyrideStatusKey);
@@ -193,7 +193,7 @@ const OnlinePopUpOpenningPage: React.FC = () => {
       }
     } catch (error: any) {
       setIsLoading(false);
-      if (error.response.code === 401) {
+      if (error.response.code === 403 || error.response.code === 401) {
         alert("해당 페이지에 접근권한이 없습니다.");
         router.push("/");
       } else {
