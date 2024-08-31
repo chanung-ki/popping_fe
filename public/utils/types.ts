@@ -68,18 +68,21 @@ export interface PopupStoreDataType {
     start: string;
     end: string;
   };
-  openTime: {
-    day: string;
-    startTime: string;
-    endTime: string;
-  };
+  openTime: OpenTimeData[];
   description: string[];
   isSaved: boolean;
   image: string[];
   homepage: string;
-  sns: string[];
+  sns: string;
   viewCount: number;
   saveCount: number;
+  status: number;
+}
+
+export interface OpenTimeData {
+  day: string;
+  startTime: string;
+  endTime: string;
 }
 
 export interface PopupStoreSimpleData {
@@ -89,6 +92,7 @@ export interface PopupStoreSimpleData {
   description: string[];
   isSaved: boolean;
   image: any;
+  status: number;
   viewCount: number;
 }
 
@@ -104,7 +108,7 @@ export interface PlaceDataType {
   // tags: string[];
   geoData: GeoDataType;
   image: any;
-  distance:number;
+  distance: number;
 }
 
 // //Store
@@ -248,4 +252,9 @@ export interface SubwayMapItem {
   name: string;
   coor: [number, number];
   image: string; // 이미지 URL
+}
+
+export interface FilterType {
+  label: string;
+  value: number;
 }

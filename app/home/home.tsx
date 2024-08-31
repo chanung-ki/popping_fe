@@ -296,7 +296,7 @@ const HomePage: React.FC = () => {
         </SwiperContainer>
 
         <Sections>
-          <div ref={hotPlaceRef} style={{ zIndex: 5 }}>HOT PLACE</div>
+          <div ref={hotPlaceRef} style={{ zIndex: 5, fontSize: 18, fontWeight: 600 }}>HOT PLACE</div>
           <Section>
             <ContentsContainer>
               {subway.map((data: SubwayMapItem, index: number) => (

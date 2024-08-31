@@ -54,7 +54,7 @@ const MapComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 팝업 스토어 목록
-  const [storeList, setStoreList] = useState<PopupStoreDataType[]>([]);
+  const [storeList, setStoreList] = useState<PopupStoreDataType[]>();
   // 검색 영역 활성화
   const [isActiveSearch, setIsActiveSearch] = useState<boolean>(false);
   // 선택된 지역
@@ -164,12 +164,14 @@ const MapComponent: React.FC = () => {
 
   // 스토어 마커 추가
   const addStoreMarkers = () => {
-    storeList.forEach((store) => {
-      const dom_id = store.id;
-      const title = store.title;
-      const lat = store.location.geoData.coordinates[0];
-      const lng = store.location.geoData.coordinates[1];
-      addEachStoreMarker(dom_id, title, lat, lng);
+    storeList && storeList.forEach((store) => {
+      if (store.status == 1) {
+        const dom_id = store.id;
+        const title = store.title;
+        const lat = store.location.geoData.coordinates[0];
+        const lng = store.location.geoData.coordinates[1];
+        addEachStoreMarker(dom_id, title, lat, lng);
+      }
     });
   };
 
@@ -319,7 +321,7 @@ const MapComponent: React.FC = () => {
 
   // 스토어 마커 클릭시 인포윈도우를 엽니다. (카페 / 맛집 미구현)
   const openInfoWindow = (marker: naver.maps.Marker) => {
-    const storeInfo: PopupStoreDataType | undefined = storeList.find(
+    const storeInfo: PopupStoreDataType | undefined = storeList && storeList.find(
       (store) => {
         return store.title === marker.getTitle();
       }
@@ -519,7 +521,6 @@ const MapComponent: React.FC = () => {
 
   useEffect(() => {
     if (userLocation && window.naver) {
-      // Naver Map을 초기화
       if (!mapRef.current) {
         const mapOptions = {
           zoom: 15,
@@ -550,7 +551,6 @@ const MapComponent: React.FC = () => {
         });
       }
 
-      // Initial map centering only once
       if (!isMapCentered) {
         mapRef.current.setCenter(
           new window.naver.maps.LatLng(userLocation.lat, userLocation.lng)
@@ -730,9 +730,7 @@ const MapComponent: React.FC = () => {
             setIsOpenMenu(!isOpenMenu);
           }}
         />
-        <StoreInformationList>
-          <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
-        </StoreInformationList>
+        <StoreCardList storeList={storeList} isPopper={userData.isPopper} />
       </SlideBottomMenu>
     </DefaultLayout>
   );
@@ -743,6 +741,8 @@ const MapContainer = styled.div`
   height: 100dvh;
   transition: background-color 1s ease-in-out, transform 1s ease-in-out;
   position: relative;
+
+  overflow-y: hidden;
 `;
 
 const LocationResetBtn = styled.div`
@@ -865,9 +865,11 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
   align-items: center;
   justify-content: flex-start;
 
+  overflow-y: scroll;
+
   width: 100%;
   max-width: 600px;
-  height: ${(props) => (props.$isOpen ? "70dvh" : "40px")};
+  height: ${(props) => (props.$isOpen ? "70dvh" : "60px")};
 
   border-radius: 16px 16px 0px 0px;
   background-color: ${COLORS.whiteColor};
@@ -893,18 +895,6 @@ const ToggleButton = styled.button`
 
   cursor: pointer;
   outline: none;
-`;
-
-const StoreInformationList = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  flex-flow: row wrap;
-  gap: 28px;
-  margin-top: 40px;
-  overflow-y: auto;
-  width: 100%;
-  padding-bottom: 40px;
 `;
 
 export default MapComponent;

@@ -10,12 +10,13 @@ interface PopupCardProps {
   storeData: MainSortedData[];
 }
 
+
 // TODO: Props interface 정의 필요
 const PopupCard = React.forwardRef<HTMLDivElement, PopupCardProps>(
   ({ title, storeData }, ref) => {
     return (
       <>
-        <div ref={ref} style={{ zIndex: 5 }}>{title}</div>
+        <div ref={ref} style={{ zIndex: 5, fontSize: 18, fontWeight: 600 }}>{title}</div>
         <Section>
           <ContentsContainer>
             {storeData.length > 0 ? (
@@ -64,8 +65,7 @@ const Stuff = styled(Link)`
     flex: 0 0 calc(33.333% - 12px);
   }
 `;
-
-export const SkeletonDiv = styled.div`
+const SkeletonDiv = styled.div`
   aspect-ratio: 1 / 1;
   background-color: ${COLORS.greyColor};
   margin-bottom: 20px;

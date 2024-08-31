@@ -1,7 +1,7 @@
 import { MARKER } from "@/public/utils/function";
 import { useEffect, useRef } from "react";
 
-const NaverMap = ({ latitude, longitude, title }: { latitude: number; longitude: number; title: string }) => {
+const NaverMap = ({ latitude, longitude, location, title }: { latitude: number; longitude: number; location: string; title: string }) => {
   const mapElement = useRef(null);
 
   useEffect(() => {
@@ -54,14 +54,14 @@ const NaverMap = ({ latitude, longitude, title }: { latitude: number; longitude:
       const handleMapClick = () => {
         const userConfirmed = window.confirm("해당 위치를 네이버 지도에서 검색하시겠습니까?");
         if (userConfirmed) {
-          const naverMapUrl = `https://map.naver.com/v5/search/${latitude},${longitude}`;
+          const naverMapUrl = `https://map.naver.com/v5/search/${location}`;
           window.open(naverMapUrl, "_blank");
         }
       };
 
       // 마커 또는 맵 클릭 시 확인 후 네이버 지도 URL로 이동
-      naver.maps.Event.addListener(marker, "click", handleMapClick);
       naver.maps.Event.addListener(map, "click", handleMapClick);
+      naver.maps.Event.addListener(marker, "click", handleMapClick);
     }
   }, [latitude, longitude, title]);
 

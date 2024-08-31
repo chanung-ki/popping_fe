@@ -154,3 +154,15 @@ export const DUMMY_SEOUL_OPTIONS = [
   { value: "서울시 송파구", label: "서울시 송파구" },
   { value: "서울시 강동구", label: "서울시 강동구" },
 ];
+
+export const filterData = [
+  { label: "최신순", value: 0 },
+  { label: "인기순", value: 1 },
+  { label: "팔로우순", value: 2 },
+];
+
+export const activeFilterData = [
+  { label: "전체", value: 0 },
+  { label: "진행중", value: 1 },
+  { label: "진행예정", value: 2 },
+];

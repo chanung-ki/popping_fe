@@ -61,29 +61,9 @@ const StoreCard: React.FC<StoreCardProps> = React.memo(({ store, isPopper }: Sto
   return (
     <StoreCardContainer onClick={() => onClickHandler(store.id)}>
       <StoreThumbnail>
-        {popupData ?
-          <Image
-            id={`store-image-${store.id}`}
-            src={imageSrc || "/images/gray.png"} // 기본 placeholder 이미지 제공
-            alt={`${store.title}`}
-            layout="fill"
-            objectFit="cover"
-            loading='lazy'
-          />
-          :
-          <Image
-            id={`store-image-${store.id}`}
-            src={"/images/gray.png"} // 기본 placeholder 이미지 제공
-            alt={`${store.title}`}
-            layout="fill"
-            objectFit="cover"
-            loading='lazy'
-          />
-        }
-
+        <StoreThumbnailImage id={`store-image-${store.id}`} src={imageSrc || "/images/gray.png"} loading='lazy' />
         {!isPopper && (
-          <div
-            className={"icon"}
+          <StoreBookmark
             onClick={(event) => {
               event.stopPropagation(); // 부모 요소로의 이벤트 전파를 막음
               handleBookmarkClick(store.id);
@@ -91,14 +71,14 @@ const StoreCard: React.FC<StoreCardProps> = React.memo(({ store, isPopper }: Sto
           >
             <IconHeart
               color={saved ? COLORS.mainColor : COLORS.greyColor}
-              width={16}
-              height={15}
+              width={undefined}
+              height={18}
             />
-          </div>
+          </StoreBookmark>
         )}
       </StoreThumbnail>
+      <div className={"store-desc"}>{store.location.address}</div>
       <div className={"store-name"}>{store.title}</div>
-      <div className={"store-desc"}>{store.description[0]}</div>
     </StoreCardContainer>
   );
 });
@@ -108,17 +88,19 @@ StoreCard.displayName = "StoreCard";
 
 // 스타일 컴포넌트 정의
 const StoreCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 166px;
   cursor: pointer;
 
+  flex: 0 0 calc(50% - 12px);
+  @media (min-width: 768px) {
+    flex: 0 0 calc(33.333% - 12px); 
+  };
+  margin-bottom: 20px;
+  
   .store-name {
     font-size: 16px;
     font-weight: 600;
   }
-
+  
   .store-desc {
     font-size: 10px;
     font-weight: 300;
@@ -126,23 +108,34 @@ const StoreCardContainer = styled.div`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    margin-bottom: 4px;
   }
 `;
 
 const StoreThumbnail = styled.div`
   position: relative;
-  width: 166px;
-  height: 166px;
-  border-radius: 8px;
-  background-color: ${COLORS.greyColor};
-  overflow: hidden;
+  margin-bottom: 8px;
 
   .icon {
     position: absolute;
-    top: 138px;
-    left: 138px;
+    bottom: 12px;
+    right: 12px;
     cursor: pointer;
   }
 `;
+
+const StoreThumbnailImage = styled.img`
+  width: 100%; 
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+`
+
+const StoreBookmark = styled.div`
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+`;
+
 
 export default StoreCard;

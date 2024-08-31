@@ -6,31 +6,16 @@ import BrandComponent from "../components/brandComponent";
 import axiosInstance from "@/public/network/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BrandType } from "@/public/utils/types";
+import { BrandType, FilterType } from "@/public/utils/types";
 import { Loading } from "../components/loading";
 import { IconCheck, IconRoundTriangle, IconTrash, IconX } from "../components/icons";
 import { COLORS } from "@/public/styles/colors";
 import Link from "next/link";
 import BottomUpModal from "../components/BottomUpModal";
 import dayjs from 'dayjs';
+import { activeFilterData, filterData } from "@/public/utils/function";
 
-interface FilterType {
-  label: string,
-  value: number
-}
 
-const filterData = [
-  { label: '최신순', value: 0 },
-  { label: '인기순', value: 1 },
-  { label: '팔로우순', value: 2 },
-]
-
-const activeFilterData = [
-  { label: '전체', value: 0 },
-  { label: '진행중', value: 1 },
-  { label: '진행예정', value: 2 },
-  { label: '종료', value: 3 },
-]
 
 const OnlinePopupPage: React.FC = () => {
   const router = useRouter();
@@ -91,11 +76,6 @@ const OnlinePopupPage: React.FC = () => {
       case 2: // 진행예정
         filteredData = filteredData.filter((brand) =>
           now.isBefore(parseDate(brand.contractStart))
-        );
-        break;
-      case 3: // 종료
-        filteredData = filteredData.filter((brand) =>
-          now.isAfter(parseDate(brand.contractEnd))
         );
         break;
       case 0: // 전체
@@ -288,6 +268,7 @@ const NoData = styled.span`
 `
 
 const Filter = styled.div`
+  cursor: pointer;
   min-width: 55px;
   display: flex;
   flex-direction: row;
