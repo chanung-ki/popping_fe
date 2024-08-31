@@ -88,10 +88,16 @@ StoreCard.displayName = "StoreCard";
 
 // 스타일 컴포넌트 정의
 const StoreCardContainer = styled.div`
-  flex: 0 0 calc(50% - 8px);  
+  cursor: pointer;
+  position: relative;
+
+  flex: 0 0 calc(50% - 12px);
+  margin-bottom: 20px;
+  
+
   @media (min-width: 768px) {
-    flex: 0 0 calc(33.333% - 8px);
-  }
+    flex: 0 0 calc(33.333% - 12px); 
+  };
 
   .store-name {
     font-size: 16px;

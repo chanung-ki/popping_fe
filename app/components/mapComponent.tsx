@@ -867,7 +867,7 @@ const SlideBottomMenu = styled.div<{ $isOpen: boolean }>`
 
   width: 100%;
   max-width: 600px;
-  height: ${(props) => (props.$isOpen ? "70dvh" : "40px")};
+  height: ${(props) => (props.$isOpen ? "70dvh" : "60px")};
 
   border-radius: 16px 16px 0px 0px;
   background-color: ${COLORS.whiteColor};
@@ -901,7 +901,7 @@ const StoreInformationList = styled.div`
   justify-content: center;
   flex-flow: row wrap;
   gap: 28px;
-  margin-top: 40px;
+  margin-top: 60px;
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
