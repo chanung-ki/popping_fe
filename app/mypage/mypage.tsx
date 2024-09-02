@@ -102,16 +102,16 @@ const MyPage: React.FC = () => {
 
   // api
   const accountChangeApi = async () => {
-
     let message;
 
     if (isPopper) {
-      message = "팝플로 계정을 다시 전환하시겠습니까?\n팝플로 계정 전환시 등록했던 브랜드와 상품은 모두 삭제됩니다.";
+      message =
+        "팝플로 계정을 다시 전환하시겠습니까?\n팝플로 계정 전환시 등록했던 브랜드와 상품은 모두 삭제됩니다.";
     } else {
       message = "팝퍼 체험을 진행하시겠습니까?";
     }
 
-    const userConfirmed = window.confirm(message); 
+    const userConfirmed = window.confirm(message);
 
     if (userConfirmed) {
       try {
